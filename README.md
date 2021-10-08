@@ -8,7 +8,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/contributors/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of contributors">
-  <img src="https://img.shields.io/github/forks/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of forks">
+  <img src="https://img.shields.io/github/forks/DAQEM/JobsPlus?color=bightgreen&style=for-the-badge" title="Number of forks">
   <img src="https://img.shields.io/github/stars/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of stars">
   <img src="https://img.shields.io/github/commit-activity/y/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of commits this year">
   <img src="https://img.shields.io/github/issues/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of running issues">
