@@ -1,11 +1,18 @@
 <div id="top"></div>
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[![Contributors][contributors-shield]][contributors-url]
+<!-- [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
+[![MIT License][license-shield]][license-url] -->
+
+<p align="center">
+  <img src="https://img.shields.io/github/contributors/DAQEM/JobsPlus.svg?style=for-the-badge">
+  <img src="https://img.shields.io/github/forks/DAQEM/JobsPlus.svg?style=for-the-badge">
+  <img src="https://img.shields.io/github/stars/DAQEM/JobsPlus.svg?style=for-the-badge">
+  <img src="https://img.shields.io/github/issues/DAQEM/JobsPlus.svg?style=for-the-badge">
+  <img src="https://img.shields.io/badge/License-All%20Rights%20Reserved-orange.svg?style=for-the-badge">
+</p>
 
 
 
@@ -191,5 +198,3 @@ Resources I find helpful and would like to give credit to!
 [issues-url]: https://github.com/DAQEM/JobsPlus/issues
 [license-shield]: https://img.shields.io/github/license/DAQEM/JobsPlus.svg?style=for-the-badge
 [license-url]: https://github.com/DAQEM/JobsPlus/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
