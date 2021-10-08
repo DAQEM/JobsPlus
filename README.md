@@ -6,7 +6,7 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url] -->
 
-<p align="left">
+<p align="center">
   <img src="https://img.shields.io/github/contributors/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of contributors">
   <img src="https://img.shields.io/github/forks/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of forks">
   <img src="https://img.shields.io/github/stars/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of stars">
