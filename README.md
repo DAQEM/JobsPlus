@@ -6,12 +6,13 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url] -->
 
-<p align="center">
-  <img src="https://img.shields.io/github/contributors/DAQEM/JobsPlus.svg?style=for-the-badge">
-  <img src="https://img.shields.io/github/forks/DAQEM/JobsPlus.svg?style=for-the-badge">
-  <img src="https://img.shields.io/github/stars/DAQEM/JobsPlus.svg?style=for-the-badge">
-  <img src="https://img.shields.io/github/issues/DAQEM/JobsPlus.svg?style=for-the-badge">
-  <img src="https://img.shields.io/badge/License-All%20Rights%20Reserved-orange.svg?style=for-the-badge">
+<p align="left">
+  <img src="https://img.shields.io/github/contributors/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of contributors">
+  <img src="https://img.shields.io/github/forks/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of forks">
+  <img src="https://img.shields.io/github/stars/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of stars">
+  <img src="https://img.shields.io/github/commit-activity/y/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of commits this year">
+  <img src="https://img.shields.io/github/issues/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of running issues">
+  <img src="https://img.shields.io/badge/License-ARR-red.svg?style=for-the-badge" title="All Rights Reserved">
 </p>
 
 
