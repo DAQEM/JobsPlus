@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/github/contributors/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of contributors">
   <img src="https://img.shields.io/github/forks/DAQEM/JobsPlus?color=bightgreen&style=for-the-badge" title="Number of forks">
   <img src="https://img.shields.io/github/stars/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of stars">
-  <img src="https://img.shields.io/github/commit-activity/y/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of commits this year">
+  <img src="https://img.shields.io/github/commit-activity/y/DAQEM/JobsPlus?label=Commits&style=for-the-badge" title="Number of commits this year">
   <img src="https://img.shields.io/github/issues/DAQEM/JobsPlus.svg?style=for-the-badge" title="Number of running issues">
   <img src="https://img.shields.io/badge/License-ARR-red.svg?style=for-the-badge" title="All Rights Reserved">
 </p>
@@ -21,7 +21,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/DAQEM/JobsPlus">
-    <img src="images/logo backgroundless new.png" alt="Logo" width="200" height="200">
+    <img src="images/logo backgroundless new no glow.png" alt="Logo" width="320" height="320">
   </a>
 
   <h3 align="center">JOBS+</h3>
