@@ -3,7 +3,8 @@ package me.daqem.jobsplus.command;
 import com.mojang.brigadier.CommandDispatcher;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.utils.Capitalizer;
-import me.daqem.jobsplus.utils.LevelFormula;
+import me.daqem.jobsplus.handlers.ChatHandler;
+import me.daqem.jobsplus.handlers.LevelFormulaHandler;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -26,9 +27,7 @@ public class JobsCommand {
             if (source.getEntity() instanceof Player player) {
                 player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
                     List<Jobs> enabledJobs = new ArrayList<>();
-                    player.sendMessage(new KeybindComponent(ChatFormatting.GRAY + "=======" +
-                            ChatFormatting.GREEN + "=======" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD + " JOBS " +
-                            ChatFormatting.RESET + ChatFormatting.GREEN + "=======" + ChatFormatting.GRAY + "=======\n"), player.getUUID());
+                    player.sendMessage(ChatHandler.header("JOBS"), player.getUUID());
                     for (Jobs job : Jobs.values()) {
                         switch (job) {
                             case ALCHEMIST -> {
@@ -105,9 +104,7 @@ public class JobsCommand {
                         player.sendMessage(new KeybindComponent(ChatFormatting.GRAY + availableJobs.toString() + "\n"), player.getUUID());
                     }
                 });
-                player.sendMessage(new KeybindComponent(ChatFormatting.GRAY + "=======" +
-                        ChatFormatting.GREEN + "=======" + ChatFormatting.GRAY + "======" +
-                        ChatFormatting.GREEN + "=======" + ChatFormatting.GRAY + "======="), player.getUUID());
+                player.sendMessage(ChatHandler.footer(4), player.getUUID());
             }
             //TODO JOBS
         }catch (Exception e) {
@@ -120,7 +117,7 @@ public class JobsCommand {
         return new KeybindComponent(ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN + job +
                 ChatFormatting.DARK_GRAY + "[" + ChatFormatting.GREEN + "LVL " + jobInfo[1] +
                 ChatFormatting.DARK_GRAY + "] [" + ChatFormatting.GREEN + "EXP " + jobInfo[2] +
-                ChatFormatting.DARK_GRAY + "/" + ChatFormatting.DARK_GREEN + LevelFormula.calcExp(jobInfo[1]) +
+                ChatFormatting.DARK_GRAY + "/" + ChatFormatting.DARK_GREEN + LevelFormulaHandler.calcExp(jobInfo[1]) +
                 ChatFormatting.DARK_GRAY + "]");
     }
 }

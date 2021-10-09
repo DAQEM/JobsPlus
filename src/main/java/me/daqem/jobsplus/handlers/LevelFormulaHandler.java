@@ -1,8 +1,8 @@
-package me.daqem.jobsplus.utils;
+package me.daqem.jobsplus.handlers;
 
 import me.daqem.jobsplus.JobsPlus;
 
-public class LevelFormula {
+public class LevelFormulaHandler {
 
     public static int calcExp(int level) {
         if (level == 0) JobsPlus.LOGGER.error("Cannot divide by zero.");

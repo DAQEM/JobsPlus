@@ -39,5 +39,8 @@ public interface IModCapability {
     int[] getSmith();
     void setSmith(int[] value);
 
+    int getCoins();
+    void setCoins(int value);
+
     void copyForRespawn(ModCapabilityImpl oldStore);
 }

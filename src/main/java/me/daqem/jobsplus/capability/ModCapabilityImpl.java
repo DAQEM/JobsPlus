@@ -25,6 +25,7 @@ public class ModCapabilityImpl implements IModCapability {
     private int[] craftsmanMap = new int[]{1, 2, 12, 0, 0, 0};
     private int[] fishermanMap = new int[]{0, 0, 0, 0, 0, 0};
     private int[] smithMap = new int[]{0, 0, 0, 0, 0, 0};
+    private int coins = 0;
 
     @Override
     public int[] getFarmer() {
@@ -147,6 +148,12 @@ public class ModCapabilityImpl implements IModCapability {
     }
 
     @Override
+    public int getCoins() { return this.coins; }
+
+    @Override
+    public void setCoins(int coins) { this.coins = coins; }
+
+    @Override
     public void copyForRespawn(ModCapabilityImpl oldStore) {
         this.farmerMap = oldStore.farmerMap;
         this.butcherMap = oldStore.butcherMap;
@@ -160,6 +167,7 @@ public class ModCapabilityImpl implements IModCapability {
         this.craftsmanMap = oldStore.craftsmanMap;
         this.fishermanMap = oldStore.fishermanMap;
         this.smithMap = oldStore.smithMap;
+        this.coins = oldStore.coins;
     }
 
     public CompoundTag serializeNBT() {
@@ -176,6 +184,7 @@ public class ModCapabilityImpl implements IModCapability {
         nbt.putIntArray("craftsman", this.getCraftsman());
         nbt.putIntArray("fisherman", this.getFisherman());
         nbt.putIntArray("smith", this.getSmith());
+        nbt.putInt("coins", this.getCoins());
         return nbt;
     }
 
@@ -192,5 +201,6 @@ public class ModCapabilityImpl implements IModCapability {
         this.setCraftsman(nbt.getIntArray("craftsman"));
         this.setFisherman(nbt.getIntArray("fisherman"));
         this.setSmith(nbt.getIntArray("smith"));
+        this.setCoins(nbt.getInt("coins"));
     }
 }
