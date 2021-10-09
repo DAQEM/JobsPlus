@@ -27,7 +27,7 @@
   <h3 align="center">JOBS+</h3>
 
   <p align="center">
-    An awesome Minecraft Forge plugin that adds 12 interesting jobs to you game!
+    An awesome Minecraft Forge plugin that adds 12 interesting jobs to your game!
     <br />
     <a href="https://docs.google.com/document/d/1xL4aUcM8tNvwqgOFbQXhK8FK6MEvvsRXdzgKuMNAEAg"><strong>Explore the docs »</strong></a>
     <br />
