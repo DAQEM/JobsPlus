@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.capability;
 
-
 public interface IModCapability {
 
     int[] getFarmer();

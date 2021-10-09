@@ -2,6 +2,7 @@ package me.daqem.jobsplus.handlers;
 
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.utils.JobSetters;
+import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.world.entity.player.Player;
 
@@ -28,9 +29,9 @@ public class ExpHandler {
 
     private static void expHandler(Jobs job, Player player, int[] array, int exp) {
         JobSetters.addEXP(job, player, exp);
-        if (array[2] > LevelFormulaHandler.calcExp(array[1])) {
+        if (array[CapType.EXP.get()] > LevelFormulaHandler.calcExp(array[CapType.LEVEL.get()])) {
             JobSetters.setLevel(job, player, -2);
-            LevelUpHandler.handler(player, job, array[1]);
+            LevelUpHandler.handler(player, job, array[CapType.LEVEL.get()]);
         }
     }
 }

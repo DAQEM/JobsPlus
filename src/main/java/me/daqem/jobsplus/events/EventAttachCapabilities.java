@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.events;
 
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.capability.ModCapabilityProvider;
 import net.minecraft.world.entity.Entity;

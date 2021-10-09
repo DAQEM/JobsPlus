@@ -1,12 +1,11 @@
 package me.daqem.jobsplus.utils.enums;
 
 public enum CapType {
-    ENABLED(0),
-    LEVEL(1),
-    EXP(2),
-    POWERUP1(3),
-    POWERUP2(4),
-    POWERUP3(5);
+    LEVEL(0),
+    EXP(1),
+    POWERUP1(2),
+    POWERUP2(3),
+    POWERUP3(4);
 
     private final int value;
 

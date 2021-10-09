@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.utils;
 
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
+import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.world.entity.player.Player;
 
@@ -8,9 +9,9 @@ import java.util.ArrayList;
 
 public class JobSetters {
 
-    public static void set(Jobs job, Player player, int enabled, int level, int exp, int powerUp1, int powerUp2, int powerUp3) {
+    public static void set(Jobs job, Player player, int level, int exp, int powerUp1, int powerUp2, int powerUp3) {
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-            int[] tempArray = {enabled, level, exp, powerUp1, powerUp2, powerUp3};
+            int[] tempArray = {level, exp, powerUp1, powerUp2, powerUp3};
             ArrayList<Integer> array = new ArrayList<>();
             for(int i : tempArray) { array.add(i); }
             switch (job) {
@@ -77,11 +78,11 @@ public class JobSetters {
     }
 
     private static int[] addEXPGenerator(int[] array, int exp) {
-        return new int[]{array[0], array[1], exp, array[3], array[4], array[5]};
+        return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()] + exp, array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
     }
 
     private static int[] addLevelGenerator(int[] array, int level) {
-        if (level == -2) level = array[1] + 1;
-        return new int[]{array[0], level, array[2], array[3], array[4], array[5]};
+        if (level == -2) level = array[CapType.LEVEL.get()] + 1;
+        return new int[]{level, array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
     }
 }

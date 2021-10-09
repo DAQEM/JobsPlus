@@ -1,105 +1,99 @@
 package me.daqem.jobsplus.utils;
 
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
+import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class JobGetters {
-
-    private boolean isEnabled = false;
-    public boolean getIsEnabled() { return this.isEnabled; }
-    public void setIsEnabled(boolean value) { this.isEnabled = value; }
-
-    private int jobLevel = 0;
-    public int getJobLevel() { return this.jobLevel; }
-    public void setJobLevel(int value) { this.jobLevel = value; }
-
-    private int jobEXP = 0;
-    public int getJobEXP() { return this.jobEXP; }
-    public void setJobEXP(int value) { this.jobEXP = value; }
     
-    public boolean getJobEnabled(Player player, Jobs job) {
-        setIsEnabled(false);
+    public static boolean getJobIsEnabled(Player player, Jobs job) {
+        AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
             switch (job) {
                 case ALCHEMIST -> {
-                    if(handler.getAlchemist()[0] == 1) setIsEnabled(true);
+                    if(handler.getAlchemist()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case BUILDER -> {
-                    if(handler.getBuilder()[0] == 1) setIsEnabled(true);
+                    if(handler.getBuilder()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case BUTCHER -> {
-                    if(handler.getButcher()[0] == 1) setIsEnabled(true);
+                    if(handler.getButcher()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case CRAFTSMAN -> {
-                    if(handler.getCraftsman()[0] == 1) setIsEnabled(true);
+                    if(handler.getCraftsman()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case DIGGER -> {
-                    if(handler.getDigger()[0] == 1) setIsEnabled(true);
+                    if(handler.getDigger()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case ENCHANTER -> {
-                    if(handler.getEnchanter()[0] == 1) setIsEnabled(true);
+                    if(handler.getEnchanter()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case FARMER -> {
-                    if(handler.getFarmer()[0] == 1) setIsEnabled(true);
+                    if(handler.getFarmer()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case FISHERMAN -> {
-                    if(handler.getFisherman()[0] == 1) setIsEnabled(true);
+                    if(handler.getFisherman()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case HUNTER -> {
-                    if(handler.getHunter()[0] == 1) setIsEnabled(true);
+                    if(handler.getHunter()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case LUMBERJACK -> {
-                    if(handler.getLumberjack()[0] == 1) setIsEnabled(true);
+                    if(handler.getLumberjack()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case MINER -> {
-                    if(handler.getMiner()[0] == 1) setIsEnabled(true);
+                    if(handler.getMiner()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case SMITH -> {
-                    if(handler.getSmith()[0] == 1) setIsEnabled(true);
+                    if(handler.getSmith()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
             }
         });
-        return getIsEnabled();
+        return atomicBoolean.get();
     }
 
-    public int getJobLevel(Player player, Jobs job) {
+    public static int getJobLevel(Player player, Jobs job) {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
             switch (job) {
-                case ALCHEMIST -> setJobLevel(handler.getAlchemist()[1]);
-                case BUILDER -> setJobLevel(handler.getBuilder()[1]);
-                case BUTCHER -> setJobLevel(handler.getButcher()[1]);
-                case CRAFTSMAN -> setJobLevel(handler.getCraftsman()[1]);
-                case DIGGER -> setJobLevel(handler.getDigger()[1]);
-                case ENCHANTER -> setJobLevel(handler.getEnchanter()[1]);
-                case FARMER -> setJobLevel(handler.getFarmer()[1]);
-                case FISHERMAN -> setJobLevel(handler.getFisherman()[1]);
-                case HUNTER -> setJobLevel(handler.getHunter()[1]);
-                case LUMBERJACK -> setJobLevel(handler.getLumberjack()[1]);
-                case MINER -> setJobLevel(handler.getMiner()[1]);
-                case SMITH -> setJobLevel(handler.getSmith()[1]);
+                case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.LEVEL.get()]);
+                case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.LEVEL.get()]);
+                case BUTCHER -> atomicInteger.set(handler.getButcher()[CapType.LEVEL.get()]);
+                case CRAFTSMAN -> atomicInteger.set(handler.getCraftsman()[CapType.LEVEL.get()]);
+                case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.LEVEL.get()]);
+                case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.LEVEL.get()]);
+                case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.LEVEL.get()]);
+                case FISHERMAN -> atomicInteger.set(handler.getFisherman()[CapType.LEVEL.get()]);
+                case HUNTER -> atomicInteger.set(handler.getHunter()[CapType.LEVEL.get()]);
+                case LUMBERJACK -> atomicInteger.set(handler.getLumberjack()[CapType.LEVEL.get()]);
+                case MINER -> atomicInteger.set(handler.getMiner()[CapType.LEVEL.get()]);
+                case SMITH -> atomicInteger.set(handler.getSmith()[CapType.LEVEL.get()]);
             }
         });
-        return getJobLevel();
+        return atomicInteger.get();
     }
 
-    public int getJobEXP(Player player, Jobs job) {
+    public static int getJobEXP(Player player, Jobs job) {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
             switch (job) {
-                case ALCHEMIST -> setJobEXP(handler.getAlchemist()[2]);
-                case BUILDER -> setJobEXP(handler.getBuilder()[2]);
-                case BUTCHER -> setJobEXP(handler.getButcher()[2]);
-                case CRAFTSMAN -> setJobEXP(handler.getCraftsman()[2]);
-                case DIGGER -> setJobEXP(handler.getDigger()[2]);
-                case ENCHANTER -> setJobEXP(handler.getEnchanter()[2]);
-                case FARMER -> setJobEXP(handler.getFarmer()[2]);
-                case FISHERMAN -> setJobEXP(handler.getFisherman()[2]);
-                case HUNTER -> setJobEXP(handler.getHunter()[2]);
-                case LUMBERJACK -> setJobEXP(handler.getLumberjack()[2]);
-                case MINER -> setJobEXP(handler.getMiner()[2]);
-                case SMITH -> setJobEXP(handler.getSmith()[2]);
+                case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.EXP.get()]);
+                case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.EXP.get()]);
+                case BUTCHER -> atomicInteger.set(handler.getButcher()[CapType.EXP.get()]);
+                case CRAFTSMAN -> atomicInteger.set(handler.getCraftsman()[CapType.EXP.get()]);
+                case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.EXP.get()]);
+                case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.EXP.get()]);
+                case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.EXP.get()]);
+                case FISHERMAN -> atomicInteger.set(handler.getFisherman()[CapType.EXP.get()]);
+                case HUNTER -> atomicInteger.set(handler.getHunter()[CapType.EXP.get()]);
+                case LUMBERJACK -> atomicInteger.set(handler.getLumberjack()[CapType.EXP.get()]);
+                case MINER -> atomicInteger.set(handler.getMiner()[CapType.EXP.get()]);
+                case SMITH -> atomicInteger.set(handler.getSmith()[CapType.EXP.get()]);
             }
         });
-        return getJobEXP();
+        return atomicInteger.get();
     }
 }

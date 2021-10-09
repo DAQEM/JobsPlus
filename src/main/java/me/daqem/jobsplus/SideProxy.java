@@ -9,7 +9,6 @@ class SideProxy {
     SideProxy() {
         IEventBus modEventBus = MinecraftForge.EVENT_BUS;
         modEventBus.register(new EventRegisterCapabilities());
-        modEventBus.register(new EventPlayerTick());
         modEventBus.register(new EventAttachCapabilities());
         modEventBus.register(new EventRegisterCommands());
 
