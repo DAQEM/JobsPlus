@@ -1,7 +1,5 @@
 package me.daqem.jobsplus.capability;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.util.INBTSerializable;
 
 public interface IModCapability {
 

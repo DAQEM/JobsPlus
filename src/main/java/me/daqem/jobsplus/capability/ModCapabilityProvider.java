@@ -14,7 +14,6 @@ public class ModCapabilityProvider<C> implements ICapabilitySerializable<Compoun
 
     private final Capability<C> capability;
 
-    //    private final Capability<IModCapability> capability = ModCapabilityImpl.MOD_CAPABILITY;
     private final ModCapabilityImpl instance = new ModCapabilityImpl();
     public final LazyOptional<IModCapability> lazyOptional = LazyOptional.of(()->instance);
 

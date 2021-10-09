@@ -13,16 +13,16 @@ public class ModCapabilityImpl implements IModCapability {
     @CapabilityInject(IModCapability.class)
     public static Capability<IModCapability> MOD_CAPABILITY = null;
 
-    private int[] farmerMap = new int[]{0, 0, 0, 0, 0, 0};
-    private int[] butcherMap = new int[]{0, 0, 0, 0, 0, 0};
+    private int[] farmerMap = new int[]{1, 5, 213, 0, 0, 0};
+    private int[] butcherMap = new int[]{1, 1, 0, 0, 0, 0};
     private int[] minerMap = new int[]{0, 0, 0, 0, 0, 0};
-    private int[] lumberjackMap = new int[]{0, 0, 0, 0, 0, 0};
-    private int[] builderMap = new int[]{0, 0, 0, 0, 0, 0};
-    private int[] diggerMap = new int[]{0, 0, 0, 0, 0, 0};
+    private int[] lumberjackMap = new int[]{1, 1, 0, 0, 0, 0};
+    private int[] builderMap = new int[]{1, 8, 23, 0, 0, 0};
+    private int[] diggerMap = new int[]{1, 1, 0, 0, 0, 0};
     private int[] hunterMap = new int[]{0, 0, 0, 0, 0, 0};
-    private int[] alchemistMap = new int[]{0, 0, 0, 0, 0, 0};
+    private int[] alchemistMap = new int[]{1, 1, 0, 0, 0, 0};
     private int[] enchanterMap = new int[]{0, 0, 0, 0, 0, 0};
-    private int[] craftsmanMap = new int[]{0, 0, 0, 0, 0, 0};
+    private int[] craftsmanMap = new int[]{1, 2, 12, 0, 0, 0};
     private int[] fishermanMap = new int[]{0, 0, 0, 0, 0, 0};
     private int[] smithMap = new int[]{0, 0, 0, 0, 0, 0};
 
