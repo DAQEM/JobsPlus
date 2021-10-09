@@ -88,7 +88,6 @@ public class JobCommand {
                     ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN + "/job " + ChatFormatting.GREEN + "start [job]\n" +
                     ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN + "/job " + ChatFormatting.GREEN + "stop [job]"), player.getUUID());
             player.sendMessage(ChatHandler.footer(4), player.getUUID());
-            //TODO HELP
         }
         return 1;
     }
@@ -104,7 +103,6 @@ public class JobCommand {
                     "you a massive benefit that fits the job. Each job also has its own craftable items that will be " +
                     "unlocked once you reach a certain job-level."), player.getUUID());
             player.sendMessage(ChatHandler.footer(5), player.getUUID());
-            //TODO ABOUT
         }
         return 1;
     }
@@ -142,7 +140,6 @@ public class JobCommand {
             player.sendMessage(new KeybindComponent(ChatFormatting.DARK_GREEN + "Usage: " +
                     ChatFormatting.GREEN + "/job info [job]\n\n This command will show you some useful information about a certain job."), player.getUUID());
             player.sendMessage(ChatHandler.footer(4), player.getUUID());
-            //TODO INFO
         }
         return 1;
     }
@@ -153,7 +150,6 @@ public class JobCommand {
             player.sendMessage(new KeybindComponent(ChatFormatting.DARK_GREEN + "Usage: " +
                     ChatFormatting.GREEN + "/job start [job]\n\n This command will start a certain job."), player.getUUID());
             player.sendMessage(ChatHandler.footer(5), player.getUUID());
-            //TODO START
         }
         return 1;
     }
@@ -164,7 +160,6 @@ public class JobCommand {
             player.sendMessage(new KeybindComponent(ChatFormatting.DARK_GREEN + "Usage: " +
                     ChatFormatting.GREEN + "/job stop [job]\n\n This command will stop a certain job if your job level is still level 1 or by paying 10 job coins."), player.getUUID());
             player.sendMessage(ChatHandler.footer(4), player.getUUID());
-            //TODO START
         }
         return 1;
     }
@@ -175,7 +170,6 @@ public class JobCommand {
             player.sendMessage(new KeybindComponent(ChatFormatting.DARK_GREEN + "Usage: " +
                     ChatFormatting.GREEN + "/job powerups [job]\n\n This command will show you some useful information about the power-ups a certain job has."), player.getUUID());
             player.sendMessage(ChatHandler.footer(9), player.getUUID());
-            //TODO POWERUPS
         }
         return 1;
     }
@@ -186,7 +180,6 @@ public class JobCommand {
             player.sendMessage(new KeybindComponent(ChatFormatting.DARK_GREEN + "Usage: " +
                     ChatFormatting.GREEN + "/job crafting [job]\n\n This command will show you some useful information about the custom crafting recipes a certain job has."), player.getUUID());
             player.sendMessage(ChatHandler.footer(8), player.getUUID());
-            //TODO CRAFTING
         }
         return 1;
     }
@@ -197,7 +190,6 @@ public class JobCommand {
             player.sendMessage(new KeybindComponent(ChatFormatting.DARK_GREEN + "Usage: " +
                     ChatFormatting.GREEN + "/job display [job]\n\n This command will change the job that is shown in front of your name in chat. By default, this is the first jon you chose."), player.getUUID());
             player.sendMessage(ChatHandler.footer(7), player.getUUID());
-            //TODO CRAFTING
         }
         return 1;
     }
