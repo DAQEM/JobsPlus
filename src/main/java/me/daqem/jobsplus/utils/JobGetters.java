@@ -96,4 +96,14 @@ public class JobGetters {
         });
         return atomicInteger.get();
     }
+
+    public static int getAmountOfEnabledJobs(Player player) {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        for(Jobs job : Jobs.values()) {
+            if (getJobIsEnabled(player, job)) {
+                atomicInteger.set(atomicInteger.get() + 1);
+            }
+        }
+        return atomicInteger.get();
+    }
 }

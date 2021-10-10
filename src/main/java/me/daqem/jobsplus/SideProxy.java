@@ -11,6 +11,7 @@ class SideProxy {
         modEventBus.register(new EventRegisterCapabilities());
         modEventBus.register(new EventAttachCapabilities());
         modEventBus.register(new EventRegisterCommands());
+        modEventBus.register(new EventServerChat());
 
         modEventBus.addListener(EventClone::onDeath);
     }

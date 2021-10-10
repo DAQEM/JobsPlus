@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelFormulaHandler;
-import me.daqem.jobsplus.utils.Capitalizer;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
@@ -58,9 +57,9 @@ public class JobsCommand {
                         for (Jobs job : Jobs.values()) {
                             if (!enabledJobs.contains(job)) {
                                 if (availableJobs.isEmpty()) {
-                                    availableJobs.append(" ").append(Capitalizer.capitalizeWord(job.toString().toLowerCase()));
+                                    availableJobs.append(" ").append(ChatHandler.capitalizeWord(job.toString().toLowerCase()));
                                 } else {
-                                    availableJobs.append(", ").append(Capitalizer.capitalizeWord(job.toString().toLowerCase()));
+                                    availableJobs.append(", ").append(ChatHandler.capitalizeWord(job.toString().toLowerCase()));
                                 }
                             }
                         }

@@ -1,9 +1,12 @@
 package me.daqem.jobsplus.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.JobSetters;
+import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -70,6 +73,33 @@ public class JobCommand {
                                         context.getArgument("job", Jobs.class)
                                 )))
                         .executes(context -> display(context.getSource())))
+                .then(Commands.literal("admin")
+                        .requires(commandSourceStack -> commandSourceStack.hasPermission(2))
+                        .then(Commands.literal("set")
+                                .then(Commands.literal("level")
+                                        .then(Commands.argument("target", EntityArgument.players())
+                                                .then(Commands.argument("coins", IntegerArgumentType.integer())
+                                                        .executes(context -> setLevel()))
+                                                .executes(context -> setLevelHelp()))
+                                        .executes(context -> setLevelHelp()))
+                                .then(Commands.literal("exp")
+                                        .then(Commands.argument("target", EntityArgument.players())
+                                                .then(Commands.argument("coins", IntegerArgumentType.integer())
+                                                        .executes(context -> setEXP()))
+                                                .executes(context -> setEXPHelp()))
+                                        .executes(context -> setEXPHelp()))
+                                .then(Commands.literal("coins")
+                                        .then(Commands.argument("target", EntityArgument.players())
+                                                .then(Commands.argument("coins", IntegerArgumentType.integer())
+                                                        .executes(context -> setCoins()))
+                                                .executes(context -> setCoinsHelp()))
+                                        .executes(context -> setCoinsHelp()))
+                                .executes(context -> adminSet()))
+                        .then(Commands.literal("debug")
+                                .then(Commands.argument("target", EntityArgument.players())
+                                        .executes(context -> debug(context.getSource(), EntityArgument.getPlayer(context, "target"))))
+                                .executes(context -> debug(context.getSource(), null)))
+                        .executes(context -> admin(context.getSource())))
                 .executes(context -> help(context.getSource())));
 
     }
@@ -214,24 +244,269 @@ public class JobCommand {
             player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
                 switch (job) {
                     case ALCHEMIST -> {
-                        if (JobGetters.getJobIsEnabled(player, job)) {
-                            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_RED +
-                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You have already started this job.");
-                        } else {
-
+                         if (getJobIsNotEnabled(player, job)) {
+                             /* Free job */
+                             if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                 JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                 JobSetters.setSelector(player, CapType.SELCTOR_ALCHEMIST.get());
+                                 ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                         "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become an Alchemist? Say yes in chat.");
+                             /* Has to pay for job */
+                             } else {
+                                 if (handler.getCoins() < 10) {
+                                     ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                             "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                 } else {
+                                     JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                     JobSetters.setSelector(player, CapType.SELCTOR_ALCHEMIST.get());
+                                     ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                             "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become an Alchemist? This will cost 10 job-coins. Say yes in chat.");
+                                 }
+                             }
+                         }
+                    }
+                    case BUILDER -> {
+                        if (getJobIsNotEnabled(player, job)) {
+                            /* Free job */
+                            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                JobSetters.setSelector(player, CapType.SELCTOR_BUILDER.get());
+                                ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Builder? Say yes in chat.");
+                                /* Has to pay for job */
+                            } else {
+                                if (handler.getCoins() < 10) {
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                } else {
+                                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                    JobSetters.setSelector(player, CapType.SELCTOR_BUILDER.get());
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Builder? This will cost 10 job-coins. Say yes in chat.");
+                                }
+                            }
                         }
                     }
-                    case BUILDER -> {}
-                    case BUTCHER -> {}
-                    case CRAFTSMAN -> {}
-                    case DIGGER -> {}
-                    case ENCHANTER -> {}
-                    case FARMER -> {}
-                    case FISHERMAN -> {}
-                    case HUNTER -> {}
-                    case LUMBERJACK -> {}
-                    case MINER -> {}
-                    case SMITH -> {}
+                    case BUTCHER -> {
+                        if (getJobIsNotEnabled(player, job)) {
+                            /* Free job */
+                            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                JobSetters.setSelector(player, CapType.SELCTOR_BUTCHER.get());
+                                ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Butcher? Say yes in chat.");
+                                /* Has to pay for job */
+                            } else {
+                                if (handler.getCoins() < 10) {
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                } else {
+                                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                    JobSetters.setSelector(player, CapType.SELCTOR_BUTCHER.get());
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Butcher? This will cost 10 job-coins. Say yes in chat.");
+                                }
+                            }
+                        }
+                    }
+                    case CRAFTSMAN -> {
+                        if (getJobIsNotEnabled(player, job)) {
+                            /* Free job */
+                            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                JobSetters.setSelector(player, CapType.SELCTOR_CRAFTSMAN.get());
+                                ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Craftsman? Say yes in chat.");
+                                /* Has to pay for job */
+                            } else {
+                                if (handler.getCoins() < 10) {
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                } else {
+                                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                    JobSetters.setSelector(player, CapType.SELCTOR_CRAFTSMAN.get());
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Craftsman? This will cost 10 job-coins. Say yes in chat.");
+                                }
+                            }
+                        }
+                    }
+                    case DIGGER -> {
+                        if (getJobIsNotEnabled(player, job)) {
+                            /* Free job */
+                            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                JobSetters.setSelector(player, CapType.SELCTOR_DIGGER.get());
+                                ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Digger? Say yes in chat.");
+                                /* Has to pay for job */
+                            } else {
+                                if (handler.getCoins() < 10) {
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                } else {
+                                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                    JobSetters.setSelector(player, CapType.SELCTOR_DIGGER.get());
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Digger? This will cost 10 job-coins. Say yes in chat.");
+                                }
+                            }
+                        }
+                    }
+                    case ENCHANTER -> {
+                        if (getJobIsNotEnabled(player, job)) {
+                            /* Free job */
+                            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                JobSetters.setSelector(player, CapType.SELCTOR_ENCHANTER.get());
+                                ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become an Enchanter? Say yes in chat.");
+                                /* Has to pay for job */
+                            } else {
+                                if (handler.getCoins() < 10) {
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                } else {
+                                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                    JobSetters.setSelector(player, CapType.SELCTOR_ENCHANTER.get());
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become an Enchanter? This will cost 10 job-coins. Say yes in chat.");
+                                }
+                            }
+                        }
+                    }
+                    case FARMER -> {
+                        if (getJobIsNotEnabled(player, job)) {
+                            /* Free job */
+                            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                JobSetters.setSelector(player, CapType.SELCTOR_FARMER.get());
+                                ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Farmer? Say yes in chat.");
+                                /* Has to pay for job */
+                            } else {
+                                if (handler.getCoins() < 10) {
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                } else {
+                                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                    JobSetters.setSelector(player, CapType.SELCTOR_FARMER.get());
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Farmer? This will cost 10 job-coins. Say yes in chat.");
+                                }
+                            }
+                        }
+                    }
+                    case FISHERMAN -> {
+                        if (getJobIsNotEnabled(player, job)) {
+                            /* Free job */
+                            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                JobSetters.setSelector(player, CapType.SELCTOR_FISHERMAN.get());
+                                ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Fisherman? Say yes in chat.");
+                                /* Has to pay for job */
+                            } else {
+                                if (handler.getCoins() < 10) {
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                } else {
+                                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                    JobSetters.setSelector(player, CapType.SELCTOR_FISHERMAN.get());
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Fisherman? This will cost 10 job-coins. Say yes in chat.");
+                                }
+                            }
+                        }
+                    }
+                    case HUNTER -> {
+                        if (getJobIsNotEnabled(player, job)) {
+                            /* Free job */
+                            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                JobSetters.setSelector(player, CapType.SELCTOR_HUNTER.get());
+                                ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Hunter? Say yes in chat.");
+                                /* Has to pay for job */
+                            } else {
+                                if (handler.getCoins() < 10) {
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                } else {
+                                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                    JobSetters.setSelector(player, CapType.SELCTOR_HUNTER.get());
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Hunter? This will cost 10 job-coins. Say yes in chat.");
+                                }
+                            }
+                        }
+                    }
+                    case LUMBERJACK -> {
+                        if (getJobIsNotEnabled(player, job)) {
+                            /* Free job */
+                            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                JobSetters.setSelector(player, CapType.SELCTOR_LUMBERJACK.get());
+                                ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Lumberjack? Say yes in chat.");
+                                /* Has to pay for job */
+                            } else {
+                                if (handler.getCoins() < 10) {
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                } else {
+                                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                    JobSetters.setSelector(player, CapType.SELCTOR_LUMBERJACK.get());
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Lumberjack? This will cost 10 job-coins. Say yes in chat.");
+                                }
+                            }
+                        }
+                    }
+                    case MINER -> {
+                        if (getJobIsNotEnabled(player, job)) {
+                            /* Free job */
+                            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                JobSetters.setSelector(player, CapType.SELCTOR_MINER.get());
+                                ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Miner? Say yes in chat.");
+                                /* Has to pay for job */
+                            } else {
+                                if (handler.getCoins() < 10) {
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                } else {
+                                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                    JobSetters.setSelector(player, CapType.SELCTOR_MINER.get());
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Miner? This will cost 10 job-coins. Say yes in chat.");
+                                }
+                            }
+                        }
+                    }
+                    case SMITH -> {
+                        if (getJobIsNotEnabled(player, job)) {
+                            /* Free job */
+                            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
+                                JobSetters.setSelector(player, CapType.SELCTOR_SMITH.get());
+                                ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Smith? Say yes in chat.");
+                                /* Has to pay for job */
+                            } else {
+                                if (handler.getCoins() < 10) {
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                                } else {
+                                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                                    JobSetters.setSelector(player, CapType.SELCTOR_SMITH.get());
+                                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD +
+                                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a Smith? This will cost 10 job-coins. Say yes in chat.");
+                                }
+                            }
+                        }
+                    }
                 }
             });
             //TODO JOB START
@@ -269,6 +544,75 @@ public class JobCommand {
             //TODO JOB CRAFTING
         }
         return 1;
+    }
+
+    private static int setLevelHelp(CommandSourceStack source) {
+        return 1;
+    }
+
+    private static int setEXPHelp(CommandSourceStack source) {
+        return 1;
+    }
+
+    private static int setCoinsHelp(CommandSourceStack source) {
+        return 1;
+    }
+
+    private static int setLevel(CommandSourceStack source, Player target, int level) {
+        return 1;
+    }
+
+    private static int setEXP(CommandSourceStack source, Player target, int exp) {
+        return 1;
+    }
+
+    private static int setCoins(CommandSourceStack source, Player target, int coins) {
+        return 1;
+    }
+
+    private static int adminSet(CommandSourceStack source) {
+        return 1;
+    }
+
+    private static int admin(CommandSourceStack source) {
+        return 1;
+    }
+
+    private static int debug(CommandSourceStack source, Player target) {
+        if (source.getEntity() instanceof Player player) {
+            if (target == null) {
+                ChatHandler.sendMessage(player, ChatHandler.header("DEBUG"));
+                ChatHandler.sendMessage(player, );
+                ChatHandler.sendMessage(player, ChatHandler.footer(5));
+            } else {
+                ChatHandler.sendMessage(player, ChatHandler.header("DEBUG"));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting);
+                ChatHandler.sendMessage(player, ChatHandler.footer(5));
+            }
+        }
+        return 1;
+    }
+
+    private static boolean getJobIsNotEnabled(Player player, Jobs job) {
+        if (JobGetters.getJobIsEnabled(player, job)) {
+            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_RED +
+                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You have already started this job.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private static void jobStartMessageFree(Player player, Jobs job) {
+        ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become an " +
+                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? Say yes in chat.");
+    }
+
+    private static void jobStartMessagePaid(Player player, Jobs job) {
+        ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become an " +
+                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? This will cost 10 job-coins. Say yes in chat.");
     }
 
 //    switch (job) {

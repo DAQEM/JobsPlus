@@ -41,5 +41,11 @@ public interface IModCapability {
     int getCoins();
     void setCoins(int value);
 
+    int[] getVerification();
+    void setVerification(int[] value);
+
+    int[] getSelector();
+    void setSelector(int[] value);
+
     void copyForRespawn(ModCapabilityImpl oldStore);
 }

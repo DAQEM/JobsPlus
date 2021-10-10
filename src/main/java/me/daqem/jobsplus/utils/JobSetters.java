@@ -6,12 +6,13 @@ import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class JobSetters {
 
     public static void set(Jobs job, Player player, int level, int exp, int powerUp1, int powerUp2, int powerUp3) {
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-            int[] tempArray = {level, exp, powerUp1, powerUp2, powerUp3};
+            int[] tempArray = new int[]{level, exp, powerUp1, powerUp2, powerUp3};
             ArrayList<Integer> array = new ArrayList<>();
             for(int i : tempArray) { array.add(i); }
             switch (job) {
@@ -66,6 +67,38 @@ public class JobSetters {
                 case MINER -> handler.setMiner(addLevelGenerator(handler.getMiner(), level));
                 case SMITH -> handler.setSmith(addLevelGenerator(handler.getSmith(), level));
             }
+        });
+    }
+
+    public static void setVerification(Player player, int type) {
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            if (type == -1) {
+                handler.setVerification(new int[]{0, 0, 0, 0, 0});
+                return;
+            }
+            ArrayList<Integer> array = new ArrayList<>();
+            for(int i = 0; i < 4; i++) { array.add(0); }
+            array.set(type, 1);
+            handler.setVerification(array.stream().mapToInt(i -> i).toArray());
+        });
+    }
+
+    public static void setSelector(Player player, int type) {
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            if (type == -1) {
+                handler.setSelector(new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+                return;
+            }
+            ArrayList<Integer> array = new ArrayList<>();
+            for(int i = 0; i < 12; i++) { array.add(0); }
+            array.set(type, 1);
+            handler.setSelector(array.stream().mapToInt(i -> i).toArray());
+        });
+    }
+
+    public static void removeCoins(Player player, int amount) {
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            handler.setCoins(handler.getCoins() - amount);
         });
     }
 

@@ -13,19 +13,21 @@ public class ModCapabilityImpl implements IModCapability {
     @CapabilityInject(IModCapability.class)
     public static Capability<IModCapability> MOD_CAPABILITY = null;
 
-    private int[] farmerMap = new int[]{5, 213, 0, 0, 0};
-    private int[] butcherMap = new int[]{1, 0, 0, 0, 0};
+    private int[] farmerMap = new int[]{0, 0, 0, 0, 0};
+    private int[] butcherMap = new int[]{0, 0, 0, 0, 0};
     private int[] minerMap = new int[]{0, 0, 0, 0, 0};
-    private int[] lumberjackMap = new int[]{1, 0, 0, 0, 0};
-    private int[] builderMap = new int[]{8, 23, 0, 0, 0};
-    private int[] diggerMap = new int[]{1, 0, 0, 0, 0};
+    private int[] lumberjackMap = new int[]{0, 0, 0, 0, 0};
+    private int[] builderMap = new int[]{0, 0, 0, 0, 0};
+    private int[] diggerMap = new int[]{0, 0, 0, 0, 0};
     private int[] hunterMap = new int[]{0, 0, 0, 0, 0};
-    private int[] alchemistMap = new int[]{1, 0, 0, 0, 0};
+    private int[] alchemistMap = new int[]{0, 0, 0, 0, 0};
     private int[] enchanterMap = new int[]{0, 0, 0, 0, 0};
-    private int[] craftsmanMap = new int[]{2, 12, 0, 0, 0};
+    private int[] craftsmanMap = new int[]{0, 0, 0, 0, 0};
     private int[] fishermanMap = new int[]{0, 0, 0, 0, 0};
     private int[] smithMap = new int[]{0, 0, 0, 0, 0};
     private int coins = 0;
+    private int[] verification = new int[]{0, 0, 0, 0, 0};
+    private int[] selector = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     @Override
     public int[] getFarmer() {
@@ -151,7 +153,19 @@ public class ModCapabilityImpl implements IModCapability {
     public int getCoins() { return this.coins; }
 
     @Override
-    public void setCoins(int coins) { this.coins = coins; }
+    public void setCoins(int value) { this.coins = value; }
+
+    @Override
+    public int[] getVerification() { return this.verification; }
+
+    @Override
+    public void setVerification(int[] value) { this.verification = value; }
+
+    @Override
+    public int[] getSelector() { return this.selector; }
+
+    @Override
+    public void setSelector(int[] value) { this.selector = value; }
 
     @Override
     public void copyForRespawn(ModCapabilityImpl oldStore) {
@@ -168,6 +182,8 @@ public class ModCapabilityImpl implements IModCapability {
         this.fishermanMap = oldStore.fishermanMap;
         this.smithMap = oldStore.smithMap;
         this.coins = oldStore.coins;
+        this.verification = oldStore.verification;
+        this.selector = oldStore.selector;
     }
 
     public CompoundTag serializeNBT() {
@@ -185,6 +201,8 @@ public class ModCapabilityImpl implements IModCapability {
         nbt.putIntArray("fisherman", this.getFisherman());
         nbt.putIntArray("smith", this.getSmith());
         nbt.putInt("coins", this.getCoins());
+        nbt.putIntArray("verification", this.getVerification());
+        nbt.putIntArray("selector", this.getVerification());
         return nbt;
     }
 
@@ -202,5 +220,7 @@ public class ModCapabilityImpl implements IModCapability {
         this.setFisherman(nbt.getIntArray("fisherman"));
         this.setSmith(nbt.getIntArray("smith"));
         this.setCoins(nbt.getInt("coins"));
+        this.setVerification(nbt.getIntArray("verification"));
+        this.setVerification(nbt.getIntArray("selector"));
     }
 }
