@@ -51,6 +51,25 @@ public class JobSetters {
         });
     }
 
+    public static void setEXP(Jobs job, Player player, int exp) {
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            switch (job) {
+                case ALCHEMIST -> handler.setAlchemist(setEXPGenerator(handler.getAlchemist(), exp));
+                case BUILDER -> handler.setBuilder(setEXPGenerator(handler.getBuilder(), exp));
+                case BUTCHER -> handler.setButcher(setEXPGenerator(handler.getButcher(), exp));
+                case CRAFTSMAN -> handler.setCraftsman(setEXPGenerator(handler.getCraftsman(), exp));
+                case DIGGER -> handler.setDigger(setEXPGenerator(handler.getDigger(), exp));
+                case ENCHANTER -> handler.setEnchanter(setEXPGenerator(handler.getEnchanter(), exp));
+                case FARMER -> handler.setFarmer(setEXPGenerator(handler.getFarmer(), exp));
+                case FISHERMAN -> handler.setFisherman(setEXPGenerator(handler.getFisherman(), exp));
+                case HUNTER -> handler.setHunter(setEXPGenerator(handler.getHunter(), exp));
+                case LUMBERJACK -> handler.setLumberjack(setEXPGenerator(handler.getLumberjack(), exp));
+                case MINER -> handler.setMiner(setEXPGenerator(handler.getMiner(), exp));
+                case SMITH -> handler.setSmith(setEXPGenerator(handler.getSmith(), exp));
+            }
+        });
+    }
+
     public static void setLevel(Jobs job, Player player, int level) {
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
             switch (job) {
@@ -97,9 +116,7 @@ public class JobSetters {
     }
 
     public static void removeCoins(Player player, int amount) {
-        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-            handler.setCoins(handler.getCoins() - amount);
-        });
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> handler.setCoins(handler.getCoins() - amount));
     }
 
     private static int[] arrayGenerator(ArrayList<Integer> arrayList, int[] intArray) {
@@ -112,6 +129,10 @@ public class JobSetters {
 
     private static int[] addEXPGenerator(int[] array, int exp) {
         return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()] + exp, array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
+    }
+
+    private static int[] setEXPGenerator(int[] array, int exp) {
+        return new int[]{array[CapType.LEVEL.get()], exp, array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
     }
 
     private static int[] addLevelGenerator(int[] array, int level) {

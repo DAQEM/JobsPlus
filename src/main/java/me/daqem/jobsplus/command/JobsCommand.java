@@ -35,24 +35,23 @@ public class JobsCommand {
 
                         for (Jobs job : enabledJobs) {
                             switch (job) {
-                                case ALCHEMIST -> ChatHandler.sendMessage(player, enabledJobString("Alchemist      ", handler.getAlchemist()));
-                                case BUILDER -> ChatHandler.sendMessage(player, enabledJobString("Builder        ", handler.getBuilder()));
-                                case BUTCHER -> ChatHandler.sendMessage(player, enabledJobString("Butcher       ", handler.getButcher()));
-                                case CRAFTSMAN -> ChatHandler.sendMessage(player, enabledJobString("Craftsman    ", handler.getCraftsman()));
-                                case DIGGER -> ChatHandler.sendMessage(player, enabledJobString("Digger         ", handler.getDigger()));
-                                case ENCHANTER -> ChatHandler.sendMessage(player, enabledJobString("Enchanter    ", handler.getEnchanter()));
-                                case FARMER -> ChatHandler.sendMessage(player, enabledJobString("Farmer        ", handler.getFarmer()));
-                                case FISHERMAN -> ChatHandler.sendMessage(player, enabledJobString("Fisherman    ", handler.getFisherman()));
-                                case HUNTER -> ChatHandler.sendMessage(player, enabledJobString("Hunter        ", handler.getHunter()));
-                                case LUMBERJACK -> ChatHandler.sendMessage(player, enabledJobString("Lumberjack  ", handler.getLumberjack()));
-                                case MINER -> ChatHandler.sendMessage(player, enabledJobString("Miner          ", handler.getMiner()));
-                                case SMITH -> ChatHandler.sendMessage(player, enabledJobString("Smith           ", handler.getSmith()));
+                                case ALCHEMIST -> ChatHandler.sendMessage(player, enabledJobString("Alchemist      ", handler.getAlchemist(), JobGetters.getJobLevel(player, job)));
+                                case BUILDER -> ChatHandler.sendMessage(player, enabledJobString("Builder        ", handler.getBuilder(), JobGetters.getJobLevel(player, job)));
+                                case BUTCHER -> ChatHandler.sendMessage(player, enabledJobString("Butcher       ", handler.getButcher(), JobGetters.getJobLevel(player, job)));
+                                case CRAFTSMAN -> ChatHandler.sendMessage(player, enabledJobString("Craftsman    ", handler.getCraftsman(), JobGetters.getJobLevel(player, job)));
+                                case DIGGER -> ChatHandler.sendMessage(player, enabledJobString("Digger         ", handler.getDigger(), JobGetters.getJobLevel(player, job)));
+                                case ENCHANTER -> ChatHandler.sendMessage(player, enabledJobString("Enchanter    ", handler.getEnchanter(), JobGetters.getJobLevel(player, job)));
+                                case FARMER -> ChatHandler.sendMessage(player, enabledJobString("Farmer        ", handler.getFarmer(), JobGetters.getJobLevel(player, job)));
+                                case FISHERMAN -> ChatHandler.sendMessage(player, enabledJobString("Fisherman    ", handler.getFisherman(), JobGetters.getJobLevel(player, job)));
+                                case HUNTER -> ChatHandler.sendMessage(player, enabledJobString("Hunter        ", handler.getHunter(), JobGetters.getJobLevel(player, job)));
+                                case LUMBERJACK -> ChatHandler.sendMessage(player, enabledJobString("Lumberjack  ", handler.getLumberjack(), JobGetters.getJobLevel(player, job)));
+                                case MINER -> ChatHandler.sendMessage(player, enabledJobString("Miner          ", handler.getMiner(), JobGetters.getJobLevel(player, job)));
+                                case SMITH -> ChatHandler.sendMessage(player, enabledJobString("Smith           ", handler.getSmith(), JobGetters.getJobLevel(player, job)));
                             }
                         }
-                        ChatHandler.sendMessage(player, "");
                     }
                     if (enabledJobs.size() != 12) {
-                        ChatHandler.sendMessage(player, ChatFormatting.GREEN + "Available Jobs:");
+                        ChatHandler.sendMessage(player, ChatFormatting.GREEN + "\nAvailable Jobs:");
                         StringBuilder availableJobs = new StringBuilder();
                         for (Jobs job : Jobs.values()) {
                             if (!enabledJobs.contains(job)) {
@@ -74,7 +73,13 @@ public class JobsCommand {
         return 1;
     }
 
-    private static String enabledJobString(String job, int[] jobInfo) {
+    private static String enabledJobString(String job, int[] jobInfo, int level) {
+        if (level == 100) {
+            return ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN + job +
+                    ChatFormatting.DARK_GRAY + "[" + ChatFormatting.GREEN + "LVL " + jobInfo[CapType.LEVEL.get()] +
+                    ChatFormatting.DARK_GRAY + "] [" + ChatFormatting.GREEN + "MAX LEVEL" +
+                    ChatFormatting.DARK_GRAY + "]";
+        }
         return ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN + job +
                 ChatFormatting.DARK_GRAY + "[" + ChatFormatting.GREEN + "LVL " + jobInfo[CapType.LEVEL.get()] +
                 ChatFormatting.DARK_GRAY + "] [" + ChatFormatting.GREEN + "EXP " + jobInfo[CapType.EXP.get()] +
