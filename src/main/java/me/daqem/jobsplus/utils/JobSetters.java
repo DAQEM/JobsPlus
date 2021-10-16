@@ -3,7 +3,9 @@ package me.daqem.jobsplus.utils;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,6 +115,13 @@ public class JobSetters {
             array.set(type, 1);
             handler.setSelector(array.stream().mapToInt(i -> i).toArray());
         });
+    }
+
+    public static void setDisplay(Player player, int value) {
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> handler.setDisplay(value + 1));
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.refreshTabListName();
+        }
     }
 
     public static void removeCoins(Player player, int amount) {

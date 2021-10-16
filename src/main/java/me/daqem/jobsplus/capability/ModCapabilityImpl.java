@@ -28,6 +28,7 @@ public class ModCapabilityImpl implements IModCapability {
     private int coins = 0;
     private int[] verification = new int[]{0, 0, 0, 0, 0};
     private int[] selector = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private int display = 0;
 
     @Override
     public int[] getFarmer() {
@@ -168,6 +169,12 @@ public class ModCapabilityImpl implements IModCapability {
     public void setSelector(int[] value) { this.selector = value; }
 
     @Override
+    public int getDisplay() { return display; }
+
+    @Override
+    public void setDisplay(int value) { this.display = value; }
+
+    @Override
     public void copyForRespawn(ModCapabilityImpl oldStore) {
         this.farmerMap = oldStore.farmerMap;
         this.butcherMap = oldStore.butcherMap;
@@ -184,6 +191,7 @@ public class ModCapabilityImpl implements IModCapability {
         this.coins = oldStore.coins;
         this.verification = oldStore.verification;
         this.selector = oldStore.selector;
+        this.display = oldStore.display;
     }
 
     public CompoundTag serializeNBT() {
@@ -202,7 +210,8 @@ public class ModCapabilityImpl implements IModCapability {
         nbt.putIntArray("smith", this.getSmith());
         nbt.putInt("coins", this.getCoins());
         nbt.putIntArray("verification", this.getVerification());
-        nbt.putIntArray("selector", this.getVerification());
+        nbt.putIntArray("selector", this.getSelector());
+        nbt.putInt("display", this.getDisplay());
         return nbt;
     }
 
@@ -221,6 +230,7 @@ public class ModCapabilityImpl implements IModCapability {
         this.setSmith(nbt.getIntArray("smith"));
         this.setCoins(nbt.getInt("coins"));
         this.setVerification(nbt.getIntArray("verification"));
-        this.setVerification(nbt.getIntArray("selector"));
+        this.setSelector(nbt.getIntArray("selector"));
+        this.setDisplay(nbt.getInt("display"));
     }
 }

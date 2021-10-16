@@ -2,6 +2,7 @@ package me.daqem.jobsplus.events;
 
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.handlers.ChatHandler;
+import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
@@ -28,22 +29,28 @@ public class EventServerChat {
                             job = Jobs.values()[i];
                         }
                     }
-                    if (event.getMessage().equalsIgnoreCase("yes") && job != null) {
-                        if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
-                            ChatHandler.sendMessage(player, ChatFormatting.DARK_GREEN + "" + ChatFormatting.BOLD +
-                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "You have become an " + ChatHandler.capitalizeWord(job.toString().toLowerCase()) + ".");
+                    if (job != null) {
+                        if (event.getMessage().equalsIgnoreCase("yes")) {
+                            if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
+                                ChatHandler.sendMessage(player, ChatFormatting.DARK_GREEN + "" + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "You have become an " + ChatHandler.capitalizeWord(job.toString().toLowerCase()) + ".");
+                            } else {
+                                ChatHandler.sendMessage(player, ChatFormatting.DARK_GREEN + "" + ChatFormatting.BOLD +
+                                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "You have become a " + ChatHandler.capitalizeWord(job.toString().toLowerCase()) + ".");
+                            }
+                            JobSetters.setLevel(job, player, 1);
                         } else {
-                            ChatHandler.sendMessage(player, ChatFormatting.DARK_GREEN + "" + ChatFormatting.BOLD +
-                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "You have become a " + ChatHandler.capitalizeWord(job.toString().toLowerCase()) + ".");
+                            ChatHandler.sendMessage(player, ChatFormatting.DARK_RED + "" + ChatFormatting.BOLD +
+                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You didn't say yes. Canceling job start command.");
                         }
-                        JobSetters.setLevel(job, player,1);
-                    } else {
-                        ChatHandler.sendMessage(player, ChatFormatting.DARK_RED + "" + ChatFormatting.BOLD +
-                                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You didn't say yes. Canceling job start command.");
+                        reset(event, player);
+                        if (JobGetters.getAmountOfEnabledJobs(player) == 1) {
+                            JobSetters.setDisplay(player, job.get());
+                        }
                     }
-                    reset(event, player);
                 }
 
+                /* Job start paid verification */
                 if (handler.getVerification()[CapType.START_VERIFICATION_PAID.get()] == 1) {
                     Jobs job = null;
                     for (int i = 0; i < 12; i++) {
@@ -68,9 +75,61 @@ public class EventServerChat {
                     reset(event, player);
                 }
 
-                /* Job stop verification */
-                if (handler.getVerification()[CapType.STOP_VERIFICATION.get()] == 1) {
+                /* Job stop free verification */
+                if (handler.getVerification()[CapType.STOP_VERIFICATION_FREE.get()] == 1) {
+                    Jobs job = null;
+                    for (int i = 0; i < 12; i++) {
+                        if (handler.getSelector()[i] == 1) {
+                            job = Jobs.values()[i];
+                        }
+                    }
+                    if (event.getMessage().equalsIgnoreCase("yes") && job != null) {
+                        if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
+                            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "You have stopped being an " + ChatHandler.capitalizeWord(job.toString().toLowerCase()) + ".");
+                        } else {
+                            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "You have stopped being a " + ChatHandler.capitalizeWord(job.toString().toLowerCase()) + ".");
+                        }
+                        JobSetters.setLevel(job, player,0);
+                        JobSetters.setEXP(job, player,0);
+                    } else {
+                        ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_RED +
+                                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You didn't say yes. Canceling job stop command.");
+                    }
                     reset(event, player);
+                    if (JobGetters.getAmountOfEnabledJobs(player) == 0) {
+                        JobSetters.setDisplay(player, 0);
+                    }
+                }
+
+                /* Job stop free verification */
+                if (handler.getVerification()[CapType.STOP_VERIFICATION_PAID.get()] == 1) {
+                    Jobs job = null;
+                    for (int i = 0; i < 12; i++) {
+                        if (handler.getSelector()[i] == 1) {
+                            job = Jobs.values()[i];
+                        }
+                    }
+                    if (event.getMessage().equalsIgnoreCase("yes") && job != null) {
+                        if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
+                            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "You have stopped being an " + ChatHandler.capitalizeWord(job.toString().toLowerCase()) + ".");
+                        } else {
+                            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "You have stopped being a " + ChatHandler.capitalizeWord(job.toString().toLowerCase()) + ".");
+                        }
+                        JobSetters.removeCoins(player, 5);
+                        JobSetters.setLevel(job, player,0);
+                        JobSetters.setEXP(job, player,0);
+                    } else {
+                        ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_RED +
+                                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You didn't say yes. Canceling job stop command.");
+                    }
+                    reset(event, player);
+                    if (JobGetters.getAmountOfEnabledJobs(player) == 0) {
+                        JobSetters.setDisplay(player, 0);
+                    }
                 }
 
                 /* Job power-up buy verification */

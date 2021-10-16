@@ -47,5 +47,8 @@ public interface IModCapability {
     int[] getSelector();
     void setSelector(int[] value);
 
+    int getDisplay();
+    void setDisplay(int value);
+
     void copyForRespawn(ModCapabilityImpl oldStore);
 }

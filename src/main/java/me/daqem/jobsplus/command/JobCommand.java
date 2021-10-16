@@ -10,6 +10,7 @@ import me.daqem.jobsplus.utils.JobSetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -17,7 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.server.command.EnumArgument;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public class JobCommand {
 
@@ -114,6 +114,16 @@ public class JobCommand {
                                                         )))
                                                 .executes(context -> setCoinsHelp(context.getSource())))
                                         .executes(context -> setCoinsHelp(context.getSource())))
+                                .then(Commands.literal("display")
+                                        .then(Commands.argument("target", EntityArgument.players())
+                                                .then(Commands.argument("display", EnumArgument.enumArgument(Jobs.class))
+                                                        .executes(context -> setDisplay(
+                                                                context.getSource(),
+                                                                EntityArgument.getPlayer(context, "target"),
+                                                                context.getArgument("display", Jobs.class)
+                                                        )))
+                                                .executes(context -> setDisplayHelp(context.getSource())))
+                                        .executes(context -> setDisplayHelp(context.getSource())))
                                 .executes(context -> adminSet(context.getSource())))
                         .then(Commands.literal("debug")
                                 .then(Commands.argument("target", EntityArgument.players())
@@ -216,7 +226,7 @@ public class JobCommand {
             ChatHandler.sendMessage(player, ChatHandler.header("STOP"));
             ChatHandler.sendMessage(player, ChatFormatting.DARK_GREEN + "Usage: " +
                     ChatFormatting.GREEN + "/job stop [job]\n\n This command will stop a certain job if your job level " +
-                    "is still level 1 or by paying 10 job coins.");
+                    "is still level 1 or by paying 5 job coins.");
             ChatHandler.sendMessage(player, ChatHandler.footer(4));
         }
         return 1;
@@ -249,7 +259,7 @@ public class JobCommand {
             ChatHandler.sendMessage(player, ChatHandler.header("DISPLAY"));
             ChatHandler.sendMessage(player, ChatFormatting.DARK_GREEN + "Usage: " +
                     ChatFormatting.GREEN + "/job display [job]\n\n This command will change the job that is shown in " +
-                    "front of your name in chat. By default, this is the first jon you chose.");
+                    "front of your name in tab and chat. By default, this is the first jon you chose.");
             ChatHandler.sendMessage(player, ChatHandler.footer(7));
         }
         return 1;
@@ -287,8 +297,22 @@ public class JobCommand {
 
     private static int jobStop(CommandSourceStack source, Jobs job) {
         if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, "name: " + player.getScoreboardName() + " job argument: " + job);
-            //TODO JOB STOP
+            player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+                switch (job) {
+                    case ALCHEMIST -> jobStopMethod(player, job, CapType.SELCTOR_ALCHEMIST, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case BUILDER -> jobStopMethod(player, job, CapType.SELCTOR_BUILDER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case BUTCHER -> jobStopMethod(player, job, CapType.SELCTOR_BUTCHER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case CRAFTSMAN -> jobStopMethod(player, job, CapType.SELCTOR_CRAFTSMAN, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case DIGGER -> jobStopMethod(player, job, CapType.SELCTOR_DIGGER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case ENCHANTER -> jobStopMethod(player, job, CapType.SELCTOR_ENCHANTER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case FARMER -> jobStopMethod(player, job, CapType.SELCTOR_FARMER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case FISHERMAN -> jobStopMethod(player, job, CapType.SELCTOR_FISHERMAN, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case HUNTER -> jobStopMethod(player, job, CapType.SELCTOR_HUNTER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case LUMBERJACK -> jobStopMethod(player, job, CapType.SELCTOR_LUMBERJACK, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case MINER -> jobStopMethod(player, job, CapType.SELCTOR_MINER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case SMITH -> jobStopMethod(player, job, CapType.SELCTOR_SMITH, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                }
+            });
         }
         return 1;
     }
@@ -311,8 +335,14 @@ public class JobCommand {
 
     private static int jobDisplay(CommandSourceStack source, Jobs job) {
         if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, "name: " + player.getScoreboardName() + " job argument: " + job);
-            //TODO JOB CRAFTING
+            if (JobGetters.getJobIsEnabled(player, job)) {
+                ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Your chat and tab display has been changed to " + ChatHandler.capitalizeWord(job.toString()));
+                JobSetters.setDisplay(player, job.get());
+            } else {
+                ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_RED +
+                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You are not performing this job.");
+            }
         }
         return 1;
     }
@@ -348,6 +378,17 @@ public class JobCommand {
                     ChatFormatting.GREEN + "/job admin set coins [player] [coins]\n\n " +
                     "This command will set the job coins of a player.");
             ChatHandler.sendMessage(player, ChatHandler.footer(9));
+        }
+        return 1;
+    }
+
+    private static int setDisplayHelp(CommandSourceStack source) {
+        if (source.getEntity() instanceof Player player) {
+            ChatHandler.sendMessage(player, ChatHandler.header("SET DISPLAY"));
+            ChatHandler.sendMessage(player, ChatFormatting.DARK_GREEN + "Usage: " +
+                    ChatFormatting.GREEN + "/job admin set display [player] [job]\n\n " +
+                    "This command will set the custom job prefix in tab and chat.");
+            ChatHandler.sendMessage(player, ChatHandler.footer(11));
         }
         return 1;
     }
@@ -421,6 +462,17 @@ public class JobCommand {
         return 1;
     }
 
+    private static int setDisplay(CommandSourceStack source, Player target, Jobs job) {
+        if (source.getEntity() instanceof Player player) {
+            ChatHandler.sendMessage(player, ChatHandler.header("SET DISPLAY"));
+            ChatHandler.sendMessage(player, ChatFormatting.GREEN + "Set " + target.getScoreboardName() +
+                    "s display prefix to " + ChatHandler.capitalizeWord(job.toString()));
+            ChatHandler.sendMessage(player, ChatHandler.footer(11));
+            JobSetters.setDisplay(player, job.get());
+        }
+        return 1;
+    }
+
     private static int adminSet(CommandSourceStack source) {
         if (source.getEntity() instanceof Player player) {
             ChatHandler.sendMessage(player, ChatHandler.header("HELP"));
@@ -448,88 +500,132 @@ public class JobCommand {
 
     private static int debug(CommandSourceStack source, Player target) {
         if (source.getEntity() instanceof Player player) {
-            debugText(player, Objects.requireNonNullElse(target, player));
+            if (target == null) target = player;
+            target.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+                ChatHandler.sendMessage(player, ChatHandler.header("DEBUG"));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Alchemist      " + ChatFormatting.GREEN + Arrays.toString(handler.getAlchemist()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Builder        " + ChatFormatting.GREEN + Arrays.toString(handler.getBuilder()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Butcher       " + ChatFormatting.GREEN + Arrays.toString(handler.getButcher()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Craftsman    " + ChatFormatting.GREEN + Arrays.toString(handler.getCraftsman()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Digger         " + ChatFormatting.GREEN + Arrays.toString(handler.getDigger()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Enchanter    " + ChatFormatting.GREEN + Arrays.toString(handler.getEnchanter()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Farmer        " + ChatFormatting.GREEN + Arrays.toString(handler.getFarmer()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Fisherman    " + ChatFormatting.GREEN + Arrays.toString(handler.getFisherman()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Hunter        " + ChatFormatting.GREEN + Arrays.toString(handler.getHunter()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Lumberjack  " + ChatFormatting.GREEN + Arrays.toString(handler.getLumberjack()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Miner          " + ChatFormatting.GREEN + Arrays.toString(handler.getMiner()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Smith           " + ChatFormatting.GREEN + Arrays.toString(handler.getSmith()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Coins          " + ChatFormatting.GREEN + handler.getCoins());
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Verification  " + ChatFormatting.GREEN + Arrays.toString(handler.getVerification()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Selector      " + ChatFormatting.GREEN + Arrays.toString(handler.getSelector()));
+                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
+                        "Display        " + ChatFormatting.GREEN + handler.getDisplay());
+                ChatHandler.sendMessage(player, ChatHandler.footer(5));
+            });
         }
         return 1;
     }
 
     private static void jobStartMethod(Player player, Jobs job, CapType capType, int coins) {
-        if (getJobIsNotEnabled(player, job)) {
-            /* Free job */
-            if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
-                JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
-                JobSetters.setSelector(player, capType.get());
-                jobStartMessageFree(player, job);
-                /* Has to pay for job */
-            } else {
-                if (coins < 10) {
-                    ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
-                            "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
-                } else {
-                    JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+        if (!JobGetters.getJobIsEnabled(player, job)) {
+            if (JobGetters.noVerificationEnabled(player)) {
+                if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                    /* Free job */
+                    JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
                     JobSetters.setSelector(player, capType.get());
-                    jobStartMessagePaid(player, job);
+                    if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
+                        ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become an " +
+                                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? Say yes in chat.");
+                    } else {
+                        ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a " +
+                                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? Say yes in chat.");
+                    }
+                    /* Has to pay for job */
+                } else {
+                    if (coins < 10) {
+                        ChatHandler.sendMessage(player, "" + ChatFormatting.DARK_RED + ChatFormatting.BOLD +
+                                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                    } else {
+                        JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
+                        JobSetters.setSelector(player, capType.get());
+                        if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
+                            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become an " +
+                                    ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? This will cost 10 job-coins. Say yes in chat.");
+                        } else {
+                            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become a " +
+                                    ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? This will cost 10 job-coins. Say yes in chat.");
+                        }
+                    }
                 }
+            } else {
+                ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_RED +
+                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You are already performing another operation.");
             }
-        }
-    }
-
-    public static void debugText(Player player, Player target) {
-        target.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-            ChatHandler.sendMessage(player, ChatHandler.header("DEBUG"));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Alchemist      " + ChatFormatting.GREEN + Arrays.toString(handler.getAlchemist()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Builder        " + ChatFormatting.GREEN + Arrays.toString(handler.getBuilder()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Butcher       " + ChatFormatting.GREEN + Arrays.toString(handler.getButcher()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Craftsman    " + ChatFormatting.GREEN + Arrays.toString(handler.getCraftsman()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Digger         " + ChatFormatting.GREEN + Arrays.toString(handler.getDigger()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Enchanter    " + ChatFormatting.GREEN + Arrays.toString(handler.getEnchanter()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Farmer        " + ChatFormatting.GREEN + Arrays.toString(handler.getFarmer()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Fisherman    " + ChatFormatting.GREEN + Arrays.toString(handler.getFisherman()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Hunter        " + ChatFormatting.GREEN + Arrays.toString(handler.getHunter()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Lumberjack  " + ChatFormatting.GREEN + Arrays.toString(handler.getLumberjack()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Miner          " + ChatFormatting.GREEN + Arrays.toString(handler.getMiner()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Smith           " + ChatFormatting.GREEN + Arrays.toString(handler.getSmith()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Coins          " + ChatFormatting.GREEN + handler.getCoins());
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Verification  " + ChatFormatting.GREEN + Arrays.toString(handler.getVerification()));
-            ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                    "Selector      " + ChatFormatting.GREEN + Arrays.toString(handler.getSelector()));
-            ChatHandler.sendMessage(player, ChatHandler.footer(5));
-        });
-    }
-
-    private static boolean getJobIsNotEnabled(Player player, Jobs job) {
-        if (JobGetters.getJobIsEnabled(player, job)) {
-            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_RED +
-                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You have already started this job.");
-            return false;
         } else {
-            return true;
+            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_RED +
+                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You are already performing this job.");
         }
     }
 
-    private static void jobStartMessageFree(Player player, Jobs job) {
-        ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
-                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become an " +
-                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? Say yes in chat.");
-    }
-
-    private static void jobStartMessagePaid(Player player, Jobs job) {
-        ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
-                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to become an " +
-                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? This will cost 10 job-coins. Say yes in chat.");
+    private static void jobStopMethod(Player player, Jobs job, CapType capType, int coins, int level) {
+        if (JobGetters.getJobIsEnabled(player, job)) {
+            if (JobGetters.noVerificationEnabled(player)) {
+                if (level == 1) {
+                    JobSetters.setVerification(player, CapType.STOP_VERIFICATION_FREE.get());
+                    JobSetters.setSelector(player, capType.get());
+                    if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
+                        ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to  stop being an " +
+                                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? Say yes in chat.");
+                    } else {
+                        ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to  stop being a " +
+                                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? Say yes in chat.");
+                    }
+                } else {
+                    if (coins > 4) {
+                        JobSetters.setVerification(player, CapType.STOP_VERIFICATION_PAID.get());
+                        JobSetters.setSelector(player, capType.get());
+                        if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
+                            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to  stop being an " +
+                                    ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? This will cost 5 job-coins. Say yes in chat.");
+                        } else {
+                            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_GREEN +
+                                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.GREEN + "Are you sure you want to  stop being a " +
+                                    ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? This will cost 5 job-coins. Say yes in chat.");
+                        }
+                    } else {
+                        ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_RED +
+                                "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You need 5 job-coins to stop a job.");
+                    }
+                }
+            } else {
+                ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_RED +
+                        "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You are already performing another operation.");
+            }
+        } else {
+            ChatHandler.sendMessage(player, ChatFormatting.BOLD + "" + ChatFormatting.DARK_RED +
+                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "You are not performing this job.");
+        }
     }
 }
