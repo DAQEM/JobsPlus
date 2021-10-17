@@ -5,20 +5,31 @@ import me.daqem.jobsplus.utils.JobGetters;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.KeybindComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
-public class EventTabListNameFormat {
+public class EventNameFormat {
 
     @SubscribeEvent
-    public void onNameChange(PlayerEvent.TabListNameFormat event) {
+    public void onTabNameChange(PlayerEvent.TabListNameFormat event) {
         Player player = event.getPlayer();
 
         if (!player.isSpectator()) {
             event.setDisplayName(new KeybindComponent(createTabName(player)));
+        }
+    }
+
+    @SubscribeEvent
+    public void onNameChange(PlayerEvent.NameFormat event) {
+        Player player = event.getPlayer();
+
+        if (!player.isSpectator()) {
+            event.setDisplayname(new KeybindComponent(createTabName(player)));
         }
     }
     

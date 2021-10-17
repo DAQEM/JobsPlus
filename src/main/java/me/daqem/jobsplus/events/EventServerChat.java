@@ -7,8 +7,11 @@ import me.daqem.jobsplus.utils.JobSetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -19,8 +22,10 @@ public class EventServerChat {
     public void onPlayerChat(ServerChatEvent event) {
         if (event.getPlayer() != null) {
             Player player = event.getPlayer();
+
+            MinecraftForge.EVENT_BUS.post(new PlayerEvent.NameFormat(player, new KeybindComponent("LMAO")));
+
             player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-                System.out.println("*" + event.getMessage() + "*");
                 /* Job start free verification */
                 if (handler.getVerification()[CapType.START_VERIFICATION_FREE.get()] == 1) {
                     Jobs job = null;
