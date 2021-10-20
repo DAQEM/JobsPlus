@@ -5,10 +5,8 @@ import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class JobSetters {
 
@@ -122,6 +120,7 @@ public class JobSetters {
         if (player instanceof ServerPlayer serverPlayer) {
             serverPlayer.refreshTabListName();
         }
+        player.refreshDisplayName();
     }
 
     public static void removeCoins(Player player, int amount) {

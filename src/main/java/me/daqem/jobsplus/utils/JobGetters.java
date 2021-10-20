@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class JobGetters {
     
-    public static boolean getJobIsEnabled(Player player, Jobs job) {
+    public static boolean jobIsEnabled(Player player, Jobs job) {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
             switch (job) {
@@ -100,7 +100,7 @@ public class JobGetters {
     public static int getAmountOfEnabledJobs(Player player) {
         int count = 0;
         for(Jobs job : Jobs.values()) {
-            if (getJobIsEnabled(player, job)) {
+            if (jobIsEnabled(player, job)) {
                 count++;
             }
         }

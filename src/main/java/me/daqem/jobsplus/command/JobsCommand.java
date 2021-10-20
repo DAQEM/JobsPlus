@@ -3,7 +3,7 @@ package me.daqem.jobsplus.command;
 import com.mojang.brigadier.CommandDispatcher;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.handlers.ChatHandler;
-import me.daqem.jobsplus.handlers.LevelFormulaHandler;
+import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
@@ -28,7 +28,7 @@ public class JobsCommand {
                     List<Jobs> enabledJobs = new ArrayList<>();
                     ChatHandler.sendMessage(player, (ChatHandler.header("JOBS")));
                     for (Jobs job : Jobs.values()) {
-                        if (JobGetters.getJobIsEnabled(player, job)) { enabledJobs.add(job); }
+                        if (JobGetters.jobIsEnabled(player, job)) { enabledJobs.add(job); }
                     }
                     if (!enabledJobs.isEmpty()) {
                         ChatHandler.sendMessage(player, (ChatFormatting.GREEN + "Currently Performing Jobs:"));
@@ -83,7 +83,7 @@ public class JobsCommand {
         return ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN + job +
                 ChatFormatting.DARK_GRAY + "[" + ChatFormatting.GREEN + "LVL " + jobInfo[CapType.LEVEL.get()] +
                 ChatFormatting.DARK_GRAY + "] [" + ChatFormatting.GREEN + "EXP " + jobInfo[CapType.EXP.get()] +
-                ChatFormatting.DARK_GRAY + "/" + ChatFormatting.DARK_GREEN + LevelFormulaHandler.calcExp(jobInfo[CapType.LEVEL.get()]) +
+                ChatFormatting.DARK_GRAY + "/" + ChatFormatting.DARK_GREEN + LevelHandler.calcExp(jobInfo[CapType.LEVEL.get()]) +
                 ChatFormatting.DARK_GRAY + "]";
     }
 }
