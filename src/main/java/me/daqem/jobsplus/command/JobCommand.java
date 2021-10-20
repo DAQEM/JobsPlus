@@ -267,7 +267,8 @@ public class JobCommand {
 
     private static int jobInfo(CommandSourceStack source, Jobs job) {
         if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, "name: " + player.getScoreboardName() + " job argument: " + job);
+            ChatHandler.sendMessage(player, ChatFormatting.DARK_RED + "" + ChatFormatting.BOLD +
+                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "This command is not done yet.");
             //TODO JOB INFO
         }
         return 1;
@@ -319,7 +320,8 @@ public class JobCommand {
 
     private static int jobPowerUps(CommandSourceStack source, Jobs job) {
         if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, "name: " + player.getScoreboardName() + " job argument: " + job);
+            ChatHandler.sendMessage(player, ChatFormatting.DARK_RED + "" + ChatFormatting.BOLD +
+                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "This command is not done yet.");
             //TODO JOB POWERUPS
         }
         return 1;
@@ -327,7 +329,8 @@ public class JobCommand {
 
     private static int jobCrafting(CommandSourceStack source, Jobs job) {
         if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, "name: " + player.getScoreboardName() + " job argument: " + job);
+            ChatHandler.sendMessage(player, ChatFormatting.DARK_RED + "" + ChatFormatting.BOLD +
+                    "[JOBS+] " + ChatFormatting.RESET + ChatFormatting.RED + "This command is not done yet.");
             //TODO JOB CRAFTING
         }
         return 1;
