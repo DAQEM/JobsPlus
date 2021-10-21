@@ -15,6 +15,7 @@ class SideProxy {
         modEventBus.register(new EventServerChat());
         modEventBus.register(new EventNameFormat());
         modEventBus.register(new EventPlayerTick());
+        modEventBus.register(new EventPlayerLoggedIn());
 
         modEventBus.register(new AlchemistEvents());
         modEventBus.register(new BuilderEvents());
