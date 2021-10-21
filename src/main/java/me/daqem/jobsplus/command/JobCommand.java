@@ -35,13 +35,13 @@ public class JobCommand {
                                         EntityArgument.getPlayer(context, "target")
                                 )))
                         .executes(context -> coins(context.getSource())))
-                .then(Commands.literal("info")
-                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                .executes(context -> jobInfo(
-                                        context.getSource(),
-                                        context.getArgument("job", Jobs.class)
-                                )))
-                        .executes(context -> info(context.getSource())))
+//                .then(Commands.literal("info")
+//                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+//                                .executes(context -> jobInfo(
+//                                        context.getSource(),
+//                                        context.getArgument("job", Jobs.class)
+//                                )))
+//                        .executes(context -> info(context.getSource())))
                 .then(Commands.literal("start")
                         .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
                                 .executes(context -> jobStart(
@@ -56,20 +56,20 @@ public class JobCommand {
                                         context.getArgument("job", Jobs.class)
                                 )))
                         .executes(context -> stop(context.getSource())))
-                .then(Commands.literal("powerups")
-                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                .executes(context -> jobPowerUps(
-                                        context.getSource(),
-                                        context.getArgument("job", Jobs.class)
-                                )))
-                        .executes(context -> powerups(context.getSource())))
-                .then(Commands.literal("crafting")
-                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                .executes(context -> jobCrafting(
-                                        context.getSource(),
-                                        context.getArgument("job", Jobs.class)
-                                )))
-                        .executes(context -> crafting(context.getSource())))
+//                .then(Commands.literal("powerups")
+//                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+//                                .executes(context -> jobPowerUps(
+//                                        context.getSource(),
+//                                        context.getArgument("job", Jobs.class)
+//                                )))
+//                        .executes(context -> powerups(context.getSource())))
+//                .then(Commands.literal("crafting")
+//                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+//                                .executes(context -> jobCrafting(
+//                                        context.getSource(),
+//                                        context.getArgument("job", Jobs.class)
+//                                )))
+//                        .executes(context -> crafting(context.getSource())))
                 .then(Commands.literal("display")
                         .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
                                 .executes(context -> jobDisplay(
