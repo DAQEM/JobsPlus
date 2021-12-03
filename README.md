@@ -180,8 +180,11 @@ Project Link: [https://github.com/DAQEM/JobsPlus](https://github.com/DAQEM/JobsP
 Resources I find helpful and would like to give credit to!
 
 [CurseForge](https://www.curseforge.com/)
+
 [Forge Forum](https://forums.minecraftforge.net/)
+
 [Forge Files](https://files.minecraftforge.net/net/minecraftforge/forge/)
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
