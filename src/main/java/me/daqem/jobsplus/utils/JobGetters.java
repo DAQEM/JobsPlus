@@ -20,12 +20,6 @@ public class JobGetters {
                 case BUILDER -> {
                     if(handler.getBuilder()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
-                case BUTCHER -> {
-                    if(handler.getButcher()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
-                }
-                case CRAFTSMAN -> {
-                    if(handler.getCraftsman()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
-                }
                 case DIGGER -> {
                     if(handler.getDigger()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
@@ -61,8 +55,6 @@ public class JobGetters {
             switch (job) {
                 case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.LEVEL.get()]);
                 case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.LEVEL.get()]);
-                case BUTCHER -> atomicInteger.set(handler.getButcher()[CapType.LEVEL.get()]);
-                case CRAFTSMAN -> atomicInteger.set(handler.getCraftsman()[CapType.LEVEL.get()]);
                 case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.LEVEL.get()]);
                 case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.LEVEL.get()]);
                 case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.LEVEL.get()]);
@@ -82,8 +74,6 @@ public class JobGetters {
             switch (job) {
                 case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.EXP.get()]);
                 case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.EXP.get()]);
-                case BUTCHER -> atomicInteger.set(handler.getButcher()[CapType.EXP.get()]);
-                case CRAFTSMAN -> atomicInteger.set(handler.getCraftsman()[CapType.EXP.get()]);
                 case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.EXP.get()]);
                 case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.EXP.get()]);
                 case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.EXP.get()]);

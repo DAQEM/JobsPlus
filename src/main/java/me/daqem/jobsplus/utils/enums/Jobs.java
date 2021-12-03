@@ -3,8 +3,6 @@ package me.daqem.jobsplus.utils.enums;
 public enum Jobs {
     ALCHEMIST(0),
     BUILDER(1),
-    BUTCHER(2),
-    CRAFTSMAN(3),
     DIGGER(4),
     FARMER(5),
     FISHERMAN(6),

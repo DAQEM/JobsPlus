@@ -18,8 +18,6 @@ public class JobSetters {
             switch (job) {
                 case ALCHEMIST -> handler.setAlchemist(arrayGenerator(array, handler.getAlchemist()));
                 case BUILDER -> handler.setBuilder(arrayGenerator(array, handler.getBuilder()));
-                case BUTCHER -> handler.setButcher(arrayGenerator(array, handler.getButcher()));
-                case CRAFTSMAN -> handler.setCraftsman(arrayGenerator(array, handler.getCraftsman()));
                 case DIGGER -> handler.setDigger(arrayGenerator(array, handler.getDigger()));
                 case ENCHANTER -> handler.setEnchanter(arrayGenerator(array, handler.getEnchanter()));
                 case FARMER -> handler.setFarmer(arrayGenerator(array, handler.getFarmer()));
@@ -37,8 +35,6 @@ public class JobSetters {
             switch (job) {
                 case ALCHEMIST -> handler.setAlchemist(addEXPGenerator(handler.getAlchemist(), exp));
                 case BUILDER -> handler.setBuilder(addEXPGenerator(handler.getBuilder(), exp));
-                case BUTCHER -> handler.setButcher(addEXPGenerator(handler.getButcher(), exp));
-                case CRAFTSMAN -> handler.setCraftsman(addEXPGenerator(handler.getCraftsman(), exp));
                 case DIGGER -> handler.setDigger(addEXPGenerator(handler.getDigger(), exp));
                 case ENCHANTER -> handler.setEnchanter(addEXPGenerator(handler.getEnchanter(), exp));
                 case FARMER -> handler.setFarmer(addEXPGenerator(handler.getFarmer(), exp));
@@ -56,8 +52,6 @@ public class JobSetters {
             switch (job) {
                 case ALCHEMIST -> handler.setAlchemist(setEXPGenerator(handler.getAlchemist(), exp));
                 case BUILDER -> handler.setBuilder(setEXPGenerator(handler.getBuilder(), exp));
-                case BUTCHER -> handler.setButcher(setEXPGenerator(handler.getButcher(), exp));
-                case CRAFTSMAN -> handler.setCraftsman(setEXPGenerator(handler.getCraftsman(), exp));
                 case DIGGER -> handler.setDigger(setEXPGenerator(handler.getDigger(), exp));
                 case ENCHANTER -> handler.setEnchanter(setEXPGenerator(handler.getEnchanter(), exp));
                 case FARMER -> handler.setFarmer(setEXPGenerator(handler.getFarmer(), exp));
@@ -75,8 +69,6 @@ public class JobSetters {
             switch (job) {
                 case ALCHEMIST -> handler.setAlchemist(addLevelGenerator(handler.getAlchemist(), level));
                 case BUILDER -> handler.setBuilder(addLevelGenerator(handler.getBuilder(), level));
-                case BUTCHER -> handler.setButcher(addLevelGenerator(handler.getButcher(), level));
-                case CRAFTSMAN -> handler.setCraftsman(addLevelGenerator(handler.getCraftsman(), level));
                 case DIGGER -> handler.setDigger(addLevelGenerator(handler.getDigger(), level));
                 case ENCHANTER -> handler.setEnchanter(addLevelGenerator(handler.getEnchanter(), level));
                 case FARMER -> handler.setFarmer(addLevelGenerator(handler.getFarmer(), level));

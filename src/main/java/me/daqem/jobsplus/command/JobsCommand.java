@@ -37,8 +37,6 @@ public class JobsCommand {
                             switch (job) {
                                 case ALCHEMIST -> ChatHandler.sendMessage(player, enabledJobString("Alchemist      ", handler.getAlchemist(), JobGetters.getJobLevel(player, job)));
                                 case BUILDER -> ChatHandler.sendMessage(player, enabledJobString("Builder        ", handler.getBuilder(), JobGetters.getJobLevel(player, job)));
-                                case BUTCHER -> ChatHandler.sendMessage(player, enabledJobString("Butcher       ", handler.getButcher(), JobGetters.getJobLevel(player, job)));
-                                case CRAFTSMAN -> ChatHandler.sendMessage(player, enabledJobString("Craftsman    ", handler.getCraftsman(), JobGetters.getJobLevel(player, job)));
                                 case DIGGER -> ChatHandler.sendMessage(player, enabledJobString("Digger         ", handler.getDigger(), JobGetters.getJobLevel(player, job)));
                                 case ENCHANTER -> ChatHandler.sendMessage(player, enabledJobString("Enchanter    ", handler.getEnchanter(), JobGetters.getJobLevel(player, job)));
                                 case FARMER -> ChatHandler.sendMessage(player, enabledJobString("Farmer        ", handler.getFarmer(), JobGetters.getJobLevel(player, job)));

@@ -280,8 +280,6 @@ public class JobCommand {
                 switch (job) {
                     case ALCHEMIST -> jobStartMethod(player, job, CapType.SELCTOR_ALCHEMIST, handler.getCoins());
                     case BUILDER -> jobStartMethod(player, job, CapType.SELCTOR_BUILDER, handler.getCoins());
-                    case BUTCHER -> jobStartMethod(player, job, CapType.SELCTOR_BUTCHER, handler.getCoins());
-                    case CRAFTSMAN -> jobStartMethod(player, job, CapType.SELCTOR_CRAFTSMAN, handler.getCoins());
                     case DIGGER -> jobStartMethod(player, job, CapType.SELCTOR_DIGGER, handler.getCoins());
                     case ENCHANTER -> jobStartMethod(player, job, CapType.SELCTOR_ENCHANTER, handler.getCoins());
                     case FARMER -> jobStartMethod(player, job, CapType.SELCTOR_FARMER, handler.getCoins());
@@ -302,8 +300,6 @@ public class JobCommand {
                 switch (job) {
                     case ALCHEMIST -> jobStopMethod(player, job, CapType.SELCTOR_ALCHEMIST, handler.getCoins(), JobGetters.getJobLevel(player, job));
                     case BUILDER -> jobStopMethod(player, job, CapType.SELCTOR_BUILDER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case BUTCHER -> jobStopMethod(player, job, CapType.SELCTOR_BUTCHER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case CRAFTSMAN -> jobStopMethod(player, job, CapType.SELCTOR_CRAFTSMAN, handler.getCoins(), JobGetters.getJobLevel(player, job));
                     case DIGGER -> jobStopMethod(player, job, CapType.SELCTOR_DIGGER, handler.getCoins(), JobGetters.getJobLevel(player, job));
                     case ENCHANTER -> jobStopMethod(player, job, CapType.SELCTOR_ENCHANTER, handler.getCoins(), JobGetters.getJobLevel(player, job));
                     case FARMER -> jobStopMethod(player, job, CapType.SELCTOR_FARMER, handler.getCoins(), JobGetters.getJobLevel(player, job));
@@ -516,10 +512,6 @@ public class JobCommand {
                         "Alchemist      " + ChatFormatting.GREEN + Arrays.toString(handler.getAlchemist()));
                 ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
                         "Builder        " + ChatFormatting.GREEN + Arrays.toString(handler.getBuilder()));
-                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                        "Butcher       " + ChatFormatting.GREEN + Arrays.toString(handler.getButcher()));
-                ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
-                        "Craftsman    " + ChatFormatting.GREEN + Arrays.toString(handler.getCraftsman()));
                 ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +
                         "Digger         " + ChatFormatting.GREEN + Arrays.toString(handler.getDigger()));
                 ChatHandler.sendMessage(player, ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN +

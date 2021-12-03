@@ -42,12 +42,6 @@ public class ChatHandler {
             case BUILDER -> {
                 return ChatFormatting.DARK_GREEN + "" + ChatFormatting.BOLD + "BUILDER " + ChatFormatting.RESET;
             }
-            case BUTCHER -> {
-                return ChatFormatting.RED + "" + ChatFormatting.BOLD + "BUTCHER " + ChatFormatting.RESET;
-            }
-            case CRAFTSMAN -> {
-                return ChatFormatting.BLUE + "" + ChatFormatting.BOLD + "CRAFTSMAN " + ChatFormatting.RESET;
-            }
             case DIGGER -> {
                 return ChatFormatting.YELLOW + "" + ChatFormatting.BOLD + "DIGGER " + ChatFormatting.RESET;
             }

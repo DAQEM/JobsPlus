@@ -19,8 +19,6 @@ class SideProxy {
 
         modEventBus.register(new AlchemistEvents());
         modEventBus.register(new BuilderEvents());
-        modEventBus.register(new ButcherEvents());
-        modEventBus.register(new CraftsmanEvents());
         modEventBus.register(new DiggerEvents());
         modEventBus.register(new FarmerEvents());
         modEventBus.register(new FishermanEvents());
