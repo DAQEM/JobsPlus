@@ -1,22 +1,23 @@
 package me.daqem.jobsplus.handlers;
 
+import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.world.entity.player.Player;
 
 public class ChatHandler {
 
+    private static final String GREEN_DIVIDER = ChatColor.green() + "=======";
+    private static final String GRAY_DIVIDER = ChatColor.gray() + "=======";
+
     public static String header(String headerText) {
-        return ChatFormatting.GRAY + "=======" +
-                ChatFormatting.GREEN + "=======" + ChatFormatting.DARK_GREEN + ChatFormatting.BOLD + " " + headerText
-                + " " + ChatFormatting.RESET + ChatFormatting.GREEN + "=======" + ChatFormatting.GRAY + "=======\n";
+        return GRAY_DIVIDER + GREEN_DIVIDER + ChatColor.boldDarkGreen() + " " +
+                headerText + " " + GREEN_DIVIDER + GRAY_DIVIDER + "\n";
     }
 
     public static String footer(int centerLength) {
-        return ChatFormatting.GRAY + "\n=======" +
-                ChatFormatting.GREEN + "=======" + ChatFormatting.GRAY + "==" + "=".repeat(Math.max(0, centerLength)) +
-                ChatFormatting.GREEN + "=======" + ChatFormatting.GRAY + "=======";
+        return "\n" + GRAY_DIVIDER + GREEN_DIVIDER + ChatColor.gray() + "==" + "=".repeat(Math.max(0, centerLength)) +
+                GREEN_DIVIDER + GRAY_DIVIDER;
     }
 
     public static void sendMessage(Player player, String message) {
@@ -37,38 +38,42 @@ public class ChatHandler {
     public static String ColorizedJobName(Jobs job) {
         switch (job) {
             case ALCHEMIST -> {
-                return ChatFormatting.DARK_PURPLE + "" + ChatFormatting.BOLD + "ALCHEMIST " + ChatFormatting.RESET;
+                return ChatColor.boldDarkPurple() + "ALCHEMIST " + ChatColor.reset();
             }
             case BUILDER -> {
-                return ChatFormatting.DARK_GREEN + "" + ChatFormatting.BOLD + "BUILDER " + ChatFormatting.RESET;
+                return ChatColor.boldDarkGreen() + "BUILDER " +ChatColor.reset();
             }
             case DIGGER -> {
-                return ChatFormatting.YELLOW + "" + ChatFormatting.BOLD + "DIGGER " + ChatFormatting.RESET;
+                return ChatColor.boldYellow() + "DIGGER " +ChatColor.reset();
             }
             case ENCHANTER -> {
-                return ChatFormatting.LIGHT_PURPLE + "" + ChatFormatting.BOLD + "ENCHANTER " + ChatFormatting.RESET;
+                return ChatColor.boldLightPurple() + "ENCHANTER " +ChatColor.reset();
             }
             case FARMER -> {
-                return ChatFormatting.GREEN + "" + ChatFormatting.BOLD + "FARMER " + ChatFormatting.RESET;
+                return ChatColor.boldGreen() + "FARMER " +ChatColor.reset();
             }
             case FISHERMAN -> {
-                return ChatFormatting.AQUA + "" + ChatFormatting.BOLD + "FISHERMAN " + ChatFormatting.RESET;
+                return ChatColor.boldAqua() + "FISHERMAN " +ChatColor.reset();
             }
             case HUNTER -> {
-                return ChatFormatting.DARK_RED + "" + ChatFormatting.BOLD + "HUNTER " + ChatFormatting.RESET;
+                return ChatColor.boldDarkRed() + "HUNTER " +ChatColor.reset();
             }
             case LUMBERJACK -> {
-                return ChatFormatting.GOLD + "" + ChatFormatting.BOLD + "LUMBERJACK " + ChatFormatting.RESET;
+                return ChatColor.boldGold() + "LUMBERJACK " +ChatColor.reset();
             }
             case MINER -> {
-                return ChatFormatting.GRAY + "" + ChatFormatting.BOLD + "MINER " + ChatFormatting.RESET;
+                return ChatColor.boldGray() + "MINER " +ChatColor.reset();
             }
             case SMITH -> {
-                return ChatFormatting.DARK_GRAY + "" + ChatFormatting.BOLD + "SMITH " + ChatFormatting.RESET;
+                return ChatColor.boldDarkGray() + "SMITH " +ChatColor.reset();
             }
             default -> {
                 return "";
             }
         }
+    }
+
+    public static String getAna(Jobs job) {
+        return job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER ? "an" : "a";
     }
 }

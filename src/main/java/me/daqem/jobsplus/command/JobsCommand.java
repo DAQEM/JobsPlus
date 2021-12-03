@@ -6,8 +6,8 @@ import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
+import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
-import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +31,7 @@ public class JobsCommand {
                         if (JobGetters.jobIsEnabled(player, job)) { enabledJobs.add(job); }
                     }
                     if (!enabledJobs.isEmpty()) {
-                        ChatHandler.sendMessage(player, (ChatFormatting.GREEN + "Currently Performing Jobs:"));
+                        ChatHandler.sendMessage(player, (ChatColor.green() + "Currently Performing Jobs:"));
 
                         for (Jobs job : enabledJobs) {
                             switch (job) {
@@ -48,8 +48,8 @@ public class JobsCommand {
                             }
                         }
                     }
-                    if (enabledJobs.size() != 12) {
-                        ChatHandler.sendMessage(player, ChatFormatting.GREEN + "\nAvailable Jobs:");
+                    if (enabledJobs.size() != 10) {
+                        ChatHandler.sendMessage(player, ChatColor.green() + "\nAvailable Jobs:");
                         StringBuilder availableJobs = new StringBuilder();
                         for (Jobs job : Jobs.values()) {
                             if (!enabledJobs.contains(job)) {
@@ -60,7 +60,7 @@ public class JobsCommand {
                                 }
                             }
                         }
-                        ChatHandler.sendMessage(player, ChatFormatting.GRAY + availableJobs.toString());
+                        ChatHandler.sendMessage(player, ChatColor.gray() + availableJobs);
                     }
                 });
                 ChatHandler.sendMessage(player, ChatHandler.footer(4));
@@ -73,15 +73,15 @@ public class JobsCommand {
 
     private static String enabledJobString(String job, int[] jobInfo, int level) {
         if (level == 100) {
-            return ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN + job +
-                    ChatFormatting.DARK_GRAY + "[" + ChatFormatting.GREEN + "LVL " + jobInfo[CapType.LEVEL.get()] +
-                    ChatFormatting.DARK_GRAY + "] [" + ChatFormatting.GREEN + "MAX LEVEL" +
-                    ChatFormatting.DARK_GRAY + "]";
+            return ChatColor.darkGray() + " - " + ChatColor.darkGreen() + job +
+                    ChatColor.darkGray() + "[" + ChatColor.green() + "LVL " + jobInfo[CapType.LEVEL.get()] +
+                    ChatColor.darkGray() + "] [" + ChatColor.green() + "MAX LEVEL" +
+                    ChatColor.darkGray() + "]";
         }
-        return ChatFormatting.DARK_GRAY + " - " + ChatFormatting.DARK_GREEN + job +
-                ChatFormatting.DARK_GRAY + "[" + ChatFormatting.GREEN + "LVL " + jobInfo[CapType.LEVEL.get()] +
-                ChatFormatting.DARK_GRAY + "] [" + ChatFormatting.GREEN + "EXP " + jobInfo[CapType.EXP.get()] +
-                ChatFormatting.DARK_GRAY + "/" + ChatFormatting.DARK_GREEN + LevelHandler.calcExp(jobInfo[CapType.LEVEL.get()]) +
-                ChatFormatting.DARK_GRAY + "]";
+        return ChatColor.darkGray() + " - " + ChatColor.darkGreen() + job +
+                ChatColor.darkGray() + "[" + ChatColor.green() + "LVL " + jobInfo[CapType.LEVEL.get()] +
+                ChatColor.darkGray() + "] [" + ChatColor.green() + "EXP " + jobInfo[CapType.EXP.get()] +
+                ChatColor.darkGray() + "/" + ChatColor.darkGreen() + LevelHandler.calcExp(jobInfo[CapType.LEVEL.get()]) +
+                ChatColor.darkGray() + "]";
     }
 }

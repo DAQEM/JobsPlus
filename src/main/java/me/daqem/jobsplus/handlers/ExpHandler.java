@@ -2,8 +2,8 @@ package me.daqem.jobsplus.handlers;
 
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
+import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,7 +37,7 @@ public class ExpHandler {
         }
         if (player instanceof ServerPlayer serverPlayer) {
             if (exp != 0) {
-                serverPlayer.sendMessage(new KeybindComponent(ChatHandler.ColorizedJobName(job) + ChatFormatting.GRAY +
+                serverPlayer.sendMessage(new KeybindComponent(ChatHandler.ColorizedJobName(job) + ChatColor.gray() +
                         " +" + exp + " EXP"), ChatType.GAME_INFO, player.getUUID());
             }
         }
