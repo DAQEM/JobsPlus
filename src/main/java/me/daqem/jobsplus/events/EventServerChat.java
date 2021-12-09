@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.events;
 
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.utils.JobGetters;
@@ -10,13 +9,11 @@ import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EventServerChat {
 
     @SubscribeEvent
@@ -63,8 +60,9 @@ public class EventServerChat {
                         ChatHandler.sendMessage(player, ChatColor.boldDarkGreen() + "[JOBS+] "
                                 + ChatColor.green() + "You have stopped being " + ChatHandler.getAna(job) +
                                 " " + ChatHandler.capitalizeWord(job.toString().toLowerCase()) + ".");
-                        if (JobGetters.getDisplay(player) == job.get()+1) JobSetters.setDisplay(player, -1);
-                        if (handler.getVerification()[CapType.STOP_VERIFICATION_PAID.get()] == 1) JobSetters.removeCoins(player, 5);
+                        if (JobGetters.getDisplay(player) == job.get() + 1) JobSetters.setDisplay(player, -1);
+                        if (handler.getVerification()[CapType.STOP_VERIFICATION_PAID.get()] == 1)
+                            JobSetters.removeCoins(player, 5);
                         JobSetters.setLevel(job, player, 0);
                         JobSetters.setEXP(job, player, 0);
                     } else {

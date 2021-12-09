@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.events.jobs;
 
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.utils.BlockPosUtil;
 import me.daqem.jobsplus.utils.JobGetters;
@@ -15,12 +14,11 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class LumberjackEvents {
 
-    private final ArrayList<BlockPos> timeoutList = new ArrayList<>();
     public final static ArrayList<String> lowList = new ArrayList<>(List.of("oak_log", "jungle_log", "spruce_log", "birch_log", "dark_oak_log", "acacia_log", "warped_stem", "crimson_stem"));
-
+    private final ArrayList<BlockPos> timeoutList = new ArrayList<>();
     private final Jobs job = Jobs.LUMBERJACK;
 
     @SubscribeEvent
@@ -30,7 +28,7 @@ public class LumberjackEvents {
             if (JobGetters.jobIsEnabled(player, job)) {
                 Block block = event.getState().getBlock();
                 if (BlockPosUtil.testAllSides(timeoutList, event.getPos())) {
-                    if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))  ) {
+                    if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
                         ExpHandler.addEXPLow(player, job);
                     }
                 } else {

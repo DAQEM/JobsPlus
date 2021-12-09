@@ -1,15 +1,10 @@
 package me.daqem.jobsplus.common.mobeffect;
 
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.init.ModEffects;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.WaterFluid;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Objects;

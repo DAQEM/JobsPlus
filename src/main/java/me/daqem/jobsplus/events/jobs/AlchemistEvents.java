@@ -1,15 +1,10 @@
 package me.daqem.jobsplus.events.jobs;
 
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.CropHandler;
 import me.daqem.jobsplus.handlers.ExpHandler;
-import me.daqem.jobsplus.init.ModEffects;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Pufferfish;
 import net.minecraft.world.entity.animal.Rabbit;
@@ -27,19 +22,17 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-@Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AlchemistEvents {
 
-    private final ArrayList<ItemStack> itemStackArrayList = new ArrayList<>();
     private static final Jobs job = Jobs.ALCHEMIST;
-    
+    private final ArrayList<ItemStack> itemStackArrayList = new ArrayList<>();
+
     //  ON POTION BREW
     @SubscribeEvent
     public void onPotionBrewedTake(PlayerBrewedPotionEvent event) {
