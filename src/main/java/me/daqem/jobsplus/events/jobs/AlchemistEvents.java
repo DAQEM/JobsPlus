@@ -1,9 +1,15 @@
 package me.daqem.jobsplus.events.jobs;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.CropHandler;
 import me.daqem.jobsplus.handlers.ExpHandler;
+import me.daqem.jobsplus.init.ModEffects;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Pufferfish;
 import net.minecraft.world.entity.animal.Rabbit;
@@ -26,12 +32,14 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
 public class AlchemistEvents {
 
     private final ArrayList<ItemStack> itemStackArrayList = new ArrayList<>();
-
+    private static final Jobs job = Jobs.ALCHEMIST;
+    
     //  ON POTION BREW
     @SubscribeEvent
     public void onPotionBrewedTake(PlayerBrewedPotionEvent event) {
@@ -39,8 +47,8 @@ public class AlchemistEvents {
         if (itemStackArrayList.contains(event.getStack())) {
             itemStackArrayList.remove(event.getStack());
             if (!player.isCreative()) {
-                if (JobGetters.jobIsEnabled(player, Jobs.ALCHEMIST)) {
-                    ExpHandler.addEXPHigh(player, Jobs.ALCHEMIST);
+                if (JobGetters.jobIsEnabled(player, job)) {
+                    ExpHandler.addEXPHigh(player, job);
                 }
             }
         }
@@ -62,13 +70,11 @@ public class AlchemistEvents {
     //  ON POTION DRINK
     @SubscribeEvent
     public void onPotionConsume(LivingEntityUseItemEvent.Finish event) {
-        if (event.getEntity() instanceof Player player && event.getItem().getItem() instanceof PotionItem potionItem) {
-            if (JobGetters.jobIsEnabled(player, Jobs.ALCHEMIST)) {
+        if (event.getEntity() instanceof ServerPlayer player && event.getItem().getItem() instanceof PotionItem potionItem) {
+            if (JobGetters.jobIsEnabled(player, job)) {
                 if (!(potionItem.getDescriptionId(event.getItem()).equals("Water Bottle"))) {
                     if (!player.isCreative()) {
-                        if (!player.level.isClientSide()) {
-                            ExpHandler.addEXPMid(player, Jobs.ALCHEMIST);
-                        }
+                        ExpHandler.addEXPMid(player, job);
                     }
                 }
             }
@@ -78,13 +84,11 @@ public class AlchemistEvents {
     //  ON SPLASH POTION THROW
     @SubscribeEvent
     public void onPotionThrow(PlayerInteractEvent.RightClickItem event) {
-        if (event.getEntity() instanceof Player player && event.getItemStack().getItem() instanceof SplashPotionItem splashPotionItem) {
-            if (JobGetters.jobIsEnabled(player, Jobs.ALCHEMIST)) {
+        if (event.getEntity() instanceof ServerPlayer player && event.getItemStack().getItem() instanceof SplashPotionItem splashPotionItem) {
+            if (JobGetters.jobIsEnabled(player, job)) {
                 if (!(splashPotionItem.getDescriptionId(event.getItemStack()).equals("Water Bottle"))) {
                     if (!player.isCreative()) {
-                        if (event.getSide() == LogicalSide.SERVER) {
-                            ExpHandler.addEXPMid(player, Jobs.ALCHEMIST);
-                        }
+                        ExpHandler.addEXPMid(player, job);
                     }
                 }
             }
@@ -94,16 +98,16 @@ public class AlchemistEvents {
     //  ON CRAFT POTION
     @SubscribeEvent
     public void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
-        if (event.getEntity() instanceof Player player && !player.level.isClientSide()) {
+        if (event.getEntity() instanceof ServerPlayer player) {
             if (!player.isCreative()) {
-                if (JobGetters.jobIsEnabled(player, Jobs.ALCHEMIST)) {
+                if (JobGetters.jobIsEnabled(player, job)) {
                     Item item = event.getCrafting().getItem();
                     String itemName = item.getDescriptionId();
                     ArrayList<String> items = new ArrayList<>(List.of("item.minecraft.fermented_spider_eye",
                             "item.minecraft.blaze_powder", "item.minecraft.glistering_melon_slice",
                             "item.minecraft.magma_cream", "item.minecraft.golden_carrot", "item.minecraft.turtle_helmet"));
                     if (items.contains(itemName)) {
-                        ExpHandler.addEXPLowest(player, Jobs.ALCHEMIST);
+                        ExpHandler.addEXPLowest(player, job);
                     } else {
                         System.out.println(items);
                         System.out.println(itemName);
@@ -116,15 +120,15 @@ public class AlchemistEvents {
     //  ON KILL ENTITY
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
-        if (event.getSource().getEntity() instanceof Player player) {
+        if (event.getSource().getEntity() instanceof ServerPlayer player) {
             if (!player.isCreative()) {
-                if (JobGetters.jobIsEnabled(player, Jobs.ALCHEMIST)) {
+                if (JobGetters.jobIsEnabled(player, job)) {
                     Entity target = event.getEntity();
                     if (target instanceof Phantom || target instanceof Rabbit) {
-                        ExpHandler.addEXPMid(player, Jobs.ALCHEMIST);
+                        ExpHandler.addEXPMid(player, job);
                     }
                     if (target instanceof Ghast || target instanceof Pufferfish) {
-                        ExpHandler.addEXPHigh(player, Jobs.ALCHEMIST);
+                        ExpHandler.addEXPHigh(player, job);
                     }
                 }
             }
@@ -134,13 +138,13 @@ public class AlchemistEvents {
     //  ON NETHER WART HARVEST
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
-        Player player = event.getPlayer();
+        ServerPlayer player = (ServerPlayer) event.getPlayer();
         Block block = event.getState().getBlock();
         if (!player.isCreative()) {
-            if (JobGetters.jobIsEnabled(player, Jobs.ALCHEMIST)) {
+            if (JobGetters.jobIsEnabled(player, job)) {
                 if (block instanceof NetherWartBlock) {
                     if (CropHandler.stateToAge(event.getState()) == 3) {
-                        ExpHandler.addEXPLow(player, Jobs.ALCHEMIST);
+                        ExpHandler.addEXPLow(player, job);
                     }
                 }
             }

@@ -2,13 +2,24 @@ package me.daqem.jobsplus;
 
 import me.daqem.jobsplus.events.*;
 import me.daqem.jobsplus.events.jobs.*;
+import me.daqem.jobsplus.init.ModBlocks;
+import me.daqem.jobsplus.init.ModEffects;
+import me.daqem.jobsplus.init.ModItems;
+import me.daqem.jobsplus.init.ModPotions;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 class SideProxy {
 
     SideProxy() {
         IEventBus modEventBus = MinecraftForge.EVENT_BUS;
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        eventBus.register(this);
+
         modEventBus.register(new EventRegisterCapabilities());
         modEventBus.register(new EventAttachCapabilities());
         modEventBus.register(new EventRegisterCommands());
@@ -28,8 +39,17 @@ class SideProxy {
         modEventBus.register(new MinerEvents());
         modEventBus.register(new SmithEvents());
 
+        ModItems.ITEMS.register(eventBus);
+        ModBlocks.BLOCKS.register(eventBus);
+        ModPotions.POTIONS.register(eventBus);
+        ModEffects.EFFECTS.register(eventBus);
 
         modEventBus.addListener(EventClone::onDeath);
+    }
+
+    @SubscribeEvent
+    public void setup(FMLCommonSetupEvent event) {
+        event.enqueueWork(ModPotions::addPotionRecipes);
     }
 
     static class Server extends SideProxy {

@@ -63,12 +63,7 @@ public class EventServerChat {
                         ChatHandler.sendMessage(player, ChatColor.boldDarkGreen() + "[JOBS+] "
                                 + ChatColor.green() + "You have stopped being " + ChatHandler.getAna(job) +
                                 " " + ChatHandler.capitalizeWord(job.toString().toLowerCase()) + ".");
-
-                        if (JobGetters.getDisplay(player) == job.get()+1) {
-                            JobSetters.setDisplay(player, -1);
-                        } else {
-                            JobsPlus.LOGGER.info(JobGetters.getDisplay(player) + " " + job.get());
-                        }
+                        if (JobGetters.getDisplay(player) == job.get()+1) JobSetters.setDisplay(player, -1);
                         if (handler.getVerification()[CapType.STOP_VERIFICATION_PAID.get()] == 1) JobSetters.removeCoins(player, 5);
                         JobSetters.setLevel(job, player, 0);
                         JobSetters.setEXP(job, player, 0);

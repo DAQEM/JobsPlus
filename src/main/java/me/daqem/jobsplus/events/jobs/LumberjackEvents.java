@@ -32,8 +32,6 @@ public class LumberjackEvents {
                 if (BlockPosUtil.testAllSides(timeoutList, event.getPos())) {
                     if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))  ) {
                         ExpHandler.addEXPLow(player, job);
-                    } else {
-                        JobsPlus.LOGGER.info(block.getDescriptionId());
                     }
                 } else {
                     timeoutList.remove(event.getPos());

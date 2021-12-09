@@ -1,10 +1,15 @@
 package me.daqem.jobsplus;
 
+import me.daqem.jobsplus.init.ModItems;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Mod(JobsPlus.MOD_ID)
 public class JobsPlus {
@@ -22,4 +27,10 @@ public class JobsPlus {
     public static ResourceLocation getId(String path) {
         return new ResourceLocation(MOD_ID, path);
     }
+
+    public static final CreativeModeTab TAB = new CreativeModeTab("jobsplustab") {
+        public ItemStack makeIcon() {
+            return new ItemStack(ModItems.LEVEL_100_TROPHY.get());
+        }
+    };
 }
