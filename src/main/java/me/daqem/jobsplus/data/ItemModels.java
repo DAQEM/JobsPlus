@@ -22,6 +22,7 @@ public class ItemModels extends ItemModelProvider {
         singleItem(ModItems.LARGE_BACKPACK.get());
         singleItem(ModItems.HUGE_BACKPACK.get());
         singleItem(ModItems.ENDER_BACKPACK.get());
+        singleItem(ModItems.EXP_JAR.get());
     }
 
     private void singleItem(Item item) {

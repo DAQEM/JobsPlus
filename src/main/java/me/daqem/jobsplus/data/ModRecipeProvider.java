@@ -8,6 +8,7 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.Tags;
@@ -75,6 +76,16 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('E', Tags.Items.CHESTS_ENDER)
                 .unlockedBy("ender_chest", has(Items.ENDER_CHEST))
                 .save(RecipeInjector.Inject(consumer, ModRecipes.BACKPACK_UPGRADE_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.EXP_JAR.get())
+                .pattern("PPP")
+                .pattern("GEG")
+                .pattern("GGG")
+                .define('P', ItemTags.PLANKS)
+                .define('G', Tags.Items.GLASS)
+                .define('E', Tags.Items.GEMS_EMERALD)
+                .unlockedBy("emerald", has(Items.EMERALD))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.EXP_JAR_RECIPE.get()));
     }
 
     static class RecipeInjector implements FinishedRecipe {

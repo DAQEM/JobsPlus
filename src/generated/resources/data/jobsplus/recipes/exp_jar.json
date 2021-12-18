@@ -1,0 +1,22 @@
+{
+  "type": "jobsplus:exp_jar",
+  "pattern": [
+    "PPP",
+    "GEG",
+    "GGG"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "G": {
+      "tag": "forge:glass"
+    },
+    "E": {
+      "tag": "forge:gems/emerald"
+    }
+  },
+  "result": {
+    "item": "jobsplus:exp_jar"
+  }
+}

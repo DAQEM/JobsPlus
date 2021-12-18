@@ -1,9 +1,8 @@
 package me.daqem.jobsplus.events;
 
+import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.utils.enums.ChatColor;
-import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
@@ -28,7 +27,7 @@ public class EventPlayerTick {
                         int tick = levelUpHashMap.get(player);
                         levelUpHashMap.put(player, tick + 1);
                         if (tick == 0) {
-                            serverPlayer.sendMessage(new KeybindComponent(ChatColor.boldGreen() + "LEVEL UP!"), ChatType.GAME_INFO, player.getUUID());
+                            HotbarMessageHandler.sendHotbarMessage(serverPlayer, ChatColor.boldGreen() + "LEVEL UP!");
                         }
                         if (tick == 5) {
                             SoundHandler.playLevelUpSound(player, 0.5F, 2F);
