@@ -1,0 +1,11 @@
+{
+  "type": "jobsplus:wool",
+  "ingredients": [
+    {
+      "tag": "minecraft:wool"
+    }
+  ],
+  "result": {
+    "item": "minecraft:white_wool"
+  }
+}

@@ -7,6 +7,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -86,6 +87,11 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('E', Tags.Items.GEMS_EMERALD)
                 .unlockedBy("emerald", has(Items.EMERALD))
                 .save(RecipeInjector.Inject(consumer, ModRecipes.EXP_JAR_RECIPE.get()));
+
+        ShapelessRecipeBuilder.shapeless(Items.WHITE_WOOL)
+                .requires(ItemTags.WOOL)
+                .unlockedBy("wool", has(ItemTags.WOOL))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.WOOL_RECIPE.get()));
     }
 
     static class RecipeInjector implements FinishedRecipe {

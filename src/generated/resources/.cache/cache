@@ -16,3 +16,5 @@ d396652131375c3a09c35eef7fc2596e03b9cf45 data/jobsplus/advancements/recipes/jobs
 1647123f953294ad4caf1cdc671875871c97dc45 data/jobsplus/recipes/large_backpack.json
 cdf067176fd3929a07ff34041c02029d561f7fb0 data/jobsplus/recipes/medium_backpack.json
 1e4f3ae83f5c08c68cb2769d81eef2537074a450 data/jobsplus/recipes/small_backpack.json
+76c1d0cc9cf4c77ff69549d76bc7923db3a3bed3 data/minecraft/advancements/recipes/building_blocks/white_wool.json
+5a6c4751420e661e2878464f30a87efc70bce6fe data/minecraft/recipes/white_wool.json
