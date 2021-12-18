@@ -1,0 +1,22 @@
+{
+  "type": "jobsplus:backpack_upgrade",
+  "pattern": [
+    "GLG",
+    "LBL",
+    "GLG"
+  ],
+  "key": {
+    "G": {
+      "tag": "forge:storage_blocks/gold"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "B": {
+      "item": "jobsplus:small_backpack"
+    }
+  },
+  "result": {
+    "item": "jobsplus:medium_backpack"
+  }
+}

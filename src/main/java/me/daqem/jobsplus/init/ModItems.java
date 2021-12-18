@@ -1,21 +1,26 @@
 package me.daqem.jobsplus.init;
 
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.common.block.BlockItemBase;
+import me.daqem.jobsplus.common.item.BackpackItem;
+import me.daqem.jobsplus.utils.enums.Backpack;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, JobsPlus.MOD_ID);
 
-//    public static final RegistryObject<Item> SMALL_BACKPACK = ITEMS.register("small_backpack", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> MEDIUM_BACKPACK = ITEMS.register("medium_backpack", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> BIG_BACKPACK = ITEMS.register("big_backpack", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> HUGE_BACKPACK = ITEMS.register("huge_backpack", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> ENDER_BACKPACK = ITEMS.register("ender_backpack", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//
-//    public static final RegistryObject<Item> BUILDERS_WAND = ITEMS.register("builders_wand", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
+    public static final RegistryObject<Item> SMALL_BACKPACK = ITEMS.register("small_backpack", () -> new BackpackItem("small_backpack", Backpack.SMALL));
+    public static final RegistryObject<Item> MEDIUM_BACKPACK = ITEMS.register("medium_backpack", () -> new BackpackItem("medium_backpack", Backpack.MEDIUM));
+    public static final RegistryObject<Item> LARGE_BACKPACK = ITEMS.register("large_backpack", () -> new BackpackItem("large_backpack", Backpack.LARGE));
+    public static final RegistryObject<Item> HUGE_BACKPACK = ITEMS.register("huge_backpack", () -> new BackpackItem("huge_backpack", Backpack.HUGE));
+    public static final RegistryObject<Item> ENDER_BACKPACK = ITEMS.register("ender_backpack", () -> new BackpackItem("ender_backpack", Backpack.ENDER));
+
+    //    public static final RegistryObject<Item> BUILDERS_WAND = ITEMS.register("builders_wand", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //    public static final RegistryObject<Item> HUNTERS_SWORD = ITEMS.register("hunters_sword", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //    public static final RegistryObject<Item> HUNTERS_BOW = ITEMS.register("hunters_bow", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //    public static final RegistryObject<Item> LUMBERJACKS_AXE = ITEMS.register("lumberjacks_axe", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
@@ -48,7 +53,7 @@ public class ModItems {
 //    public static final RegistryObject<Item> LEVEL_3_TOOL_UPGRADE = ITEMS.register("level_3_tool_upgrade", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //    public static final RegistryObject<Item> LEVEL_4_TOOL_UPGRADE = ITEMS.register("level_4_tool_upgrade", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //
-//    public static final RegistryObject<Item> LEVEL_25_TROPHY = ITEMS.register("level_25_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_25_TROPHY.get()));
-//    public static final RegistryObject<Item> LEVEL_50_TROPHY = ITEMS.register("level_50_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_50_TROPHY.get()));
-//    public static final RegistryObject<Item> LEVEL_100_TROPHY = ITEMS.register("level_100_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_100_TROPHY.get()));
+//    public static final RegistryObject<Item> LEVEL_25_TROPHY = ITEMS.register("level_25_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_25_TROPHY.get(), new Item.Properties().rarity(Rarity.UNCOMMON)));
+//    public static final RegistryObject<Item> LEVEL_50_TROPHY = ITEMS.register("level_50_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_50_TROPHY.get(), new Item.Properties().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> LEVEL_100_TROPHY = ITEMS.register("level_100_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_100_TROPHY.get(), new Item.Properties().rarity(Rarity.EPIC)));
 }

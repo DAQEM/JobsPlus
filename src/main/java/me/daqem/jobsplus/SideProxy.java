@@ -1,14 +1,15 @@
 package me.daqem.jobsplus;
 
+import me.daqem.jobsplus.common.container.BackpackGUI;
+import me.daqem.jobsplus.data.ModDataGenerator;
 import me.daqem.jobsplus.events.*;
 import me.daqem.jobsplus.events.jobs.*;
-import me.daqem.jobsplus.init.ModBlocks;
-import me.daqem.jobsplus.init.ModEffects;
-import me.daqem.jobsplus.init.ModItems;
-import me.daqem.jobsplus.init.ModPotions;
+import me.daqem.jobsplus.init.*;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -43,8 +44,11 @@ class SideProxy {
         ModBlocks.BLOCKS.register(eventBus);
         ModPotions.POTIONS.register(eventBus);
         ModEffects.EFFECTS.register(eventBus);
+        ModContainers.CONTAINERS.register(eventBus);
+        ModRecipes.RECIPES.register(eventBus);
 
         modEventBus.addListener(EventClone::onDeath);
+        eventBus.addListener(ModDataGenerator::gatherData);
     }
 
     @SubscribeEvent
@@ -60,7 +64,14 @@ class SideProxy {
 
     static class Client extends SideProxy {
         Client() {
+            IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+            eventBus.addListener(this::clientStuff);
+        }
+
+        private void clientStuff(final FMLClientSetupEvent event) {
+            MenuScreens.register(ModContainers.BACKPACK_CONTAINER.get(), BackpackGUI::new);
+            JobsPlus.LOGGER.info("Screen registered!");
         }
     }
 }

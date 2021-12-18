@@ -1,0 +1,22 @@
+{
+  "type": "jobsplus:backpack_upgrade",
+  "pattern": [
+    "ILI",
+    "LSL",
+    "ILI"
+  ],
+  "key": {
+    "I": {
+      "tag": "forge:storage_blocks/iron"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "S": {
+      "tag": "forge:string"
+    }
+  },
+  "result": {
+    "item": "jobsplus:small_backpack"
+  }
+}

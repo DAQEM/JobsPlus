@@ -1,0 +1,22 @@
+{
+  "type": "jobsplus:backpack_upgrade",
+  "pattern": [
+    "DLD",
+    "LBL",
+    "DLD"
+  ],
+  "key": {
+    "D": {
+      "tag": "forge:storage_blocks/diamond"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "B": {
+      "item": "jobsplus:medium_backpack"
+    }
+  },
+  "result": {
+    "item": "jobsplus:large_backpack"
+  }
+}

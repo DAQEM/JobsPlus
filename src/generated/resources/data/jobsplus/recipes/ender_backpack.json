@@ -1,0 +1,22 @@
+{
+  "type": "jobsplus:backpack_upgrade",
+  "pattern": [
+    "GLG",
+    "LEL",
+    "GLG"
+  ],
+  "key": {
+    "G": {
+      "tag": "forge:ender_pearls"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "E": {
+      "tag": "forge:chests/ender"
+    }
+  },
+  "result": {
+    "item": "jobsplus:ender_backpack"
+  }
+}

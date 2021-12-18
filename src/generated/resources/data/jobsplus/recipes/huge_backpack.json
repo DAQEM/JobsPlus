@@ -1,0 +1,22 @@
+{
+  "type": "jobsplus:backpack_upgrade",
+  "pattern": [
+    "ELE",
+    "LBL",
+    "ELE"
+  ],
+  "key": {
+    "E": {
+      "tag": "forge:storage_blocks/emerald"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "B": {
+      "item": "jobsplus:large_backpack"
+    }
+  },
+  "result": {
+    "item": "jobsplus:huge_backpack"
+  }
+}
