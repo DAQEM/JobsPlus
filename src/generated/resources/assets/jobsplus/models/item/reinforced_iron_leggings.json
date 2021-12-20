@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "jobsplus:item/reinforced_iron_leggings"
+  }
+}

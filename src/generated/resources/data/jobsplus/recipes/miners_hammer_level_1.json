@@ -1,0 +1,22 @@
+{
+  "type": "jobsplus:shaped_job_based_recipe",
+  "pattern": [
+    "DBD",
+    "BSB",
+    " S "
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "result": {
+    "item": "jobsplus:miners_hammer_level_1"
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "type": "jobsplus:backpack_upgrade",
+  "type": "jobsplus:upgrade_recipe",
   "pattern": [
     "ELE",
     "LBL",

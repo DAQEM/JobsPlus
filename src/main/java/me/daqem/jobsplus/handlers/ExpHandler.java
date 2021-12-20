@@ -13,17 +13,55 @@ import java.util.Random;
 
 public class ExpHandler {
 
-    public static void addEXPLowest(Player player, Jobs job) { addRandomJobEXP(player, job, 0, 2);}
-    public static void addEXPLow(Player player, Jobs job) { addRandomJobEXP(player, job, 1, 3);}
-    public static void addEXPMid(Player player, Jobs job) { addRandomJobEXP(player, job, 2, 6);}
-    public static void addEXPHigh(Player player, Jobs job) { addRandomJobEXP(player, job, 3, 9);}
-    public static void addEXPHighest(Player player, Jobs job) { addRandomJobEXP(player, job, 4, 11);}
+    public static void addEXPLowest(Player player, Jobs job) {
+        addRandomJobEXP(player, job, 0, 2);
+    }
+
+    public static void addEXPLow(Player player, Jobs job) {
+        addRandomJobEXP(player, job, 1, 3);
+    }
+
+    public static void addEXPMid(Player player, Jobs job) {
+        addRandomJobEXP(player, job, 2, 6);
+    }
+
+    public static void addEXPHigh(Player player, Jobs job) {
+        addRandomJobEXP(player, job, 3, 9);
+    }
+
+    public static void addEXPHighest(Player player, Jobs job) {
+        addRandomJobEXP(player, job, 4, 11);
+    }
+
+    public static int getEXPLowest(Player player, Jobs job) {
+        return getRandomJobEXP(player, job, 0, 2);
+    }
+
+    public static int getEXPLow(Player player, Jobs job) {
+        return getRandomJobEXP(player, job, 1, 3);
+    }
+
+    public static int getEXPMid(Player player, Jobs job) {
+        return getRandomJobEXP(player, job, 2, 6);
+    }
+
+    public static int getEXPHigh(Player player, Jobs job) {
+        return getRandomJobEXP(player, job, 3, 9);
+    }
+
+    public static int getEXPHighest(Player player, Jobs job) {
+        return getRandomJobEXP(player, job, 4, 11);
+    }
 
     public static void addRandomJobEXP(Player player, Jobs job, int lowerBound, int upperBound) {
         Random random = new Random();
         int randomNumber = random.nextInt(upperBound - lowerBound) + lowerBound;
         addJobEXP(player, job, randomNumber);
+    }
 
+    public static int getRandomJobEXP(Player player, Jobs job, int lowerBound, int upperBound) {
+        Random random = new Random();
+        return random.nextInt(upperBound - lowerBound) + lowerBound;
     }
 
     public static void addJobEXP(Player player, Jobs job, int exp) {

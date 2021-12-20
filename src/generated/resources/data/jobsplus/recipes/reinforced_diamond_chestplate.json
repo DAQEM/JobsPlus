@@ -1,0 +1,22 @@
+{
+  "type": "jobsplus:shaped_job_based_recipe",
+  "pattern": [
+    "N N",
+    "BDB",
+    "BBB"
+  ],
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    },
+    "B": {
+      "item": "minecraft:diamond_block"
+    }
+  },
+  "result": {
+    "item": "jobsplus:reinforced_diamond_chestplate"
+  }
+}

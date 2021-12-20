@@ -3,7 +3,6 @@ package me.daqem.jobsplus.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
-import me.daqem.jobsplus.events.EventPlayerTick;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.utils.JobGetters;
@@ -504,7 +503,6 @@ public class JobCommand {
 
     private static int debug(CommandSourceStack source, Player target) {
         if (source.getEntity() instanceof Player player) {
-            EventPlayerTick.levelUpHashMap.put(player, 0);
             if (target == null) target = player;
             target.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
                 ChatHandler.sendMessage(player, ChatHandler.header("DEBUG"));

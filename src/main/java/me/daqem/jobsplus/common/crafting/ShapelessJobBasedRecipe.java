@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
@@ -20,9 +21,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class WoolRecipe extends ShapelessRecipe {
+public class ShapelessJobBasedRecipe extends ShapelessRecipe {
 
-    public WoolRecipe(ShapelessRecipe shapelessRecipe) {
+    public ShapelessJobBasedRecipe(ShapelessRecipe shapelessRecipe) {
         super(shapelessRecipe.getId(), shapelessRecipe.getGroup(), shapelessRecipe.getResultItem(), shapelessRecipe.getIngredients());
     }
 
@@ -30,9 +31,20 @@ public class WoolRecipe extends ShapelessRecipe {
     public @NotNull ItemStack assemble(CraftingContainer container) {
         if (container.menu instanceof CraftingMenu craftingMenu) {
             Player player = craftingMenu.player;
-            if (JobGetters.jobIsEnabled(player, Jobs.HUNTER) && JobGetters.getJobLevel(player, Jobs.HUNTER) >= 1) {
-                return super.assemble(container);
-            }
+            return assemble(player, container);
+        }
+        if (container.menu instanceof InventoryMenu inventoryMenu) {
+            Player player = inventoryMenu.owner;
+            return assemble(player, container);
+        }
+        return ItemStack.EMPTY;
+    }
+    
+    private ItemStack assemble(Player player, CraftingContainer container) {
+        if (JobGetters.jobIsEnabled(player, Jobs.HUNTER)
+                && JobGetters.getJobLevel(player, Jobs.HUNTER) >= 1
+                && Objects.requireNonNull(getResultItem().getItem().getRegistryName()).toString().equals("minecraft:white_wool")) {
+            return super.assemble(container);
         }
         return ItemStack.EMPTY;
     }
@@ -40,21 +52,21 @@ public class WoolRecipe extends ShapelessRecipe {
     @Override
     @Nonnull
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.WOOL_RECIPE.get();
+        return ModRecipes.SHAPELESS_JOB_BASED_RECIPE.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<WoolRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapelessJobBasedRecipe> {
         @Nullable
         @Override
-        public WoolRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {
-            return new WoolRecipe(Objects.requireNonNull(RecipeSerializer.SHAPELESS_RECIPE.fromNetwork(recipeId, buffer)));
+        public ShapelessJobBasedRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {
+            return new ShapelessJobBasedRecipe(Objects.requireNonNull(RecipeSerializer.SHAPELESS_RECIPE.fromNetwork(recipeId, buffer)));
         }
 
         @Override
         @Nonnull
-        public WoolRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
+        public ShapelessJobBasedRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
             try {
-                return new WoolRecipe(RecipeSerializer.SHAPELESS_RECIPE.fromJson(recipeId, json));
+                return new ShapelessJobBasedRecipe(RecipeSerializer.SHAPELESS_RECIPE.fromJson(recipeId, json));
             } catch (Exception exception) {
                 JobsPlus.LOGGER.info("Error reading CopyBackpack Recipe from packet: ", exception);
                 throw exception;
@@ -62,7 +74,7 @@ public class WoolRecipe extends ShapelessRecipe {
         }
 
         @Override
-        public void toNetwork(@Nonnull FriendlyByteBuf buffer, @Nonnull WoolRecipe recipe) {
+        public void toNetwork(@Nonnull FriendlyByteBuf buffer, @Nonnull ShapelessJobBasedRecipe recipe) {
             try {
                 RecipeSerializer.SHAPELESS_RECIPE.toNetwork(buffer, recipe);
             } catch (Exception exception) {

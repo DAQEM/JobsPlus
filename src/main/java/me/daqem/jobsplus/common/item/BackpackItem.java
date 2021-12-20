@@ -5,9 +5,13 @@ import me.daqem.jobsplus.common.container.BackpackContainer;
 import me.daqem.jobsplus.common.container.BackpackHandler;
 import me.daqem.jobsplus.common.container.BackpackSavedData;
 import me.daqem.jobsplus.handlers.BackpackItemHandler;
+import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
+import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.TranslatableString;
 import me.daqem.jobsplus.utils.enums.Backpack;
 import me.daqem.jobsplus.utils.enums.ChatColor;
+import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -69,9 +73,24 @@ public class BackpackItem extends Item {
 
     @Override
     @Nonnull
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, @Nonnull InteractionHand handIn) {
-        ItemStack backpack = playerIn.getItemInHand(handIn);
-        if (!worldIn.isClientSide && playerIn instanceof ServerPlayer && backpack.getItem() instanceof BackpackItem) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, @Nonnull InteractionHand hand) {
+        ItemStack backpack = player.getItemInHand(hand);
+        if (!level.isClientSide && player instanceof ServerPlayer && backpack.getItem() instanceof BackpackItem) {
+            Jobs job = Jobs.BUILDER;
+            boolean canOpenBackpack = backpack.getItem() == ModItems.SMALL_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 5;
+            if (backpack.getItem() == ModItems.MEDIUM_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 10)
+                canOpenBackpack = true;
+            if (backpack.getItem() == ModItems.LARGE_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 20)
+                canOpenBackpack = true;
+            if (backpack.getItem() == ModItems.HUGE_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 35)
+                canOpenBackpack = true;
+            if (backpack.getItem() == ModItems.ENDER_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 10)
+                canOpenBackpack = true;
+            if (!canOpenBackpack) {
+                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                return InteractionResultHolder.success(player.getItemInHand(hand));
+            }
+
             BackpackSavedData data = BackpackItem.getData(backpack);
 
             if (backpack.getOrCreateTag().contains("Inventory")) {
@@ -86,14 +105,14 @@ public class BackpackItem extends Item {
                 data.upgrade(itemTier);
             }
             if (!Objects.equals(backpack.getItem().getRegistryName(), JobsPlus.getId("ender_backpack"))) {
-                NetworkHooks.openGui(((ServerPlayer) playerIn), new SimpleMenuProvider((windowId, playerInventory, playerEntity) -> new BackpackContainer(windowId, playerInventory, uuid, data.getTier(), data.getHandler()), backpack.getHoverName()), (buffer -> buffer.writeUUID(uuid).writeInt(data.getTier().ordinal())));
+                NetworkHooks.openGui(((ServerPlayer) player), new SimpleMenuProvider((windowId, playerInventory, playerEntity) -> new BackpackContainer(windowId, playerInventory, uuid, data.getTier(), data.getHandler()), backpack.getHoverName()), (buffer -> buffer.writeUUID(uuid).writeInt(data.getTier().ordinal())));
             } else {
-                PlayerEnderChestContainer playerenderchestcontainer = playerIn.getEnderChestInventory();
-                NetworkHooks.openGui(((ServerPlayer) playerIn), new SimpleMenuProvider((p_53124_, p_53125_, p_53126_) ->
+                PlayerEnderChestContainer playerenderchestcontainer = player.getEnderChestInventory();
+                NetworkHooks.openGui(((ServerPlayer) player), new SimpleMenuProvider((p_53124_, p_53125_, p_53126_) ->
                         ChestMenu.threeRows(p_53124_, p_53125_, playerenderchestcontainer), CONTAINER_TITLE));
             }
         }
-        return InteractionResultHolder.success(playerIn.getItemInHand(handIn));
+        return InteractionResultHolder.success(player.getItemInHand(hand));
     }
 
     @Override
@@ -126,7 +145,7 @@ public class BackpackItem extends Item {
             }
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Builder"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Level: " + ChatColor.reset() + level));
+            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
         } else {
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }

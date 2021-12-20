@@ -15,13 +15,12 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MinerEvents {
 
-    private final ArrayList<BlockPos> timeoutList = new ArrayList<>();
     public final static ArrayList<String> lowList = new ArrayList<>(List.of("andesite", "diorite", "granite", "calcite", "dripstone", "dripstone_block", "sandstone"));
     public final static ArrayList<String> lowestList = new ArrayList<>(List.of("stone", "deepslate"));
-
+    public static final ArrayList<BlockPos> timeoutList = new ArrayList<>();
     private final Jobs job = Jobs.MINER;
 
     @SubscribeEvent
@@ -33,9 +32,9 @@ public class MinerEvents {
                 if (BlockPosUtil.testAllSides(timeoutList, event.getPos())) {
                     if (block instanceof OreBlock) {
                         ExpHandler.addEXPMid(player, job);
-                    } else if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))  ) {
+                    } else if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
                         ExpHandler.addEXPLow(player, job);
-                    } else if (lowestList.contains(block.getDescriptionId().replace("block.minecraft.", ""))  ) {
+                    } else if (lowestList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
                         ExpHandler.addEXPLowest(player, job);
                     }
                 } else {

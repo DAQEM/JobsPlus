@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "jobsplus:item/miners_hammer_level_3"
+  }
+}

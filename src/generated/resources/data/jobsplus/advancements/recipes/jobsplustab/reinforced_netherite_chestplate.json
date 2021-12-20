@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "jobsplus:reinforced_netherite_chestplate"
+    ]
+  },
+  "criteria": {
+    "nether_star": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:nether_star"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "jobsplus:reinforced_netherite_chestplate"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "nether_star",
+      "has_the_recipe"
+    ]
+  ]
+}

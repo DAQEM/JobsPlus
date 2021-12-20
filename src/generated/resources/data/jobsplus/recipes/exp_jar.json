@@ -1,5 +1,5 @@
 {
-  "type": "jobsplus:exp_jar",
+  "type": "jobsplus:shaped_job_based_recipe",
   "pattern": [
     "PPP",
     "GEG",

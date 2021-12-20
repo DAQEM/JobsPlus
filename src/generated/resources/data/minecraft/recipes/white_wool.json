@@ -1,5 +1,5 @@
 {
-  "type": "jobsplus:wool",
+  "type": "jobsplus:shapeless_job_based_recipe",
   "ingredients": [
     {
       "tag": "minecraft:wool"

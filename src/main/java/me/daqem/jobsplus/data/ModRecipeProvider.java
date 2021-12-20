@@ -36,7 +36,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('L', Tags.Items.LEATHER)
                 .define('S', Tags.Items.STRING)
                 .unlockedBy("iron_block", has(Items.IRON_BLOCK))
-                .save(RecipeInjector.Inject(consumer, ModRecipes.BACKPACK_UPGRADE_RECIPE.get()));
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
 
         ShapedRecipeBuilder.shaped(ModItems.MEDIUM_BACKPACK.get())
                 .pattern("GLG")
@@ -46,7 +46,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('L', Tags.Items.LEATHER)
                 .define('B', ModItems.SMALL_BACKPACK.get())
                 .unlockedBy("gold_block", has(Items.GOLD_BLOCK))
-                .save(RecipeInjector.Inject(consumer, ModRecipes.BACKPACK_UPGRADE_RECIPE.get()));
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
 
         ShapedRecipeBuilder.shaped(ModItems.LARGE_BACKPACK.get())
                 .pattern("DLD")
@@ -56,7 +56,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('L', Tags.Items.LEATHER)
                 .define('B', ModItems.MEDIUM_BACKPACK.get())
                 .unlockedBy("diamond_block", has(Items.DIAMOND_BLOCK))
-                .save(RecipeInjector.Inject(consumer, ModRecipes.BACKPACK_UPGRADE_RECIPE.get()));
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
 
         ShapedRecipeBuilder.shaped(ModItems.HUGE_BACKPACK.get())
                 .pattern("ELE")
@@ -66,7 +66,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('L', Tags.Items.LEATHER)
                 .define('B', ModItems.LARGE_BACKPACK.get())
                 .unlockedBy("emerald_block", has(Items.EMERALD_BLOCK))
-                .save(RecipeInjector.Inject(consumer, ModRecipes.BACKPACK_UPGRADE_RECIPE.get()));
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
 
         ShapedRecipeBuilder.shaped(ModItems.ENDER_BACKPACK.get())
                 .pattern("GLG")
@@ -76,7 +76,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('L', Tags.Items.LEATHER)
                 .define('E', Tags.Items.CHESTS_ENDER)
                 .unlockedBy("ender_chest", has(Items.ENDER_CHEST))
-                .save(RecipeInjector.Inject(consumer, ModRecipes.BACKPACK_UPGRADE_RECIPE.get()));
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
 
         ShapedRecipeBuilder.shaped(ModItems.EXP_JAR.get())
                 .pattern("PPP")
@@ -86,12 +86,246 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('G', Tags.Items.GLASS)
                 .define('E', Tags.Items.GEMS_EMERALD)
                 .unlockedBy("emerald", has(Items.EMERALD))
-                .save(RecipeInjector.Inject(consumer, ModRecipes.EXP_JAR_RECIPE.get()));
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_IRON_HELMET.get())
+                .pattern("DND")
+                .pattern("B B")
+                .define('D', Items.DIAMOND)
+                .define('N', Items.NETHERITE_INGOT)
+                .define('B', Items.IRON_BLOCK)
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_IRON_CHESTPLATE.get())
+                .pattern("N N")
+                .pattern("BDB")
+                .pattern("BBB")
+                .define('D', Items.DIAMOND)
+                .define('N', Items.NETHERITE_INGOT)
+                .define('B', Items.IRON_BLOCK)
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_IRON_LEGGINGS.get())
+                .pattern("DND")
+                .pattern("B B")
+                .pattern("B B")
+                .define('D', Items.DIAMOND)
+                .define('N', Items.NETHERITE_INGOT)
+                .define('B', Items.IRON_BLOCK)
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_IRON_BOOTS.get())
+                .pattern("D D")
+                .pattern("B B")
+                .define('D', Items.DIAMOND)
+                .define('B', Items.IRON_BLOCK)
+                .unlockedBy("diamond", has(Items.DIAMOND))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.OBSIDIAN_HELMET.get())
+                .pattern("DND")
+                .pattern("B B")
+                .define('D', Items.DIAMOND_BLOCK)
+                .define('N', Items.NETHERITE_INGOT)
+                .define('B', Items.OBSIDIAN)
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.OBSIDIAN_CHESTPLATE.get())
+                .pattern("N N")
+                .pattern("BDB")
+                .pattern("BBB")
+                .define('D', Items.DIAMOND_BLOCK)
+                .define('N', Items.NETHERITE_INGOT)
+                .define('B', Items.OBSIDIAN)
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.OBSIDIAN_LEGGINGS.get())
+                .pattern("DND")
+                .pattern("B B")
+                .pattern("B B")
+                .define('D', Items.DIAMOND_BLOCK)
+                .define('N', Items.NETHERITE_INGOT)
+                .define('B', Items.OBSIDIAN)
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.OBSIDIAN_BOOTS.get())
+                .pattern("D D")
+                .pattern("B B")
+                .define('D', Items.DIAMOND_BLOCK)
+                .define('B', Items.OBSIDIAN)
+                .unlockedBy("obsidian", has(Items.OBSIDIAN))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_DIAMOND_HELMET.get())
+                .pattern("DND")
+                .pattern("B B")
+                .define('D', Items.NETHERITE_INGOT)
+                .define('N', Items.NETHER_STAR)
+                .define('B', Items.DIAMOND_BLOCK)
+                .unlockedBy("nether_star", has(Items.NETHER_STAR))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_DIAMOND_CHESTPLATE.get())
+                .pattern("N N")
+                .pattern("BDB")
+                .pattern("BBB")
+                .define('D', Items.NETHERITE_INGOT)
+                .define('N', Items.NETHER_STAR)
+                .define('B', Items.DIAMOND_BLOCK)
+                .unlockedBy("nether_star", has(Items.NETHER_STAR))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_DIAMOND_LEGGINGS.get())
+                .pattern("DND")
+                .pattern("B B")
+                .pattern("B B")
+                .define('D', Items.NETHERITE_INGOT)
+                .define('N', Items.NETHER_STAR)
+                .define('B', Items.DIAMOND_BLOCK)
+                .unlockedBy("nether_star", has(Items.NETHER_STAR))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_DIAMOND_BOOTS.get())
+                .pattern("D D")
+                .pattern("B B")
+                .define('D', Items.NETHERITE_INGOT)
+                .define('B', Items.DIAMOND_BLOCK)
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_NETHERITE_HELMET.get())
+                .pattern("DND")
+                .pattern("B B")
+                .define('D', Items.NETHERITE_INGOT)
+                .define('N', Items.NETHER_STAR)
+                .define('B', Items.NETHERITE_BLOCK)
+                .unlockedBy("nether_star", has(Items.NETHER_STAR))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_NETHERITE_CHESTPLATE.get())
+                .pattern("N N")
+                .pattern("BDB")
+                .pattern("BBB")
+                .define('D', Items.NETHERITE_INGOT)
+                .define('N', Items.NETHER_STAR)
+                .define('B', Items.NETHERITE_BLOCK)
+                .unlockedBy("nether_star", has(Items.NETHER_STAR))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_NETHERITE_LEGGINGS.get())
+                .pattern("DND")
+                .pattern("B B")
+                .pattern("B B")
+                .define('D', Items.NETHERITE_INGOT)
+                .define('N', Items.NETHER_STAR)
+                .define('B', Items.NETHERITE_BLOCK)
+                .unlockedBy("nether_star", has(Items.NETHER_STAR))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.REINFORCED_NETHERITE_BOOTS.get())
+                .pattern("D D")
+                .pattern("B B")
+                .define('D', Items.NETHERITE_INGOT)
+                .define('B', Items.NETHERITE_BLOCK)
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.MINERS_HAMMER_LEVEL_1.get())
+                .pattern("DBD")
+                .pattern("BSB")
+                .pattern(" S ")
+                .define('S', Items.STICK)
+                .define('D', Items.DIAMOND)
+                .define('B', Items.IRON_BLOCK)
+                .unlockedBy("diamond", has(Items.DIAMOND))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.MINERS_HAMMER_LEVEL_2.get())
+                .pattern("NHN")
+                .pattern("BSB")
+                .pattern(" S ")
+                .define('S', Items.STICK)
+                .define('N', Items.NETHERITE_INGOT)
+                .define('H', ModItems.MINERS_HAMMER_LEVEL_1.get())
+                .define('B', Items.GOLD_BLOCK)
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.MINERS_HAMMER_LEVEL_3.get())
+                .pattern("NHN")
+                .pattern("BSB")
+                .pattern(" S ")
+                .define('S', Items.STICK)
+                .define('N', Items.NETHERITE_INGOT)
+                .define('H', ModItems.MINERS_HAMMER_LEVEL_2.get())
+                .define('B', Items.DIAMOND_BLOCK)
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.MINERS_HAMMER_LEVEL_4.get())
+                .pattern("NHN")
+                .pattern("BSB")
+                .pattern(" S ")
+                .define('S', Items.STICK)
+                .define('N', Items.NETHERITE_BLOCK)
+                .define('H', ModItems.MINERS_HAMMER_LEVEL_3.get())
+                .define('B', Items.EMERALD_BLOCK)
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.DIGGERS_EXCAVATOR_LEVEL_1.get())
+                .pattern(" DI")
+                .pattern(" SD")
+                .pattern("S  ")
+                .define('S', Items.STICK)
+                .define('D', Items.DIAMOND)
+                .define('I', Items.IRON_BLOCK)
+                .unlockedBy("diamond", has(Items.DIAMOND))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.DIGGERS_EXCAVATOR_LEVEL_2.get())
+                .pattern(" DI")
+                .pattern(" ED")
+                .pattern("S  ")
+                .define('S', Items.STICK)
+                .define('D', Items.NETHERITE_INGOT)
+                .define('I', Items.GOLD_BLOCK)
+                .define('E', ModItems.DIGGERS_EXCAVATOR_LEVEL_1.get())
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get())
+                .pattern(" DI")
+                .pattern(" ED")
+                .pattern("S  ")
+                .define('S', Items.STICK)
+                .define('D', Items.NETHERITE_INGOT)
+                .define('I', Items.DIAMOND_BLOCK)
+                .define('E', ModItems.DIGGERS_EXCAVATOR_LEVEL_2.get())
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get())
+                .pattern(" DI")
+                .pattern(" ED")
+                .pattern("S  ")
+                .define('S', Items.STICK)
+                .define('D', Items.NETHERITE_BLOCK)
+                .define('I', Items.EMERALD_BLOCK)
+                .define('E', ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get())
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
 
         ShapelessRecipeBuilder.shapeless(Items.WHITE_WOOL)
                 .requires(ItemTags.WOOL)
                 .unlockedBy("wool", has(ItemTags.WOOL))
-                .save(RecipeInjector.Inject(consumer, ModRecipes.WOOL_RECIPE.get()));
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPELESS_JOB_BASED_RECIPE.get()));
     }
 
     static class RecipeInjector implements FinishedRecipe {

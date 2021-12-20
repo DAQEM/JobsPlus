@@ -71,7 +71,6 @@ class SideProxy {
 
         private void clientStuff(final FMLClientSetupEvent event) {
             MenuScreens.register(ModContainers.BACKPACK_CONTAINER.get(), BackpackGUI::new);
-            JobsPlus.LOGGER.info("Screen registered!");
         }
     }
 }

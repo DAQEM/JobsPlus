@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
+import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.TranslatableString;
 import me.daqem.jobsplus.utils.enums.ChatColor;
@@ -50,6 +51,7 @@ public class EXPJarItem extends Item {
                             player.giveExperiencePoints(Objects.requireNonNull(nbt).getInt("EXP"));
                             if (nbt.getInt("EXP") != 0) {
                                 HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("success.exp.extract", nbt.getInt("EXP")));
+                                SoundHandler.playLevelUpSound(player, 0.7F, 1F);
                             }
                             nbt.putInt("EXP", 0);
                         }
@@ -61,6 +63,7 @@ public class EXPJarItem extends Item {
                         }
                         if (player.totalExperience != 0) {
                             HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("success.exp.insert", player.totalExperience));
+                            SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
                         }
                         player.giveExperiencePoints(-player.totalExperience);
                         stack.setTag(nbt);
@@ -81,8 +84,9 @@ public class EXPJarItem extends Item {
         if (Screen.hasShiftDown()) {
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Level: " + ChatColor.reset() + 5));
+            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + 5));
             tooltip.add(new KeybindComponent(""));
+            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Controls:"));
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Right-click to inset EXP"));
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Shift + right-click to extract EXP."));
         } else {

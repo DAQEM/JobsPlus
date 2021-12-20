@@ -1,0 +1,25 @@
+{
+  "type": "jobsplus:upgrade_recipe",
+  "pattern": [
+    "NHN",
+    "BSB",
+    " S "
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "N": {
+      "item": "minecraft:netherite_block"
+    },
+    "H": {
+      "item": "jobsplus:miners_hammer_level_3"
+    },
+    "B": {
+      "item": "minecraft:emerald_block"
+    }
+  },
+  "result": {
+    "item": "jobsplus:miners_hammer_level_4"
+  }
+}

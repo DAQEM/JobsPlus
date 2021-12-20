@@ -1,9 +1,11 @@
 package me.daqem.jobsplus.init;
 
 import me.daqem.jobsplus.JobsPlus;
-import me.daqem.jobsplus.common.item.BackpackItem;
-import me.daqem.jobsplus.common.item.EXPJarItem;
+import me.daqem.jobsplus.common.item.*;
 import me.daqem.jobsplus.utils.enums.Backpack;
+import me.daqem.jobsplus.utils.enums.ItemTiers;
+import me.daqem.jobsplus.utils.enums.ModArmorMaterials;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.registries.DeferredRegister;
@@ -20,34 +22,40 @@ public class ModItems {
     public static final RegistryObject<Item> HUGE_BACKPACK = ITEMS.register("huge_backpack", () -> new BackpackItem("huge_backpack", Backpack.HUGE));
     public static final RegistryObject<Item> ENDER_BACKPACK = ITEMS.register("ender_backpack", () -> new BackpackItem("ender_backpack", Backpack.ENDER));
 
+    public static final RegistryObject<Item> EXP_JAR = ITEMS.register("exp_jar", () -> new EXPJarItem(new Item.Properties().tab(JobsPlus.TAB).stacksTo(1).rarity(Rarity.UNCOMMON)));
+    //    public static final RegistryObject<Item> CURSE_BREAKER = ITEMS.register("curse_breaker", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
+
     //    public static final RegistryObject<Item> BUILDERS_WAND = ITEMS.register("builders_wand", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //    public static final RegistryObject<Item> HUNTERS_SWORD = ITEMS.register("hunters_sword", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //    public static final RegistryObject<Item> HUNTERS_BOW = ITEMS.register("hunters_bow", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //    public static final RegistryObject<Item> LUMBERJACKS_AXE = ITEMS.register("lumberjacks_axe", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> MINERS_HAMMER = ITEMS.register("miners_hammer", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> FISHERMANS_ROD = ITEMS.register("fishermans_rod", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
+    public static final RegistryObject<Item> MINERS_HAMMER_LEVEL_1 = ITEMS.register("miners_hammer_level_1", () -> new HammerItem(ItemTiers.LEVEL_1, 0, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
+    public static final RegistryObject<Item> MINERS_HAMMER_LEVEL_2 = ITEMS.register("miners_hammer_level_2", () -> new HammerItem(ItemTiers.LEVEL_2, 1, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> MINERS_HAMMER_LEVEL_3 = ITEMS.register("miners_hammer_level_3", () -> new HammerItem(ItemTiers.LEVEL_3, 2, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> MINERS_HAMMER_LEVEL_4 = ITEMS.register("miners_hammer_level_4", () -> new HammerItem(ItemTiers.LEVEL_4, 4, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
+    //    public static final RegistryObject<Item> FISHERMANS_ROD = ITEMS.register("fishermans_rod", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //    public static final RegistryObject<Item> FARMERS_HOE = ITEMS.register("farmers_hoe", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> DIGGERS_EXCAVATOR = ITEMS.register("diggers_excavator", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//
-//    public static final RegistryObject<Item> OBSIDIAN_HELMET = ITEMS.register("obsidian_helmet", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> OBSIDIAN_CHESTPLATE = ITEMS.register("obsidian_chestplate", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> OBSIDIAN_LEGGINGS = ITEMS.register("obsidian_leggings", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> OBSIDIAN_BOOTS = ITEMS.register("obsidian_boots", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_IRON_HELMET = ITEMS.register("reinforced_iron_helmet", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_IRON_CHESTPLATE = ITEMS.register("reinforced_iron_chestplate", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_IRON_LEGGINGS = ITEMS.register("reinforced_iron_leggings", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_IRON_BOOTS = ITEMS.register("reinforced_iron_boots", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_DIAMOND_HELMET = ITEMS.register("reinforced_diamond_helmet", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_DIAMOND_CHESTPLATE = ITEMS.register("reinforced_diamond_chestplate", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_DIAMOND_LEGGINGS = ITEMS.register("reinforced_diamond_leggings", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_DIAMOND_BOOTS = ITEMS.register("reinforced_diamond_boots", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_NETHERITE_HELMET = ITEMS.register("reinforced_netherite_helmet", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_NETHERITE_CHESTPLATE = ITEMS.register("reinforced_netherite_chestplate", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_NETHERITE_LEGGINGS = ITEMS.register("reinforced_netherite_leggings", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> REINFORCED_NETHERITE_BOOTS = ITEMS.register("reinforced_netherite_boots", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//
-    public static final RegistryObject<Item> EXP_JAR = ITEMS.register("exp_jar", () -> new EXPJarItem(new Item.Properties().tab(JobsPlus.TAB).stacksTo(1).rarity(Rarity.UNCOMMON)));
-    //    public static final RegistryObject<Item> CURSE_BREAKER = ITEMS.register("curse_breaker", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
+    public static final RegistryObject<Item> DIGGERS_EXCAVATOR_LEVEL_1 = ITEMS.register("diggers_excavator_level_1", () -> new ExcavatorItem(ItemTiers.LEVEL_1, 0, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
+    public static final RegistryObject<Item> DIGGERS_EXCAVATOR_LEVEL_2 = ITEMS.register("diggers_excavator_level_2", () -> new ExcavatorItem(ItemTiers.LEVEL_2, 0, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> DIGGERS_EXCAVATOR_LEVEL_3 = ITEMS.register("diggers_excavator_level_3", () -> new ExcavatorItem(ItemTiers.LEVEL_3, 0, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> DIGGERS_EXCAVATOR_LEVEL_4 = ITEMS.register("diggers_excavator_level_4", () -> new ExcavatorItem(ItemTiers.LEVEL_4, 0, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
+    //
+    public static final RegistryObject<Item> REINFORCED_IRON_HELMET = ITEMS.register("reinforced_iron_helmet", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_IRON, EquipmentSlot.HEAD, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
+    public static final RegistryObject<Item> REINFORCED_IRON_CHESTPLATE = ITEMS.register("reinforced_iron_chestplate", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_IRON, EquipmentSlot.CHEST, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
+    public static final RegistryObject<Item> REINFORCED_IRON_LEGGINGS = ITEMS.register("reinforced_iron_leggings", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_IRON, EquipmentSlot.LEGS, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
+    public static final RegistryObject<Item> REINFORCED_IRON_BOOTS = ITEMS.register("reinforced_iron_boots", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_IRON, EquipmentSlot.FEET, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
+    public static final RegistryObject<Item> OBSIDIAN_HELMET = ITEMS.register("obsidian_helmet", () -> new ModArmorItem(ModArmorMaterials.OBSIDIAN, EquipmentSlot.HEAD, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> OBSIDIAN_CHESTPLATE = ITEMS.register("obsidian_chestplate", () -> new ModArmorItem(ModArmorMaterials.OBSIDIAN, EquipmentSlot.CHEST, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> OBSIDIAN_LEGGINGS = ITEMS.register("obsidian_leggings", () -> new ModArmorItem(ModArmorMaterials.OBSIDIAN, EquipmentSlot.LEGS, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> OBSIDIAN_BOOTS = ITEMS.register("obsidian_boots", () -> new ModArmorItem(ModArmorMaterials.OBSIDIAN, EquipmentSlot.FEET, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> REINFORCED_DIAMOND_HELMET = ITEMS.register("reinforced_diamond_helmet", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_DIAMOND, EquipmentSlot.HEAD, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> REINFORCED_DIAMOND_CHESTPLATE = ITEMS.register("reinforced_diamond_chestplate", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_DIAMOND, EquipmentSlot.CHEST, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> REINFORCED_DIAMOND_LEGGINGS = ITEMS.register("reinforced_diamond_leggings", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_DIAMOND, EquipmentSlot.LEGS, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> REINFORCED_DIAMOND_BOOTS = ITEMS.register("reinforced_diamond_boots", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_DIAMOND, EquipmentSlot.FEET, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> REINFORCED_NETHERITE_HELMET = ITEMS.register("reinforced_netherite_helmet", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_NETHERITE, EquipmentSlot.HEAD, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> REINFORCED_NETHERITE_CHESTPLATE = ITEMS.register("reinforced_netherite_chestplate", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_NETHERITE, EquipmentSlot.CHEST, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> REINFORCED_NETHERITE_LEGGINGS = ITEMS.register("reinforced_netherite_leggings", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_NETHERITE, EquipmentSlot.LEGS, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> REINFORCED_NETHERITE_BOOTS = ITEMS.register("reinforced_netherite_boots", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_NETHERITE, EquipmentSlot.FEET, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
 //
 //    public static final RegistryObject<Item> LEVEL_2_TOOL_UPGRADE = ITEMS.register("level_2_tool_upgrade", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //    public static final RegistryObject<Item> LEVEL_3_TOOL_UPGRADE = ITEMS.register("level_3_tool_upgrade", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
