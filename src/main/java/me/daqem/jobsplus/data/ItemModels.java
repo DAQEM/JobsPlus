@@ -32,6 +32,10 @@ public class ItemModels extends ItemModelProvider {
         handheld(ModItems.DIGGERS_EXCAVATOR_LEVEL_2.get());
         handheld(ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get());
         handheld(ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get());
+        handheld(ModItems.LUMBERJACK_AXE_LEVEL_1.get());
+        handheld(ModItems.LUMBERJACK_AXE_LEVEL_2.get());
+        handheld(ModItems.LUMBERJACK_AXE_LEVEL_3.get());
+        handheld(ModItems.LUMBERJACK_AXE_LEVEL_4.get());
 
         generated(ModItems.OBSIDIAN_HELMET.get());
         generated(ModItems.OBSIDIAN_CHESTPLATE.get());

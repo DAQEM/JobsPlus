@@ -14,17 +14,13 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DiggerEvents {
 
-    private final ArrayList<BlockPos> timeoutList = new ArrayList<>();
-    public final static ArrayList<String> lowestList = new ArrayList<>(List.of("dirt", "sand", "gravel"));
-    public final static ArrayList<String> lowList = new ArrayList<>(List.of("grass_block", "coarse_dirt", "podzol", "rooted_dirt",
-            "red_sand", "soul_sand", "farmland", "soul_soil", "mycelium", "dirt_path", "white_concrete_powder"
-            , "orange_concrete_powder", "magenta_concrete_powder", "light_blue_concrete_powder", "yellow_concrete_powder",
-            "lime_concrete_powder", "pink_concrete_powder", "gray_concrete_powder", "light_gray_concrete_powder",
-            "cyan_concrete_powder", "purple_concrete_powder", "blue_concrete_powder", "brown_concrete_powder",
-            "green_concrete_powder", "red_concrete_powder", "black_concrete_powder"));
+    public static final ArrayList<BlockPos> timeoutList = new ArrayList<>();
+    public static final ArrayList<String> lowestList = new ArrayList<>(List.of("dirt", "sand"));
+    public static final ArrayList<String> lowList = new ArrayList<>(List.of("grass_block", "coarse_dirt", "podzol", "rooted_dirt",
+            "red_sand", "soul_sand", "soul_soil", "mycelium", "gravel"));
 
     private final Jobs job = Jobs.DIGGER;
 
@@ -35,9 +31,9 @@ public class DiggerEvents {
             if (JobGetters.jobIsEnabled(player, job)) {
                 Block block = event.getState().getBlock();
                 if (BlockPosUtil.testAllSides(timeoutList, event.getPos())) {
-                    if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))  ) {
+                    if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
                         ExpHandler.addEXPLow(player, job);
-                    } else if (lowestList.contains(block.getDescriptionId().replace("block.minecraft.", ""))  ) {
+                    } else if (lowestList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
                         ExpHandler.addEXPLowest(player, job);
                     }
                 } else {

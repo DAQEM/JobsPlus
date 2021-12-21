@@ -1,0 +1,25 @@
+{
+  "type": "jobsplus:upgrade_recipe",
+  "pattern": [
+    "DII",
+    " EI",
+    " SD"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "I": {
+      "item": "minecraft:diamond_block"
+    },
+    "E": {
+      "item": "jobsplus:lumberjack_axe_level_2"
+    }
+  },
+  "result": {
+    "item": "jobsplus:lumberjack_axe_level_3"
+  }
+}

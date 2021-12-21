@@ -28,7 +28,10 @@ public class ModItems {
     //    public static final RegistryObject<Item> BUILDERS_WAND = ITEMS.register("builders_wand", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //    public static final RegistryObject<Item> HUNTERS_SWORD = ITEMS.register("hunters_sword", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
 //    public static final RegistryObject<Item> HUNTERS_BOW = ITEMS.register("hunters_bow", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> LUMBERJACKS_AXE = ITEMS.register("lumberjacks_axe", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
+    public static final RegistryObject<Item> LUMBERJACK_AXE_LEVEL_1 = ITEMS.register("lumberjack_axe_level_1", () -> new LumberAxeItem(ItemTiers.LEVEL_1, 3, 0, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
+    public static final RegistryObject<Item> LUMBERJACK_AXE_LEVEL_2 = ITEMS.register("lumberjack_axe_level_2", () -> new LumberAxeItem(ItemTiers.LEVEL_2, 4, 0, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> LUMBERJACK_AXE_LEVEL_3 = ITEMS.register("lumberjack_axe_level_3", () -> new LumberAxeItem(ItemTiers.LEVEL_3, 5, 0, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> LUMBERJACK_AXE_LEVEL_4 = ITEMS.register("lumberjack_axe_level_4", () -> new LumberAxeItem(ItemTiers.LEVEL_4, 6, 0, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
     public static final RegistryObject<Item> MINERS_HAMMER_LEVEL_1 = ITEMS.register("miners_hammer_level_1", () -> new HammerItem(ItemTiers.LEVEL_1, 0, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
     public static final RegistryObject<Item> MINERS_HAMMER_LEVEL_2 = ITEMS.register("miners_hammer_level_2", () -> new HammerItem(ItemTiers.LEVEL_2, 1, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> MINERS_HAMMER_LEVEL_3 = ITEMS.register("miners_hammer_level_3", () -> new HammerItem(ItemTiers.LEVEL_3, 2, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
@@ -56,11 +59,7 @@ public class ModItems {
     public static final RegistryObject<Item> REINFORCED_NETHERITE_CHESTPLATE = ITEMS.register("reinforced_netherite_chestplate", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_NETHERITE, EquipmentSlot.CHEST, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
     public static final RegistryObject<Item> REINFORCED_NETHERITE_LEGGINGS = ITEMS.register("reinforced_netherite_leggings", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_NETHERITE, EquipmentSlot.LEGS, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
     public static final RegistryObject<Item> REINFORCED_NETHERITE_BOOTS = ITEMS.register("reinforced_netherite_boots", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_NETHERITE, EquipmentSlot.FEET, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
-//
-//    public static final RegistryObject<Item> LEVEL_2_TOOL_UPGRADE = ITEMS.register("level_2_tool_upgrade", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> LEVEL_3_TOOL_UPGRADE = ITEMS.register("level_3_tool_upgrade", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> LEVEL_4_TOOL_UPGRADE = ITEMS.register("level_4_tool_upgrade", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//
+
 //    public static final RegistryObject<Item> LEVEL_25_TROPHY = ITEMS.register("level_25_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_25_TROPHY.get(), new Item.Properties().rarity(Rarity.UNCOMMON)));
 //    public static final RegistryObject<Item> LEVEL_50_TROPHY = ITEMS.register("level_50_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_50_TROPHY.get(), new Item.Properties().rarity(Rarity.RARE)));
 //    public static final RegistryObject<Item> LEVEL_100_TROPHY = ITEMS.register("level_100_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_100_TROPHY.get(), new Item.Properties().rarity(Rarity.EPIC)));

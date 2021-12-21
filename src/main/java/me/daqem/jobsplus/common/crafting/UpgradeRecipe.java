@@ -5,6 +5,7 @@ import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.item.BackpackItem;
 import me.daqem.jobsplus.common.item.ExcavatorItem;
 import me.daqem.jobsplus.common.item.HammerItem;
+import me.daqem.jobsplus.common.item.LumberAxeItem;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.init.ModRecipes;
 import me.daqem.jobsplus.utils.JobGetters;
@@ -38,6 +39,7 @@ public class UpgradeRecipe extends ShapedRecipe {
             var backpackPresent = false;
             var hammerPresent = false;
             var excavatorPresent = false;
+            var lumberAxePresent = false;
             for (int index = 0; index < container.getContainerSize(); ++index) {
                 final var slotStack = container.getItem(index);
                 if (!slotStack.isEmpty()) {
@@ -65,6 +67,15 @@ public class UpgradeRecipe extends ShapedRecipe {
                             return ItemStack.EMPTY;
                         }
                         excavatorPresent = true;
+                        if (slotStack.hasTag()) {
+                            upgradedStack.setTag(Objects.requireNonNull(slotStack.getTag()).copy());
+                        }
+                    }
+                    if (item instanceof LumberAxeItem) {
+                        if (lumberAxePresent) {
+                            return ItemStack.EMPTY;
+                        }
+                        lumberAxePresent = true;
                         if (slotStack.hasTag()) {
                             upgradedStack.setTag(Objects.requireNonNull(slotStack.getTag()).copy());
                         }
@@ -118,6 +129,24 @@ public class UpgradeRecipe extends ShapedRecipe {
                 }
                 if (JobGetters.getJobLevel(player, digger) >= 75) {
                     if (getResultItem().getItem() == ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get()) {
+                        return upgradedStack;
+                    }
+                }
+            }
+            Jobs lumberjack = Jobs.LUMBERJACK;
+            if (JobGetters.jobIsEnabled(player, lumberjack) && lumberAxePresent) {
+                if (JobGetters.getJobLevel(player, lumberjack) >= 25) {
+                    if (getResultItem().getItem() == ModItems.LUMBERJACK_AXE_LEVEL_2.get()) {
+                        return upgradedStack;
+                    }
+                }
+                if (JobGetters.getJobLevel(player, lumberjack) >= 50) {
+                    if (getResultItem().getItem() == ModItems.LUMBERJACK_AXE_LEVEL_3.get()) {
+                        return upgradedStack;
+                    }
+                }
+                if (JobGetters.getJobLevel(player, lumberjack) >= 75) {
+                    if (getResultItem().getItem() == ModItems.LUMBERJACK_AXE_LEVEL_4.get()) {
                         return upgradedStack;
                     }
                 }

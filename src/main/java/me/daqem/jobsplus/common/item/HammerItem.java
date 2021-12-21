@@ -32,6 +32,7 @@ public class HammerItem extends PickaxeItem {
         super(tier, attackDamage, attackSpeed, properties);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean canAttackBlock(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
         if (!level.isClientSide) {
@@ -117,23 +118,23 @@ public class HammerItem extends PickaxeItem {
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (Screen.hasShiftDown()) {
-            String level = "";
+            int level = 0;
             String modes = "";
             Item item = stack.getItem();
             if (item == ModItems.MINERS_HAMMER_LEVEL_1.get()) {
-                level = "5";
+                level = 5;
                 modes = "3x3";
             }
             if (item == ModItems.MINERS_HAMMER_LEVEL_2.get()) {
-                level = "25";
+                level = 25;
                 modes = "3x3, 3x3x3";
             }
             if (item == ModItems.MINERS_HAMMER_LEVEL_3.get()) {
-                level = "50";
+                level = 50;
                 modes = "3x3, 3x3x3, 5x5";
             }
             if (item == ModItems.MINERS_HAMMER_LEVEL_4.get()) {
-                level = "75";
+                level = 75;
                 modes = "3x3, 3x3x3, 5x5, 5x5x5";
             }
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
@@ -146,19 +147,15 @@ public class HammerItem extends PickaxeItem {
             tooltip.add(new KeybindComponent(""));
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Controls:"));
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Shift + right-click to change the mode."));
-            if (stack.isEnchanted()) {
-                tooltip.add(new KeybindComponent(""));
-                tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Enchantments:"));
-            }
         } else {
             if (stack.getOrCreateTag().contains("mode")) {
                 tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Mode: " + ChatColor.reset() + getModeString(stack)));
             }
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
-            if (stack.isEnchanted()) {
-                tooltip.add(new KeybindComponent(""));
-                tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Enchantments:"));
-            }
+        }
+        if (stack.isEnchanted()) {
+            tooltip.add(new KeybindComponent(""));
+            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Enchantments:"));
         }
     }
 

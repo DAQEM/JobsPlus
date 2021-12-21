@@ -1,0 +1,22 @@
+{
+  "type": "jobsplus:shaped_job_based_recipe",
+  "pattern": [
+    "DII",
+    " SI",
+    "S D"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "result": {
+    "item": "jobsplus:lumberjack_axe_level_1"
+  }
+}

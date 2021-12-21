@@ -41,5 +41,9 @@
   "item.jobsplus.diggers_excavator_level_2": "Golden Diggers Excavator",
   "item.jobsplus.diggers_excavator_level_3": "Diamond Diggers Excavator",
   "item.jobsplus.diggers_excavator_level_4": "Emerald Diggers Excavator",
+  "item.jobsplus.lumberjack_axe_level_1": "Iron Lumberjack Axe",
+  "item.jobsplus.lumberjack_axe_level_2": "Golden Lumberjack Axe",
+  "item.jobsplus.lumberjack_axe_level_3": "Diamond Lumberjack Axe",
+  "item.jobsplus.lumberjack_axe_level_4": "Emerald Lumberjack Axe",
   "itemGroup.jobsplustab": "Jobs+"
 }

@@ -314,11 +314,54 @@ public class ModRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder.shaped(ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get())
                 .pattern(" DI")
                 .pattern(" ED")
-                .pattern("S  ")
+                .pattern(" S ")
                 .define('S', Items.STICK)
                 .define('D', Items.NETHERITE_BLOCK)
                 .define('I', Items.EMERALD_BLOCK)
                 .define('E', ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get())
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.LUMBERJACK_AXE_LEVEL_1.get())
+                .pattern("DII")
+                .pattern(" SI")
+                .pattern("S D")
+                .define('S', Items.STICK)
+                .define('D', Items.DIAMOND)
+                .define('I', Items.IRON_BLOCK)
+                .unlockedBy("diamond", has(Items.DIAMOND))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.LUMBERJACK_AXE_LEVEL_2.get())
+                .pattern("DII")
+                .pattern(" EI")
+                .pattern(" SD")
+                .define('S', Items.STICK)
+                .define('D', Items.NETHERITE_INGOT)
+                .define('I', Items.GOLD_BLOCK)
+                .define('E', ModItems.LUMBERJACK_AXE_LEVEL_1.get())
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.LUMBERJACK_AXE_LEVEL_3.get())
+                .pattern("DII")
+                .pattern(" EI")
+                .pattern(" SD")
+                .define('S', Items.STICK)
+                .define('D', Items.NETHERITE_INGOT)
+                .define('I', Items.DIAMOND_BLOCK)
+                .define('E', ModItems.LUMBERJACK_AXE_LEVEL_2.get())
+                .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.LUMBERJACK_AXE_LEVEL_4.get())
+                .pattern("DII")
+                .pattern(" EI")
+                .pattern(" SD")
+                .define('S', Items.STICK)
+                .define('D', Items.NETHERITE_BLOCK)
+                .define('I', Items.EMERALD_BLOCK)
+                .define('E', ModItems.LUMBERJACK_AXE_LEVEL_3.get())
                 .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
                 .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
 

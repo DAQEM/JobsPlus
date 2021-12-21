@@ -1,5 +1,8 @@
 package me.daqem.jobsplus.utils;
 
+import me.daqem.jobsplus.common.item.ExcavatorItem;
+import me.daqem.jobsplus.common.item.HammerItem;
+import me.daqem.jobsplus.events.jobs.DiggerEvents;
 import me.daqem.jobsplus.events.jobs.MinerEvents;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.utils.enums.Jobs;
@@ -32,21 +35,34 @@ public class ToolFunctions {
         if (mode == 2 || mode == 3) radius = 2;
         if (!level.isClientSide) {
             List<BlockPos> brokenBlocks = getBreakBlocks(level, player, radius, mode);
-            Jobs job = Jobs.MINER;
-            int exp = 0;
+            Jobs miner = Jobs.MINER;
+            Jobs digger = Jobs.DIGGER;
+            int minerExp = 0;
+            int diggerExp = 0;
             for (BlockPos pos : brokenBlocks) {
                 BlockState state = level.getBlockState(pos);
                 if (breakValidator.canBreak(state)) {
                     Block block = level.getBlockState(pos).getBlock();
-                    if (!MinerEvents.timeoutList.contains(pos)) {
-                        if (block instanceof OreBlock) {
-                            exp += ExpHandler.getEXPMid(player, job);
-                        } else if (MinerEvents.lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
-                            exp += ExpHandler.getEXPLow(player, job);
+                    if (player.getMainHandItem().getItem() instanceof HammerItem) {
+                        if (!MinerEvents.timeoutList.contains(pos)) {
+                            if (block instanceof OreBlock) {
+                                minerExp += ExpHandler.getEXPLow(player, miner);
+                            } else if (MinerEvents.lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
+                                minerExp += ExpHandler.getEXPLowest(player, miner);
+                            }
+                            player.awardStat(Stats.BLOCK_MINED.get(block));
                         }
-                        player.awardStat(Stats.BLOCK_MINED.get(block));
+                        MinerEvents.timeoutList.remove(pos);
                     }
-                    MinerEvents.timeoutList.remove(pos);
+                    if (player.getMainHandItem().getItem() instanceof ExcavatorItem) {
+                        if (!DiggerEvents.timeoutList.contains(pos)) {
+                            if (DiggerEvents.lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
+                                diggerExp += ExpHandler.getEXPLowest(player, digger);
+                            }
+                            player.awardStat(Stats.BLOCK_MINED.get(block));
+                        }
+                        DiggerEvents.timeoutList.remove(pos);
+                    }
                     level.removeBlock(pos, false);
 
                     if (!player.isCreative()) {
@@ -60,8 +76,11 @@ public class ToolFunctions {
                     }
                 }
             }
-            if (exp != 0) {
-                ExpHandler.addJobEXP(player, job, exp);
+            if (minerExp != 0) {
+                ExpHandler.addJobEXP(player, miner, minerExp);
+            }
+            if (diggerExp != 0) {
+                ExpHandler.addJobEXP(player, digger, diggerExp);
             }
         }
     }

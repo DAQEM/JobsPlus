@@ -1,9 +1,9 @@
 {
   "type": "jobsplus:upgrade_recipe",
   "pattern": [
-    " DI",
-    " ED",
-    " S "
+    "DII",
+    " EI",
+    " SD"
   ],
   "key": {
     "S": {
@@ -16,10 +16,10 @@
       "item": "minecraft:emerald_block"
     },
     "E": {
-      "item": "jobsplus:diggers_excavator_level_3"
+      "item": "jobsplus:lumberjack_axe_level_3"
     }
   },
   "result": {
-    "item": "jobsplus:diggers_excavator_level_4"
+    "item": "jobsplus:lumberjack_axe_level_4"
   }
 }

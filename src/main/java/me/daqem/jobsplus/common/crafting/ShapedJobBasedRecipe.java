@@ -107,6 +107,13 @@ public class ShapedJobBasedRecipe extends ShapedRecipe {
                     }
                 }
             }
+            if (JobGetters.jobIsEnabled(player, Jobs.LUMBERJACK)) {
+                if (JobGetters.getJobLevel(player, Jobs.LUMBERJACK) >= 5) {
+                    if (getResultItem().getItem() == ModItems.LUMBERJACK_AXE_LEVEL_1.get()) {
+                        return super.assemble(container);
+                    }
+                }
+            }
         }
         return ItemStack.EMPTY;
     }
