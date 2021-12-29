@@ -163,7 +163,7 @@ public class JobCommand {
                     "your job by doing tasks that fit the job. Think of mining, building, killing, etc. Every time " +
                     "you level-up your job, you get a job-coin. With this coin you can buy new jobs and power-ups." +
                     "Once you reach job-level 100, your job will obtain its super power. This superpower will give " +
-                    "you a massive benefit that fits the job. Each job also has its own `1craftable items that will be " +
+                    "you a massive benefit that fits the job. Each job also has its own craftable items that will be " +
                     "unlocked once you reach a certain job-level.");
             ChatHandler.sendMessage(player, ChatHandler.footer(5));
         }

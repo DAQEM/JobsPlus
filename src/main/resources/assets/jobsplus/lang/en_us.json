@@ -45,5 +45,11 @@
   "item.jobsplus.lumberjack_axe_level_2": "Golden Lumberjack Axe",
   "item.jobsplus.lumberjack_axe_level_3": "Diamond Lumberjack Axe",
   "item.jobsplus.lumberjack_axe_level_4": "Emerald Lumberjack Axe",
+  "item.jobsplus.farmers_hoe_level_1": "Iron Farmers Hoe",
+  "item.jobsplus.farmers_hoe_level_2": "Golden Farmers Hoe",
+  "item.jobsplus.farmers_hoe_level_3": "Diamond Farmers Hoe",
+  "item.jobsplus.farmers_hoe_level_4": "Emerald Farmers Hoe",
+  "effect.jobsplus.jesus": "Jesus",
+  "effect.jobsplus.flying": "Flying",
   "itemGroup.jobsplustab": "Jobs+"
 }

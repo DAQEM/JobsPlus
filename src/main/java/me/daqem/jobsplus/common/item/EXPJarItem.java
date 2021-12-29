@@ -87,7 +87,7 @@ public class EXPJarItem extends Item {
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + 5));
             tooltip.add(new KeybindComponent(""));
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Controls:"));
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Right-click to inset EXP"));
+            tooltip.add(new KeybindComponent(ChatColor.gray() + "Right-click to insert EXP"));
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Shift + right-click to extract EXP."));
         } else {
             if (stack.getOrCreateTag().contains("EXP")) {

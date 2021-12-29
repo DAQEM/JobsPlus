@@ -36,6 +36,10 @@ public class ItemModels extends ItemModelProvider {
         handheld(ModItems.LUMBERJACK_AXE_LEVEL_2.get());
         handheld(ModItems.LUMBERJACK_AXE_LEVEL_3.get());
         handheld(ModItems.LUMBERJACK_AXE_LEVEL_4.get());
+        handheld(ModItems.FARMERS_HOE_LEVEL_1.get());
+        handheld(ModItems.FARMERS_HOE_LEVEL_2.get());
+        handheld(ModItems.FARMERS_HOE_LEVEL_3.get());
+        handheld(ModItems.FARMERS_HOE_LEVEL_4.get());
 
         generated(ModItems.OBSIDIAN_HELMET.get());
         generated(ModItems.OBSIDIAN_CHESTPLATE.get());
@@ -58,12 +62,10 @@ public class ItemModels extends ItemModelProvider {
     private void handheld(Item item) {
         String name = Objects.requireNonNull(item.getRegistryName()).getPath();
         singleTexture(name, mcLoc("item/handheld"), "layer0", modLoc("item/" + name));
-
     }
 
     private void generated(Item item) {
         String name = Objects.requireNonNull(item.getRegistryName()).getPath();
         singleTexture(name, ResourceLocation.tryParse("item/generated"), "layer0", modLoc("item/" + name));
-
     }
 }

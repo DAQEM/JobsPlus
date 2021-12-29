@@ -1,8 +1,8 @@
 {
   "type": "jobsplus:shaped_job_based_recipe",
   "pattern": [
-    " DI",
-    " SD",
+    "DII",
+    "DS ",
     " S "
   ],
   "key": {
@@ -17,6 +17,6 @@
     }
   },
   "result": {
-    "item": "jobsplus:diggers_excavator_level_1"
+    "item": "jobsplus:farmers_hoe_level_1"
   }
 }

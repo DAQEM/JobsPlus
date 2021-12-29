@@ -15,7 +15,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class FarmerEvents {
 
     private final Jobs job = Jobs.FARMER;
@@ -34,7 +34,7 @@ public class FarmerEvents {
     }
 
     @SubscribeEvent
-    public void onCropBreak(BabyEntitySpawnEvent event) {
+    public void onBreed(BabyEntitySpawnEvent event) {
         Player player = event.getCausedByPlayer();
         if (player != null) {
             if (JobGetters.jobIsEnabled(player, job)) {

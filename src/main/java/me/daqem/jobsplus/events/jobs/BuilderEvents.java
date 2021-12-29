@@ -21,9 +21,7 @@ public class BuilderEvents {
             if (!player.isCreative()) {
                 if (JobGetters.jobIsEnabled(player, Jobs.BUILDER)) {
                     Block block = event.getPlacedBlock().getBlock();
-                    ArrayList<String> bannedBlocks = new ArrayList<>(List.of("stone", "cobblestone", "granite", "diorite",
-                            "andesite", "polished_granite", "polished_diorite", "polished_andesite", "dirt", "grass_block",
-                            "calcite", "tuff", "coarse_dirt", "sand"));
+                    ArrayList<String> bannedBlocks = new ArrayList<>(List.of("cobblestone", "farmland"));
                     if (!bannedBlocks.contains(block.getDescriptionId().replace("block.minecraft.", "")) && event.getPlacedBlock().getMaterial().isSolid()) {
                         float destroySpeed = event.getPlacedBlock().getDestroySpeed(player.level, event.getPos());
                         if (destroySpeed <= 2.5) {

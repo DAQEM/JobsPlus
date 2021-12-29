@@ -114,6 +114,13 @@ public class ShapedJobBasedRecipe extends ShapedRecipe {
                     }
                 }
             }
+            if (JobGetters.jobIsEnabled(player, Jobs.FARMER)) {
+                if (JobGetters.getJobLevel(player, Jobs.FARMER) >= 5) {
+                    if (getResultItem().getItem() == ModItems.FARMERS_HOE_LEVEL_1.get()) {
+                        return super.assemble(container);
+                    }
+                }
+            }
         }
         return ItemStack.EMPTY;
     }

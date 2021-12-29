@@ -4,6 +4,7 @@ import me.daqem.jobsplus.common.container.BackpackGUI;
 import me.daqem.jobsplus.data.ModDataGenerator;
 import me.daqem.jobsplus.events.*;
 import me.daqem.jobsplus.events.jobs.*;
+import me.daqem.jobsplus.events.tools.FarmersHoeEvents;
 import me.daqem.jobsplus.init.*;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.common.MinecraftForge;
@@ -28,6 +29,9 @@ class SideProxy {
         modEventBus.register(new EventNameFormat());
         modEventBus.register(new EventPlayerTick());
         modEventBus.register(new EventPlayerLoggedIn());
+        modEventBus.register(new EventPlayerLoggedIn());
+
+        modEventBus.register(new FarmersHoeEvents());
 
         modEventBus.register(new AlchemistEvents());
         modEventBus.register(new BuilderEvents());

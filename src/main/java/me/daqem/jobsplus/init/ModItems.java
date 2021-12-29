@@ -37,7 +37,10 @@ public class ModItems {
     public static final RegistryObject<Item> MINERS_HAMMER_LEVEL_3 = ITEMS.register("miners_hammer_level_3", () -> new HammerItem(ItemTiers.LEVEL_3, 2, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
     public static final RegistryObject<Item> MINERS_HAMMER_LEVEL_4 = ITEMS.register("miners_hammer_level_4", () -> new HammerItem(ItemTiers.LEVEL_4, 4, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
     //    public static final RegistryObject<Item> FISHERMANS_ROD = ITEMS.register("fishermans_rod", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
-//    public static final RegistryObject<Item> FARMERS_HOE = ITEMS.register("farmers_hoe", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
+    public static final RegistryObject<Item> FARMERS_HOE_LEVEL_1 = ITEMS.register("farmers_hoe_level_1", () -> new FarmersHoeItem(ItemTiers.LEVEL_1, 0, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
+    public static final RegistryObject<Item> FARMERS_HOE_LEVEL_2 = ITEMS.register("farmers_hoe_level_2", () -> new FarmersHoeItem(ItemTiers.LEVEL_2, 1, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> FARMERS_HOE_LEVEL_3 = ITEMS.register("farmers_hoe_level_3", () -> new FarmersHoeItem(ItemTiers.LEVEL_3, 2, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> FARMERS_HOE_LEVEL_4 = ITEMS.register("farmers_hoe_level_4", () -> new FarmersHoeItem(ItemTiers.LEVEL_4, 4, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
     public static final RegistryObject<Item> DIGGERS_EXCAVATOR_LEVEL_1 = ITEMS.register("diggers_excavator_level_1", () -> new ExcavatorItem(ItemTiers.LEVEL_1, 0, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
     public static final RegistryObject<Item> DIGGERS_EXCAVATOR_LEVEL_2 = ITEMS.register("diggers_excavator_level_2", () -> new ExcavatorItem(ItemTiers.LEVEL_2, 0, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> DIGGERS_EXCAVATOR_LEVEL_3 = ITEMS.register("diggers_excavator_level_3", () -> new ExcavatorItem(ItemTiers.LEVEL_3, 0, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));

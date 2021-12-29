@@ -30,7 +30,7 @@ public class MinerEvents {
             if (JobGetters.jobIsEnabled(player, job)) {
                 Block block = event.getState().getBlock();
                 if (BlockPosUtil.testAllSides(timeoutList, event.getPos())) {
-                    if (block instanceof OreBlock) {
+                    if (block instanceof OreBlock || !(block.getDescriptionId().startsWith("block.minecraft.")) && block.getDescriptionId().endsWith("_ore")) {
                         ExpHandler.addEXPMid(player, job);
                     } else if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
                         ExpHandler.addEXPLow(player, job);

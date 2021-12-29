@@ -2,6 +2,7 @@ package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
+import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.TranslatableString;
@@ -150,15 +151,14 @@ public class LumberAxeItem extends AxeItem {
             if (tag.contains("mode")) {
                 if (tag.getInt("mode") == 0) {
                     tag.putInt("mode", 1);
-                    HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + "Single Block");
                 } else {
                     tag.putInt("mode", 0);
-                    HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + "Tree Feller");
                 }
             } else {
                 tag.putInt("mode", 0);
-                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + "Tree Feller");
             }
+            HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + getModeString(stack));
+            SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
         }
         return super.use(level, player, hand);
     }

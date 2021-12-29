@@ -1,8 +1,8 @@
 {
   "type": "jobsplus:upgrade_recipe",
   "pattern": [
-    " DI",
-    " ED",
+    "DII",
+    "DE ",
     " S "
   ],
   "key": {
@@ -10,16 +10,16 @@
       "item": "minecraft:stick"
     },
     "D": {
-      "item": "minecraft:netherite_ingot"
+      "item": "minecraft:netherite_block"
     },
     "I": {
-      "item": "minecraft:diamond_block"
+      "item": "minecraft:emerald_block"
     },
     "E": {
-      "item": "jobsplus:diggers_excavator_level_2"
+      "item": "jobsplus:farmers_hoe_level_3"
     }
   },
   "result": {
-    "item": "jobsplus:diggers_excavator_level_3"
+    "item": "jobsplus:farmers_hoe_level_4"
   }
 }

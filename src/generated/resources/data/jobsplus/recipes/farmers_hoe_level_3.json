@@ -1,8 +1,8 @@
 {
   "type": "jobsplus:upgrade_recipe",
   "pattern": [
-    " DI",
-    " ED",
+    "DII",
+    "DE ",
     " S "
   ],
   "key": {
@@ -16,10 +16,10 @@
       "item": "minecraft:diamond_block"
     },
     "E": {
-      "item": "jobsplus:diggers_excavator_level_2"
+      "item": "jobsplus:farmers_hoe_level_2"
     }
   },
   "result": {
-    "item": "jobsplus:diggers_excavator_level_3"
+    "item": "jobsplus:farmers_hoe_level_3"
   }
 }

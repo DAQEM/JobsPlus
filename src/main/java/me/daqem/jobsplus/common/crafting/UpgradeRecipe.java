@@ -2,10 +2,7 @@ package me.daqem.jobsplus.common.crafting;
 
 import com.google.gson.JsonObject;
 import me.daqem.jobsplus.JobsPlus;
-import me.daqem.jobsplus.common.item.BackpackItem;
-import me.daqem.jobsplus.common.item.ExcavatorItem;
-import me.daqem.jobsplus.common.item.HammerItem;
-import me.daqem.jobsplus.common.item.LumberAxeItem;
+import me.daqem.jobsplus.common.item.*;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.init.ModRecipes;
 import me.daqem.jobsplus.utils.JobGetters;
@@ -40,6 +37,7 @@ public class UpgradeRecipe extends ShapedRecipe {
             var hammerPresent = false;
             var excavatorPresent = false;
             var lumberAxePresent = false;
+            var hoePresent = false;
             for (int index = 0; index < container.getContainerSize(); ++index) {
                 final var slotStack = container.getItem(index);
                 if (!slotStack.isEmpty()) {
@@ -76,6 +74,15 @@ public class UpgradeRecipe extends ShapedRecipe {
                             return ItemStack.EMPTY;
                         }
                         lumberAxePresent = true;
+                        if (slotStack.hasTag()) {
+                            upgradedStack.setTag(Objects.requireNonNull(slotStack.getTag()).copy());
+                        }
+                    }
+                    if (item instanceof FarmersHoeItem) {
+                        if (hoePresent) {
+                            return ItemStack.EMPTY;
+                        }
+                        hoePresent = true;
                         if (slotStack.hasTag()) {
                             upgradedStack.setTag(Objects.requireNonNull(slotStack.getTag()).copy());
                         }
@@ -147,6 +154,24 @@ public class UpgradeRecipe extends ShapedRecipe {
                 }
                 if (JobGetters.getJobLevel(player, lumberjack) >= 75) {
                     if (getResultItem().getItem() == ModItems.LUMBERJACK_AXE_LEVEL_4.get()) {
+                        return upgradedStack;
+                    }
+                }
+            }
+            Jobs farmer = Jobs.FARMER;
+            if (JobGetters.jobIsEnabled(player, farmer) && hoePresent) {
+                if (JobGetters.getJobLevel(player, farmer) >= 25) {
+                    if (getResultItem().getItem() == ModItems.FARMERS_HOE_LEVEL_2.get()) {
+                        return upgradedStack;
+                    }
+                }
+                if (JobGetters.getJobLevel(player, farmer) >= 50) {
+                    if (getResultItem().getItem() == ModItems.FARMERS_HOE_LEVEL_3.get()) {
+                        return upgradedStack;
+                    }
+                }
+                if (JobGetters.getJobLevel(player, farmer) >= 75) {
+                    if (getResultItem().getItem() == ModItems.FARMERS_HOE_LEVEL_4.get()) {
                         return upgradedStack;
                     }
                 }
