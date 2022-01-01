@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.data;
 
 import com.google.gson.JsonObject;
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.init.ModRecipes;
 import net.minecraft.data.DataGenerator;
@@ -537,6 +538,51 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("netherite_ingot", has(Items.NETHERITE_INGOT))
                 .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
 
+        ShapedRecipeBuilder.shaped(ModItems.CURSE_BREAKER.get())
+                .pattern("DGD")
+                .pattern("GEG")
+                .pattern("DGD")
+                .define('G', Items.GLOW_LICHEN)
+                .define('D', Tags.Items.GEMS_EMERALD)
+                .define('E', Items.COBWEB)
+                .unlockedBy("cobweb", has(Items.COBWEB))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.EXPERIENCE_BOTTLE.get())
+                .pattern(" G ")
+                .pattern("GEG")
+                .pattern(" G ")
+                .define('G', Tags.Items.GLASS)
+                .define('E', ModItems.EXP_JAR.get())
+                .unlockedBy("exp_jar", has(ModItems.EXP_JAR.get()))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
+
+        ShapedRecipeBuilder.shaped(ModItems.EXPERIENCE_BOTTLE.get())
+                .pattern("BGR")
+                .pattern("GEG")
+                .pattern("UGS")
+                .define('G', Tags.Items.GLASS)
+                .define('R', Items.ROTTEN_FLESH)
+                .define('B', Items.BONE)
+                .define('S', Items.STRING)
+                .define('U', Items.GUNPOWDER)
+                .define('E', Tags.Items.GEMS_EMERALD)
+                .unlockedBy("emerald", has(Items.EMERALD))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get(), JobsPlus.getId("experience_bottle_tier_1")));
+
+        ShapedRecipeBuilder.shaped(ModItems.EXPERIENCE_BOTTLE.get())
+                .pattern("BGR")
+                .pattern("GEG")
+                .pattern("UGS")
+                .define('G', Tags.Items.GLASS)
+                .define('R', Items.ROTTEN_FLESH)
+                .define('B', Items.BONE)
+                .define('S', Items.STRING)
+                .define('U', Items.GUNPOWDER)
+                .define('E', ModItems.EXPERIENCE_BOTTLE.get())
+                .unlockedBy("experience_bottle", has(ModItems.EXPERIENCE_BOTTLE.get()))
+                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get(), JobsPlus.getId("experience_bottle_other_tiers")));
+
         ShapelessRecipeBuilder.shapeless(Items.WHITE_WOOL)
                 .requires(ItemTags.WOOL)
                 .unlockedBy("wool", has(ItemTags.WOOL))
@@ -547,14 +593,25 @@ public class ModRecipeProvider extends RecipeProvider {
 
         final FinishedRecipe inner;
         RecipeSerializer<?> serializerOverride;
+        ResourceLocation location;
 
         public RecipeInjector(FinishedRecipe innerIn, RecipeSerializer<?> serializerOverrideIn) {
             this.inner = innerIn;
             this.serializerOverride = serializerOverrideIn;
         }
 
+        public RecipeInjector(FinishedRecipe innerIn, RecipeSerializer<?> serializerOverrideIn, ResourceLocation location) {
+            this.inner = innerIn;
+            this.location = location;
+            this.serializerOverride = serializerOverrideIn;
+        }
+
         public static Consumer<FinishedRecipe> Inject(Consumer<FinishedRecipe> consumer, RecipeSerializer<?> serializer) {
             return iFinishedRecipe -> consumer.accept(new RecipeInjector(iFinishedRecipe, serializer));
+        }
+
+        public static Consumer<FinishedRecipe> Inject(Consumer<FinishedRecipe> consumer, RecipeSerializer<?> serializer, ResourceLocation location) {
+            return iFinishedRecipe -> consumer.accept(new RecipeInjector(iFinishedRecipe, serializer, location));
         }
 
         @Override
@@ -564,7 +621,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
         @Override
         public @NotNull ResourceLocation getId() {
-            return this.inner.getId();
+            return this.location == null ? this.inner.getId() : this.location;
         }
 
         @Override

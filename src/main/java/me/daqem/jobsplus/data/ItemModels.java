@@ -24,6 +24,8 @@ public class ItemModels extends ItemModelProvider {
         handheld(ModItems.HUGE_BACKPACK.get());
         handheld(ModItems.ENDER_BACKPACK.get());
         handheld(ModItems.EXP_JAR.get());
+        handheld(ModItems.EXPERIENCE_BOTTLE.get());
+        handheld(ModItems.CURSE_BREAKER.get());
         handheld(ModItems.MINERS_HAMMER_LEVEL_1.get());
         handheld(ModItems.MINERS_HAMMER_LEVEL_2.get());
         handheld(ModItems.MINERS_HAMMER_LEVEL_3.get());
@@ -40,10 +42,10 @@ public class ItemModels extends ItemModelProvider {
         handheld(ModItems.FARMERS_HOE_LEVEL_2.get());
         handheld(ModItems.FARMERS_HOE_LEVEL_3.get());
         handheld(ModItems.FARMERS_HOE_LEVEL_4.get());
-        handheldRod(ModItems.HUNTERS_SWORD_LEVEL_1.get());
-        handheldRod(ModItems.HUNTERS_SWORD_LEVEL_2.get());
-        handheldRod(ModItems.HUNTERS_SWORD_LEVEL_3.get());
-        handheldRod(ModItems.HUNTERS_SWORD_LEVEL_4.get());
+        handheld(ModItems.HUNTERS_SWORD_LEVEL_1.get());
+        handheld(ModItems.HUNTERS_SWORD_LEVEL_2.get());
+        handheld(ModItems.HUNTERS_SWORD_LEVEL_3.get());
+        handheld(ModItems.HUNTERS_SWORD_LEVEL_4.get());
 
         generated(ModItems.OBSIDIAN_HELMET.get());
         generated(ModItems.OBSIDIAN_CHESTPLATE.get());
@@ -66,11 +68,6 @@ public class ItemModels extends ItemModelProvider {
     private void handheld(Item item) {
         String name = Objects.requireNonNull(item.getRegistryName()).getPath();
         singleTexture(name, mcLoc("item/handheld"), "layer0", modLoc("item/" + name));
-    }
-
-    private void handheldRod(Item item) {
-        String name = Objects.requireNonNull(item.getRegistryName()).getPath();
-        singleTexture(name, mcLoc("item/handheld_rod"), "layer0", modLoc("item/" + name));
     }
 
     private void generated(Item item) {

@@ -41,6 +41,8 @@ public class UpgradeRecipe extends ShapedRecipe {
             var swordPresent = false;
             var bowPresent = false;
             var rodPresent = false;
+            var expBottlePresent = false;
+            var expJarPresent = false;
             for (int index = 0; index < container.getContainerSize(); ++index) {
                 final var slotStack = container.getItem(index);
                 if (!slotStack.isEmpty()) {
@@ -115,6 +117,27 @@ public class UpgradeRecipe extends ShapedRecipe {
                         rodPresent = true;
                         if (slotStack.hasTag()) {
                             upgradedStack.setTag(Objects.requireNonNull(slotStack.getTag()).copy());
+                        }
+                    }
+                    if (item instanceof EXPJarItem) {
+                        if (expJarPresent) {
+                            return ItemStack.EMPTY;
+                        }
+                        expJarPresent = true;
+                        if (slotStack.hasTag()) {
+                            upgradedStack.setTag(Objects.requireNonNull(slotStack.getTag()).copy());
+                        }
+                    }
+                    if (item instanceof ModExperienceBottleItem) {
+                        if (expBottlePresent) {
+                            return ItemStack.EMPTY;
+                        }
+                        expBottlePresent = true;
+                        if (slotStack.hasTag()) {
+                            upgradedStack.setTag(Objects.requireNonNull(slotStack.getTag()).copy());
+                            if (upgradedStack.getOrCreateTag().getInt("tier") < 6) {
+                                upgradedStack.getOrCreateTag().putInt("tier", upgradedStack.getOrCreateTag().getInt("tier") + 1);
+                            }
                         }
                     }
                 }
@@ -257,6 +280,53 @@ public class UpgradeRecipe extends ShapedRecipe {
                 if (JobGetters.getJobLevel(player, fisherman) >= 75) {
                     if (getResultItem().getItem() == ModItems.FISHERMANS_ROD_LEVEL_4.get()) {
                         return upgradedStack;
+                    }
+                }
+            }
+            Jobs enchanter = Jobs.ENCHANTER;
+            if (JobGetters.jobIsEnabled(player, enchanter) && expBottlePresent) {
+                if (JobGetters.getJobLevel(player, enchanter) >= 20) {
+                    if (getResultItem().getItem() == ModItems.EXPERIENCE_BOTTLE.get()) {
+                        if (upgradedStack.getOrCreateTag().getInt("tier") == 2) {
+                            return upgradedStack;
+                        }
+                    }
+                }
+                if (JobGetters.getJobLevel(player, enchanter) >= 35) {
+                    if (getResultItem().getItem() == ModItems.EXPERIENCE_BOTTLE.get()) {
+                        if (upgradedStack.getOrCreateTag().getInt("tier") == 3) {
+                            return upgradedStack;
+                        }
+                    }
+                }
+                if (JobGetters.getJobLevel(player, enchanter) >= 50) {
+                    if (getResultItem().getItem() == ModItems.EXPERIENCE_BOTTLE.get()) {
+                        if (upgradedStack.getOrCreateTag().getInt("tier") == 4) {
+                            return upgradedStack;
+                        }
+                    }
+                }
+                if (JobGetters.getJobLevel(player, enchanter) >= 75) {
+                    if (getResultItem().getItem() == ModItems.EXPERIENCE_BOTTLE.get()) {
+                        if (upgradedStack.getOrCreateTag().getInt("tier") == 5) {
+                            return upgradedStack;
+                        }
+                    }
+                }
+                if (JobGetters.getJobLevel(player, enchanter) >= 100) {
+                    if (getResultItem().getItem() == ModItems.EXPERIENCE_BOTTLE.get()) {
+                        if (upgradedStack.getOrCreateTag().getInt("tier") == 6) {
+                            return upgradedStack;
+                        }
+                    }
+                }
+            }
+            if (JobGetters.jobIsEnabled(player, enchanter) && expJarPresent) {
+                if (JobGetters.getJobLevel(player, enchanter) >= 25) {
+                    if (upgradedStack.getOrCreateTag().getInt("EXP") != 0) {
+                        if (getResultItem().getItem() == ModItems.EXPERIENCE_BOTTLE.get()) {
+                            return upgradedStack;
+                        }
                     }
                 }
             }

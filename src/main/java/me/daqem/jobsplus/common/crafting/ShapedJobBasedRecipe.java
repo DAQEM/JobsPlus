@@ -27,14 +27,28 @@ public class ShapedJobBasedRecipe extends ShapedRecipe {
         super(shapedRecipe.getId(), shapedRecipe.getGroup(), shapedRecipe.getRecipeWidth(), shapedRecipe.getRecipeHeight(), shapedRecipe.getIngredients(), shapedRecipe.getResultItem());
     }
 
+
     @Override
     public @NotNull ItemStack assemble(CraftingContainer container) {
         if (container.menu instanceof CraftingMenu craftingMenu) {
             Player player = craftingMenu.player;
-            if (JobGetters.jobIsEnabled(player, Jobs.ENCHANTER)
-                    && JobGetters.getJobLevel(player, Jobs.ENCHANTER) >= 5
-                    && Objects.equals(getResultItem().getItem().getRegistryName(), JobsPlus.getId("exp_jar"))) {
-                return super.assemble(container);
+            if (JobGetters.jobIsEnabled(player, Jobs.ENCHANTER)) {
+                if (JobGetters.getJobLevel(player, Jobs.ENCHANTER) >= 5) {
+                    if (getResultItem().getItem() == ModItems.EXP_JAR.get()) {
+                        return super.assemble(container);
+                    }
+                }
+                if (JobGetters.getJobLevel(player, Jobs.ENCHANTER) >= 10) {
+                    if (getResultItem().getItem() == ModItems.EXPERIENCE_BOTTLE.get()) {
+                        getResultItem().getOrCreateTag().putInt("tier", 1);
+                        return super.assemble(container);
+                    }
+                }
+                if (JobGetters.getJobLevel(player, Jobs.ENCHANTER) >= 10) {
+                    if (getResultItem().getItem() == ModItems.CURSE_BREAKER.get()) {
+                        return super.assemble(container);
+                    }
+                }
             }
             if (JobGetters.jobIsEnabled(player, Jobs.SMITH)) {
                 if (JobGetters.getJobLevel(player, Jobs.SMITH) >= 1) {

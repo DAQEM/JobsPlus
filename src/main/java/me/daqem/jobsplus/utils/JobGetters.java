@@ -9,40 +9,40 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class JobGetters {
-    
+
     public static boolean jobIsEnabled(Player player, Jobs job) {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
             switch (job) {
                 case ALCHEMIST -> {
-                    if(handler.getAlchemist()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
+                    if (handler.getAlchemist()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case BUILDER -> {
-                    if(handler.getBuilder()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
+                    if (handler.getBuilder()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case DIGGER -> {
-                    if(handler.getDigger()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
+                    if (handler.getDigger()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case ENCHANTER -> {
-                    if(handler.getEnchanter()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
+                    if (handler.getEnchanter()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case FARMER -> {
-                    if(handler.getFarmer()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
+                    if (handler.getFarmer()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case FISHERMAN -> {
-                    if(handler.getFisherman()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
+                    if (handler.getFisherman()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case HUNTER -> {
-                    if(handler.getHunter()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
+                    if (handler.getHunter()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case LUMBERJACK -> {
-                    if(handler.getLumberjack()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
+                    if (handler.getLumberjack()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case MINER -> {
-                    if(handler.getMiner()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
+                    if (handler.getMiner()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
                 case SMITH -> {
-                    if(handler.getSmith()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
+                    if (handler.getSmith()[CapType.LEVEL.get()] != 0) atomicBoolean.set(true);
                 }
             }
         });
@@ -89,7 +89,7 @@ public class JobGetters {
 
     public static int getAmountOfEnabledJobs(Player player) {
         int count = 0;
-        for(Jobs job : Jobs.values()) {
+        for (Jobs job : Jobs.values()) {
             if (jobIsEnabled(player, job)) {
                 count++;
             }
@@ -107,6 +107,7 @@ public class JobGetters {
         if (getVerification(player, CapType.START_VERIFICATION_FREE) == 1) return false;
         if (getVerification(player, CapType.START_VERIFICATION_PAID) == 1) return false;
         if (getVerification(player, CapType.STOP_VERIFICATION_FREE) == 1) return false;
+        if (getVerification(player, CapType.STOP_VERIFICATION_PAID) == 1) return false;
         return getVerification(player, CapType.POWER_UP_VERIFICATION) != 1;
     }
 

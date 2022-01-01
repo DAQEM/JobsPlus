@@ -29,7 +29,7 @@ import java.util.Objects;
 public class HunterBowItem extends BowItem {
 
     public HunterBowItem(Properties properties) {
-        super(properties.stacksTo(1));
+        super(properties);
     }
 
     @Override

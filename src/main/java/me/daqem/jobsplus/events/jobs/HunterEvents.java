@@ -23,10 +23,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class HunterEvents {
 
     private final Jobs job = Jobs.HUNTER;
+    private final HashMap<Player, Integer> furnaceHashmap = new HashMap<>();
 
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
@@ -45,8 +46,6 @@ public class HunterEvents {
         }
     }
 
-    private final HashMap<Player, Integer> furnaceHashmap = new HashMap<>();
-
     @SubscribeEvent
     public void onPlayerTickFurnace(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
@@ -62,7 +61,7 @@ public class HunterEvents {
                                 if (item.getItem() instanceof AirItem) {
                                     int exp = 0;
                                     for (int i = 0; i < furnaceHashmap.get(player); i++) {
-                                        exp += ExpHandler.generateFurnaceInt();
+                                        exp += ExpHandler.getEXPLow();
                                     }
                                     ExpHandler.addJobEXP(player, job, exp);
                                     furnaceHashmap.remove(player);
@@ -70,7 +69,7 @@ public class HunterEvents {
                                     if (itemCount < furnaceHashmap.get(player)) {
                                         int exp = 0;
                                         for (int i = 0; i < furnaceHashmap.get(player) - itemCount; i++) {
-                                            exp += ExpHandler.generateFurnaceInt();
+                                            exp += ExpHandler.getEXPLow();
                                         }
                                         ExpHandler.addJobEXP(player, job, exp);
                                         furnaceHashmap.put(player, furnaceHashmap.get(player) - itemCount);

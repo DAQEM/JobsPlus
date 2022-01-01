@@ -1,4 +1,4 @@
-package me.daqem.jobsplus.events.tools;
+package me.daqem.jobsplus.events.item;
 
 import me.daqem.jobsplus.common.item.FarmersHoeItem;
 import me.daqem.jobsplus.handlers.CropHandler;

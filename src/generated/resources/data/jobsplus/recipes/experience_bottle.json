@@ -1,0 +1,19 @@
+{
+  "type": "jobsplus:upgrade_recipe",
+  "pattern": [
+    " G ",
+    "GEG",
+    " G "
+  ],
+  "key": {
+    "G": {
+      "tag": "forge:glass"
+    },
+    "E": {
+      "item": "jobsplus:exp_jar"
+    }
+  },
+  "result": {
+    "item": "jobsplus:experience_bottle"
+  }
+}

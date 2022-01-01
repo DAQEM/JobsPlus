@@ -33,6 +33,10 @@ public class ExpHandler {
         addRandomJobEXP(player, job, 4, 11);
     }
 
+    public static void addEXPFishing(Player player, Jobs job) {
+        addRandomJobEXP(player, job, 8, 14);
+    }
+
     public static int getEXPLowest() {
         return getRandomJobEXP(0, 2);
     }
@@ -51,6 +55,10 @@ public class ExpHandler {
 
     public static int getEXPHighest() {
         return getRandomJobEXP(4, 11);
+    }
+
+    public static int getEXPFishing() {
+        return getRandomJobEXP(8, 14);
     }
 
     public static void addRandomJobEXP(Player player, Jobs job, int lowerBound, int upperBound) {
@@ -79,10 +87,5 @@ public class ExpHandler {
                         " +" + exp + " EXP"), ChatType.GAME_INFO, player.getUUID());
             }
         }
-    }
-
-    public static int generateFurnaceInt() {
-        Random random = new Random();
-        return random.nextInt(3 - 1) + 1;
     }
 }

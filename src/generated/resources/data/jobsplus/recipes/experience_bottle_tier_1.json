@@ -1,0 +1,31 @@
+{
+  "type": "jobsplus:shaped_job_based_recipe",
+  "pattern": [
+    "BGR",
+    "GEG",
+    "UGS"
+  ],
+  "key": {
+    "G": {
+      "tag": "forge:glass"
+    },
+    "R": {
+      "item": "minecraft:rotten_flesh"
+    },
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "S": {
+      "item": "minecraft:string"
+    },
+    "U": {
+      "item": "minecraft:gunpowder"
+    },
+    "E": {
+      "tag": "forge:gems/emerald"
+    }
+  },
+  "result": {
+    "item": "jobsplus:experience_bottle"
+  }
+}

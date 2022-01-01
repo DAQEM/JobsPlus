@@ -23,16 +23,17 @@ public class ModItems {
     public static final RegistryObject<Item> ENDER_BACKPACK = ITEMS.register("ender_backpack", () -> new BackpackItem("ender_backpack", Backpack.ENDER));
 
     public static final RegistryObject<Item> EXP_JAR = ITEMS.register("exp_jar", () -> new EXPJarItem(new Item.Properties().tab(JobsPlus.TAB).stacksTo(1).rarity(Rarity.UNCOMMON)));
-    //    public static final RegistryObject<Item> CURSE_BREAKER = ITEMS.register("curse_breaker", () -> new Item(new Item.Properties().tab(JobsPlus.TAB)));
+    public static final RegistryObject<Item> EXPERIENCE_BOTTLE = ITEMS.register("experience_bottle", () -> new ModExperienceBottleItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> CURSE_BREAKER = ITEMS.register("curse_breaker", () -> new CurseBreakItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
 
     public static final RegistryObject<Item> HUNTERS_SWORD_LEVEL_1 = ITEMS.register("hunters_sword_level_1", () -> new HunterSwordItem(ItemTiers.LEVEL_1, 6, -2.4F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
     public static final RegistryObject<Item> HUNTERS_SWORD_LEVEL_2 = ITEMS.register("hunters_sword_level_2", () -> new HunterSwordItem(ItemTiers.LEVEL_2, 7, -2.3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> HUNTERS_SWORD_LEVEL_3 = ITEMS.register("hunters_sword_level_3", () -> new HunterSwordItem(ItemTiers.LEVEL_3, 9, -2.2F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
     public static final RegistryObject<Item> HUNTERS_SWORD_LEVEL_4 = ITEMS.register("hunters_sword_level_4", () -> new HunterSwordItem(ItemTiers.LEVEL_4, 11, -2F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
-    public static final RegistryObject<Item> HUNTERS_BOW_LEVEL_1 = ITEMS.register("hunters_bow_level_1", () -> new HunterBowItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
-    public static final RegistryObject<Item> HUNTERS_BOW_LEVEL_2 = ITEMS.register("hunters_bow_level_2", () -> new HunterBowItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
-    public static final RegistryObject<Item> HUNTERS_BOW_LEVEL_3 = ITEMS.register("hunters_bow_level_3", () -> new HunterBowItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
-    public static final RegistryObject<Item> HUNTERS_BOW_LEVEL_4 = ITEMS.register("hunters_bow_level_4", () -> new HunterBowItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> HUNTERS_BOW_LEVEL_1 = ITEMS.register("hunters_bow_level_1", () -> new HunterBowItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON).durability(257)));
+    public static final RegistryObject<Item> HUNTERS_BOW_LEVEL_2 = ITEMS.register("hunters_bow_level_2", () -> new HunterBowItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON).durability(473)));
+    public static final RegistryObject<Item> HUNTERS_BOW_LEVEL_3 = ITEMS.register("hunters_bow_level_3", () -> new HunterBowItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE).durability(741)));
+    public static final RegistryObject<Item> HUNTERS_BOW_LEVEL_4 = ITEMS.register("hunters_bow_level_4", () -> new HunterBowItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC).durability(976)));
     public static final RegistryObject<Item> LUMBERJACK_AXE_LEVEL_1 = ITEMS.register("lumberjack_axe_level_1", () -> new LumberAxeItem(ItemTiers.LEVEL_1, 7, -3.4F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
     public static final RegistryObject<Item> LUMBERJACK_AXE_LEVEL_2 = ITEMS.register("lumberjack_axe_level_2", () -> new LumberAxeItem(ItemTiers.LEVEL_2, 8, -3.3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> LUMBERJACK_AXE_LEVEL_3 = ITEMS.register("lumberjack_axe_level_3", () -> new LumberAxeItem(ItemTiers.LEVEL_3, 10, -3.2F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
