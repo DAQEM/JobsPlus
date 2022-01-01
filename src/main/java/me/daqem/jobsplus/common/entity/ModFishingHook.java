@@ -2,7 +2,6 @@ package me.daqem.jobsplus.common.entity;
 
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.item.RodItem;
-import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModEntities;
 import me.daqem.jobsplus.init.ModItems;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -127,8 +126,6 @@ public class ModFishingHook extends FishingHook {
     public void tick() {
         this.syncronizedRandom.setSeed(this.getUUID().getLeastSignificantBits() ^ this.level.getGameTime());
         Player player = this.getPlayerOwner();
-        if (!this.level.isClientSide && player != null)
-            HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, this.timeUntilHooked + "");
         if (player == null) {
             this.discard();
         } else if (this.level.isClientSide || !this.shouldStopFishing(player)) {
