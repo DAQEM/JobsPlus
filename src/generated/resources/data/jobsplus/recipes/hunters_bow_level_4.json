@@ -1,0 +1,25 @@
+{
+  "type": "jobsplus:upgrade_recipe",
+  "pattern": [
+    " IS",
+    "DES",
+    " IS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:string"
+    },
+    "D": {
+      "item": "minecraft:netherite_block"
+    },
+    "I": {
+      "item": "minecraft:emerald_block"
+    },
+    "E": {
+      "item": "jobsplus:hunters_bow_level_3"
+    }
+  },
+  "result": {
+    "item": "jobsplus:hunters_bow_level_4"
+  }
+}

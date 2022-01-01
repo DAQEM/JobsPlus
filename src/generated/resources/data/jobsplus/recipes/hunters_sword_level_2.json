@@ -1,0 +1,25 @@
+{
+  "type": "jobsplus:upgrade_recipe",
+  "pattern": [
+    " D ",
+    "IEI",
+    " S "
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "I": {
+      "item": "minecraft:gold_block"
+    },
+    "E": {
+      "item": "jobsplus:hunters_sword_level_1"
+    }
+  },
+  "result": {
+    "item": "jobsplus:hunters_sword_level_2"
+  }
+}

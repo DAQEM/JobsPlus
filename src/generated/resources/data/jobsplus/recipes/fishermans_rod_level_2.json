@@ -1,0 +1,25 @@
+{
+  "type": "jobsplus:upgrade_recipe",
+  "pattern": [
+    "  I",
+    " ES",
+    "D S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:string"
+    },
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "I": {
+      "item": "minecraft:gold_block"
+    },
+    "E": {
+      "item": "jobsplus:fishermans_rod_level_1"
+    }
+  },
+  "result": {
+    "item": "jobsplus:fishermans_rod_level_2"
+  }
+}

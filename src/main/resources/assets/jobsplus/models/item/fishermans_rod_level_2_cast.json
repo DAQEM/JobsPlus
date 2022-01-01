@@ -1,0 +1,6 @@
+{
+    "parent": "item/fishing_rod",
+    "textures": {
+        "layer0": "jobsplus:item/fishermans_rod_level_2_cast"
+    }
+}

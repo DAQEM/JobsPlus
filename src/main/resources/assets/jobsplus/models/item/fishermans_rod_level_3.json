@@ -1,0 +1,14 @@
+{
+    "parent": "item/handheld_rod",
+    "textures": {
+        "layer0": "jobsplus:item/fishermans_rod_level_3"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "cast": 1
+            },
+            "model": "jobsplus:item/fishermans_rod_level_3_cast"
+        }
+    ]
+}

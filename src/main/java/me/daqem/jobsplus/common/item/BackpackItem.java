@@ -78,11 +78,11 @@ public class BackpackItem extends Item {
         if (!level.isClientSide && player instanceof ServerPlayer && backpack.getItem() instanceof BackpackItem) {
             Jobs job = Jobs.BUILDER;
             boolean canOpenBackpack = backpack.getItem() == ModItems.SMALL_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 5;
-            if (backpack.getItem() == ModItems.MEDIUM_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 10)
+            if (backpack.getItem() == ModItems.MEDIUM_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 15)
                 canOpenBackpack = true;
-            if (backpack.getItem() == ModItems.LARGE_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 20)
+            if (backpack.getItem() == ModItems.LARGE_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 25)
                 canOpenBackpack = true;
-            if (backpack.getItem() == ModItems.HUGE_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 35)
+            if (backpack.getItem() == ModItems.HUGE_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 50)
                 canOpenBackpack = true;
             if (backpack.getItem() == ModItems.ENDER_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 10)
                 canOpenBackpack = true;
@@ -132,13 +132,13 @@ public class BackpackItem extends Item {
                 level = "5";
             }
             if (stack.getItem() == ModItems.MEDIUM_BACKPACK.get()) {
-                level = "10";
+                level = "15";
             }
             if (stack.getItem() == ModItems.LARGE_BACKPACK.get()) {
-                level = "20";
+                level = "25";
             }
             if (stack.getItem() == ModItems.HUGE_BACKPACK.get()) {
-                level = "35";
+                level = "50";
             }
             if (stack.getItem() == ModItems.ENDER_BACKPACK.get()) {
                 level = "10";

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:fishing",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "weight": 80,
+          "name": "minecraft:gameplay/fishing"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "weight": 20,
+          "name": "jobsplus:gameplay/fishing_2_drops"
+        }
+      ]
+    }
+  ]
+}

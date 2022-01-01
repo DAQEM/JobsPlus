@@ -1,0 +1,6 @@
+{
+    "parent": "item/bow",
+    "textures": {
+        "layer0": "jobsplus:item/hunters_bow_level_4_pulling_1"
+    }
+}

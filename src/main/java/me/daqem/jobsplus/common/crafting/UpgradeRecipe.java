@@ -38,6 +38,9 @@ public class UpgradeRecipe extends ShapedRecipe {
             var excavatorPresent = false;
             var lumberAxePresent = false;
             var hoePresent = false;
+            var swordPresent = false;
+            var bowPresent = false;
+            var rodPresent = false;
             for (int index = 0; index < container.getContainerSize(); ++index) {
                 final var slotStack = container.getItem(index);
                 if (!slotStack.isEmpty()) {
@@ -87,17 +90,44 @@ public class UpgradeRecipe extends ShapedRecipe {
                             upgradedStack.setTag(Objects.requireNonNull(slotStack.getTag()).copy());
                         }
                     }
+                    if (item instanceof HunterSwordItem) {
+                        if (swordPresent) {
+                            return ItemStack.EMPTY;
+                        }
+                        swordPresent = true;
+                        if (slotStack.hasTag()) {
+                            upgradedStack.setTag(Objects.requireNonNull(slotStack.getTag()).copy());
+                        }
+                    }
+                    if (item instanceof HunterBowItem) {
+                        if (bowPresent) {
+                            return ItemStack.EMPTY;
+                        }
+                        bowPresent = true;
+                        if (slotStack.hasTag()) {
+                            upgradedStack.setTag(Objects.requireNonNull(slotStack.getTag()).copy());
+                        }
+                    }
+                    if (item instanceof RodItem) {
+                        if (rodPresent) {
+                            return ItemStack.EMPTY;
+                        }
+                        rodPresent = true;
+                        if (slotStack.hasTag()) {
+                            upgradedStack.setTag(Objects.requireNonNull(slotStack.getTag()).copy());
+                        }
+                    }
                 }
             }
             Jobs builder = Jobs.BUILDER;
             if (JobGetters.jobIsEnabled(player, builder) && backpackPresent) {
-                if (JobGetters.getJobLevel(player, builder) >= 10 && upgradedStack.getItem() == ModItems.MEDIUM_BACKPACK.get()) {
+                if (JobGetters.getJobLevel(player, builder) >= 15 && upgradedStack.getItem() == ModItems.MEDIUM_BACKPACK.get()) {
                     return upgradedStack;
                 }
-                if (JobGetters.getJobLevel(player, builder) >= 20 && upgradedStack.getItem() == ModItems.LARGE_BACKPACK.get()) {
+                if (JobGetters.getJobLevel(player, builder) >= 25 && upgradedStack.getItem() == ModItems.LARGE_BACKPACK.get()) {
                     return upgradedStack;
                 }
-                if (JobGetters.getJobLevel(player, builder) >= 35 && upgradedStack.getItem() == ModItems.HUGE_BACKPACK.get()) {
+                if (JobGetters.getJobLevel(player, builder) >= 50 && upgradedStack.getItem() == ModItems.HUGE_BACKPACK.get()) {
                     return upgradedStack;
                 }
                 if (JobGetters.getJobLevel(player, builder) >= 10 && upgradedStack.getItem() == ModItems.ENDER_BACKPACK.get()) {
@@ -176,6 +206,60 @@ public class UpgradeRecipe extends ShapedRecipe {
                     }
                 }
             }
+            Jobs hunter = Jobs.HUNTER;
+            if (JobGetters.jobIsEnabled(player, hunter) && swordPresent) {
+                if (JobGetters.getJobLevel(player, hunter) >= 25) {
+                    if (getResultItem().getItem() == ModItems.HUNTERS_SWORD_LEVEL_2.get()) {
+                        return upgradedStack;
+                    }
+                }
+                if (JobGetters.getJobLevel(player, hunter) >= 50) {
+                    if (getResultItem().getItem() == ModItems.HUNTERS_SWORD_LEVEL_3.get()) {
+                        return upgradedStack;
+                    }
+                }
+                if (JobGetters.getJobLevel(player, hunter) >= 75) {
+                    if (getResultItem().getItem() == ModItems.HUNTERS_SWORD_LEVEL_4.get()) {
+                        return upgradedStack;
+                    }
+                }
+            }
+            if (JobGetters.jobIsEnabled(player, hunter) && bowPresent) {
+                if (JobGetters.getJobLevel(player, hunter) >= 25) {
+                    if (getResultItem().getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get()) {
+                        return upgradedStack;
+                    }
+                }
+                if (JobGetters.getJobLevel(player, hunter) >= 50) {
+                    if (getResultItem().getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get()) {
+                        return upgradedStack;
+                    }
+                }
+                if (JobGetters.getJobLevel(player, hunter) >= 75) {
+                    if (getResultItem().getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get()) {
+                        return upgradedStack;
+                    }
+                }
+            }
+
+            Jobs fisherman = Jobs.FISHERMAN;
+            if (JobGetters.jobIsEnabled(player, fisherman) && rodPresent) {
+                if (JobGetters.getJobLevel(player, fisherman) >= 25) {
+                    if (getResultItem().getItem() == ModItems.FISHERMANS_ROD_LEVEL_2.get()) {
+                        return upgradedStack;
+                    }
+                }
+                if (JobGetters.getJobLevel(player, fisherman) >= 50) {
+                    if (getResultItem().getItem() == ModItems.FISHERMANS_ROD_LEVEL_3.get()) {
+                        return upgradedStack;
+                    }
+                }
+                if (JobGetters.getJobLevel(player, fisherman) >= 75) {
+                    if (getResultItem().getItem() == ModItems.FISHERMANS_ROD_LEVEL_4.get()) {
+                        return upgradedStack;
+                    }
+                }
+            }
         }
         return ItemStack.EMPTY;
     }
@@ -199,7 +283,7 @@ public class UpgradeRecipe extends ShapedRecipe {
             try {
                 return new UpgradeRecipe(RecipeSerializer.SHAPED_RECIPE.fromJson(recipeId, json));
             } catch (Exception exception) {
-                JobsPlus.LOGGER.info("Error reading CopyBackpack Recipe from packet: ", exception);
+                JobsPlus.LOGGER.info("Error reading UpgradeRecipe from packet: ", exception);
                 throw exception;
             }
         }
@@ -209,7 +293,7 @@ public class UpgradeRecipe extends ShapedRecipe {
             try {
                 RecipeSerializer.SHAPED_RECIPE.toNetwork(buffer, recipe);
             } catch (Exception exception) {
-                JobsPlus.LOGGER.info("Error writing CopyBackpack Recipe to packet: ", exception);
+                JobsPlus.LOGGER.info("Error writing UpgradeRecipe Recipe to packet: ", exception);
                 throw exception;
             }
         }

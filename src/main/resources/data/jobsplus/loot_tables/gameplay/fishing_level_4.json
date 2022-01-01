@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:fishing",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "weight": 50,
+          "name": "minecraft:gameplay/fishing"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "weight": 20,
+          "name": "jobsplus:gameplay/fishing_2_drops"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "weight":15,
+          "name": "jobsplus:gameplay/fishing_3_drops"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "weight": 10,
+          "name": "jobsplus:gameplay/fishing_4_drops"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "weight": 5,
+          "name": "jobsplus:gameplay/fishing_5_drops"
+        }
+      ]
+    }
+  ]
+}

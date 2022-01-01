@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld_rod",
+  "textures": {
+    "layer0": "jobsplus:item/hunters_sword_level_2"
+  }
+}

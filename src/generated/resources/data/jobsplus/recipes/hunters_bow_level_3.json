@@ -1,0 +1,25 @@
+{
+  "type": "jobsplus:upgrade_recipe",
+  "pattern": [
+    " IS",
+    "DES",
+    " IS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:string"
+    },
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "I": {
+      "item": "minecraft:diamond_block"
+    },
+    "E": {
+      "item": "jobsplus:hunters_bow_level_2"
+    }
+  },
+  "result": {
+    "item": "jobsplus:hunters_bow_level_3"
+  }
+}

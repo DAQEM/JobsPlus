@@ -121,6 +121,23 @@ public class ShapedJobBasedRecipe extends ShapedRecipe {
                     }
                 }
             }
+            if (JobGetters.jobIsEnabled(player, Jobs.HUNTER)) {
+                if (JobGetters.getJobLevel(player, Jobs.HUNTER) >= 5) {
+                    if (getResultItem().getItem() == ModItems.HUNTERS_SWORD_LEVEL_1.get()) {
+                        return super.assemble(container);
+                    }
+                    if (getResultItem().getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get()) {
+                        return super.assemble(container);
+                    }
+                }
+            }
+            if (JobGetters.jobIsEnabled(player, Jobs.FISHERMAN)) {
+                if (JobGetters.getJobLevel(player, Jobs.FISHERMAN) >= 5) {
+                    if (getResultItem().getItem() == ModItems.FISHERMANS_ROD_LEVEL_1.get()) {
+                        return super.assemble(container);
+                    }
+                }
+            }
         }
         return ItemStack.EMPTY;
     }
@@ -144,7 +161,7 @@ public class ShapedJobBasedRecipe extends ShapedRecipe {
             try {
                 return new ShapedJobBasedRecipe(RecipeSerializer.SHAPED_RECIPE.fromJson(recipeId, json));
             } catch (Exception exception) {
-                JobsPlus.LOGGER.info("Error reading CopyBackpack Recipe from packet: ", exception);
+                JobsPlus.LOGGER.info("Error reading ShapedJobBasedRecipe Recipe from packet: ", exception);
                 throw exception;
             }
         }
@@ -154,7 +171,7 @@ public class ShapedJobBasedRecipe extends ShapedRecipe {
             try {
                 RecipeSerializer.SHAPED_RECIPE.toNetwork(buffer, recipe);
             } catch (Exception exception) {
-                JobsPlus.LOGGER.info("Error writing CopyBackpack Recipe to packet: ", exception);
+                JobsPlus.LOGGER.info("Error writing ShapedJobBasedRecipe Recipe to packet: ", exception);
                 throw exception;
             }
         }

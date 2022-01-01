@@ -39,7 +39,7 @@ public class ShapelessJobBasedRecipe extends ShapelessRecipe {
         }
         return ItemStack.EMPTY;
     }
-    
+
     private ItemStack assemble(Player player, CraftingContainer container) {
         if (JobGetters.jobIsEnabled(player, Jobs.HUNTER)
                 && JobGetters.getJobLevel(player, Jobs.HUNTER) >= 1
@@ -68,7 +68,7 @@ public class ShapelessJobBasedRecipe extends ShapelessRecipe {
             try {
                 return new ShapelessJobBasedRecipe(RecipeSerializer.SHAPELESS_RECIPE.fromJson(recipeId, json));
             } catch (Exception exception) {
-                JobsPlus.LOGGER.info("Error reading CopyBackpack Recipe from packet: ", exception);
+                JobsPlus.LOGGER.info("Error reading ShapelessJobBasedRecipe Recipe from packet: ", exception);
                 throw exception;
             }
         }
@@ -78,7 +78,7 @@ public class ShapelessJobBasedRecipe extends ShapelessRecipe {
             try {
                 RecipeSerializer.SHAPELESS_RECIPE.toNetwork(buffer, recipe);
             } catch (Exception exception) {
-                JobsPlus.LOGGER.info("Error writing CopyBackpack Recipe to packet: ", exception);
+                JobsPlus.LOGGER.info("Error writing ShapelessJobBasedRecipe Recipe to packet: ", exception);
                 throw exception;
             }
         }
