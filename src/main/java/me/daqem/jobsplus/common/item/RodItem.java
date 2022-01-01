@@ -6,7 +6,11 @@ import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.TranslatableString;
+import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -15,11 +19,18 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FishingRodItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class RodItem extends FishingRodItem {
 
@@ -66,5 +77,58 @@ public class RodItem extends FishingRodItem {
                 HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
         }
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        if (Screen.hasShiftDown()) {
+            int level = 0;
+            Item item = stack.getItem();
+            ArrayList<String> dropList = new ArrayList<>();
+            String two = ChatColor.green() + "20% " + ChatColor.reset() + "2 drops";
+            String three = ChatColor.green() + "15% " + ChatColor.reset() + "3 drops";
+            String four = ChatColor.green() + "10% " + ChatColor.reset() + "4 drops";
+            String five = ChatColor.green() + "5% " + ChatColor.reset() + "5 drops";
+            if (item == ModItems.FISHERMANS_ROD_LEVEL_1.get()) {
+                level = 5;
+                dropList.add(two);
+            }
+            if (item == ModItems.FISHERMANS_ROD_LEVEL_2.get()) {
+                level = 25;
+                dropList.add(two);
+                dropList.add(three);
+            }
+            if (item == ModItems.FISHERMANS_ROD_LEVEL_3.get()) {
+                level = 50;
+                dropList.add(two);
+                dropList.add(three);
+                dropList.add(four);
+            }
+            if (item == ModItems.FISHERMANS_ROD_LEVEL_4.get()) {
+                level = 75;
+                dropList.add(two);
+                dropList.add(three);
+                dropList.add(four);
+                dropList.add(five);
+            }
+            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
+            tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Fisherman"));
+            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
+            tooltip.add(new KeybindComponent(""));
+            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "About:"));
+            tooltip.add(new KeybindComponent(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getRegistryName()).toString().replace("jobsplus:fishermans_rod_level_", "")));
+            tooltip.add(new KeybindComponent(""));
+            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Drop chance:"));
+            for (String s : dropList) {
+                tooltip.add(new KeybindComponent(s));
+            }
+        } else {
+            tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
+        }
+        if (stack.isEnchanted()) {
+            tooltip.add(new KeybindComponent(""));
+            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Enchantments:"));
+        }
     }
 }

@@ -283,7 +283,7 @@ public class UpgradeRecipe extends ShapedRecipe {
             try {
                 return new UpgradeRecipe(RecipeSerializer.SHAPED_RECIPE.fromJson(recipeId, json));
             } catch (Exception exception) {
-                JobsPlus.LOGGER.info("Error reading UpgradeRecipe from packet: ", exception);
+                JobsPlus.LOGGER.error("Error reading UpgradeRecipe from packet: ", exception);
                 throw exception;
             }
         }
@@ -293,7 +293,7 @@ public class UpgradeRecipe extends ShapedRecipe {
             try {
                 RecipeSerializer.SHAPED_RECIPE.toNetwork(buffer, recipe);
             } catch (Exception exception) {
-                JobsPlus.LOGGER.info("Error writing UpgradeRecipe Recipe to packet: ", exception);
+                JobsPlus.LOGGER.error("Error writing UpgradeRecipe Recipe to packet: ", exception);
                 throw exception;
             }
         }

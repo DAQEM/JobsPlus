@@ -33,24 +33,24 @@ public class ExpHandler {
         addRandomJobEXP(player, job, 4, 11);
     }
 
-    public static int getEXPLowest(Player player, Jobs job) {
-        return getRandomJobEXP(player, job, 0, 2);
+    public static int getEXPLowest() {
+        return getRandomJobEXP(0, 2);
     }
 
-    public static int getEXPLow(Player player, Jobs job) {
-        return getRandomJobEXP(player, job, 1, 3);
+    public static int getEXPLow() {
+        return getRandomJobEXP(1, 3);
     }
 
-    public static int getEXPMid(Player player, Jobs job) {
-        return getRandomJobEXP(player, job, 2, 6);
+    public static int getEXPMid() {
+        return getRandomJobEXP(2, 6);
     }
 
-    public static int getEXPHigh(Player player, Jobs job) {
-        return getRandomJobEXP(player, job, 3, 9);
+    public static int getEXPHigh() {
+        return getRandomJobEXP(3, 9);
     }
 
-    public static int getEXPHighest(Player player, Jobs job) {
-        return getRandomJobEXP(player, job, 4, 11);
+    public static int getEXPHighest() {
+        return getRandomJobEXP(4, 11);
     }
 
     public static void addRandomJobEXP(Player player, Jobs job, int lowerBound, int upperBound) {
@@ -59,7 +59,7 @@ public class ExpHandler {
         addJobEXP(player, job, randomNumber);
     }
 
-    public static int getRandomJobEXP(Player player, Jobs job, int lowerBound, int upperBound) {
+    public static int getRandomJobEXP(int lowerBound, int upperBound) {
         Random random = new Random();
         return random.nextInt(upperBound - lowerBound) + lowerBound;
     }

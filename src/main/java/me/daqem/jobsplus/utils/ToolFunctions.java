@@ -46,9 +46,9 @@ public class ToolFunctions {
                     if (player.getMainHandItem().getItem() instanceof HammerItem) {
                         if (!MinerEvents.timeoutList.contains(pos)) {
                             if (block instanceof OreBlock) {
-                                minerExp += ExpHandler.getEXPLow(player, miner);
+                                minerExp += ExpHandler.getEXPLow();
                             } else if (MinerEvents.lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
-                                minerExp += ExpHandler.getEXPLowest(player, miner);
+                                minerExp += ExpHandler.getEXPLowest();
                             }
                             player.awardStat(Stats.BLOCK_MINED.get(block));
                         }
@@ -57,7 +57,7 @@ public class ToolFunctions {
                     if (player.getMainHandItem().getItem() instanceof ExcavatorItem) {
                         if (!DiggerEvents.timeoutList.contains(pos)) {
                             if (DiggerEvents.lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
-                                diggerExp += ExpHandler.getEXPLowest(player, digger);
+                                diggerExp += ExpHandler.getEXPLowest();
                             }
                             player.awardStat(Stats.BLOCK_MINED.get(block));
                         }

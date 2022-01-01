@@ -1,10 +1,15 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
+import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.TranslatableString;
 import me.daqem.jobsplus.utils.enums.ChatColor;
+import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.KeybindComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -60,6 +65,18 @@ public class HunterBowItem extends BowItem {
                 }
 
                 float f = getPowerForTime(i);
+                Jobs job = Jobs.HUNTER;
+                boolean isAllowedToUseBow = JobGetters.getJobLevel(player, job) >= 5 && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get();
+                if (JobGetters.getJobLevel(player, job) >= 25 && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get())
+                    isAllowedToUseBow = true;
+                if (JobGetters.getJobLevel(player, job) >= 50 && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get())
+                    isAllowedToUseBow = true;
+                if (JobGetters.getJobLevel(player, job) >= 75 && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get())
+                    isAllowedToUseBow = true;
+                if (!isAllowedToUseBow) f = 0.1F;
+                if (!isAllowedToUseBow)
+                    if (!level.isClientSide)
+                        HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
                 if (!((double) f < 0.1D)) {
                     boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem) itemstack.getItem()).isInfinite(itemstack, stack, player));
                     if (!level.isClientSide) {

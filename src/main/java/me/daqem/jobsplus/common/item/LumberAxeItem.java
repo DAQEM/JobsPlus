@@ -122,7 +122,7 @@ public class LumberAxeItem extends AxeItem {
                 }
             }
             if (logs.size() == 0) return;
-            ExpHandler.addJobEXP(player, Jobs.LUMBERJACK, ExpHandler.getEXPLow(player, Jobs.LUMBERJACK) * logs.size());
+            ExpHandler.addJobEXP(player, Jobs.LUMBERJACK, ExpHandler.getEXPLow() * logs.size());
             MinecraftForge.EVENT_BUS.register(new Object() {
                 int delay = LOG_BREAK_DELAY;
                 int i = 0;
