@@ -4,13 +4,17 @@ import com.mojang.brigadier.CommandDispatcher;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
+import me.daqem.jobsplus.handlers.ModPacketHandler;
+import me.daqem.jobsplus.packet.PacketSendMainMenuData;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +22,10 @@ import java.util.List;
 public class JobsCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("jobs").executes(context -> jobs(context.getSource())));
+        dispatcher.register(Commands.literal("jobs")
+                .executes(context -> jobs(context.getSource()))
+                .then(Commands.literal("menu")
+                        .executes(context -> menu(context.getSource()))));
     }
 
     public static int jobs(CommandSourceStack source) {
@@ -28,7 +35,9 @@ public class JobsCommand {
                     List<Jobs> enabledJobs = new ArrayList<>();
                     ChatHandler.sendMessage(player, (ChatHandler.header("JOBS")));
                     for (Jobs job : Jobs.values()) {
-                        if (JobGetters.jobIsEnabled(player, job)) { enabledJobs.add(job); }
+                        if (JobGetters.jobIsEnabled(player, job)) {
+                            enabledJobs.add(job);
+                        }
                     }
                     if (!enabledJobs.isEmpty()) {
                         ChatHandler.sendMessage(player, (ChatColor.green() + "Currently Performing Jobs:"));
@@ -65,8 +74,26 @@ public class JobsCommand {
                 });
                 ChatHandler.sendMessage(player, ChatHandler.footer(4));
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        return 1;
+    }
+
+    public static int menu(CommandSourceStack source) {
+        if (source.getEntity() instanceof ServerPlayer player) {
+            ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketSendMainMenuData(new int[]{
+                    JobGetters.getJobLevel(player, Jobs.ALCHEMIST), JobGetters.getJobEXP(player, Jobs.ALCHEMIST),
+                    JobGetters.getJobLevel(player, Jobs.BUILDER), JobGetters.getJobEXP(player, Jobs.BUILDER),
+                    JobGetters.getJobLevel(player, Jobs.DIGGER), JobGetters.getJobEXP(player, Jobs.DIGGER),
+                    JobGetters.getJobLevel(player, Jobs.FARMER), JobGetters.getJobEXP(player, Jobs.FARMER),
+                    JobGetters.getJobLevel(player, Jobs.FISHERMAN), JobGetters.getJobEXP(player, Jobs.FISHERMAN),
+                    JobGetters.getJobLevel(player, Jobs.ENCHANTER), JobGetters.getJobEXP(player, Jobs.ENCHANTER),
+                    JobGetters.getJobLevel(player, Jobs.HUNTER), JobGetters.getJobEXP(player, Jobs.HUNTER),
+                    JobGetters.getJobLevel(player, Jobs.LUMBERJACK), JobGetters.getJobEXP(player, Jobs.LUMBERJACK),
+                    JobGetters.getJobLevel(player, Jobs.MINER), JobGetters.getJobEXP(player, Jobs.MINER),
+                    JobGetters.getJobLevel(player, Jobs.SMITH), JobGetters.getJobEXP(player, Jobs.SMITH),
+                    JobGetters.getCoins(player), JobGetters.getAmountOfEnabledJobs(player)}));
         }
         return 1;
     }

@@ -1,7 +1,7 @@
 package me.daqem.jobsplus.utils;
 
 import com.mojang.brigadier.context.CommandContext;
-import me.daqem.jobsplus.common.container.BackpackHandler;
+import me.daqem.jobsplus.common.container.backpack.BackpackHandler;
 import me.daqem.jobsplus.common.item.BackpackItem;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.world.item.ItemStack;

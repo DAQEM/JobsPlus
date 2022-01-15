@@ -65,5 +65,12 @@
   "item.jobsplus.experience_bottle": "Bottle o' Enchanting",
   "effect.jobsplus.jesus": "Jesus",
   "effect.jobsplus.flying": "Flying",
-  "itemGroup.jobsplustab": "Jobs+"
+  "itemGroup.jobsplustab": "Jobs+",
+  "jobsplus.gui.all_jobs": "All Jobs",
+  "jobsplus.gui.performing_jobs": "Performing Jobs",
+  "jobsplus.gui.not_performing_jobs": "Not Performing Jobs",
+  "jobsplus.gui.job_info": "Job Info",
+  "jobsplus.gui.job_crafting_recipes": "Job Crafting Recipes",
+  "jobsplus.gui.job_powerups": "Job Powerups",
+  "jobsplus.gui.job_how_to_get_exp": "How To Get EXP"
 }

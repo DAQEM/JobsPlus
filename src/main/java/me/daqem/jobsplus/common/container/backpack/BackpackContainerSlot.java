@@ -1,4 +1,4 @@
-package me.daqem.jobsplus.common.container;
+package me.daqem.jobsplus.common.container.backpack;
 
 import me.daqem.jobsplus.utils.BackpackUtils;
 import net.minecraft.world.item.ItemStack;

@@ -101,6 +101,7 @@ public class LumberAxeItem extends AxeItem {
 
             for (int i = 0; i < candidates.size(); i++) {
                 if (logs.size() > maxLogs) {
+                    ExpHandler.addEXPLow(player, Jobs.LUMBERJACK);
                     HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "This tree is too big to cut down with this axe.");
                     return;
                 }

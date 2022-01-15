@@ -1,4 +1,4 @@
-package me.daqem.jobsplus.common.container;
+package me.daqem.jobsplus.common.container.backpack;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

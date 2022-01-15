@@ -43,6 +43,11 @@ public class JobCommand {
 //                        .executes(context -> info(context.getSource())))
                 .then(Commands.literal("start")
                         .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+                                .then(Commands.literal("force")
+                                        .executes(context -> forceJobStart(
+                                                context.getSource(),
+                                                context.getArgument("job", Jobs.class)
+                                        )))
                                 .executes(context -> jobStart(
                                         context.getSource(),
                                         context.getArgument("job", Jobs.class)
@@ -50,6 +55,11 @@ public class JobCommand {
                         .executes(context -> start(context.getSource())))
                 .then(Commands.literal("stop")
                         .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+                                .then(Commands.literal("force")
+                                        .executes(context -> forceJobStop(
+                                                context.getSource(),
+                                                context.getArgument("job", Jobs.class)
+                                        )))
                                 .executes(context -> jobStop(
                                         context.getSource(),
                                         context.getArgument("job", Jobs.class)
@@ -225,7 +235,7 @@ public class JobCommand {
             ChatHandler.sendMessage(player, ChatHandler.header("STOP"));
             ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
                     ChatColor.green() + "/job stop [job]\n\n This command will stop a certain job if your job level " +
-                    "is still level 1 or by paying 5 job coins.");
+                    "is still level 1 or by paying 10 job coins.");
             ChatHandler.sendMessage(player, ChatHandler.footer(4));
         }
         return 1;
@@ -293,6 +303,28 @@ public class JobCommand {
         return 1;
     }
 
+    private static int forceJobStart(CommandSourceStack source, Jobs job) {
+        if (source.getEntity() instanceof Player player) {
+            if (!JobGetters.jobIsEnabled(player, job)) {
+                if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
+                    JobSetters.setLevel(job, player, 1);
+                } else {
+                    if (JobGetters.getCoins(player) < 10) {
+                        ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
+                                "[JOBS+] " + ChatColor.red() + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                    } else {
+                        JobSetters.setLevel(job, player, 1);
+                        JobSetters.removeCoins(player, 10);
+                    }
+                }
+            } else {
+                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
+                        "[JOBS+] " + ChatColor.red() + "You are already performing this job.");
+            }
+        }
+        return 1;
+    }
+
     private static int jobStop(CommandSourceStack source, Jobs job) {
         if (source.getEntity() instanceof Player player) {
             player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
@@ -309,6 +341,28 @@ public class JobCommand {
                     case SMITH -> jobStopMethod(player, job, CapType.SELCTOR_SMITH, handler.getCoins(), JobGetters.getJobLevel(player, job));
                 }
             });
+        }
+        return 1;
+    }
+
+    private static int forceJobStop(CommandSourceStack source, Jobs job) {
+        if (source.getEntity() instanceof Player player) {
+            if (JobGetters.jobIsEnabled(player, job)) {
+                if (JobGetters.getJobLevel(player, job) == 1) {
+                    JobSetters.setLevel(job, player, 0);
+                } else {
+                    if (JobGetters.getCoins(player) >= 5) {
+                        JobSetters.setLevel(job, player, 0);
+                        JobSetters.removeCoins(player, 5);
+                    } else {
+                        ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
+                                "[JOBS+] " + ChatColor.red() + "You need 5 job-coins to stop a job.");
+                    }
+                }
+            } else {
+                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
+                        "[JOBS+] " + ChatColor.red() + "You are not performing this job.");
+            }
         }
         return 1;
     }
@@ -601,7 +655,7 @@ public class JobCommand {
                                 ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? Say yes in chat.");
                     }
                 } else {
-                    if (coins > 4) {
+                    if (coins >= 5) {
                         JobSetters.setVerification(player, CapType.STOP_VERIFICATION_PAID.get());
                         JobSetters.setSelector(player, capType.get());
                         if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {

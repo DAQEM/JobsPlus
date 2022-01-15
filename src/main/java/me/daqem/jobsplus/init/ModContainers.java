@@ -1,7 +1,7 @@
 package me.daqem.jobsplus.init;
 
 import me.daqem.jobsplus.JobsPlus;
-import me.daqem.jobsplus.common.container.BackpackContainer;
+import me.daqem.jobsplus.common.container.backpack.BackpackContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;

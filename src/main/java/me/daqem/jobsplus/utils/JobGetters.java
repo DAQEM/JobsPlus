@@ -116,4 +116,10 @@ public class JobGetters {
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> atomicInteger.set(handler.getDisplay()));
         return atomicInteger.get();
     }
+
+    public static int getCoins(Player player) {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> atomicInteger.set(handler.getCoins()));
+        return atomicInteger.get();
+    }
 }

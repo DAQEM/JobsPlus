@@ -1,9 +1,9 @@
 package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.JobsPlus;
-import me.daqem.jobsplus.common.container.BackpackContainer;
-import me.daqem.jobsplus.common.container.BackpackHandler;
-import me.daqem.jobsplus.common.container.BackpackSavedData;
+import me.daqem.jobsplus.common.container.backpack.BackpackContainer;
+import me.daqem.jobsplus.common.container.backpack.BackpackHandler;
+import me.daqem.jobsplus.common.container.backpack.BackpackSavedData;
 import me.daqem.jobsplus.handlers.BackpackItemHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;

@@ -4,8 +4,6 @@ import me.daqem.jobsplus.JobsPlus;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.*;
 
 import java.util.function.Supplier;
@@ -19,8 +17,8 @@ public class ModBlocks {
 //            new Block(BlockBehaviour.Properties.of(Material.STONE)));
 //    public static final RegistryObject<Block> LEVEL_50_TROPHY = register("level_50_trophy", () ->
 //            new Block(BlockBehaviour.Properties.of(Material.STONE)));
-    public static final RegistryObject<Block> LEVEL_100_TROPHY = register("level_100_trophy", () ->
-            new Block(BlockBehaviour.Properties.of(Material.STONE)));
+//    public static final RegistryObject<Block> LEVEL_100_TROPHY = register("level_100_trophy", () ->
+//            new Block(BlockBehaviour.Properties.of(Material.STONE)));
 
     private static <T extends Block> RegistryObject<T> register(String name, Supplier<T> block) {
         RegistryObject<T> ret = registerNoItem(name, block);

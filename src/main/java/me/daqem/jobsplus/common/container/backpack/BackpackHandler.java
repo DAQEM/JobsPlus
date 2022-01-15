@@ -1,4 +1,4 @@
-package me.daqem.jobsplus.common.container;
+package me.daqem.jobsplus.common.container.backpack;
 
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.utils.enums.Backpack;

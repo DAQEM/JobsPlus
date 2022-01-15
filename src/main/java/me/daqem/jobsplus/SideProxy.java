@@ -1,24 +1,30 @@
 package me.daqem.jobsplus;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import me.daqem.jobsplus.client.renderer.entity.ModFishingHookRenderer;
-import me.daqem.jobsplus.common.container.BackpackGUI;
+import me.daqem.jobsplus.common.container.backpack.BackpackGUI;
 import me.daqem.jobsplus.data.ModDataGenerator;
 import me.daqem.jobsplus.events.*;
 import me.daqem.jobsplus.events.item.CurseBreakEvents;
 import me.daqem.jobsplus.events.item.FarmersHoeEvents;
 import me.daqem.jobsplus.events.jobs.*;
+import me.daqem.jobsplus.handlers.ModPacketHandler;
 import me.daqem.jobsplus.init.*;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.lwjgl.glfw.GLFW;
 
-class SideProxy {
+public class SideProxy {
 
     SideProxy() {
         IEventBus modEventBus = MinecraftForge.EVENT_BUS;
@@ -60,7 +66,7 @@ class SideProxy {
         modEventBus.addListener(EventClone::onDeath);
         eventBus.addListener(ModDataGenerator::gatherData);
 
-
+        ModPacketHandler.init();
     }
 
     @SubscribeEvent
@@ -68,16 +74,21 @@ class SideProxy {
         event.enqueueWork(ModPotions::addPotionRecipes);
     }
 
-    static class Server extends SideProxy {
+    public static class Server extends SideProxy {
         Server() {
 
         }
+
     }
 
-    static class Client extends SideProxy {
+    public static class Client extends SideProxy {
+
+        public static final KeyMapping OPEN_GUI_KEYBIND = new KeyMapping("keys.jobsplus.open_gui", KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, "keys.jobsplus.category");
+
+
         Client() {
             IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
+            MinecraftForge.EVENT_BUS.register(new EventKeyInput());
             eventBus.addListener(this::clientStuff);
         }
 
@@ -86,6 +97,7 @@ class SideProxy {
             EntityRenderers.register(ModEntities.FISHING_BOBBER.get(), ModFishingHookRenderer::new);
             EntityRenderers.register(ModEntities.EXPERIENCE_BOTTLE.get(), ThrownItemRenderer::new);
             ModItemProperties.register();
+            ClientRegistry.registerKeyBinding(OPEN_GUI_KEYBIND);
         }
     }
 }
