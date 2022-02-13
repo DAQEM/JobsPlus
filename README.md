@@ -73,8 +73,8 @@
 
 ## About The Project
 
-This mod adds 12 jobs to Minecraft. (Alchemist, Builder, Butcher, Craftsman, Digger, Enchanter, Farmer, Fisherman,
-Hunter, Lumberjack, Miner and Smith)
+This mod adds 10 jobs to Minecraft. (Alchemist, Builder, Digger, Enchanter, Farmer, Fisherman, Hunter, Lumberjack, Miner
+and Smith)
 
 Each mod will have 100 levels. To level up your job, you need to preform certain tasks that fits the job you chose.
 

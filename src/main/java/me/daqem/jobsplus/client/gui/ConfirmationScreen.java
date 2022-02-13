@@ -113,8 +113,6 @@ public class ConfirmationScreen extends Screen {
         if (!action.equals("not_enough_coins_stop") && !action.equals("not_enough_coins_start") && !action.equals("not_enough_coins_powerup")) {
             int activeRightButton = 0;
             if (action.equals("powerup")) activeRightButton = 2;
-            if (action.equals("start") || action.equals("stop") || action.equals("start_paid") || action.equals("stop_free"))
-                activeRightButton = 1;
             // YES BUTTON
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 - 78, imageHeight - 22, imageWidth / 2 - 4, imageHeight - 5)) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));

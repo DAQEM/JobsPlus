@@ -3,14 +3,14 @@ package me.daqem.jobsplus.utils.enums;
 public enum Jobs {
     ALCHEMIST(0),
     BUILDER(1),
-    DIGGER(4),
-    FARMER(5),
-    FISHERMAN(6),
-    ENCHANTER(7),
-    HUNTER(8),
-    LUMBERJACK(9),
-    MINER(10),
-    SMITH(11);
+    DIGGER(2),
+    ENCHANTER(3),
+    FARMER(4),
+    FISHERMAN(5),
+    HUNTER(6),
+    LUMBERJACK(7),
+    MINER(8),
+    SMITH(9);
 
     private final int value;
 
@@ -19,7 +19,6 @@ public enum Jobs {
     }
 
     public static String getString(int value) {
-        if (value > 1) value = value + 2;
         for (Jobs jobs : Jobs.values()) {
             if (value == jobs.get()) {
                 return jobs.name();
@@ -30,7 +29,6 @@ public enum Jobs {
 
     public static int getJobInt(Jobs job) {
         int value = job.get();
-        if (value > 1) value = value - 2;
         for (Jobs jobs : Jobs.values()) {
             if (value == jobs.get()) {
                 return value;
@@ -40,16 +38,11 @@ public enum Jobs {
     }
 
     public static Jobs getJobFromInt(int job) {
-        if (job == 0) return ALCHEMIST;
-        if (job == 1) return BUILDER;
-        if (job == 2) return DIGGER;
-        if (job == 3) return FARMER;
-        if (job == 4) return FISHERMAN;
-        if (job == 5) return ENCHANTER;
-        if (job == 6) return HUNTER;
-        if (job == 7) return LUMBERJACK;
-        if (job == 8) return MINER;
-        if (job == 9) return SMITH;
+        for (Jobs jobs : Jobs.values()) {
+            if (job == jobs.get()) {
+                return jobs;
+            }
+        }
         return null;
     }
 

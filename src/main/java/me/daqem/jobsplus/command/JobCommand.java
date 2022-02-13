@@ -453,18 +453,18 @@ public class JobCommand {
         if (source.getEntity() instanceof Player player) {
             if (JobGetters.jobIsEnabled(player, job)) {
                 if (JobGetters.getJobLevel(player, job) == 1) {
-                    JobSetters.setLevel(job, player, 0);
-                    if (JobGetters.getAmountOfEnabledJobs(player) == 0) {
-                        JobSetters.setDisplay(player, -1);
-                    }
+                    JobSetters.set(job, player, 0, 0, 0, 0, 0);
                 } else {
                     if (JobGetters.getCoins(player) >= 5) {
-                        JobSetters.setLevel(job, player, 0);
+                        JobSetters.set(job, player, 0, 0, 0, 0, 0);
                         JobSetters.removeCoins(player, 5);
                     } else {
                         ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
                                 "[JOBS+] " + ChatColor.red() + "You need 5 job-coins to stop a job.");
                     }
+                }
+                if (job.get() + 1 == JobGetters.getDisplay(player)) {
+                    JobSetters.setDisplay(player, -1);
                 }
             } else {
                 ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +

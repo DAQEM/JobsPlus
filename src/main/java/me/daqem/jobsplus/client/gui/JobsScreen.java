@@ -300,10 +300,11 @@ public class JobsScreen extends Screen {
                     RenderSystem.setShaderColor(1F, 1F, 1F, 1);
                 }
             }
+
             // CRAFTING RECIPE BUTTONS
         } else if (activeRightButton == 1) {
             if (jobId != -1) {
-                ArrayList<Integer> jobItemAmounts = new ArrayList<>(Arrays.asList(23, 5, 4, 4, 4, 3, 9, 4, 4, 16));
+                ArrayList<Integer> jobItemAmounts = new ArrayList<>(Arrays.asList(23, 5, 4, 3, 4, 4, 9, 4, 4, 16));
                 int itemsAmount = jobItemAmounts.get(jobId);
                 for (int i = 0; i < itemsAmount; ++i) {
                     int xOffset = 172 + i % 5 * 27;
@@ -400,20 +401,6 @@ public class JobsScreen extends Screen {
         }
     }
 
-//.TTTTTTTTTTT...EEEEEEEEEEEE...EXXX..XXXXX...XTTTTTTTTT.....SSSSSSS.....
-//.TTTTTTTTTTT...EEEEEEEEEEE....EXXX..XXXX....XTTTTTTTTT....TSSSSSSSS....
-//.TTTTTTTTTTT...EEEEEEEEEEE....EXXXXXXXXX....XTTTTTTTTT...TTSSSSSSSSS...
-//....TTTT.......EEEE............XXXXXXXX........TTTT......TTSSS..SSSS...
-//....TTTT.......EEEE.............XXXXXX.........TTTT......TTSSS.........
-//....TTTT.......EEEEEEEEEE.......XXXXXX.........TTTT.......TSSSSSS......
-//....TTTT.......EEEEEEEEEE.......XXXXX..........TTTT........SSSSSSSSS...
-//....TTTT.......EEEEEEEEEE.......XXXXXX.........TTTT..........SSSSSSS...
-//....TTTT.......EEEE............XXXXXXXX........TTTT.............SSSSS..
-//....TTTT.......EEEE............XXXXXXXX........TTTT......TTSS....SSSS..
-//....TTTT.......EEEEEEEEEEE....EXXX.XXXXX.......TTTT......TTSSSSSSSSSS..
-//....TTTT.......EEEEEEEEEEEE...EXXX..XXXXX......TTTT.......TSSSSSSSSS...
-//....TTTT.......EEEEEEEEEEEE...EXX....XXXX......TTTT........SSSSSSSS....
-
     public void renderItems(int x, int y) {
         if (activeRightButton == 1) {
             ArrayList<ItemStack> jobItemsArray = new ArrayList<>();
@@ -438,11 +425,11 @@ public class JobsScreen extends Screen {
             } else if (jobId == 2) {
                 jobItemsArray.addAll(Arrays.asList(ModItems.DIGGERS_EXCAVATOR_LEVEL_1.get().getDefaultInstance(), ModItems.DIGGERS_EXCAVATOR_LEVEL_2.get().getDefaultInstance(), ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get().getDefaultInstance(), ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get().getDefaultInstance()));
             } else if (jobId == 3) {
-                jobItemsArray.addAll(Arrays.asList(ModItems.FARMERS_HOE_LEVEL_1.get().getDefaultInstance(), ModItems.FARMERS_HOE_LEVEL_2.get().getDefaultInstance(), ModItems.FARMERS_HOE_LEVEL_3.get().getDefaultInstance(), ModItems.FARMERS_HOE_LEVEL_4.get().getDefaultInstance()));
-            } else if (jobId == 4) {
-                jobItemsArray.addAll(Arrays.asList(ModItems.FISHERMANS_ROD_LEVEL_1.get().getDefaultInstance(), ModItems.FISHERMANS_ROD_LEVEL_2.get().getDefaultInstance(), ModItems.FISHERMANS_ROD_LEVEL_3.get().getDefaultInstance(), ModItems.FISHERMANS_ROD_LEVEL_4.get().getDefaultInstance()));
-            } else if (jobId == 5) {
                 jobItemsArray.addAll(Arrays.asList(ModItems.EXP_JAR.get().getDefaultInstance(), ModItems.EXPERIENCE_BOTTLE.get().getDefaultInstance(), ModItems.CURSE_BREAKER.get().getDefaultInstance()));
+            } else if (jobId == 4) {
+                jobItemsArray.addAll(Arrays.asList(ModItems.FARMERS_HOE_LEVEL_1.get().getDefaultInstance(), ModItems.FARMERS_HOE_LEVEL_2.get().getDefaultInstance(), ModItems.FARMERS_HOE_LEVEL_3.get().getDefaultInstance(), ModItems.FARMERS_HOE_LEVEL_4.get().getDefaultInstance()));
+            } else if (jobId == 5) {
+                jobItemsArray.addAll(Arrays.asList(ModItems.FISHERMANS_ROD_LEVEL_1.get().getDefaultInstance(), ModItems.FISHERMANS_ROD_LEVEL_2.get().getDefaultInstance(), ModItems.FISHERMANS_ROD_LEVEL_3.get().getDefaultInstance(), ModItems.FISHERMANS_ROD_LEVEL_4.get().getDefaultInstance()));
             } else if (jobId == 6) {
                 jobItemsArray.addAll(Arrays.asList(Items.WHITE_WOOL.getDefaultInstance(), ModItems.HUNTERS_SWORD_LEVEL_1.get().getDefaultInstance(), ModItems.HUNTERS_SWORD_LEVEL_2.get().getDefaultInstance(), ModItems.HUNTERS_SWORD_LEVEL_3.get().getDefaultInstance(), ModItems.HUNTERS_SWORD_LEVEL_4.get().getDefaultInstance(), ModItems.HUNTERS_BOW_LEVEL_1.get().getDefaultInstance(), ModItems.HUNTERS_BOW_LEVEL_2.get().getDefaultInstance(), ModItems.HUNTERS_BOW_LEVEL_3.get().getDefaultInstance(), ModItems.HUNTERS_BOW_LEVEL_4.get().getDefaultInstance()));
             } else if (jobId == 7) {
@@ -460,6 +447,20 @@ public class JobsScreen extends Screen {
             }
         }
     }
+
+//.TTTTTTTTTTT...EEEEEEEEEEEE...EXXX..XXXXX...XTTTTTTTTT.....SSSSSSS.....
+//.TTTTTTTTTTT...EEEEEEEEEEE....EXXX..XXXX....XTTTTTTTTT....TSSSSSSSS....
+//.TTTTTTTTTTT...EEEEEEEEEEE....EXXXXXXXXX....XTTTTTTTTT...TTSSSSSSSSS...
+//....TTTT.......EEEE............XXXXXXXX........TTTT......TTSSS..SSSS...
+//....TTTT.......EEEE.............XXXXXX.........TTTT......TTSSS.........
+//....TTTT.......EEEEEEEEEE.......XXXXXX.........TTTT.......TSSSSSS......
+//....TTTT.......EEEEEEEEEE.......XXXXX..........TTTT........SSSSSSSSS...
+//....TTTT.......EEEEEEEEEE.......XXXXXX.........TTTT..........SSSSSSS...
+//....TTTT.......EEEE............XXXXXXXX........TTTT.............SSSSS..
+//....TTTT.......EEEE............XXXXXXXX........TTTT......TTSS....SSSS..
+//....TTTT.......EEEEEEEEEEE....EXXX.XXXXX.......TTTT......TTSSSSSSSSSS..
+//....TTTT.......EEEEEEEEEEEE...EXXX..XXXXX......TTTT.......TSSSSSSSSS...
+//....TTTT.......EEEEEEEEEEEE...EXX....XXXX......TTTT........SSSSSSSS....
 
     public void drawTexts(PoseStack poseStack, int something, int occurrences) {
         if (activeLeftButton == 0) {
@@ -582,19 +583,6 @@ public class JobsScreen extends Screen {
                     font.draw(poseStack, ChatColor.darkGray() + "The " + ChatColor.boldWhite() + "Excavator" + ChatColor.darkGray() + " can mine", startX + 173, startY + 42 + 18 + 9 + 18, 16777215);
                     font.draw(poseStack, ChatColor.darkGray() + "multiple blocks at once.", startX + 180, startY + 42 + 27 + 9 + 18, 16777215);
                 } else if (jobId == 3) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Farmer job adds a new", startX + 168, startY + 42 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "tool called the " + ChatColor.boldWhite() + "Farmers Hoe" + ChatColor.darkGray() + ".", startX + 162, startY + 42 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "The " + ChatColor.boldWhite() + "Farmers Hoe" + ChatColor.darkGray() + " can harvest", startX + 157, startY + 42 + 18 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "multiple crops at once. Including", startX + 157, startY + 42 + 27 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "crops like sugarcane and cactus.", startX + 154, startY + 42 + 27 + 27, 16777215);
-                } else if (jobId == 4) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Fisherman job adds a new", startX + 161, startY + 42 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "fishing rod called the", startX + 182, startY + 42 + 9 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.boldWhite() + "Fishermans Rod" + ChatColor.darkGray() + ".", startX + 189, startY + 42 + 18 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "The " + ChatColor.boldWhite() + "Fishermans Rod" + ChatColor.darkGray() + " can", startX + 169, startY + 42 + 18 + 18 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "catch multiple fish or", startX + 183, startY + 42 + 27 + 18 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "treasures at once.", startX + 188, startY + 42 + 27 + 18 + 18, 16777215);
-                } else if (jobId == 5) {
                     font.draw(poseStack, ChatColor.darkGray() + "The Enchanter job adds 2", startX + 169, startY + 42, 16777215);
                     font.draw(poseStack, ChatColor.darkGray() + "new items. The " + ChatColor.boldWhite() + "EXP jar" + ChatColor.darkGray() + " is a", startX + 166, startY + 42 + 9, 16777215);
                     font.draw(poseStack, ChatColor.darkGray() + "jar that can store EXP. The", startX + 167, startY + 42 + 18, 16777215);
@@ -603,6 +591,19 @@ public class JobsScreen extends Screen {
                     font.draw(poseStack, ChatColor.darkGray() + "It also adds the ability", startX + 179, startY + 42 + 27 + 27, 16777215);
                     font.draw(poseStack, ChatColor.darkGray() + "to craft and upgrade", startX + 182, startY + 42 + 27 + 36, 16777215);
                     font.draw(poseStack, ChatColor.boldWhite() + "Bottles 'o Enchanting" + ChatColor.darkGray() + ".", startX + 173, startY + 42 + 36 + 36, 16777215);
+                } else if (jobId == 4) {
+                    font.draw(poseStack, ChatColor.darkGray() + "The Farmer job adds a new", startX + 168, startY + 42 + 9, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "tool called the " + ChatColor.boldWhite() + "Farmers Hoe" + ChatColor.darkGray() + ".", startX + 162, startY + 42 + 18, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "The " + ChatColor.boldWhite() + "Farmers Hoe" + ChatColor.darkGray() + " can harvest", startX + 157, startY + 42 + 18 + 18, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "multiple crops at once. Including", startX + 157, startY + 42 + 27 + 18, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "crops like sugarcane and cactus.", startX + 154, startY + 42 + 27 + 27, 16777215);
+                } else if (jobId == 5) {
+                    font.draw(poseStack, ChatColor.darkGray() + "The Fisherman job adds a new", startX + 161, startY + 42 + 9, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "fishing rod called the", startX + 182, startY + 42 + 9 + 9, 16777215);
+                    font.draw(poseStack, ChatColor.boldWhite() + "Fishermans Rod" + ChatColor.darkGray() + ".", startX + 189, startY + 42 + 18 + 9, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "The " + ChatColor.boldWhite() + "Fishermans Rod" + ChatColor.darkGray() + " can", startX + 169, startY + 42 + 18 + 18 + 9, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "catch multiple fish or", startX + 183, startY + 42 + 27 + 18 + 9, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "treasures at once.", startX + 188, startY + 42 + 27 + 18 + 18, 16777215);
                 } else if (jobId == 6) {
                     font.draw(poseStack, ChatColor.darkGray() + "The Hunter job adds 2 new", startX + 168, startY + 42 + 18, 16777215);
                     font.draw(poseStack, ChatColor.darkGray() + "weapons a " + ChatColor.boldWhite() + "Hunters Sword", startX + 166, startY + 42 + 9 + 18, 16777215);
@@ -657,20 +658,20 @@ public class JobsScreen extends Screen {
                     font.draw(poseStack, ChatColor.darkGray() + "Haste I when digging", (startX + 200) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
                     font.draw(poseStack, ChatColor.darkGray() + "Haste II and Speed I when digging", (startX + 177) / 0.72F, (startY + 136) / 0.72F, 16777215);
                 } else if (jobId == 3) {
-                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get double drops", (startX + 184) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "A Chance to get better drops", (startX + 184) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "+1 Random color wool when shearing", (startX + 172) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Double crop and wool drops", (startX + 187) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                } else if (jobId == 4) {
-                    font.draw(poseStack, ChatColor.darkGray() + "Double job-exp", (startX + 207) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get 2 extra drops", (startX + 182) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "A Change to catch minerals", (startX + 188) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get 5 extra drops", (startX + 182) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                } else if (jobId == 5) {
                     font.draw(poseStack, ChatColor.darkGray() + "Remove curses using a grinder", (startX + 182) / 0.72F, (startY + 33) / 0.72F, 16777215);
                     font.draw(poseStack, ChatColor.darkGray() + "+1 Enchantment level on enchanting", (startX + 174) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
                     font.draw(poseStack, ChatColor.darkGray() + "Double experience", (startX + 203) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
                     font.draw(poseStack, ChatColor.darkGray() + "Enchantments in an anvil add up", (startX + 181) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                } else if (jobId == 4) {
+                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get double drops", (startX + 184) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "A Chance to get better drops", (startX + 184) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "+1 Random color wool when shearing", (startX + 172) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Double crop and wool drops", (startX + 187) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                } else if (jobId == 5) {
+                    font.draw(poseStack, ChatColor.darkGray() + "Double job-exp", (startX + 207) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get 2 extra drops", (startX + 182) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "A Change to catch minerals", (startX + 188) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get 5 extra drops", (startX + 182) / 0.72F, (startY + 136) / 0.72F, 16777215);
                 } else if (jobId == 6) {
                     font.draw(poseStack, ChatColor.darkGray() + "Meat give one extra hunger bar", (startX + 180) / 0.72F, (startY + 33) / 0.72F, 16777215);
                     font.draw(poseStack, ChatColor.darkGray() + "Strength II and Speed I on kill", (startX + 182) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
@@ -885,6 +886,14 @@ public class JobsScreen extends Screen {
                     }
                 } else if (jobId == 3) {
                     if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
+                        itemStack = ModItems.EXP_JAR.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
+                        itemStack = ModItems.EXPERIENCE_BOTTLE.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
+                        itemStack = ModItems.CURSE_BREAKER.get().getDefaultInstance();
+                    }
+                } else if (jobId == 4) {
+                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
                         itemStack = ModItems.FARMERS_HOE_LEVEL_1.get().getDefaultInstance();
                     } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
                         itemStack = ModItems.FARMERS_HOE_LEVEL_2.get().getDefaultInstance();
@@ -893,7 +902,7 @@ public class JobsScreen extends Screen {
                     } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18, 46 + (27 * 3), 42)) {
                         itemStack = ModItems.FARMERS_HOE_LEVEL_4.get().getDefaultInstance();
                     }
-                } else if (jobId == 4) {
+                } else if (jobId == 5) {
                     if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
                         itemStack = ModItems.FISHERMANS_ROD_LEVEL_1.get().getDefaultInstance();
                     } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
@@ -902,14 +911,6 @@ public class JobsScreen extends Screen {
                         itemStack = ModItems.FISHERMANS_ROD_LEVEL_3.get().getDefaultInstance();
                     } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18, 46 + (27 * 3), 42)) {
                         itemStack = ModItems.FISHERMANS_ROD_LEVEL_4.get().getDefaultInstance();
-                    }
-                } else if (jobId == 5) {
-                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
-                        itemStack = ModItems.EXP_JAR.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
-                        itemStack = ModItems.EXPERIENCE_BOTTLE.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
-                        itemStack = ModItems.CURSE_BREAKER.get().getDefaultInstance();
                     }
                 } else if (jobId == 6) {
                     if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {

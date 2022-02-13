@@ -51,7 +51,7 @@ public class EventServerChat {
                     reset(event, player);
                 }
 
-                /* Job stop free verification */
+                /* Job stop verification */
                 if (handler.getVerification()[CapType.STOP_VERIFICATION_FREE.get()] == 1 ||
                         handler.getVerification()[CapType.STOP_VERIFICATION_PAID.get()] == 1) {
                     Jobs job = null;
@@ -67,8 +67,7 @@ public class EventServerChat {
                         if (JobGetters.getDisplay(player) == job.get() + 1) JobSetters.setDisplay(player, -1);
                         if (handler.getVerification()[CapType.STOP_VERIFICATION_PAID.get()] == 1)
                             JobSetters.removeCoins(player, 5);
-                        JobSetters.setLevel(job, player, 0);
-                        JobSetters.setEXP(job, player, 0);
+                        JobSetters.set(job, player, 0, 0, 0, 0, 0);
                     } else {
                         ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
                                 "[JOBS+] " + ChatColor.red() + "You didn't say yes. Canceling job stop command.");
