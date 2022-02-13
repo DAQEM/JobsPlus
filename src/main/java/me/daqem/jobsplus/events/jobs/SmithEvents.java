@@ -22,7 +22,7 @@ import java.util.List;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SmithEvents {
 
-    private final static ArrayList<String> toolsAndArmorList = new ArrayList<>(List.of("_axe", "_sword", "_pickaxe", "_shovel", "_hoe", "_helmet", "_chestplate", "_leggings", "_boots"));
+    private final static ArrayList<String> toolsAndArmorList = new ArrayList<>(List.of("_axe", "_sword", "_pickaxe", "_shovel", "_hoe", "_helmet", "_chestplate", "_leggings", "_boots", "_level_1", "_level_2", "_level_3", "_level_4"));
     private final Jobs job = Jobs.SMITH;
     private final HashMap<Player, Boolean> grindstoneHashMap = new HashMap<>();
     private final HashMap<Player, Integer> furnaceHashmap = new HashMap<>();
@@ -133,7 +133,7 @@ public class SmithEvents {
                                 }
 
                             }
-                            ArrayList<String> acceptedItems = new ArrayList<>(List.of("iron_ingot", "gold_ingot", "diamond", "emerald", "copper_ingot"));
+                            ArrayList<String> acceptedItems = new ArrayList<>(List.of("iron_ingot", "gold_ingot", "diamond", "emerald", "copper_ingot", "netherite_scrap"));
                             if (acceptedItems.contains(item.getItem().getDescriptionId().replace("item.minecraft.", ""))) {
                                 furnaceHashmap.put(player, itemCount);
                             }

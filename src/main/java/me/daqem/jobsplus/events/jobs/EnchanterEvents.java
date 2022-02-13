@@ -29,7 +29,8 @@ public class EnchanterEvents {
             if (containerMenu instanceof EnchantmentMenu) {
                 int lapisCount = containerMenu.getSlot(1).getItem().getCount();
                 if (multiMap.containsKey(player)) {
-                    if (containerMenu.getSlot(0).getItem().isEnchanted()) {
+                    if (containerMenu.getSlot(0).getItem().isEnchanted() || containerMenu.getSlot(0).getItem().getOrCreateTag().contains("StoredEnchantments")) {
+                        if (lapisCount == 0) return;
                         Integer mapInt = (Integer) multiMap.get(player).get(1);
                         if (mapInt > lapisCount) {
                             int lapisUsed = mapInt - lapisCount;
@@ -42,11 +43,11 @@ public class EnchanterEvents {
                             if (lapisUsed == 3) {
                                 ExpHandler.addEXPHighest(player, job);
                             }
-                            multiMap.clear();
+                            multiMap.remove(player);
                         }
                     }
                 }
-                if (!containerMenu.getSlot(0).getItem().isEnchanted()) {
+                if (!containerMenu.getSlot(0).getItem().isEnchanted() && !containerMenu.getSlot(0).getItem().getOrCreateTag().contains("StoredEnchantments")) {
                     multiMap.put(player, new ArrayList<>(List.of(false, lapisCount)));
                 }
             }

@@ -2,7 +2,9 @@ package me.daqem.jobsplus.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
+import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.utils.JobGetters;
@@ -65,13 +67,35 @@ public class JobCommand {
                                         context.getArgument("job", Jobs.class)
                                 )))
                         .executes(context -> stop(context.getSource())))
-//                .then(Commands.literal("powerups")
-//                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-//                                .executes(context -> jobPowerUps(
-//                                        context.getSource(),
-//                                        context.getArgument("job", Jobs.class)
-//                                )))
-//                        .executes(context -> powerups(context.getSource())))
+                .then(Commands.literal("powerups")
+                        .then(Commands.literal("buy")
+                                .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+                                        .then(Commands.argument("powerup", IntegerArgumentType.integer(1, 3))
+                                                .executes(context -> jobPowerUps(
+                                                        context.getSource(),
+                                                        context.getArgument("job", Jobs.class),
+                                                        IntegerArgumentType.getInteger(context, "powerup")
+                                                )))
+                                        .executes(context -> powerups(context.getSource())))
+                                .executes(context -> powerups(context.getSource())))
+                        .then(Commands.literal("switch")
+                                .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+                                        .then(Commands.argument("powerup", IntegerArgumentType.integer(1, 3))
+                                                .executes(context -> switchJobPowerUps(
+                                                        context.getSource(),
+                                                        context.getArgument("job", Jobs.class),
+                                                        IntegerArgumentType.getInteger(context, "powerup")
+                                                )))
+                                        .executes(context -> powerups(context.getSource())))
+                                .executes(context -> powerups(context.getSource())))
+                        .executes(context -> powerups(context.getSource())))
+                .then(Commands.literal("superpower")
+                        .then(Commands.literal("switch")
+                                .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+                                        .executes(context -> switchSuperpower(
+                                                context.getSource(),
+                                                context.getArgument("job", Jobs.class)
+                                        )))))
 //                .then(Commands.literal("crafting")
 //                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
 //                                .executes(context -> jobCrafting(
@@ -92,7 +116,7 @@ public class JobCommand {
                                 .then(Commands.literal("level")
                                         .then(Commands.argument("target", EntityArgument.players())
                                                 .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                                        .then(Commands.argument("level", IntegerArgumentType.integer())
+                                                        .then(Commands.argument("level", IntegerArgumentType.integer(0, 100))
                                                                 .executes(context -> setLevel(
                                                                         context.getSource(),
                                                                         EntityArgument.getPlayer(context, "target"),
@@ -133,6 +157,23 @@ public class JobCommand {
                                                         )))
                                                 .executes(context -> setDisplayHelp(context.getSource())))
                                         .executes(context -> setDisplayHelp(context.getSource())))
+                                .then(Commands.literal("powerup")
+                                        .then(Commands.argument("target", EntityArgument.players())
+                                                .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+                                                        .then(Commands.argument("powerup", IntegerArgumentType.integer(1, 3))
+                                                                .then(Commands.argument("int", IntegerArgumentType.integer(0, 2))
+                                                                        .executes(context -> setPowerUp(
+                                                                                context.getSource(),
+                                                                                EntityArgument.getPlayer(context, "target"),
+                                                                                context.getArgument("job", Jobs.class),
+                                                                                IntegerArgumentType.getInteger(context, "powerup"),
+                                                                                IntegerArgumentType.getInteger(context, "int"))
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
                                 .executes(context -> adminSet(context.getSource())))
                         .then(Commands.literal("debug")
                                 .then(Commands.argument("target", EntityArgument.players())
@@ -147,6 +188,69 @@ public class JobCommand {
 
     }
 
+    private static int switchJobPowerUps(CommandSourceStack source, Jobs job, int powerUp) {
+        if (source.getEntity() instanceof Player player) {
+            ++powerUp;
+            if (JobGetters.getPowerup(player, job, powerUp) == 1 || JobGetters.getPowerup(player, job, powerUp) == 2) {
+                if (JobGetters.getPowerup(player, job, powerUp) == 1) {
+                    JobSetters.setPowerUp(job, player, powerUp, 2);
+                } else {
+                    JobSetters.setPowerUp(job, player, powerUp, 1);
+                }
+            } else {
+                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
+                        "[JOBS+] " + ChatColor.red() + "You have not bought this power-up yet.");
+            }
+        }
+        return 1;
+    }
+
+    private static int switchSuperpower(CommandSourceStack source, Jobs job) {
+        if (source.getEntity() instanceof Player player) {
+            if (JobGetters.getJobLevel(player, job) == 100) {
+                if (JobGetters.getSuperPower(player, job) == 0) {
+                    JobSetters.setSuperPower(player, job, 1);
+                } else {
+                    JobSetters.setSuperPower(player, job, 0);
+                }
+            } else {
+                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
+                        "[JOBS+] " + ChatColor.red() + "You must be level 100 to perform this action.");
+            }
+        }
+        return 1;
+    }
+
+    private static int setPowerUp(CommandSourceStack source, Player target, Jobs job, int powerUp, int i) {
+        if (source.getEntity() instanceof Player player) {
+            ChatHandler.sendMessage(player, ChatHandler.header("SET POWER-UP"));
+            if (powerUp == 1) {
+                ChatHandler.sendMessage(player, ChatColor.green() + "Set " + target.getScoreboardName() + "s first " +
+                        ChatHandler.capitalizeWord(job.toString().toLowerCase()) + " power-up to " + i);
+            } else if (powerUp == 2) {
+                ChatHandler.sendMessage(player, ChatColor.green() + "Set " + target.getScoreboardName() + "s second " +
+                        ChatHandler.capitalizeWord(job.toString().toLowerCase()) + " power-up to " + i);
+            } else if (powerUp == 3) {
+                ChatHandler.sendMessage(player, ChatColor.green() + "Set " + target.getScoreboardName() + "s third " +
+                        ChatHandler.capitalizeWord(job.toString().toLowerCase()) + " power-up to " + i);
+            }
+            ChatHandler.sendMessage(player, ChatHandler.footer(13));
+        } else {
+            if (powerUp == 1) {
+                JobsPlus.LOGGER.info("Set " + target.getScoreboardName() + "s first " +
+                        ChatHandler.capitalizeWord(job.toString().toLowerCase()) + " power-up to " + i);
+            } else if (powerUp == 2) {
+                JobsPlus.LOGGER.info("Set " + target.getScoreboardName() + "s second " +
+                        ChatHandler.capitalizeWord(job.toString().toLowerCase()) + " power-up to " + i);
+            } else if (powerUp == 3) {
+                JobsPlus.LOGGER.info("Set " + target.getScoreboardName() + "s third " +
+                        ChatHandler.capitalizeWord(job.toString().toLowerCase()) + " power-up to " + i);
+            }
+        }
+        JobSetters.setPowerUp(job, target, powerUp + 1, i);
+        return 1;
+    }
+
     private static int help(CommandSourceStack source) {
         if (source.getEntity() instanceof Player player) {
             ChatHandler.sendMessage(player, ChatHandler.header("HELP"));
@@ -154,10 +258,10 @@ public class JobCommand {
                     ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/jobs\n\n" +
                     ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "about\n" +
                     ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "coins\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "crafting [job]\n" +
+//                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "crafting [job]\n" +
                     ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "display [job]\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "info [job]\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "powerups [job]\n" +
+//                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "info [job]\n" +
+//                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "powerups [job]\n" +
                     ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "start [job]\n" +
                     ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "stop [job]");
             ChatHandler.sendMessage(player, ChatHandler.footer(4));
@@ -168,11 +272,11 @@ public class JobCommand {
     private static int about(CommandSourceStack source) {
         if (source.getEntity() instanceof Player player) {
             ChatHandler.sendMessage(player, ChatHandler.header("ABOUT"));
-            ChatHandler.sendMessage(player, ChatColor.green() + "Jobs+ is a mod that adds 12 jobs " +
+            ChatHandler.sendMessage(player, ChatColor.green() + "Jobs+ is a mod that adds 10 jobs " +
                     "to the game. These jobs each have their own power-ups, superpower and tasks. You can level-up " +
                     "your job by doing tasks that fit the job. Think of mining, building, killing, etc. Every time " +
                     "you level-up your job, you get a job-coin. With this coin you can buy new jobs and power-ups." +
-                    "Once you reach job-level 100, your job will obtain its super power. This superpower will give " +
+                    " Once you reach job-level 100, your job will obtain its superpower. This superpower will give " +
                     "you a massive benefit that fits the job. Each job also has its own craftable items that will be " +
                     "unlocked once you reach a certain job-level.");
             ChatHandler.sendMessage(player, ChatHandler.footer(5));
@@ -245,8 +349,7 @@ public class JobCommand {
         if (source.getEntity() instanceof Player player) {
             ChatHandler.sendMessage(player, ChatHandler.header("POWER-UPS"));
             ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
-                    ChatColor.green() + "/job powerups [job]\n\n This command will show you some useful information " +
-                    "about the power-ups a certain job has.");
+                    ChatColor.green() + "/job powerups buy [job]\n\n This command will buy one of the available power-ups.");
             ChatHandler.sendMessage(player, ChatHandler.footer(9));
         }
         return 1;
@@ -268,7 +371,7 @@ public class JobCommand {
             ChatHandler.sendMessage(player, ChatHandler.header("DISPLAY"));
             ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
                     ChatColor.green() + "/job display [job]\n\n This command will change the job that is shown in " +
-                    "front of your name in tab and chat. By default, this is the first jon you chose.");
+                    "front of your name in tab and chat. By default, this is the first job you chose.");
             ChatHandler.sendMessage(player, ChatHandler.footer(7));
         }
         return 1;
@@ -308,6 +411,7 @@ public class JobCommand {
             if (!JobGetters.jobIsEnabled(player, job)) {
                 if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
                     JobSetters.setLevel(job, player, 1);
+                    if (JobGetters.getAmountOfEnabledJobs(player) == 1) JobSetters.setDisplay(player, job.get());
                 } else {
                     if (JobGetters.getCoins(player) < 10) {
                         ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
@@ -350,6 +454,9 @@ public class JobCommand {
             if (JobGetters.jobIsEnabled(player, job)) {
                 if (JobGetters.getJobLevel(player, job) == 1) {
                     JobSetters.setLevel(job, player, 0);
+                    if (JobGetters.getAmountOfEnabledJobs(player) == 0) {
+                        JobSetters.setDisplay(player, -1);
+                    }
                 } else {
                     if (JobGetters.getCoins(player) >= 5) {
                         JobSetters.setLevel(job, player, 0);
@@ -367,11 +474,26 @@ public class JobCommand {
         return 1;
     }
 
-    private static int jobPowerUps(CommandSourceStack source, Jobs job) {
+    private static int jobPowerUps(CommandSourceStack source, Jobs job, int powerUp) {
         if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                    "[JOBS+] " + ChatColor.red() + "This command is not done yet.");
-            //TODO JOB POWERUPS
+            powerUp = powerUp + 1;
+            if (JobGetters.jobIsEnabled(player, job)) {
+                if (!JobGetters.hasEnabledPowerup(player, job, powerUp)) {
+                    if (!(JobGetters.getCoins(player) < 10)) {
+                        JobSetters.addPowerUp(job, player, powerUp);
+                        JobSetters.removeCoins(player, 10);
+                    } else {
+                        ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
+                                "[JOBS+] " + ChatColor.red() + "You need 10 job-coins to buy a power-up.");
+                    }
+                } else {
+                    ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
+                            "[JOBS+] " + ChatColor.red() + "You have already bought this power-up.");
+                }
+            } else {
+                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
+                        "[JOBS+] " + ChatColor.red() + "You are not performing this job.");
+            }
         }
         return 1;
     }
@@ -447,22 +569,12 @@ public class JobCommand {
 
     private static int setLevel(CommandSourceStack source, Player target, Jobs job, int level) {
         if (source.getEntity() instanceof Player player) {
-            if (level > 100 || level < 0) {
-                if (level > 100) {
-                    ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                            "[JOBS+] " + ChatColor.red() + "A job-level cannot be higher than 100.");
-                } else {
-                    ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                            "[JOBS+] " + ChatColor.red() + "A job-level cannot be negative.");
-                }
-                return 1;
-            }
             if (level == 0) JobSetters.set(job, player, 0, 0, 0, 0, 0);
             ChatHandler.sendMessage(player, ChatHandler.header("SET LEVEL"));
             ChatHandler.sendMessage(player, ChatColor.green() + "Set " + target.getScoreboardName() + "s " +
                     ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "-level to " + level);
             ChatHandler.sendMessage(player, ChatHandler.footer(9));
-            JobSetters.setLevel(job, player, level);
+            JobSetters.setLevel(job, target, level);
 
         }
         return 1;
@@ -491,7 +603,7 @@ public class JobCommand {
             ChatHandler.sendMessage(player, ChatColor.green() + "Set " + target.getScoreboardName() + "s " +
                     ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "-EXP to " + exp);
             ChatHandler.sendMessage(player, ChatHandler.footer(7));
-            JobSetters.setEXP(job, player, exp);
+            JobSetters.setEXP(job, target, exp);
         }
         return 1;
     }
@@ -558,7 +670,8 @@ public class JobCommand {
     private static int debug(CommandSourceStack source, Player target) {
         if (source.getEntity() instanceof Player player) {
             if (target == null) target = player;
-            target.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            Player finalTarget = target;
+            target.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> finalTarget.getCapability(SuperPowerCapabilityImpl.SUPERPOWER_CAPABILITY).ifPresent(handler2 -> {
                 ChatHandler.sendMessage(player, ChatHandler.header("DEBUG"));
                 ChatHandler.sendMessage(player, ChatColor.darkGray() + " - " + ChatColor.darkGreen() +
                         "Alchemist      " + ChatColor.green() + Arrays.toString(handler.getAlchemist()));
@@ -588,8 +701,10 @@ public class JobCommand {
                         "Selector      " + ChatColor.green() + Arrays.toString(handler.getSelector()));
                 ChatHandler.sendMessage(player, ChatColor.darkGray() + " - " + ChatColor.darkGreen() +
                         "Display        " + ChatColor.green() + handler.getDisplay());
+                ChatHandler.sendMessage(player, ChatColor.darkGray() + " - " + ChatColor.darkGreen() +
+                        "Superpower  " + ChatColor.green() + Arrays.toString(handler2.getSuperpower()));
                 ChatHandler.sendMessage(player, ChatHandler.footer(5));
-            });
+            }));
         }
         return 1;
     }

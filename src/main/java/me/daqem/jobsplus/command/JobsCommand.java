@@ -1,6 +1,8 @@
 package me.daqem.jobsplus.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
@@ -18,6 +20,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class JobsCommand {
 
@@ -25,7 +28,21 @@ public class JobsCommand {
         dispatcher.register(Commands.literal("jobs")
                 .executes(context -> jobs(context.getSource()))
                 .then(Commands.literal("menu")
-                        .executes(context -> menu(context.getSource()))));
+                        .then(Commands.argument("jobId", IntegerArgumentType.integer(-1, 9))
+                                .then(Commands.argument("activeLeftButton", IntegerArgumentType.integer(0, 2))
+                                        .then(Commands.argument("activeRightButton", IntegerArgumentType.integer(0, 3))
+                                                .then(Commands.argument("selectedButton", IntegerArgumentType.integer(-1, 9))
+                                                        .then(Commands.argument("scrollOffs", FloatArgumentType.floatArg(-1, 9))
+                                                                .then(Commands.argument("startIndex", IntegerArgumentType.integer(-1, 9))
+                                                                        .executes(context -> menu(
+                                                                                context.getSource(),
+                                                                                IntegerArgumentType.getInteger(context, "jobId"),
+                                                                                IntegerArgumentType.getInteger(context, "activeLeftButton"),
+                                                                                IntegerArgumentType.getInteger(context, "activeRightButton"),
+                                                                                IntegerArgumentType.getInteger(context, "selectedButton"),
+                                                                                FloatArgumentType.getFloat(context, "scrollOffs"),
+                                                                                IntegerArgumentType.getInteger(context, "startIndex")
+                                                                        ))))))))));
     }
 
     public static int jobs(CommandSourceStack source) {
@@ -80,20 +97,67 @@ public class JobsCommand {
         return 1;
     }
 
-    public static int menu(CommandSourceStack source) {
-        if (source.getEntity() instanceof ServerPlayer player) {
-            ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketSendMainMenuData(new int[]{
-                    JobGetters.getJobLevel(player, Jobs.ALCHEMIST), JobGetters.getJobEXP(player, Jobs.ALCHEMIST),
-                    JobGetters.getJobLevel(player, Jobs.BUILDER), JobGetters.getJobEXP(player, Jobs.BUILDER),
-                    JobGetters.getJobLevel(player, Jobs.DIGGER), JobGetters.getJobEXP(player, Jobs.DIGGER),
-                    JobGetters.getJobLevel(player, Jobs.FARMER), JobGetters.getJobEXP(player, Jobs.FARMER),
-                    JobGetters.getJobLevel(player, Jobs.FISHERMAN), JobGetters.getJobEXP(player, Jobs.FISHERMAN),
-                    JobGetters.getJobLevel(player, Jobs.ENCHANTER), JobGetters.getJobEXP(player, Jobs.ENCHANTER),
-                    JobGetters.getJobLevel(player, Jobs.HUNTER), JobGetters.getJobEXP(player, Jobs.HUNTER),
-                    JobGetters.getJobLevel(player, Jobs.LUMBERJACK), JobGetters.getJobEXP(player, Jobs.LUMBERJACK),
-                    JobGetters.getJobLevel(player, Jobs.MINER), JobGetters.getJobEXP(player, Jobs.MINER),
-                    JobGetters.getJobLevel(player, Jobs.SMITH), JobGetters.getJobEXP(player, Jobs.SMITH),
-                    JobGetters.getCoins(player), JobGetters.getAmountOfEnabledJobs(player)}));
+    public static int menu(CommandSourceStack source, int jobId, int activeLeftButton, int activeRightButton, int selectedButton, float scrollOffs, int startIndex) {
+        try {
+            if (source.getEntity() instanceof ServerPlayer player) {
+                ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketSendMainMenuData(new int[]{
+                        JobGetters.getJobLevel(player, Jobs.ALCHEMIST), JobGetters.getJobEXP(player, Jobs.ALCHEMIST),
+                        JobGetters.getJobLevel(player, Jobs.BUILDER), JobGetters.getJobEXP(player, Jobs.BUILDER),
+                        JobGetters.getJobLevel(player, Jobs.DIGGER), JobGetters.getJobEXP(player, Jobs.DIGGER),
+                        JobGetters.getJobLevel(player, Jobs.FARMER), JobGetters.getJobEXP(player, Jobs.FARMER),
+                        JobGetters.getJobLevel(player, Jobs.FISHERMAN), JobGetters.getJobEXP(player, Jobs.FISHERMAN),
+                        JobGetters.getJobLevel(player, Jobs.ENCHANTER), JobGetters.getJobEXP(player, Jobs.ENCHANTER),
+                        JobGetters.getJobLevel(player, Jobs.HUNTER), JobGetters.getJobEXP(player, Jobs.HUNTER),
+                        JobGetters.getJobLevel(player, Jobs.LUMBERJACK), JobGetters.getJobEXP(player, Jobs.LUMBERJACK),
+                        JobGetters.getJobLevel(player, Jobs.MINER), JobGetters.getJobEXP(player, Jobs.MINER),
+                        JobGetters.getJobLevel(player, Jobs.SMITH), JobGetters.getJobEXP(player, Jobs.SMITH),
+                        JobGetters.getCoins(player), JobGetters.getAmountOfEnabledJobs(player),
+                        JobGetters.getPowerup(player, Jobs.ALCHEMIST, CapType.POWERUP1.get()),
+                        JobGetters.getPowerup(player, Jobs.ALCHEMIST, CapType.POWERUP2.get()),
+                        JobGetters.getPowerup(player, Jobs.ALCHEMIST, CapType.POWERUP3.get()),
+                        JobGetters.getPowerup(player, Jobs.BUILDER, CapType.POWERUP1.get()),
+                        JobGetters.getPowerup(player, Jobs.BUILDER, CapType.POWERUP2.get()),
+                        JobGetters.getPowerup(player, Jobs.BUILDER, CapType.POWERUP3.get()),
+                        JobGetters.getPowerup(player, Jobs.DIGGER, CapType.POWERUP1.get()),
+                        JobGetters.getPowerup(player, Jobs.DIGGER, CapType.POWERUP2.get()),
+                        JobGetters.getPowerup(player, Jobs.DIGGER, CapType.POWERUP3.get()),
+                        JobGetters.getPowerup(player, Jobs.FARMER, CapType.POWERUP1.get()),
+                        JobGetters.getPowerup(player, Jobs.FARMER, CapType.POWERUP2.get()),
+                        JobGetters.getPowerup(player, Jobs.FARMER, CapType.POWERUP3.get()),
+                        JobGetters.getPowerup(player, Jobs.FISHERMAN, CapType.POWERUP1.get()),
+                        JobGetters.getPowerup(player, Jobs.FISHERMAN, CapType.POWERUP2.get()),
+                        JobGetters.getPowerup(player, Jobs.FISHERMAN, CapType.POWERUP3.get()),
+                        JobGetters.getPowerup(player, Jobs.ENCHANTER, CapType.POWERUP1.get()),
+                        JobGetters.getPowerup(player, Jobs.ENCHANTER, CapType.POWERUP2.get()),
+                        JobGetters.getPowerup(player, Jobs.ENCHANTER, CapType.POWERUP3.get()),
+                        JobGetters.getPowerup(player, Jobs.HUNTER, CapType.POWERUP1.get()),
+                        JobGetters.getPowerup(player, Jobs.HUNTER, CapType.POWERUP2.get()),
+                        JobGetters.getPowerup(player, Jobs.HUNTER, CapType.POWERUP3.get()),
+                        JobGetters.getPowerup(player, Jobs.LUMBERJACK, CapType.POWERUP1.get()),
+                        JobGetters.getPowerup(player, Jobs.LUMBERJACK, CapType.POWERUP2.get()),
+                        JobGetters.getPowerup(player, Jobs.LUMBERJACK, CapType.POWERUP3.get()),
+                        JobGetters.getPowerup(player, Jobs.MINER, CapType.POWERUP1.get()),
+                        JobGetters.getPowerup(player, Jobs.MINER, CapType.POWERUP2.get()),
+                        JobGetters.getPowerup(player, Jobs.MINER, CapType.POWERUP3.get()),
+                        JobGetters.getPowerup(player, Jobs.SMITH, CapType.POWERUP1.get()),
+                        JobGetters.getPowerup(player, Jobs.SMITH, CapType.POWERUP2.get()),
+                        JobGetters.getPowerup(player, Jobs.SMITH, CapType.POWERUP3.get()),
+                        JobGetters.getSuperPower(player, Jobs.ALCHEMIST), JobGetters.getSuperPower(player, Jobs.BUILDER),
+                        JobGetters.getSuperPower(player, Jobs.DIGGER), JobGetters.getSuperPower(player, Jobs.FARMER),
+                        JobGetters.getSuperPower(player, Jobs.FISHERMAN), JobGetters.getSuperPower(player, Jobs.ENCHANTER),
+                        JobGetters.getSuperPower(player, Jobs.HUNTER), JobGetters.getSuperPower(player, Jobs.LUMBERJACK),
+                        JobGetters.getSuperPower(player, Jobs.MINER), JobGetters.getSuperPower(player, Jobs.SMITH)
+                }, jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                try {
+                    for (ServerPlayer player1 : Objects.requireNonNull(player.getServer()).getPlayerList().getPlayers()) {
+                        player1.refreshDisplayName();
+                        player1.refreshTabListName();
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return 1;
     }

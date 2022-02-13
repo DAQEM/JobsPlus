@@ -6,12 +6,21 @@ import java.util.Arrays;
 
 public class CropHandler {
 
-    public static int stateToAge (BlockState blockState) {
+    public static int stateToAge(BlockState blockState) {
         try {
             return Integer.parseInt(Arrays.toString(blockState.getValues().values().toArray()).replace("[", "").replace("]", ""));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public static String stateToAgeString(BlockState blockState) {
+        try {
+            return Arrays.toString(blockState.getValues().values().toArray()).replace("[", "").replace("]", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

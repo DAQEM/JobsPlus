@@ -78,7 +78,7 @@ public class ExcavatorItem extends ShovelItem {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         if (player.isShiftKeyDown() && !level.isClientSide) {
-            ItemStack stack = player.getItemInHand(hand);
+            ItemStack stack = player.getMainHandItem();
             if (stack.getItem() instanceof ExcavatorItem) {
                 CompoundTag tag = stack.getOrCreateTag();
                 if (tag.contains("mode")) {

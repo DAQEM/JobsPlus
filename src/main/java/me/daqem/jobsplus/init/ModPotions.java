@@ -29,7 +29,7 @@ public class ModPotions {
     public static final RegistryObject<Potion> LONG_EXTRA_STRONG_SWIFTNESS = POTIONS.register("long_extra_strong_swiftness", () -> new Potion("swiftness", new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 6000, 2)));
     public static final RegistryObject<Potion> SUPER_STRONG_SWIFTNESS = POTIONS.register("super_strong_swiftness", () -> new Potion("swiftness", new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2400, 3)));
     public static final RegistryObject<Potion> LONG_SUPER_STRONG_SWIFTNESS = POTIONS.register("long_super_strong_swiftness", () -> new Potion("swiftness", new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 6000, 3)));
-    
+
     public static final RegistryObject<Potion> EXTRA_STRONG_STRENGTH = POTIONS.register("extra_strong_strength", () -> new Potion("strength", new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2400, 2)));
     public static final RegistryObject<Potion> LONG_EXTRA_STRONG_STRENGTH = POTIONS.register("long_extra_strong_strength", () -> new Potion("strength", new MobEffectInstance(MobEffects.DAMAGE_BOOST, 6000, 2)));
     public static final RegistryObject<Potion> SUPER_STRONG_STRENGTH = POTIONS.register("super_strong_strength", () -> new Potion("strength", new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2400, 3)));
@@ -49,32 +49,32 @@ public class ModPotions {
     public static void addPotionRecipes() {
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(Potions.AWKWARD, Items.HONEY_BOTTLE, ModPotions.HASTE.get()));
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.HASTE.get(), Items.REDSTONE, ModPotions.LONG_HASTE.get()));
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.HASTE.get(), Items.GLOWSTONE, ModPotions.STRONG_HASTE.get()));
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LONG_HASTE.get(), Items.GLOWSTONE, ModPotions.STRONG_HASTE.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.HASTE.get(), Items.GLOWSTONE_DUST, ModPotions.STRONG_HASTE.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LONG_HASTE.get(), Items.GLOWSTONE_DUST, ModPotions.STRONG_HASTE.get()));
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.STRONG_HASTE.get(), Items.REDSTONE, ModPotions.LONG_STRONG_HASTE.get()));
 
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(Potions.STRONG_REGENERATION, Items.REDSTONE, ModPotions.LONG_STRONG_REGENERATION.get()));
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LONG_STRONG_REGENERATION.get(), Items.REDSTONE, ModPotions.EXTRA_LONG_STRONG_REGENERATION.get()));
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(Potions.STRONG_REGENERATION, Items.GLOWSTONE, ModPotions.EXTRA_STRONG_REGENERATION.get()));
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LONG_STRONG_REGENERATION.get(), Items.GLOWSTONE, ModPotions.EXTRA_STRONG_REGENERATION.get()));
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.EXTRA_LONG_STRONG_REGENERATION.get(), Items.GLOWSTONE, ModPotions.EXTRA_STRONG_REGENERATION.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(Potions.STRONG_REGENERATION, Items.GLOWSTONE_DUST, ModPotions.EXTRA_STRONG_REGENERATION.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LONG_STRONG_REGENERATION.get(), Items.GLOWSTONE_DUST, ModPotions.EXTRA_STRONG_REGENERATION.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.EXTRA_LONG_STRONG_REGENERATION.get(), Items.GLOWSTONE_DUST, ModPotions.EXTRA_STRONG_REGENERATION.get()));
 
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(Potions.STRONG_SWIFTNESS, Items.GLOWSTONE, ModPotions.EXTRA_STRONG_SWIFTNESS.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(Potions.STRONG_SWIFTNESS, Items.GLOWSTONE_DUST, ModPotions.EXTRA_STRONG_SWIFTNESS.get()));
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.EXTRA_STRONG_SWIFTNESS.get(), Items.REDSTONE, ModPotions.LONG_EXTRA_STRONG_SWIFTNESS.get()));
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.EXTRA_STRONG_SWIFTNESS.get(), Items.GLOWSTONE, ModPotions.SUPER_STRONG_SWIFTNESS.get()));
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LONG_EXTRA_STRONG_SWIFTNESS.get(), Items.GLOWSTONE, ModPotions.SUPER_STRONG_SWIFTNESS.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.EXTRA_STRONG_SWIFTNESS.get(), Items.GLOWSTONE_DUST, ModPotions.SUPER_STRONG_SWIFTNESS.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LONG_EXTRA_STRONG_SWIFTNESS.get(), Items.GLOWSTONE_DUST, ModPotions.SUPER_STRONG_SWIFTNESS.get()));
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.SUPER_STRONG_SWIFTNESS.get(), Items.REDSTONE, ModPotions.LONG_SUPER_STRONG_SWIFTNESS.get()));
 
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(Potions.STRONG_STRENGTH, Items.GLOWSTONE, ModPotions.EXTRA_STRONG_STRENGTH.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(Potions.STRONG_STRENGTH, Items.GLOWSTONE_DUST, ModPotions.EXTRA_STRONG_STRENGTH.get()));
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.EXTRA_STRONG_STRENGTH.get(), Items.REDSTONE, ModPotions.LONG_EXTRA_STRONG_STRENGTH.get()));
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.EXTRA_STRONG_STRENGTH.get(), Items.GLOWSTONE, ModPotions.SUPER_STRONG_STRENGTH.get()));
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LONG_EXTRA_STRONG_STRENGTH.get(), Items.GLOWSTONE, ModPotions.SUPER_STRONG_STRENGTH.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.EXTRA_STRONG_STRENGTH.get(), Items.GLOWSTONE_DUST, ModPotions.SUPER_STRONG_STRENGTH.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LONG_EXTRA_STRONG_STRENGTH.get(), Items.GLOWSTONE_DUST, ModPotions.SUPER_STRONG_STRENGTH.get()));
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.SUPER_STRONG_STRENGTH.get(), Items.REDSTONE, ModPotions.LONG_SUPER_STRONG_STRENGTH.get()));
 
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(Potions.AWKWARD, Items.GLOW_INK_SAC, ModPotions.LUCK.get()));
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LUCK.get(), Items.REDSTONE, ModPotions.LONG_LUCK.get()));
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LUCK.get(), Items.GLOWSTONE, ModPotions.STRONG_LUCK.get()));
-        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LONG_LUCK.get(), Items.GLOWSTONE, ModPotions.STRONG_LUCK.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LUCK.get(), Items.GLOWSTONE_DUST, ModPotions.STRONG_LUCK.get()));
+        BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.LONG_LUCK.get(), Items.GLOWSTONE_DUST, ModPotions.STRONG_LUCK.get()));
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(ModPotions.STRONG_LUCK.get(), Items.REDSTONE, ModPotions.LONG_STRONG_LUCK.get()));
 
         BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(Potions.AWKWARD, Items.FEATHER, ModPotions.JESUS.get()));

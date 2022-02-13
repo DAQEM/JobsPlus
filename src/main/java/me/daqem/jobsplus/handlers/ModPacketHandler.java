@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.handlers;
 
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.packet.PacketDisableVeinMiner;
 import me.daqem.jobsplus.packet.PacketSendMainMenuData;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -18,5 +19,6 @@ public class ModPacketHandler {
     public static void init() {
         int id = 0;
         INSTANCE.registerMessage(++id, PacketSendMainMenuData.class, PacketSendMainMenuData::encode, PacketSendMainMenuData::decode, PacketSendMainMenuData::handle);
+        INSTANCE.registerMessage(++id, PacketDisableVeinMiner.class, PacketDisableVeinMiner::encode, PacketDisableVeinMiner::decode, PacketDisableVeinMiner::handle);
     }
 }

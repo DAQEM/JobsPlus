@@ -41,7 +41,7 @@ public class AlchemistEvents {
             itemStackArrayList.remove(event.getStack());
             if (!player.isCreative()) {
                 if (JobGetters.jobIsEnabled(player, job)) {
-                    ExpHandler.addEXPHigh(player, job);
+                    ExpHandler.addEXPBrewing(player, job);
                 }
             }
         }
@@ -63,9 +63,9 @@ public class AlchemistEvents {
     //  ON POTION DRINK
     @SubscribeEvent
     public void onPotionConsume(LivingEntityUseItemEvent.Finish event) {
-        if (event.getEntity() instanceof ServerPlayer player && event.getItem().getItem() instanceof PotionItem potionItem) {
+        if (event.getEntity() instanceof ServerPlayer player && event.getItem().getItem() instanceof PotionItem) {
             if (JobGetters.jobIsEnabled(player, job)) {
-                if (!(potionItem.getDescriptionId(event.getItem()).equals("Water Bottle"))) {
+                if (!(event.getItem().getDescriptionId().equals("item.minecraft.potion.effect.water"))) {
                     if (!player.isCreative()) {
                         ExpHandler.addEXPMid(player, job);
                     }
@@ -77,9 +77,11 @@ public class AlchemistEvents {
     //  ON SPLASH POTION THROW
     @SubscribeEvent
     public void onPotionThrow(PlayerInteractEvent.RightClickItem event) {
-        if (event.getEntity() instanceof ServerPlayer player && event.getItemStack().getItem() instanceof SplashPotionItem splashPotionItem) {
+        final Item item = event.getItemStack().getItem();
+        if (event.getEntity() instanceof ServerPlayer player && (item instanceof SplashPotionItem || item instanceof LingeringPotionItem)) {
             if (JobGetters.jobIsEnabled(player, job)) {
-                if (!(splashPotionItem.getDescriptionId(event.getItemStack()).equals("Water Bottle"))) {
+                if (!(event.getItemStack().getDescriptionId().equals("item.minecraft.splash_potion.effect.water"))
+                        && !(event.getItemStack().getDescriptionId().equals("item.minecraft.lingering_potion.effect.water"))) {
                     if (!player.isCreative()) {
                         ExpHandler.addEXPMid(player, job);
                     }
@@ -101,9 +103,6 @@ public class AlchemistEvents {
                             "item.minecraft.magma_cream", "item.minecraft.golden_carrot", "item.minecraft.turtle_helmet"));
                     if (items.contains(itemName)) {
                         ExpHandler.addEXPLowest(player, job);
-                    } else {
-                        System.out.println(items);
-                        System.out.println(itemName);
                     }
                 }
             }

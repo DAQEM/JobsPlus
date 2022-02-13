@@ -1,5 +1,5 @@
 {
-  "type": "jobsplus:upgrade_recipe",
+  "type": "jobsplus:shaped_job_based_recipe",
   "pattern": [
     "GLG",
     "LEL",

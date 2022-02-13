@@ -25,6 +25,7 @@ public class ConfirmationScreen extends Screen {
     private final Jobs job;
     private int startX;
     private int startY;
+    private int powerUp;
 
 
     protected ConfirmationScreen(String confirmationText, String action, Jobs job) {
@@ -33,6 +34,15 @@ public class ConfirmationScreen extends Screen {
         this.confirmationText = confirmationText;
         this.action = action;
         this.job = job;
+    }
+
+    protected ConfirmationScreen(String confirmationText, String action, Jobs job, int powerUp) {
+        super(TITLE);
+
+        this.confirmationText = confirmationText;
+        this.action = action;
+        this.job = job;
+        this.powerUp = powerUp;
     }
 
     @Override
@@ -44,7 +54,6 @@ public class ConfirmationScreen extends Screen {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.setShaderTexture(0, BACKGROUND);
-//        blitThis(poseStack, 0, 0, 0, 0, imageWidth, imageHeight);
         if (action.equals("stop_free") || action.equals("start"))
             blit(poseStack, (this.width - 300) / 2, (this.height - 30) / 2, 0, 0, 300, 30, 300, 300 / 5 * 3);
         else blit(poseStack, (this.width - 350) / 2, (this.height - 30) / 2, 0, 0, 350, 30, 350, 300 / 5 * 3);
@@ -57,8 +66,9 @@ public class ConfirmationScreen extends Screen {
             case "not_enough_coins_stop" -> font.draw(poseStack, confirmationText, startX, startY + 15, 16777215);
             case "start_paid" -> font.draw(poseStack, confirmationText, startX - 18, startY + 15, 16777215);
             case "not_enough_coins_start" -> font.draw(poseStack, confirmationText, startX - 1, startY + 15, 16777215);
+            case "powerup" -> font.draw(poseStack, confirmationText, startX, startY + 15, 16777215);
         }
-        if (!action.equals("not_enough_coins_stop") && !action.equals("not_enough_coins_start")) {
+        if (!action.equals("not_enough_coins_stop") && !action.equals("not_enough_coins_start") && !action.equals("not_enough_coins_powerup")) {
             font.draw(poseStack, "Yes", startX + 102, startY + 33, 16777215);
             font.draw(poseStack, "Cancel", startX + 174, startY + 33, 16777215);
         } else {
@@ -69,7 +79,7 @@ public class ConfirmationScreen extends Screen {
     }
 
     private void renderButtons(PoseStack poseStack, int mouseX, int mouseY) {
-        if (!action.equals("not_enough_coins_stop") && !action.equals("not_enough_coins_start")) {
+        if (!action.equals("not_enough_coins_stop") && !action.equals("not_enough_coins_start") && !action.equals("not_enough_coins_powerup")) {
             // YES BUTTON
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 - 78, imageHeight - 22, imageWidth / 2 - 4, imageHeight - 5)) {
                 RenderSystem.setShaderColor(0.6F, 0.6F, 1F, 1);
@@ -100,7 +110,11 @@ public class ConfirmationScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int p_94697_) {
-        if (!action.equals("not_enough_coins_stop") && !action.equals("not_enough_coins_start")) {
+        if (!action.equals("not_enough_coins_stop") && !action.equals("not_enough_coins_start") && !action.equals("not_enough_coins_powerup")) {
+            int activeRightButton = 0;
+            if (action.equals("powerup")) activeRightButton = 2;
+            if (action.equals("start") || action.equals("stop") || action.equals("start_paid") || action.equals("stop_free"))
+                activeRightButton = 1;
             // YES BUTTON
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 - 78, imageHeight - 22, imageWidth / 2 - 4, imageHeight - 5)) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -108,18 +122,20 @@ public class ConfirmationScreen extends Screen {
                     Minecraft.getInstance().player.chat("/job start " + job.name() + " force");
                 if (action.equals("stop") || action.equals("stop_free"))
                     Minecraft.getInstance().player.chat("/job stop " + job.name() + " force");
-                Minecraft.getInstance().player.chat("/jobs menu");
+                if (action.equals("powerup"))
+                    Minecraft.getInstance().player.chat("/job powerups buy " + Jobs.getString(Jobs.getJobInt(job)) + " " + powerUp);
+                Minecraft.getInstance().player.chat("/jobs menu " + Jobs.getJobInt(job) + " 0 " + activeRightButton + " -1 0 0");
             }
             // CANCEL BUTTON
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 + 3, imageHeight - 22, imageWidth / 2 + 77, imageHeight - 5)) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                Minecraft.getInstance().player.chat("/jobs menu");
+                Minecraft.getInstance().player.chat("/jobs menu " + Jobs.getJobInt(job) + " 0 " + activeRightButton + " -1 0 0");
             }
         } else {
             // BACK BUTTON if NOT ENOUGH COINS
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 - 38, imageHeight - 22, imageWidth / 2 + 36, imageHeight - 5)) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                Minecraft.getInstance().player.chat("/jobs menu");
+                Minecraft.getInstance().player.chat("/jobs menu -1 0 0 -1 0 0");
             }
         }
         return super.mouseClicked(mouseX, mouseY, p_94697_);

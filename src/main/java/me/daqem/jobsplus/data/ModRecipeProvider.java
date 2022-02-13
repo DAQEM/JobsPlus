@@ -77,7 +77,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('L', Tags.Items.LEATHER)
                 .define('E', Tags.Items.CHESTS_ENDER)
                 .unlockedBy("ender_chest", has(Items.ENDER_CHEST))
-                .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
+                .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
 
         ShapedRecipeBuilder.shaped(ModItems.EXP_JAR.get())
                 .pattern("PPP")

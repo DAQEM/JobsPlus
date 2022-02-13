@@ -33,8 +33,8 @@ public class ExpHandler {
         addRandomJobEXP(player, job, 4, 11);
     }
 
-    public static void addEXPFishing(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 8, 14);
+    public static void addEXPBrewing(Player player, Jobs job) {
+        addRandomJobEXP(player, job, 12, 24);
     }
 
     public static int getEXPLowest() {
@@ -58,33 +58,33 @@ public class ExpHandler {
     }
 
     public static int getEXPFishing() {
-        return getRandomJobEXP(8, 14);
+        return getRandomJobEXP(10, 16);
     }
 
     public static void addRandomJobEXP(Player player, Jobs job, int lowerBound, int upperBound) {
-        Random random = new Random();
-        int randomNumber = random.nextInt(upperBound - lowerBound) + lowerBound;
+        int randomNumber = new Random().nextInt(upperBound - lowerBound) + lowerBound;
         addJobEXP(player, job, randomNumber);
     }
 
     public static int getRandomJobEXP(int lowerBound, int upperBound) {
-        Random random = new Random();
-        return random.nextInt(upperBound - lowerBound) + lowerBound;
+        return new Random().nextInt(upperBound - lowerBound) + lowerBound;
     }
 
     public static void addJobEXP(Player player, Jobs job, int exp) {
-        JobSetters.addEXP(job, player, exp);
-        int maxEXP = LevelHandler.calcExp(JobGetters.getJobLevel(player, job));
-        int newEXP = JobGetters.getJobEXP(player, job);
-        if (newEXP >= maxEXP) {
-            JobSetters.setLevel(job, player, -2);
-            JobSetters.setEXP(job, player, newEXP - maxEXP);
-            LevelUpHandler.handler(player, job, JobGetters.getJobLevel(player, job));
-        }
-        if (player instanceof ServerPlayer serverPlayer) {
-            if (exp != 0) {
-                serverPlayer.sendMessage(new KeybindComponent(ChatHandler.ColorizedJobName(job) + ChatColor.gray() +
-                        " +" + exp + " EXP"), ChatType.GAME_INFO, player.getUUID());
+        if (JobGetters.getJobLevel(player, job) < 100) {
+            JobSetters.addEXP(job, player, exp);
+            int maxEXP = LevelHandler.calcExp(JobGetters.getJobLevel(player, job));
+            int newEXP = JobGetters.getJobEXP(player, job);
+            if (newEXP >= maxEXP) {
+                JobSetters.setLevel(job, player, -2);
+                JobSetters.setEXP(job, player, newEXP - maxEXP);
+                LevelUpHandler.handler(player, job, JobGetters.getJobLevel(player, job));
+            }
+            if (player instanceof ServerPlayer serverPlayer) {
+                if (exp != 0) {
+                    serverPlayer.sendMessage(new KeybindComponent(ChatHandler.ColorizedJobName(job) + ChatColor.gray() +
+                            " +" + exp + " EXP"), ChatType.GAME_INFO, player.getUUID());
+                }
             }
         }
     }

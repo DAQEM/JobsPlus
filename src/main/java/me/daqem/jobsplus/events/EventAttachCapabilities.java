@@ -2,13 +2,15 @@ package me.daqem.jobsplus.events;
 
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.capability.ModCapabilityProvider;
+import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
+import me.daqem.jobsplus.capability.SuperPowerCapabilityProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EventAttachCapabilities {
 
     @SubscribeEvent
@@ -16,6 +18,7 @@ public class EventAttachCapabilities {
         if (event.getObject() instanceof Player) {
             if (event.getObject().level.isClientSide()) return;
             event.addCapability(ModCapabilityImpl.ID, ModCapabilityProvider.from(ModCapabilityImpl.MOD_CAPABILITY));
+            event.addCapability(SuperPowerCapabilityImpl.ID, SuperPowerCapabilityProvider.from(SuperPowerCapabilityImpl.SUPERPOWER_CAPABILITY));
         }
     }
 }

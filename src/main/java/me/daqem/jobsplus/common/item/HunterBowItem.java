@@ -177,4 +177,12 @@ public class HunterBowItem extends BowItem {
         }
         return 0D;
     }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack leftItem, @NotNull ItemStack rightItem) {
+        return leftItem.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get() && rightItem.getItem() == Items.IRON_BLOCK
+                || leftItem.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get() && rightItem.getItem() == Items.GOLD_BLOCK
+                || leftItem.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get() && rightItem.getItem() == Items.DIAMOND_BLOCK
+                || leftItem.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get() && rightItem.getItem() == Items.EMERALD_BLOCK;
+    }
 }

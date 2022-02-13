@@ -120,6 +120,11 @@ public class ShapedJobBasedRecipe extends ShapedRecipe {
                         return super.assemble(container);
                     }
                 }
+                if (JobGetters.getJobLevel(player, Jobs.BUILDER) >= 10) {
+                    if (getResultItem().getItem() == ModItems.ENDER_BACKPACK.get()) {
+                        return super.assemble(container);
+                    }
+                }
             }
             if (JobGetters.jobIsEnabled(player, Jobs.LUMBERJACK)) {
                 if (JobGetters.getJobLevel(player, Jobs.LUMBERJACK) >= 5) {

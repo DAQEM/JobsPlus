@@ -65,4 +65,38 @@ public class ModArmorItem extends ArmorItem {
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }
     }
+
+    @Override
+    public boolean isValidRepairItem(@NotNull ItemStack leftItem, ItemStack rightItem) {
+        if (rightItem.getItem() == Items.IRON_BLOCK) {
+            return leftItem.getItem() == ModItems.REINFORCED_IRON_HELMET.get()
+                    || leftItem.getItem() == ModItems.REINFORCED_IRON_CHESTPLATE.get()
+                    || leftItem.getItem() == ModItems.REINFORCED_IRON_LEGGINGS.get()
+                    || leftItem.getItem() == ModItems.REINFORCED_IRON_BOOTS.get();
+        } else if (rightItem.getItem() == Items.OBSIDIAN) {
+            return leftItem.getItem() == ModItems.OBSIDIAN_HELMET.get()
+                    || leftItem.getItem() == ModItems.OBSIDIAN_CHESTPLATE.get()
+                    || leftItem.getItem() == ModItems.OBSIDIAN_LEGGINGS.get()
+                    || leftItem.getItem() == ModItems.OBSIDIAN_BOOTS.get();
+        } else if (rightItem.getItem() == Items.DIAMOND_BLOCK) {
+            return leftItem.getItem() == ModItems.REINFORCED_DIAMOND_HELMET.get()
+                    || leftItem.getItem() == ModItems.REINFORCED_DIAMOND_CHESTPLATE.get()
+                    || leftItem.getItem() == ModItems.REINFORCED_DIAMOND_LEGGINGS.get()
+                    || leftItem.getItem() == ModItems.REINFORCED_DIAMOND_BOOTS.get();
+        } else if (rightItem.getItem() == Items.NETHERITE_BLOCK) {
+            return leftItem.getItem() == ModItems.REINFORCED_NETHERITE_HELMET.get()
+                    || leftItem.getItem() == ModItems.REINFORCED_NETHERITE_CHESTPLATE.get()
+                    || leftItem.getItem() == ModItems.REINFORCED_NETHERITE_LEGGINGS.get()
+                    || leftItem.getItem() == ModItems.REINFORCED_NETHERITE_BOOTS.get();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isFireResistant() {
+        return this == ModItems.REINFORCED_NETHERITE_HELMET.get()
+                || this == ModItems.REINFORCED_NETHERITE_CHESTPLATE.get()
+                || this == ModItems.REINFORCED_NETHERITE_LEGGINGS.get()
+                || this == ModItems.REINFORCED_NETHERITE_BOOTS.get();
+    }
 }

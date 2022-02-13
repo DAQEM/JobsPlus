@@ -18,10 +18,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.FishingRodItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -130,5 +127,13 @@ public class RodItem extends FishingRodItem {
             tooltip.add(new KeybindComponent(""));
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Enchantments:"));
         }
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack leftItem, @NotNull ItemStack rightItem) {
+        return leftItem.getItem() == ModItems.FISHERMANS_ROD_LEVEL_1.get() && rightItem.getItem() == Items.IRON_BLOCK
+                || leftItem.getItem() == ModItems.FISHERMANS_ROD_LEVEL_2.get() && rightItem.getItem() == Items.GOLD_BLOCK
+                || leftItem.getItem() == ModItems.FISHERMANS_ROD_LEVEL_3.get() && rightItem.getItem() == Items.DIAMOND_BLOCK
+                || leftItem.getItem() == ModItems.FISHERMANS_ROD_LEVEL_4.get() && rightItem.getItem() == Items.EMERALD_BLOCK;
     }
 }

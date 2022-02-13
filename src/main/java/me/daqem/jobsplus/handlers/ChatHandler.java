@@ -24,11 +24,11 @@ public class ChatHandler {
         player.sendMessage(new KeybindComponent(message), player.getUUID());
     }
 
-    public static String capitalizeWord(String str){
+    public static String capitalizeWord(String str) {
         String[] words = str.split("\\s");
-        StringBuilder capitalizeWord= new StringBuilder();
-        for(String w : words){
-            String first = w.substring(0,1);
+        StringBuilder capitalizeWord = new StringBuilder();
+        for (String w : words) {
+            String first = w.substring(0, 1);
             String afterFirst = w.substring(1);
             capitalizeWord.append(first.toUpperCase()).append(afterFirst).append(" ");
         }
@@ -41,31 +41,31 @@ public class ChatHandler {
                 return ChatColor.boldDarkPurple() + "ALCHEMIST " + ChatColor.reset();
             }
             case BUILDER -> {
-                return ChatColor.boldDarkGreen() + "BUILDER " +ChatColor.reset();
+                return ChatColor.boldDarkGreen() + "BUILDER " + ChatColor.reset();
             }
             case DIGGER -> {
-                return ChatColor.boldYellow() + "DIGGER " +ChatColor.reset();
+                return ChatColor.boldYellow() + "DIGGER " + ChatColor.reset();
             }
             case ENCHANTER -> {
-                return ChatColor.boldLightPurple() + "ENCHANTER " +ChatColor.reset();
+                return ChatColor.boldLightPurple() + "ENCHANTER " + ChatColor.reset();
             }
             case FARMER -> {
-                return ChatColor.boldGreen() + "FARMER " +ChatColor.reset();
+                return ChatColor.boldGreen() + "FARMER " + ChatColor.reset();
             }
             case FISHERMAN -> {
-                return ChatColor.boldAqua() + "FISHERMAN " +ChatColor.reset();
+                return ChatColor.boldAqua() + "FISHERMAN " + ChatColor.reset();
             }
             case HUNTER -> {
-                return ChatColor.boldDarkRed() + "HUNTER " +ChatColor.reset();
+                return ChatColor.boldDarkRed() + "HUNTER " + ChatColor.reset();
             }
             case LUMBERJACK -> {
-                return ChatColor.boldGold() + "LUMBERJACK " +ChatColor.reset();
+                return ChatColor.boldGold() + "LUMBERJACK " + ChatColor.reset();
             }
             case MINER -> {
-                return ChatColor.boldGray() + "MINER " +ChatColor.reset();
+                return ChatColor.boldGray() + "MINER " + ChatColor.reset();
             }
             case SMITH -> {
-                return ChatColor.boldDarkGray() + "SMITH " +ChatColor.reset();
+                return ChatColor.boldDarkGray() + "SMITH " + ChatColor.reset();
             }
             default -> {
                 return "";

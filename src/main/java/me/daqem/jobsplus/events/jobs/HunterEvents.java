@@ -4,7 +4,9 @@ import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -34,7 +36,7 @@ public class HunterEvents {
         if (event.getSource().getEntity() instanceof Player player) {
             if (!player.isCreative()) {
                 if (JobGetters.jobIsEnabled(player, job)) {
-                    if (event.getEntity() instanceof Monster || event.getEntity() instanceof Animal) {
+                    if (event.getEntity() instanceof Monster || event.getEntity() instanceof Animal || event.getEntity() instanceof WaterAnimal || event.getEntity() instanceof Slime) {
                         if (event.getSource().isProjectile()) {
                             ExpHandler.addEXPHigh(player, job);
                         } else {

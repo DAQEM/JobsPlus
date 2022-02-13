@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.utils;
 
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
+import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,7 +15,9 @@ public class JobSetters {
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
             int[] tempArray = new int[]{level, exp, powerUp1, powerUp2, powerUp3};
             ArrayList<Integer> array = new ArrayList<>();
-            for(int i : tempArray) { array.add(i); }
+            for (int i : tempArray) {
+                array.add(i);
+            }
             switch (job) {
                 case ALCHEMIST -> handler.setAlchemist(arrayGenerator(array, handler.getAlchemist()));
                 case BUILDER -> handler.setBuilder(arrayGenerator(array, handler.getBuilder()));
@@ -81,6 +84,63 @@ public class JobSetters {
         });
     }
 
+    public static void addPowerUp(Jobs job, Player player, int powerUp) {
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            switch (job) {
+                case ALCHEMIST -> handler.setAlchemist(addPowerUpGenerator(handler.getAlchemist(), powerUp));
+                case BUILDER -> handler.setBuilder(addPowerUpGenerator(handler.getBuilder(), powerUp));
+                case DIGGER -> handler.setDigger(addPowerUpGenerator(handler.getDigger(), powerUp));
+                case ENCHANTER -> handler.setEnchanter(addPowerUpGenerator(handler.getEnchanter(), powerUp));
+                case FARMER -> handler.setFarmer(addPowerUpGenerator(handler.getFarmer(), powerUp));
+                case FISHERMAN -> handler.setFisherman(addPowerUpGenerator(handler.getFisherman(), powerUp));
+                case HUNTER -> handler.setHunter(addPowerUpGenerator(handler.getHunter(), powerUp));
+                case LUMBERJACK -> handler.setLumberjack(addPowerUpGenerator(handler.getLumberjack(), powerUp));
+                case MINER -> handler.setMiner(addPowerUpGenerator(handler.getMiner(), powerUp));
+                case SMITH -> handler.setSmith(addPowerUpGenerator(handler.getSmith(), powerUp));
+            }
+        });
+    }
+
+    public static void setPowerUp(Jobs job, Player player, int powerUp, int i) {
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            switch (job) {
+                case ALCHEMIST -> handler.setAlchemist(setPowerUpGenerator(handler.getAlchemist(), powerUp, i));
+                case BUILDER -> handler.setBuilder(setPowerUpGenerator(handler.getBuilder(), powerUp, i));
+                case DIGGER -> handler.setDigger(setPowerUpGenerator(handler.getDigger(), powerUp, i));
+                case ENCHANTER -> handler.setEnchanter(setPowerUpGenerator(handler.getEnchanter(), powerUp, i));
+                case FARMER -> handler.setFarmer(setPowerUpGenerator(handler.getFarmer(), powerUp, i));
+                case FISHERMAN -> handler.setFisherman(setPowerUpGenerator(handler.getFisherman(), powerUp, i));
+                case HUNTER -> handler.setHunter(setPowerUpGenerator(handler.getHunter(), powerUp, i));
+                case LUMBERJACK -> handler.setLumberjack(setPowerUpGenerator(handler.getLumberjack(), powerUp, i));
+                case MINER -> handler.setMiner(setPowerUpGenerator(handler.getMiner(), powerUp, i));
+                case SMITH -> handler.setSmith(setPowerUpGenerator(handler.getSmith(), powerUp, i));
+            }
+        });
+    }
+
+    public static void setSuperPower(Player player, Jobs job, int superpower) {
+        player.getCapability(SuperPowerCapabilityImpl.SUPERPOWER_CAPABILITY).ifPresent(handler -> {
+            int[] array = handler.getSuperpower();
+            int alchemist = array[0], builder = array[1], digger = array[2], farmer = array[3], fisherman = array[4],
+                    enchanter = array[5], hunter = array[6], lumberjack = array[7], miner = array[8], smith = array[9];
+            for (int i = 0; i < 10; ++i) {
+                if (i == Jobs.getJobInt(job)) {
+                    if (job == Jobs.ALCHEMIST) alchemist = superpower;
+                    if (job == Jobs.BUILDER) builder = superpower;
+                    if (job == Jobs.DIGGER) digger = superpower;
+                    if (job == Jobs.FARMER) farmer = superpower;
+                    if (job == Jobs.FISHERMAN) fisherman = superpower;
+                    if (job == Jobs.ENCHANTER) enchanter = superpower;
+                    if (job == Jobs.HUNTER) hunter = superpower;
+                    if (job == Jobs.LUMBERJACK) lumberjack = superpower;
+                    if (job == Jobs.MINER) miner = superpower;
+                    if (job == Jobs.SMITH) smith = superpower;
+                }
+            }
+            handler.setSuperpower(new int[]{alchemist, builder, digger, farmer, fisherman, enchanter, hunter, lumberjack, miner, smith});
+        });
+    }
+
     public static void setVerification(Player player, int type) {
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
             if (type == -1) {
@@ -88,7 +148,9 @@ public class JobSetters {
                 return;
             }
             ArrayList<Integer> array = new ArrayList<>();
-            for(int i = 0; i < 4; i++) { array.add(0); }
+            for (int i = 0; i < 4; i++) {
+                array.add(0);
+            }
             array.set(type, 1);
             handler.setVerification(array.stream().mapToInt(i -> i).toArray());
         });
@@ -101,7 +163,9 @@ public class JobSetters {
                 return;
             }
             ArrayList<Integer> array = new ArrayList<>();
-            for(int i = 0; i < 12; i++) { array.add(0); }
+            for (int i = 0; i < 12; i++) {
+                array.add(0);
+            }
             array.set(type, 1);
             handler.setSelector(array.stream().mapToInt(i -> i).toArray());
         });
@@ -120,7 +184,7 @@ public class JobSetters {
     }
 
     private static int[] arrayGenerator(ArrayList<Integer> arrayList, int[] intArray) {
-        for(int j : arrayList) {
+        for (int j : arrayList) {
             if (arrayList.get(j) == -1) arrayList.set(j, intArray[j]);
             if (arrayList.get(j) == -2) arrayList.set(j, intArray[j] + 1);
         }
@@ -138,5 +202,25 @@ public class JobSetters {
     private static int[] addLevelGenerator(int[] array, int level) {
         if (level == -2) level = array[CapType.LEVEL.get()] + 1;
         return new int[]{level, array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
+    }
+
+    private static int[] addPowerUpGenerator(int[] array, int powerUp) {
+        if (powerUp == CapType.POWERUP1.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], 1, array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
+        if (powerUp == CapType.POWERUP2.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], 1, array[CapType.POWERUP3.get()]};
+        if (powerUp == CapType.POWERUP3.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], 1};
+        return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
+    }
+
+    private static int[] setPowerUpGenerator(int[] array, int powerUp, int i) {
+        if (powerUp == CapType.POWERUP1.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], i, array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
+        if (powerUp == CapType.POWERUP2.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], i, array[CapType.POWERUP3.get()]};
+        if (powerUp == CapType.POWERUP3.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], i};
+        return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
     }
 }

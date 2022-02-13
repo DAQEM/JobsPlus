@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.events.jobs.MinerEvents;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.init.ModItems;
@@ -19,6 +20,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,12 +57,15 @@ public class HammerItem extends PickaxeItem {
                             if (player.getMainHandItem().getOrCreateTag().contains("mode")) {
                                 mode = player.getMainHandItem().getOrCreateTag().getInt("mode");
                             }
-                            ToolFunctions.breakInRadius(level, player, mode, (breakState) -> {
-                                double hardness = breakState.getDestroySpeed(null, null);
-                                boolean isEffective = player.getMainHandItem().isCorrectToolForDrops(breakState);
-                                boolean verifyHardness = hardness < originHardness * 5 && hardness > 0;
-                                return isEffective && verifyHardness;
-                            }, true);
+                            if (state.getBlock() instanceof ShulkerBoxBlock) return true;
+                            if (!MinerEvents.veinMinerArray.contains(player.getUUID())) {
+                                ToolFunctions.breakInRadius(level, player, mode, (breakState) -> {
+                                    double hardness = breakState.getDestroySpeed(null, null);
+                                    boolean isEffective = player.getMainHandItem().isCorrectToolForDrops(breakState);
+                                    boolean verifyHardness = hardness < originHardness * 5 && hardness > 0;
+                                    return isEffective && verifyHardness;
+                                }, true);
+                            }
                             return true;
                         }
                     }
@@ -78,7 +83,7 @@ public class HammerItem extends PickaxeItem {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         if (player.isShiftKeyDown() && !level.isClientSide) {
-            ItemStack stack = player.getItemInHand(hand);
+            ItemStack stack = player.getMainHandItem();
             if (stack.getItem() instanceof HammerItem) {
                 CompoundTag tag = stack.getOrCreateTag();
                 if (tag.contains("mode")) {

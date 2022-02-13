@@ -1,12 +1,19 @@
 package me.daqem.jobsplus.client.gui;
 
+import com.google.common.collect.Sets;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.LevelHandler;
+import me.daqem.jobsplus.init.ModEffects;
 import me.daqem.jobsplus.init.ModItems;
+import me.daqem.jobsplus.init.ModPotions;
+import me.daqem.jobsplus.jei.JobsPlusJeiPlugin;
 import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import mezz.jei.api.recipe.IFocus;
+import mezz.jei.api.recipe.IRecipeManager;
+import mezz.jei.api.runtime.IRecipesGui;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -17,11 +24,14 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class JobsScreen extends Screen {
 
@@ -29,21 +39,26 @@ public class JobsScreen extends Screen {
     private final int[] array;
     private final int imageWidth = 326;
     private final int imageHeight = 166;
-    private final int selectedItem = -1;
     ArrayList<Integer> ints = new ArrayList<>();
-    private int activeRightButton = 0;
-    private int activeLeftButton = 0;
+    private int activeRightButton;
+    private int activeLeftButton;
     private float scrollOffs;
     private boolean scrolling;
     private int startIndex;
     private int startX;
     private int startY;
-    private int jobId = -1;
-    private int selectedButton = -1;
+    private int jobId;
+    private int selectedButton;
 
-    public JobsScreen(int[] array) {
+    public JobsScreen(int[] array, int jobId, int activeLeftButton, int activeRightButton, int selectedButton, float scrollOffs, int startIndex) {
         super(new KeybindComponent("Jobs"));
         this.array = array;
+        this.jobId = jobId;
+        this.activeLeftButton = activeLeftButton;
+        this.activeRightButton = activeRightButton;
+        this.selectedButton = selectedButton;
+        this.scrollOffs = scrollOffs;
+        this.startIndex = startIndex;
     }
 
 //.RRRRRRRRRR........EEEEEEEEEEE...... NNN...NNNN....... DDDDDDDD......... EEEEEEEEEE...... RRRRRRRRR....
@@ -182,7 +197,7 @@ public class JobsScreen extends Screen {
             int posX = 6 + (28 * i);
             if (activeLeftButton != i && isBetween(mouseX - startX, mouseY - startY, posX, -19, posX + 25, 0)) {
                 poseStack.pushPose();
-                RenderSystem.setShaderColor(0.6F, 0.6F, 1F, 1);
+                RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
                 blitThis(poseStack, posX, -22, 142, activeLeftButton == i ? imageHeight + 22 : imageHeight, 26, 22);
                 RenderSystem.setShaderColor(1F, 1F, 1F, 1);
                 poseStack.popPose();
@@ -196,7 +211,7 @@ public class JobsScreen extends Screen {
             int posX = 156 + (28 * i);
             if (activeRightButton != i && isBetween(mouseX - startX, mouseY - startY, posX, -19, posX + 25, 0)) {
                 poseStack.pushPose();
-                RenderSystem.setShaderColor(0.6F, 0.6F, 1F, 1);
+                RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
                 blitThis(poseStack, posX, -22, 142, activeRightButton == i ? imageHeight + 22 : imageHeight, 26, 22);
                 RenderSystem.setShaderColor(1F, 1F, 1F, 1);
                 poseStack.popPose();
@@ -263,7 +278,7 @@ public class JobsScreen extends Screen {
             if (getSelectedJobLevel() == 0) {
                 if (isBetween(mouseX - startX, mouseY - startY, 169, 132, 169 + 138, 132 + 17)) {
                     poseStack.pushPose();
-                    RenderSystem.setShaderColor(0.6F, 0.6F, 1F, 1);
+                    RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
                     blitThis(poseStack, 150 + 19, 132, 26, imageHeight + 105, 139, 18);
                     RenderSystem.setShaderColor(1F, 1F, 1F, 1);
                     poseStack.popPose();
@@ -275,7 +290,7 @@ public class JobsScreen extends Screen {
             } else if (jobId != -1) {
                 if (isBetween(mouseX - startX, mouseY - startY, 169, 132, 169 + 138, 132 + 17)) {
                     poseStack.pushPose();
-                    RenderSystem.setShaderColor(0.6F, 0.6F, 1F, 1);
+                    RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
                     blitThis(poseStack, 150 + 19, 132, 26, imageHeight + 105, 139, 18);
                     RenderSystem.setShaderColor(1F, 1F, 1F, 1);
                     poseStack.popPose();
@@ -287,37 +302,100 @@ public class JobsScreen extends Screen {
             }
             // CRAFTING RECIPE BUTTONS
         } else if (activeRightButton == 1) {
-            blitThis(poseStack, 172, 60, 142, 210, 24, 24);
-            blitThis(poseStack, 172 + 27, 60, 142, 210, 24, 24);
-            blitThis(poseStack, 172 + 54, 60, 142, 210, 24, 24);
-            blitThis(poseStack, 172 + 81, 60, 142, 210, 24, 24);
-            blitThis(poseStack, 172 + 108, 60, 142, 210, 24, 24);
-        }
-    }
-
-//.IIIII...TTTTTTTTTT...EEEEEEEEEEEE...EMMMMM...MMMMMM.....SSSSSSS.....
-//.IIIII...TTTTTTTTTT...EEEEEEEEEEEE...EMMMMM...MMMMMM....SSSSSSSSS....
-//.IIIII...TTTTTTTTTT...EEEEEEEEEEEE...EMMMMM...MMMMMM....SSSSSSSSSS...
-//.IIIII......TTTT.......EEEE..........EMMMMMM.MMMMMMM...SSSSS..SSSS...
-//.IIIII......TTTT.......EEEE..........EMMMMMM.MMMMMMM...SSSSS.........
-//.IIIII......TTTT.......EEEEEEEEEE....EMMMMMM.MMMMMMM....SSSSSSS......
-//.IIIII......TTTT.......EEEEEEEEEE....EMMMMMMMMMMMMMM.....SSSSSSSSS...
-//.IIIII......TTTT.......EEEEEEEEEE....EMMMMMMMMMMMMMM.......SSSSSSS...
-//.IIIII......TTTT.......EEEE..........EMMMMMMMMMMMMMM..........SSSSS..
-//.IIIII......TTTT.......EEEE..........EMMM.MMMMM.MMMM...SSSS....SSSS..
-//.IIIII......TTTT.......EEEEEEEEEEE...EMMM.MMMMM.MMMM...SSSSSSSSSSSS..
-//.IIIII......TTTT.......EEEEEEEEEEE...EMMM.MMMMM.MMMM....SSSSSSSSSS...
-//.IIIII......TTTT.......EEEEEEEEEEE...EMMM.MMMMM.MMMM.....SSSSSSSS....
-
-    public void renderItems(int x, int y) {
-        if (activeRightButton == 1) {
-            // BUILDER CRAFTING RECIPE ITEMS
-            if (jobId == 1) {
-                this.minecraft.getItemRenderer().renderAndDecorateItem(ModItems.SMALL_BACKPACK.get().getDefaultInstance(), x + 176, y + 64);
-                this.minecraft.getItemRenderer().renderAndDecorateItem(ModItems.MEDIUM_BACKPACK.get().getDefaultInstance(), x + 176 + 27, y + 64);
-                this.minecraft.getItemRenderer().renderAndDecorateItem(ModItems.LARGE_BACKPACK.get().getDefaultInstance(), x + 176 + 54, y + 64);
-                this.minecraft.getItemRenderer().renderAndDecorateItem(ModItems.HUGE_BACKPACK.get().getDefaultInstance(), x + 176 + 81, y + 64);
-                this.minecraft.getItemRenderer().renderAndDecorateItem(ModItems.ENDER_BACKPACK.get().getDefaultInstance(), x + 176 + 107, y + 64);
+            if (jobId != -1) {
+                ArrayList<Integer> jobItemAmounts = new ArrayList<>(Arrays.asList(23, 5, 4, 4, 4, 3, 9, 4, 4, 16));
+                int itemsAmount = jobItemAmounts.get(jobId);
+                for (int i = 0; i < itemsAmount; ++i) {
+                    int xOffset = 172 + i % 5 * 27;
+                    int l = i / 5;
+                    int yOffset = 16 + l * 27 + 2;
+                    if (isBetween(mouseX - startX, mouseY - startY, xOffset, yOffset, xOffset + 23, yOffset + 23)) {
+                        poseStack.pushPose();
+                        RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
+                        blitThis(poseStack, xOffset, yOffset, 142, 210, 24, 24);
+                        RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+                        poseStack.popPose();
+                    } else {
+                        blitThis(poseStack, xOffset, yOffset, 142, 210, 24, 24);
+                    }
+                }
+            }
+        } else if (activeRightButton == 2 && (jobId == 0 || jobId == 1 || jobId == 8)) {
+            if (jobId != -1) {
+                //POWER-UP 1
+                if (array[21 + (jobId * 3) + 1] == 1) {
+                    RenderSystem.setShaderColor(0.5F, 1F, 0.5F, 1);
+                    if (isBetween(mouseX - startX, mouseY - startY, 169, 27, 169 + 138, 27 + 17)) {
+                        RenderSystem.setShaderColor(0.3F, 0.9F, 0.3F, 1);
+                    }
+                } else if (array[21 + (jobId * 3) + 1] == 2) {
+                    RenderSystem.setShaderColor(1F, 0.5F, 0.5F, 1);
+                    if (isBetween(mouseX - startX, mouseY - startY, 169, 27, 169 + 138, 27 + 17)) {
+                        RenderSystem.setShaderColor(0.9F, 0.3F, 0.3F, 1);
+                    }
+                } else {
+                    if (isBetween(mouseX - startX, mouseY - startY, 169, 27, 169 + 138, 27 + 17)) {
+                        RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
+                    }
+                }
+                blitThis(poseStack, 150 + 19, 27, 26, imageHeight + 105, 139, 18);
+                RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+                //POWER-UP 2
+                if (array[21 + (jobId * 3) + 2] == 1) {
+                    RenderSystem.setShaderColor(0.5F, 1F, 0.5F, 1);
+                    if (isBetween(mouseX - startX, mouseY - startY, 169, 27 + 25, 169 + 138, 27 + 17 + 25)) {
+                        RenderSystem.setShaderColor(0.3F, 0.9F, 0.3F, 1);
+                    }
+                } else if (array[21 + (jobId * 3) + 2] == 2) {
+                    RenderSystem.setShaderColor(1F, 0.5F, 0.5F, 1);
+                    if (isBetween(mouseX - startX, mouseY - startY, 169, 27 + 25, 169 + 138, 27 + 17 + 25)) {
+                        RenderSystem.setShaderColor(0.9F, 0.3F, 0.3F, 1);
+                    }
+                } else {
+                    if (isBetween(mouseX - startX, mouseY - startY, 169, 27 + 25, 169 + 138, 27 + 17 + 25)) {
+                        RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
+                    }
+                }
+                blitThis(poseStack, 150 + 19, 52, 26, imageHeight + 105, 139, 18);
+                RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+                //POWER-UP 3
+                if (array[21 + (jobId * 3) + 3] == 1) {
+                    RenderSystem.setShaderColor(0.5F, 1F, 0.5F, 1);
+                    if (isBetween(mouseX - startX, mouseY - startY, 169, 27 + 50, 169 + 138, 27 + 17 + 50)) {
+                        RenderSystem.setShaderColor(0.3F, 0.9F, 0.3F, 1);
+                    }
+                } else if (array[21 + (jobId * 3) + 3] == 2) {
+                    RenderSystem.setShaderColor(1F, 0.5F, 0.5F, 1);
+                    if (isBetween(mouseX - startX, mouseY - startY, 169, 27 + 50, 169 + 138, 27 + 17 + 50)) {
+                        RenderSystem.setShaderColor(0.9F, 0.3F, 0.3F, 1);
+                    }
+                } else {
+                    if (isBetween(mouseX - startX, mouseY - startY, 169, 27 + 50, 169 + 138, 27 + 17 + 50)) {
+                        RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
+                    }
+                }
+                blitThis(poseStack, 150 + 19, 77, 26, imageHeight + 105, 139, 18);
+                RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+                //SUPERPOWER
+                if (array[(jobId * 2)] == 100) {
+                    if (array[52 + jobId] == 0) {
+                        RenderSystem.setShaderColor(0.5F, 1F, 0.5F, 1);
+                        if (isBetween(mouseX - startX, mouseY - startY, 169, 27 + 103, 169 + 138, 27 + 17 + 103)) {
+                            RenderSystem.setShaderColor(0.3F, 0.9F, 0.3F, 1);
+                        }
+                    } else {
+                        RenderSystem.setShaderColor(1F, 0.5F, 0.5F, 1);
+                        if (isBetween(mouseX - startX, mouseY - startY, 169, 27 + 103, 169 + 138, 27 + 17 + 103)) {
+                            RenderSystem.setShaderColor(0.9F, 0.3F, 0.3F, 1);
+                        }
+                    }
+                } else {
+                    if (isBetween(mouseX - startX, mouseY - startY, 169, 27 + 103, 169 + 138, 27 + 17 + 103)) {
+                        RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
+                    }
+                }
+                blitThis(poseStack, 150 + 19, 130, 26, imageHeight + 105, 139, 18);
+                RenderSystem.setShaderColor(1F, 1F, 1F, 1);
             }
         }
     }
@@ -335,6 +413,53 @@ public class JobsScreen extends Screen {
 //....TTTT.......EEEEEEEEEEE....EXXX.XXXXX.......TTTT......TTSSSSSSSSSS..
 //....TTTT.......EEEEEEEEEEEE...EXXX..XXXXX......TTTT.......TSSSSSSSSS...
 //....TTTT.......EEEEEEEEEEEE...EXX....XXXX......TTTT........SSSSSSSS....
+
+    public void renderItems(int x, int y) {
+        if (activeRightButton == 1) {
+            ArrayList<ItemStack> jobItemsArray = new ArrayList<>();
+            if (jobId == 0) {
+                final ItemStack SPEED_POTION = Items.POTION.getDefaultInstance();
+                final ItemStack HASTE_POTION = Items.POTION.getDefaultInstance();
+                final ItemStack STRENGTH_POTION = Items.POTION.getDefaultInstance();
+                final ItemStack REGENERATION_POTION = Items.POTION.getDefaultInstance();
+                final ItemStack LUCK_POTION = Items.POTION.getDefaultInstance();
+                final ItemStack JESUS_POTION = Items.POTION.getDefaultInstance();
+                final ItemStack FLYING_POTION = Items.POTION.getDefaultInstance();
+                Set<MobEffectInstance> speed = Sets.newHashSet(new MobEffectInstance(MobEffects.MOVEMENT_SPEED));
+                Set<MobEffectInstance> haste = Sets.newHashSet(new MobEffectInstance(MobEffects.DIG_SPEED));
+                Set<MobEffectInstance> strength = Sets.newHashSet(new MobEffectInstance(MobEffects.DAMAGE_BOOST));
+                Set<MobEffectInstance> regeneration = Sets.newHashSet(new MobEffectInstance(MobEffects.REGENERATION));
+                Set<MobEffectInstance> luck = Sets.newHashSet(new MobEffectInstance(MobEffects.LUCK));
+                Set<MobEffectInstance> jesus = Sets.newHashSet(new MobEffectInstance(ModEffects.JESUS.get()));
+                Set<MobEffectInstance> flying = Sets.newHashSet(new MobEffectInstance(ModEffects.FLYING.get()));
+                jobItemsArray.addAll(Arrays.asList(PotionUtils.setCustomEffects(SPEED_POTION, speed), PotionUtils.setCustomEffects(SPEED_POTION, speed), PotionUtils.setCustomEffects(SPEED_POTION, speed), PotionUtils.setCustomEffects(SPEED_POTION, speed), PotionUtils.setCustomEffects(HASTE_POTION, haste), PotionUtils.setCustomEffects(HASTE_POTION, haste), PotionUtils.setCustomEffects(HASTE_POTION, haste), PotionUtils.setCustomEffects(HASTE_POTION, haste), PotionUtils.setCustomEffects(STRENGTH_POTION, strength), PotionUtils.setCustomEffects(STRENGTH_POTION, strength), PotionUtils.setCustomEffects(STRENGTH_POTION, strength), PotionUtils.setCustomEffects(STRENGTH_POTION, strength), PotionUtils.setCustomEffects(REGENERATION_POTION, regeneration), PotionUtils.setCustomEffects(REGENERATION_POTION, regeneration), PotionUtils.setCustomEffects(REGENERATION_POTION, regeneration), PotionUtils.setCustomEffects(LUCK_POTION, luck), PotionUtils.setCustomEffects(LUCK_POTION, luck), PotionUtils.setCustomEffects(LUCK_POTION, luck), PotionUtils.setCustomEffects(LUCK_POTION, luck), PotionUtils.setCustomEffects(JESUS_POTION, jesus), PotionUtils.setCustomEffects(JESUS_POTION, jesus), PotionUtils.setCustomEffects(FLYING_POTION, flying), PotionUtils.setCustomEffects(FLYING_POTION, flying)));
+            } else if (jobId == 1) {
+                jobItemsArray.addAll(Arrays.asList(ModItems.SMALL_BACKPACK.get().getDefaultInstance(), ModItems.MEDIUM_BACKPACK.get().getDefaultInstance(), ModItems.LARGE_BACKPACK.get().getDefaultInstance(), ModItems.HUGE_BACKPACK.get().getDefaultInstance(), ModItems.ENDER_BACKPACK.get().getDefaultInstance()));
+            } else if (jobId == 2) {
+                jobItemsArray.addAll(Arrays.asList(ModItems.DIGGERS_EXCAVATOR_LEVEL_1.get().getDefaultInstance(), ModItems.DIGGERS_EXCAVATOR_LEVEL_2.get().getDefaultInstance(), ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get().getDefaultInstance(), ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get().getDefaultInstance()));
+            } else if (jobId == 3) {
+                jobItemsArray.addAll(Arrays.asList(ModItems.FARMERS_HOE_LEVEL_1.get().getDefaultInstance(), ModItems.FARMERS_HOE_LEVEL_2.get().getDefaultInstance(), ModItems.FARMERS_HOE_LEVEL_3.get().getDefaultInstance(), ModItems.FARMERS_HOE_LEVEL_4.get().getDefaultInstance()));
+            } else if (jobId == 4) {
+                jobItemsArray.addAll(Arrays.asList(ModItems.FISHERMANS_ROD_LEVEL_1.get().getDefaultInstance(), ModItems.FISHERMANS_ROD_LEVEL_2.get().getDefaultInstance(), ModItems.FISHERMANS_ROD_LEVEL_3.get().getDefaultInstance(), ModItems.FISHERMANS_ROD_LEVEL_4.get().getDefaultInstance()));
+            } else if (jobId == 5) {
+                jobItemsArray.addAll(Arrays.asList(ModItems.EXP_JAR.get().getDefaultInstance(), ModItems.EXPERIENCE_BOTTLE.get().getDefaultInstance(), ModItems.CURSE_BREAKER.get().getDefaultInstance()));
+            } else if (jobId == 6) {
+                jobItemsArray.addAll(Arrays.asList(Items.WHITE_WOOL.getDefaultInstance(), ModItems.HUNTERS_SWORD_LEVEL_1.get().getDefaultInstance(), ModItems.HUNTERS_SWORD_LEVEL_2.get().getDefaultInstance(), ModItems.HUNTERS_SWORD_LEVEL_3.get().getDefaultInstance(), ModItems.HUNTERS_SWORD_LEVEL_4.get().getDefaultInstance(), ModItems.HUNTERS_BOW_LEVEL_1.get().getDefaultInstance(), ModItems.HUNTERS_BOW_LEVEL_2.get().getDefaultInstance(), ModItems.HUNTERS_BOW_LEVEL_3.get().getDefaultInstance(), ModItems.HUNTERS_BOW_LEVEL_4.get().getDefaultInstance()));
+            } else if (jobId == 7) {
+                jobItemsArray.addAll(Arrays.asList(ModItems.LUMBERJACK_AXE_LEVEL_1.get().getDefaultInstance(), ModItems.LUMBERJACK_AXE_LEVEL_2.get().getDefaultInstance(), ModItems.LUMBERJACK_AXE_LEVEL_3.get().getDefaultInstance(), ModItems.LUMBERJACK_AXE_LEVEL_4.get().getDefaultInstance()));
+            } else if (jobId == 8) {
+                jobItemsArray.addAll(Arrays.asList(ModItems.MINERS_HAMMER_LEVEL_1.get().getDefaultInstance(), ModItems.MINERS_HAMMER_LEVEL_2.get().getDefaultInstance(), ModItems.MINERS_HAMMER_LEVEL_3.get().getDefaultInstance(), ModItems.MINERS_HAMMER_LEVEL_4.get().getDefaultInstance()));
+            } else if (jobId == 9) {
+                jobItemsArray.addAll(Arrays.asList(ModItems.REINFORCED_IRON_HELMET.get().getDefaultInstance(), ModItems.REINFORCED_IRON_CHESTPLATE.get().getDefaultInstance(), ModItems.REINFORCED_IRON_LEGGINGS.get().getDefaultInstance(), ModItems.REINFORCED_IRON_BOOTS.get().getDefaultInstance(), ModItems.OBSIDIAN_HELMET.get().getDefaultInstance(), ModItems.OBSIDIAN_CHESTPLATE.get().getDefaultInstance(), ModItems.OBSIDIAN_LEGGINGS.get().getDefaultInstance(), ModItems.OBSIDIAN_BOOTS.get().getDefaultInstance(), ModItems.REINFORCED_DIAMOND_HELMET.get().getDefaultInstance(), ModItems.REINFORCED_DIAMOND_CHESTPLATE.get().getDefaultInstance(), ModItems.REINFORCED_DIAMOND_LEGGINGS.get().getDefaultInstance(), ModItems.REINFORCED_DIAMOND_BOOTS.get().getDefaultInstance(), ModItems.REINFORCED_NETHERITE_HELMET.get().getDefaultInstance(), ModItems.REINFORCED_NETHERITE_CHESTPLATE.get().getDefaultInstance(), ModItems.REINFORCED_NETHERITE_LEGGINGS.get().getDefaultInstance(), ModItems.REINFORCED_NETHERITE_BOOTS.get().getDefaultInstance()));
+            }
+            for (int i = 0; i < jobItemsArray.size(); i++) {
+                int xOffset = x + 176 + i % 5 * 27;
+                int l = i / 5;
+                int yOffset = y + 20 + l * 27 + 2;
+                minecraft.getItemRenderer().renderAndDecorateItem(jobItemsArray.get(i), xOffset, yOffset);
+            }
+        }
+    }
 
     public void drawTexts(PoseStack poseStack, int something, int occurrences) {
         if (activeLeftButton == 0) {
@@ -508,7 +633,66 @@ public class JobsScreen extends Screen {
                     font.draw(poseStack, ChatColor.white() + "Stop performing this job.", startX + 175, startY + 137, 16777215);
                 }
             } else if (activeRightButton == 1) {
-                font.draw(poseStack, ChatColor.darkGray() + "Available Crafting Recipes", startX + 172, startY + 48, 16777215);
+                font.draw(poseStack, ChatColor.darkGray() + "Available Crafting Recipes", startX + 172, startY + 6, 16777215);
+            } else if (activeRightButton == 2 && (jobId == 0 || jobId == 1 || jobId == 8)) {
+                font.draw(poseStack, ChatColor.darkGray() + "Power-ups", startX + 209, startY + 6, 16777215);
+                font.draw(poseStack, ChatColor.gray() + "10 Coins Each", startX + 200, startY + 16, 16777215);
+                font.draw(poseStack, ChatColor.darkGray() + "Superpower", startX + 207, startY + 110, 16777215);
+                font.draw(poseStack, ChatColor.gray() + "Unlocked at Level 100", startX + 181, startY + 120, 16777215);
+                poseStack.pushPose();
+                poseStack.scale(0.72F, 0.72F, 0.72F);
+                if (jobId == 0) {
+                    font.draw(poseStack, ChatColor.darkGray() + "Harmful potion immunity", (startX + 197) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "1.5x Potion duration", (startX + 202) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Double Health with Potion of Healing", (startX + 175) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "2x Potion duration", (startX + 205) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                } else if (jobId == 1) {
+                    font.draw(poseStack, ChatColor.darkGray() + "A chance you get your block back", (startX + 176) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Use blocks in backpack first", (startX + 186) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Double jump and less fall damage", (startX + 178) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Triple jump and no fall damage", (startX + 181) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                } else if (jobId == 2) {
+                    font.draw(poseStack, ChatColor.darkGray() + "Blocks mined go into your inventory", (startX + 174) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "A Change to dig up minerals", (startX + 188) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Haste I when digging", (startX + 200) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Haste II and Speed I when digging", (startX + 177) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                } else if (jobId == 3) {
+                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get double drops", (startX + 184) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "A Chance to get better drops", (startX + 184) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "+1 Random color wool when shearing", (startX + 172) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Double crop and wool drops", (startX + 187) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                } else if (jobId == 4) {
+                    font.draw(poseStack, ChatColor.darkGray() + "Double job-exp", (startX + 207) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get 2 extra drops", (startX + 182) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "A Change to catch minerals", (startX + 188) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get 5 extra drops", (startX + 182) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                } else if (jobId == 5) {
+                    font.draw(poseStack, ChatColor.darkGray() + "Remove curses using a grinder", (startX + 182) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "+1 Enchantment level on enchanting", (startX + 174) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Double experience", (startX + 203) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Enchantments in an anvil add up", (startX + 181) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                } else if (jobId == 6) {
+                    font.draw(poseStack, ChatColor.darkGray() + "Meat give one extra hunger bar", (startX + 180) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Strength II and Speed I on kill", (startX + 182) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Chance to drop the head", (startX + 192) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Shoot 3 arrows & 25% more damage", (startX + 175) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                } else if (jobId == 7) {
+                    font.draw(poseStack, ChatColor.darkGray() + "A change to get a double log drop", (startX + 176) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get Haste II on harvest", (startX + 173) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Get better apples from leaves", (startX + 183) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Logs go into your inventory", (startX + 186) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                } else if (jobId == 8) {
+                    font.draw(poseStack, ChatColor.darkGray() + "Ore vein miner", (startX + 210) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Automatically smelt ores", (startX + 194) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Haste I when mining", (startX + 203) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Haste II and Speed I when mining", (startX + 179) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                } else if (jobId == 9) {
+                    font.draw(poseStack, ChatColor.darkGray() + "Mobs can freeze when they hit you", (startX + 175) / 0.72F, (startY + 33) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Enchantments from items to books", (startX + 177) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Jobs+ armor gives Fire Protection", (startX + 176) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "Crafted items are unbreakable", (startX + 181) / 0.72F, (startY + 136) / 0.72F, 16777215);
+                }
+                poseStack.popPose();
             } else {
                 font.draw(poseStack, ChatColor.darkGray() + "Coming soon!", startX + 203, startY + 69, 16777215);
             }
@@ -602,30 +786,257 @@ public class JobsScreen extends Screen {
         }
         // JOB START STOP BUTTON
         if (jobId != -1) {
-            if (isBetween(mouseX, mouseY, 169, 132, 169 + 138, 132 + 18)) {
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                if (getSelectedJobLevel() == 0) {
-                    if (array[21] <= 2) {
-                        Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to start performing this job?", "start", Jobs.getJobFromInt(jobId)));
-                    } else {
-                        if (array[20] >= 10) {
-                            Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to start performing this job for " + 10 + " coins?", "start_paid", Jobs.getJobFromInt(jobId)));
+            if (activeRightButton == 0) {
+                if (isBetween(mouseX, mouseY, 169, 132, 169 + 138, 132 + 18)) {
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    if (getSelectedJobLevel() == 0) {
+                        if (array[21] <= 2) {
+                            Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to start performing this job?", "start", Jobs.getJobFromInt(jobId)));
                         } else {
-                            Minecraft.getInstance().setScreen(new ConfirmationScreen("You do not have enough coins to start performing this job.", "not_enough_coins_start", Jobs.getJobFromInt(jobId)));
+                            if (array[20] >= 10) {
+                                Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to start performing this job for " + 10 + " coins?", "start_paid", Jobs.getJobFromInt(jobId)));
+                            } else {
+                                Minecraft.getInstance().setScreen(new ConfirmationScreen("You do not have enough coins to start performing this job.", "not_enough_coins_start", Jobs.getJobFromInt(jobId)));
+                            }
+                        }
+                    } else if (getSelectedJobLevel() == 1) {
+                        Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to stop performing this job?", "stop_free", Jobs.getJobFromInt(jobId)));
+                    } else {
+                        if (array[20] >= 5) {
+                            Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to stop performing this job for " + 5 + " coins?", "stop", Jobs.getJobFromInt(jobId)));
+                        } else {
+                            Minecraft.getInstance().setScreen(new ConfirmationScreen("You do not have enough coins to stop performing this job.", "not_enough_coins_stop", Jobs.getJobFromInt(jobId)));
                         }
                     }
-                } else if (getSelectedJobLevel() == 1) {
-                    Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to stop performing this job?", "stop_free", Jobs.getJobFromInt(jobId)));
-                } else {
-                    if (array[20] >= 5) {
-                        Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to stop performing this job for " + 5 + " coins?", "stop", Jobs.getJobFromInt(jobId)));
-                    } else {
-                        Minecraft.getInstance().setScreen(new ConfirmationScreen("You do not have enough coins to stop performing this job.", "not_enough_coins_stop", Jobs.getJobFromInt(jobId)));
+                }
+            }
+            if (activeRightButton == 1) {
+                ItemStack itemStack = ItemStack.EMPTY;
+                mouseX = mouseX - 150D;
+                if (jobId == 0) {
+                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.EXTRA_STRONG_SWIFTNESS.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LONG_EXTRA_STRONG_SWIFTNESS.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.SUPER_STRONG_SWIFTNESS.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18, 46 + (27 * 3), 42)) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LONG_SUPER_STRONG_SWIFTNESS.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 4), 18, 46 + (27 * 4), 42)) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.HASTE.get());
+                    } else if (isBetween(mouseX, mouseY, 22, 18 + 27, 46, 42 + 27)) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LONG_HASTE.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18 + 27, 46 + 27, 42 + 27)) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.STRONG_HASTE.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18 + 27, 46 + (27 * 2), 42 + 27)) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LONG_STRONG_HASTE.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18 + 27, 46 + (27 * 3), 42 + 27)) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.EXTRA_STRONG_STRENGTH.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 4), 18 + 27, 46 + (27 * 4), 42 + 27)) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LONG_EXTRA_STRONG_STRENGTH.get());
+                    } else if (isBetween(mouseX, mouseY, 22, 18 + (27 * 2), 46, 42 + (27 * 2))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.SUPER_STRONG_STRENGTH.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18 + (27 * 2), 46 + 27, 42 + (27 * 2))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LONG_SUPER_STRONG_STRENGTH.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18 + (27 * 2), 46 + (27 * 2), 42 + (27 * 2))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LONG_STRONG_REGENERATION.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18 + (27 * 2), 46 + (27 * 3), 42 + (27 * 2))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.EXTRA_LONG_STRONG_REGENERATION.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 4), 18 + (27 * 2), 46 + (27 * 4), 42 + (27 * 2))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.EXTRA_STRONG_REGENERATION.get());
+                    } else if (isBetween(mouseX, mouseY, 22, 18 + (27 * 3), 46, 42 + (27 * 3))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LUCK.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18 + (27 * 3), 46 + 27, 42 + (27 * 3))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LONG_LUCK.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18 + (27 * 3), 46 + (27 * 2), 42 + (27 * 3))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.STRONG_LUCK.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18 + (27 * 3), 46 + (27 * 3), 42 + (27 * 3))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LONG_STRONG_LUCK.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 4), 18 + (27 * 3), 46 + (27 * 4), 42 + (27 * 3))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.JESUS.get());
+                    } else if (isBetween(mouseX, mouseY, 22, 18 + (27 * 4), 46, 42 + (27 * 4))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LONG_JESUS.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18 + (27 * 4), 46 + 27, 42 + (27 * 4))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.FLYING.get());
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18 + (27 * 4), 46 + (27 * 2), 42 + (27 * 4))) {
+                        itemStack = PotionUtils.setPotion(Items.POTION.getDefaultInstance(), ModPotions.LONG_FLYING.get());
+                    }
+                } else if (jobId == 1) {
+                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
+                        itemStack = ModItems.SMALL_BACKPACK.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
+                        itemStack = ModItems.MEDIUM_BACKPACK.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
+                        itemStack = ModItems.LARGE_BACKPACK.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18, 46 + (27 * 3), 42)) {
+                        itemStack = ModItems.HUGE_BACKPACK.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 4), 18, 46 + (27 * 4), 42)) {
+                        itemStack = ModItems.ENDER_BACKPACK.get().getDefaultInstance();
+                    }
+                } else if (jobId == 2) {
+                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
+                        itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_1.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
+                        itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_2.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
+                        itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18, 46 + (27 * 3), 42)) {
+                        itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get().getDefaultInstance();
+                    }
+                } else if (jobId == 3) {
+                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
+                        itemStack = ModItems.FARMERS_HOE_LEVEL_1.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
+                        itemStack = ModItems.FARMERS_HOE_LEVEL_2.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
+                        itemStack = ModItems.FARMERS_HOE_LEVEL_3.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18, 46 + (27 * 3), 42)) {
+                        itemStack = ModItems.FARMERS_HOE_LEVEL_4.get().getDefaultInstance();
+                    }
+                } else if (jobId == 4) {
+                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
+                        itemStack = ModItems.FISHERMANS_ROD_LEVEL_1.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
+                        itemStack = ModItems.FISHERMANS_ROD_LEVEL_2.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
+                        itemStack = ModItems.FISHERMANS_ROD_LEVEL_3.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18, 46 + (27 * 3), 42)) {
+                        itemStack = ModItems.FISHERMANS_ROD_LEVEL_4.get().getDefaultInstance();
+                    }
+                } else if (jobId == 5) {
+                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
+                        itemStack = ModItems.EXP_JAR.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
+                        itemStack = ModItems.EXPERIENCE_BOTTLE.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
+                        itemStack = ModItems.CURSE_BREAKER.get().getDefaultInstance();
+                    }
+                } else if (jobId == 6) {
+                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
+                        itemStack = Items.WHITE_WOOL.getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
+                        itemStack = ModItems.HUNTERS_SWORD_LEVEL_1.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
+                        itemStack = ModItems.HUNTERS_SWORD_LEVEL_2.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18, 46 + (27 * 3), 42)) {
+                        itemStack = ModItems.HUNTERS_SWORD_LEVEL_3.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 4), 18, 46 + (27 * 4), 42)) {
+                        itemStack = ModItems.HUNTERS_SWORD_LEVEL_4.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22, 18 + 27, 46, 42 + 27)) {
+                        itemStack = ModItems.HUNTERS_BOW_LEVEL_1.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18 + 27, 46 + 27, 42 + 27)) {
+                        itemStack = ModItems.HUNTERS_BOW_LEVEL_2.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18 + 27, 46 + (27 * 2), 42 + 27)) {
+                        itemStack = ModItems.HUNTERS_BOW_LEVEL_3.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18 + 27, 46 + (27 * 3), 42 + 27)) {
+                        itemStack = ModItems.HUNTERS_BOW_LEVEL_4.get().getDefaultInstance();
+                    }
+                } else if (jobId == 7) {
+                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
+                        itemStack = ModItems.LUMBERJACK_AXE_LEVEL_1.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
+                        itemStack = ModItems.LUMBERJACK_AXE_LEVEL_2.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
+                        itemStack = ModItems.LUMBERJACK_AXE_LEVEL_3.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18, 46 + (27 * 3), 42)) {
+                        itemStack = ModItems.LUMBERJACK_AXE_LEVEL_4.get().getDefaultInstance();
+                    }
+                } else if (jobId == 8) {
+                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
+                        itemStack = ModItems.MINERS_HAMMER_LEVEL_1.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
+                        itemStack = ModItems.MINERS_HAMMER_LEVEL_2.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
+                        itemStack = ModItems.MINERS_HAMMER_LEVEL_3.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18, 46 + (27 * 3), 42)) {
+                        itemStack = ModItems.MINERS_HAMMER_LEVEL_4.get().getDefaultInstance();
+                    }
+                } else if (jobId == 9) {
+                    if (isBetween(mouseX, mouseY, 22, 18, 46, 42)) {
+                        itemStack = ModItems.REINFORCED_IRON_HELMET.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18, 46 + 27, 42)) {
+                        itemStack = ModItems.REINFORCED_IRON_CHESTPLATE.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18, 46 + (27 * 2), 42)) {
+                        itemStack = ModItems.REINFORCED_IRON_LEGGINGS.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18, 46 + (27 * 3), 42)) {
+                        itemStack = ModItems.REINFORCED_IRON_BOOTS.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 4), 18, 46 + (27 * 4), 42)) {
+                        itemStack = ModItems.OBSIDIAN_HELMET.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22, 18 + 27, 46, 42 + 27)) {
+                        itemStack = ModItems.OBSIDIAN_CHESTPLATE.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18 + 27, 46 + 27, 42 + 27)) {
+                        itemStack = ModItems.OBSIDIAN_LEGGINGS.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18 + 27, 46 + (27 * 2), 42 + 27)) {
+                        itemStack = ModItems.OBSIDIAN_BOOTS.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18 + 27, 46 + (27 * 3), 42 + 27)) {
+                        itemStack = ModItems.REINFORCED_DIAMOND_HELMET.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 4), 18 + 27, 46 + (27 * 4), 42 + 27)) {
+                        itemStack = ModItems.REINFORCED_DIAMOND_CHESTPLATE.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22, 18 + (27 * 2), 46, 42 + (27 * 2))) {
+                        itemStack = ModItems.REINFORCED_DIAMOND_LEGGINGS.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + 27, 18 + (27 * 2), 46 + 27, 42 + (27 * 2))) {
+                        itemStack = ModItems.REINFORCED_DIAMOND_BOOTS.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 2), 18 + (27 * 2), 46 + (27 * 2), 42 + (27 * 2))) {
+                        itemStack = ModItems.REINFORCED_NETHERITE_HELMET.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 3), 18 + (27 * 2), 46 + (27 * 3), 42 + (27 * 2))) {
+                        itemStack = ModItems.REINFORCED_NETHERITE_CHESTPLATE.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22 + (27 * 4), 18 + (27 * 2), 46 + (27 * 4), 42 + (27 * 2))) {
+                        itemStack = ModItems.REINFORCED_NETHERITE_LEGGINGS.get().getDefaultInstance();
+                    } else if (isBetween(mouseX, mouseY, 22, 18 + (27 * 3), 46, 42 + (27 * 3))) {
+                        itemStack = ModItems.REINFORCED_NETHERITE_BOOTS.get().getDefaultInstance();
+                    }
+                }
+                if (itemStack != ItemStack.EMPTY) {
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    ItemStack finalItemStack = itemStack;
+                    JobsPlusJeiPlugin.getJeiRuntime().ifPresent(jeiRuntime -> {
+                        IRecipeManager recipeManager = jeiRuntime.getRecipeManager();
+                        IFocus<ItemStack> focus = recipeManager.createFocus(IFocus.Mode.OUTPUT, finalItemStack);
+
+                        IRecipesGui recipesGui = jeiRuntime.getRecipesGui();
+                        recipesGui.show(focus);
+                    });
+                }
+            }
+            if (activeRightButton == 2) {
+                if (Minecraft.getInstance().player != null) {
+                    String menuCommand = "/jobs menu " + jobId + " " + activeLeftButton + " " + activeRightButton + " " + selectedButton + " " + scrollOffs + " " + startIndex;
+                    String powerupSwitchCommand = "/job powerups switch " + Jobs.getString(jobId);
+                    if (isBetween(mouseX, mouseY, 169, 27, 169 + 139, 27 + 18)) {
+                        if (array[21 + (jobId * 3) + 1] == 1 || array[21 + (jobId * 3) + 1] == 2) {
+                            Minecraft.getInstance().player.chat(powerupSwitchCommand + " 1");
+                            Minecraft.getInstance().player.chat(menuCommand);
+                        } else {
+                            Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to buy this power-up for 10 coins?", "powerup", Jobs.getJobFromInt(jobId), 1));
+                        }
+                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    }
+                    if (isBetween(mouseX, mouseY, 169, 27 + 25, 169 + 139, 27 + 18 + 25)) {
+                        if (array[21 + (jobId * 3) + 2] == 1 || array[21 + (jobId * 3) + 2] == 2) {
+                            Minecraft.getInstance().player.chat(powerupSwitchCommand + " 2");
+                            Minecraft.getInstance().player.chat(menuCommand);
+                        } else {
+                            Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to buy this power-up for 10 coins?", "powerup", Jobs.getJobFromInt(jobId), 2));
+                        }
+                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    }
+                    if (isBetween(mouseX, mouseY, 169, 27 + 50, 169 + 139, 27 + 18 + 50)) {
+                        if (array[21 + (jobId * 3) + 3] == 1 || array[21 + (jobId * 3) + 3] == 2) {
+                            Minecraft.getInstance().player.chat(powerupSwitchCommand + " 3");
+                            Minecraft.getInstance().player.chat(menuCommand);
+                        } else {
+                            Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to buy this power-up for 10 coins?", "powerup", Jobs.getJobFromInt(jobId), 3));
+                        }
+                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    }
+                    if (isBetween(mouseX, mouseY, 169, 27 + 103, 169 + 139, 27 + 18 + 103)) {
+                        Minecraft.getInstance().player.chat("/job superpower switch " + Jobs.getString(jobId));
+                        Minecraft.getInstance().player.chat(menuCommand);
+                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     }
                 }
             }
         }
-
         return super.mouseClicked(mouseX, mouseY, p_99320_);
     }
 

@@ -19,7 +19,7 @@ public class DiggerEvents {
 
     public static final ArrayList<BlockPos> timeoutList = new ArrayList<>();
     public static final ArrayList<String> lowestList = new ArrayList<>(List.of("dirt", "sand"));
-    public static final ArrayList<String> lowList = new ArrayList<>(List.of("grass_block", "coarse_dirt", "podzol", "rooted_dirt",
+    public static final ArrayList<String> lowList = new ArrayList<>(List.of("grass_block", "coarse_dirt", "podzol", "rooted_dirt", "clay",
             "red_sand", "soul_sand", "soul_soil", "mycelium", "gravel"));
 
     private final Jobs job = Jobs.DIGGER;

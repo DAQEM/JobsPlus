@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.utils;
 
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
+import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.world.entity.player.Player;
@@ -121,5 +122,83 @@ public class JobGetters {
         AtomicInteger atomicInteger = new AtomicInteger(0);
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> atomicInteger.set(handler.getCoins()));
         return atomicInteger.get();
+    }
+
+    public static boolean hasEnabledPowerup(Player player, Jobs job, int powerUp) {
+        AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            switch (job) {
+                case ALCHEMIST -> atomicBoolean.set(handler.getAlchemist()[powerUp] == 1);
+                case BUILDER -> atomicBoolean.set(handler.getBuilder()[powerUp] == 1);
+                case DIGGER -> atomicBoolean.set(handler.getDigger()[powerUp] == 1);
+                case ENCHANTER -> atomicBoolean.set(handler.getEnchanter()[powerUp] == 1);
+                case FARMER -> atomicBoolean.set(handler.getFarmer()[powerUp] == 1);
+                case FISHERMAN -> atomicBoolean.set(handler.getFisherman()[powerUp] == 1);
+                case HUNTER -> atomicBoolean.set(handler.getHunter()[powerUp] == 1);
+                case LUMBERJACK -> atomicBoolean.set(handler.getLumberjack()[powerUp] == 1);
+                case MINER -> atomicBoolean.set(handler.getMiner()[powerUp] == 1);
+                case SMITH -> atomicBoolean.set(handler.getSmith()[powerUp] == 1);
+            }
+        });
+        return atomicBoolean.get();
+    }
+
+    public static int getPowerup(Player player, Jobs job, int powerUp) {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            if (powerUp == 2) {
+                switch (job) {
+                    case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.POWERUP1.get()]);
+                    case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.POWERUP1.get()]);
+                    case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.POWERUP1.get()]);
+                    case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.POWERUP1.get()]);
+                    case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.POWERUP1.get()]);
+                    case FISHERMAN -> atomicInteger.set(handler.getFisherman()[CapType.POWERUP1.get()]);
+                    case HUNTER -> atomicInteger.set(handler.getHunter()[CapType.POWERUP1.get()]);
+                    case LUMBERJACK -> atomicInteger.set(handler.getLumberjack()[CapType.POWERUP1.get()]);
+                    case MINER -> atomicInteger.set(handler.getMiner()[CapType.POWERUP1.get()]);
+                    case SMITH -> atomicInteger.set(handler.getSmith()[CapType.POWERUP1.get()]);
+                }
+            } else if (powerUp == 3) {
+                switch (job) {
+                    case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.POWERUP2.get()]);
+                    case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.POWERUP2.get()]);
+                    case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.POWERUP2.get()]);
+                    case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.POWERUP2.get()]);
+                    case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.POWERUP2.get()]);
+                    case FISHERMAN -> atomicInteger.set(handler.getFisherman()[CapType.POWERUP2.get()]);
+                    case HUNTER -> atomicInteger.set(handler.getHunter()[CapType.POWERUP2.get()]);
+                    case LUMBERJACK -> atomicInteger.set(handler.getLumberjack()[CapType.POWERUP2.get()]);
+                    case MINER -> atomicInteger.set(handler.getMiner()[CapType.POWERUP2.get()]);
+                    case SMITH -> atomicInteger.set(handler.getSmith()[CapType.POWERUP2.get()]);
+                }
+            } else if (powerUp == 4) {
+                switch (job) {
+                    case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.POWERUP3.get()]);
+                    case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.POWERUP3.get()]);
+                    case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.POWERUP3.get()]);
+                    case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.POWERUP3.get()]);
+                    case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.POWERUP3.get()]);
+                    case FISHERMAN -> atomicInteger.set(handler.getFisherman()[CapType.POWERUP3.get()]);
+                    case HUNTER -> atomicInteger.set(handler.getHunter()[CapType.POWERUP3.get()]);
+                    case LUMBERJACK -> atomicInteger.set(handler.getLumberjack()[CapType.POWERUP3.get()]);
+                    case MINER -> atomicInteger.set(handler.getMiner()[CapType.POWERUP3.get()]);
+                    case SMITH -> atomicInteger.set(handler.getSmith()[CapType.POWERUP3.get()]);
+                }
+            }
+        });
+        return atomicInteger.get();
+    }
+
+    public static int getSuperPower(Player player, Jobs job) {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        player.getCapability(SuperPowerCapabilityImpl.SUPERPOWER_CAPABILITY).ifPresent(handler -> atomicInteger.set(handler.getSuperpower()[Jobs.getJobInt(job)]));
+        return atomicInteger.get();
+    }
+
+    public static boolean hasSuperPowerEnabled(Player player, Jobs job) {
+        AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+        player.getCapability(SuperPowerCapabilityImpl.SUPERPOWER_CAPABILITY).ifPresent(handler -> atomicBoolean.set(getSuperPower(player, job) == 0 && JobGetters.getJobLevel(player, job) == 100));
+        return atomicBoolean.get();
     }
 }

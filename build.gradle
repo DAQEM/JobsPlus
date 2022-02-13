@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.2.2'
+version = '0.2.5'
 group = 'me.daqem' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'jobsplus'
 
@@ -74,17 +74,25 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-//    mavenCentral()
-//    maven {
-//        url 'https://maven.blamejared.com'
-//    }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.1-39.0.9'
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
+    // at runtime, use the full JEI jar
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
-//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.1-64-SNAPSHOT:api")
-//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.1-64-SNAPSHOT")
 }
 
 jar {

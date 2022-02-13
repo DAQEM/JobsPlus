@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public class EXPJarItem extends Item {
 
@@ -33,7 +32,7 @@ public class EXPJarItem extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         if (!level.isClientSide) {
-            if (JobGetters.jobIsEnabled(player, Jobs.ENCHANTER) && JobGetters.getJobLevel(player, Jobs.ENCHANTER) >= 5) {
+            if (JobGetters.getJobLevel(player, Jobs.ENCHANTER) >= 5) {
                 InteractionHand usedHand = InteractionHand.OFF_HAND;
                 if (player.getMainHandItem().getItem() instanceof EXPJarItem) {
                     usedHand = InteractionHand.MAIN_HAND;
@@ -46,9 +45,10 @@ public class EXPJarItem extends Item {
                     } else {
                         nbt = new CompoundTag();
                     }
+                    if (nbt == null) return super.use(level, player, hand);
                     if (player.isShiftKeyDown()) {
                         if (stack.getOrCreateTag().contains("EXP")) {
-                            player.giveExperiencePoints(Objects.requireNonNull(nbt).getInt("EXP"));
+                            player.giveExperiencePoints(nbt.getInt("EXP"));
                             if (nbt.getInt("EXP") != 0) {
                                 HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("success.exp.extract", nbt.getInt("EXP")));
                                 SoundHandler.playLevelUpSound(player, 0.7F, 1F);
@@ -56,17 +56,18 @@ public class EXPJarItem extends Item {
                             nbt.putInt("EXP", 0);
                         }
                     } else {
-                        if (stack.getOrCreateTag().contains("EXP")) {
-                            Objects.requireNonNull(nbt).putInt("EXP", nbt.getInt("EXP") + player.totalExperience);
-                        } else {
-                            Objects.requireNonNull(nbt).putInt("EXP", player.totalExperience);
-                        }
-                        if (player.totalExperience != 0) {
-                            HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("success.exp.insert", player.totalExperience));
-                            SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
-                        }
-                        player.giveExperiencePoints(-player.totalExperience);
-                        stack.setTag(nbt);
+                        HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "This feature is temporarily disabled due to a bug.");
+//                        if (stack.getOrCreateTag().contains("EXP")) {
+//                            nbt.putInt("EXP", nbt.getInt("EXP") + player.totalExperience);
+//                        } else {
+//                            nbt.putInt("EXP", player.totalExperience);
+//                        }
+//                        if (player.totalExperience != 0) {
+//                            HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("success.exp.insert", player.totalExperience));
+//                            SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
+//                        }
+//                        player.giveExperiencePoints(-player.totalExperience);
+//                        stack.setTag(nbt);
                     }
                     return InteractionResultHolder.success(stack);
                 }

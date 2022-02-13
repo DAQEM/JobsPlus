@@ -55,6 +55,8 @@ public class SideProxy {
         modEventBus.register(new MinerEvents());
         modEventBus.register(new SmithEvents());
 
+        modEventBus.register(new DoubleJumpEvents());
+
         ModItems.ITEMS.register(eventBus);
         ModBlocks.BLOCKS.register(eventBus);
         ModPotions.POTIONS.register(eventBus);
@@ -84,6 +86,8 @@ public class SideProxy {
     public static class Client extends SideProxy {
 
         public static final KeyMapping OPEN_GUI_KEYBIND = new KeyMapping("keys.jobsplus.open_gui", KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, "keys.jobsplus.category");
+        public static final KeyMapping VEIN_MINER_KEYBIND = new KeyMapping("keys.jobsplus.vein_miner", KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, "keys.jobsplus.category");
+        public static final KeyMapping DOUBLE_JUMP_KEYBIND = new KeyMapping("keys.jobsplus.double_jump", KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_SPACE, "keys.jobsplus.category");
 
 
         Client() {
@@ -98,6 +102,8 @@ public class SideProxy {
             EntityRenderers.register(ModEntities.EXPERIENCE_BOTTLE.get(), ThrownItemRenderer::new);
             ModItemProperties.register();
             ClientRegistry.registerKeyBinding(OPEN_GUI_KEYBIND);
+            ClientRegistry.registerKeyBinding(VEIN_MINER_KEYBIND);
+            ClientRegistry.registerKeyBinding(DOUBLE_JUMP_KEYBIND);
         }
     }
 }

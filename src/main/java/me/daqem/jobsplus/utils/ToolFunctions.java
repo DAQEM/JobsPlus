@@ -5,14 +5,18 @@ import me.daqem.jobsplus.common.item.HammerItem;
 import me.daqem.jobsplus.events.jobs.DiggerEvents;
 import me.daqem.jobsplus.events.jobs.MinerEvents;
 import me.daqem.jobsplus.handlers.ExpHandler;
+import me.daqem.jobsplus.handlers.ItemHandler;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -43,12 +47,15 @@ public class ToolFunctions {
                 BlockState state = level.getBlockState(pos);
                 if (breakValidator.canBreak(state)) {
                     Block block = level.getBlockState(pos).getBlock();
+                    String blockString = block.getDescriptionId().replace("block.minecraft.", "");
                     if (player.getMainHandItem().getItem() instanceof HammerItem) {
                         if (!MinerEvents.timeoutList.contains(pos)) {
-                            if (block instanceof OreBlock) {
-                                minerExp += ExpHandler.getEXPLow();
-                            } else if (MinerEvents.lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
+                            if (MinerEvents.lowestList.contains(blockString)) {
                                 minerExp += ExpHandler.getEXPLowest();
+                            } else if (block instanceof OreBlock) {
+                                minerExp += ExpHandler.getEXPMid();
+                            } else if (MinerEvents.lowList.contains(blockString)) {
+                                minerExp += ExpHandler.getEXPLow();
                             }
                             player.awardStat(Stats.BLOCK_MINED.get(block));
                         }
@@ -56,8 +63,10 @@ public class ToolFunctions {
                     }
                     if (player.getMainHandItem().getItem() instanceof ExcavatorItem) {
                         if (!DiggerEvents.timeoutList.contains(pos)) {
-                            if (DiggerEvents.lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
+                            if (DiggerEvents.lowestList.contains(blockString)) {
                                 diggerExp += ExpHandler.getEXPLowest();
+                            } else if (DiggerEvents.lowList.contains(blockString)) {
+                                diggerExp += ExpHandler.getEXPLow();
                             }
                             player.awardStat(Stats.BLOCK_MINED.get(block));
                         }
@@ -67,7 +76,10 @@ public class ToolFunctions {
 
                     if (!player.isCreative()) {
                         BlockPos offsetPos = new BlockPos(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
-                        dropItems(level, Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem()), offsetPos);
+                        int bonusLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
+                        int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
+                        final List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
+                        dropItems(level, ItemHandler.smeltedRawMaterials(player, drops), offsetPos, state.getExpDrop(level, pos, bonusLevel, silkLevel));
                     }
 
                     if (damageTool) {
@@ -78,6 +90,7 @@ public class ToolFunctions {
             }
             if (minerExp != 0) {
                 ExpHandler.addJobEXP(player, miner, minerExp);
+                MinerEvents.addPlayerPowerUpEffects(player, Jobs.MINER);
             }
             if (diggerExp != 0) {
                 ExpHandler.addJobEXP(player, digger, diggerExp);
@@ -131,10 +144,12 @@ public class ToolFunctions {
         return potentialBrokenBlocks;
     }
 
-    private static void dropItems(Level level, List<ItemStack> stacks, BlockPos pos) {
+    private static void dropItems(Level level, List<ItemStack> stacks, BlockPos pos, int exp) {
         for (ItemStack stack : stacks) {
-            ItemEntity itemEntity = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack);
-            level.addFreshEntity(itemEntity);
+            if (exp > 0) {
+                level.addFreshEntity(new ExperienceOrb(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, exp));
+            }
+            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack));
         }
     }
 }

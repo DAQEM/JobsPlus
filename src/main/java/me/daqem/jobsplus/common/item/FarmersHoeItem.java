@@ -29,7 +29,7 @@ public class FarmersHoeItem extends HoeItem {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         if (!level.isClientSide && player.isCrouching()) {
-            ItemStack stack = player.getItemInHand(hand);
+            ItemStack stack = player.getMainHandItem();
             CompoundTag orCreateTag = stack.getOrCreateTag();
             int mode = orCreateTag.getInt("mode");
             if (orCreateTag.contains("mode")) {

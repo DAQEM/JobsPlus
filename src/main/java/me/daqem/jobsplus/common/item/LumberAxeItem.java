@@ -58,25 +58,27 @@ public class LumberAxeItem extends AxeItem {
     @Override
     public boolean mineBlock(@NotNull ItemStack stack, @NotNull Level level, @NotNull BlockState state, @NotNull BlockPos pos, @NotNull LivingEntity entityLiving) {
         if (entityLiving instanceof Player player) {
-            if (player.getMainHandItem().getOrCreateTag().getInt("mode") == 0) {
-                stack.hurtAndBreak(3, entityLiving, entityLiving1 -> {
-                });
-                int jobLevel = JobGetters.getJobLevel(player, Jobs.LUMBERJACK);
-                Item itemInHand = player.getMainHandItem().getItem();
-                boolean isAllowedToUseAxe = jobLevel >= 5 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_1.get();
-                if (!isAllowedToUseAxe)
-                    isAllowedToUseAxe = jobLevel >= 25 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_2.get();
-                if (!isAllowedToUseAxe)
-                    isAllowedToUseAxe = jobLevel >= 50 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_3.get();
-                if (!isAllowedToUseAxe)
-                    isAllowedToUseAxe = jobLevel >= 75 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_4.get();
-                if (isAllowedToUseAxe) {
-                    attemptFellTree(level, pos, player);
+            if (BlockTags.LOGS.contains(state.getBlock())) {
+                if (player.getMainHandItem().getOrCreateTag().getInt("mode") == 0) {
+                    stack.hurtAndBreak(3, entityLiving, entityLiving1 -> {
+                    });
+                    int jobLevel = JobGetters.getJobLevel(player, Jobs.LUMBERJACK);
+                    Item itemInHand = player.getMainHandItem().getItem();
+                    boolean isAllowedToUseAxe = jobLevel >= 5 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_1.get();
+                    if (!isAllowedToUseAxe)
+                        isAllowedToUseAxe = jobLevel >= 25 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_2.get();
+                    if (!isAllowedToUseAxe)
+                        isAllowedToUseAxe = jobLevel >= 50 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_3.get();
+                    if (!isAllowedToUseAxe)
+                        isAllowedToUseAxe = jobLevel >= 75 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_4.get();
+                    if (isAllowedToUseAxe) {
+                        attemptFellTree(level, pos, player);
+                    } else {
+                        HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                    }
                 } else {
-                    HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                    ExpHandler.addEXPLow(player, Jobs.LUMBERJACK);
                 }
-            } else {
-                ExpHandler.addEXPLow(player, Jobs.LUMBERJACK);
             }
         }
         return super.mineBlock(stack, level, state, pos, entityLiving);
@@ -146,7 +148,7 @@ public class LumberAxeItem extends AxeItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
+        ItemStack stack = player.getMainHandItem();
         if (player.isCrouching() && !level.isClientSide) {
             CompoundTag tag = stack.getOrCreateTag();
             if (tag.contains("mode")) {

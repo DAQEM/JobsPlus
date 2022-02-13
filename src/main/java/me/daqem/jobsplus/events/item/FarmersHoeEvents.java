@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.events.item;
 
 import me.daqem.jobsplus.common.item.FarmersHoeItem;
+import me.daqem.jobsplus.events.jobs.FarmerEvents;
 import me.daqem.jobsplus.handlers.CropHandler;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
@@ -55,15 +56,13 @@ public class FarmersHoeEvents {
                 if (clicked instanceof CropBlock || clicked == Blocks.MELON || clicked == Blocks.PUMPKIN
                         || clicked == Blocks.NETHER_WART || clicked instanceof SweetBerryBushBlock
                         || clicked == Blocks.SUGAR_CANE || clicked == Blocks.CACTUS
-                        || clicked == Blocks.BAMBOO || clicked == Blocks.KELP_PLANT) {
+                        || clicked == Blocks.BAMBOO || clicked == Blocks.KELP_PLANT
+                        || clicked.getDescriptionId().equals("block.farmersdelight.tomatoes")) {
                     if (JobGetters.jobIsEnabled(player, job)) {
-                        boolean isAllowedToUseHoe = JobGetters.getJobLevel(player, job) >= 5 && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_1.get();
-                        if (JobGetters.getJobLevel(player, job) >= 25 && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_2.get())
-                            isAllowedToUseHoe = true;
-                        if (JobGetters.getJobLevel(player, job) >= 50 && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_3.get())
-                            isAllowedToUseHoe = true;
-                        if (JobGetters.getJobLevel(player, job) >= 75 && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_4.get())
-                            isAllowedToUseHoe = true;
+                        boolean isAllowedToUseHoe = (JobGetters.getJobLevel(player, job) >= 5 && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_1.get())
+                                || (JobGetters.getJobLevel(player, job) >= 25 && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_2.get())
+                                || (JobGetters.getJobLevel(player, job) >= 50 && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_3.get())
+                                || (JobGetters.getJobLevel(player, job) >= 75 && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_4.get());
                         if (isAllowedToUseHoe) {
                             if (!stack.getOrCreateTag().contains("mode")) stack.getOrCreateTag().putInt("mode", 0);
                             if (stack.getOrCreateTag().getInt("mode") == 0
@@ -125,8 +124,8 @@ public class FarmersHoeEvents {
                                             }
                                         }
                                         if (block instanceof SweetBerryBushBlock) {
-                                            if (CropHandler.stateToAge(state) > 1) {
-                                                if (CropHandler.stateToAge(state) == 1) {
+                                            if (CropHandler.stateToAge(state) >= 2) {
+                                                if (CropHandler.stateToAge(state) == 2) {
                                                     exp += 1;
                                                     ModItemUtils.damageItem(1, stack, player);
                                                 } else {
@@ -141,30 +140,23 @@ public class FarmersHoeEvents {
                                                 level.setBlockAndUpdate(blockPos, block.defaultBlockState().setValue(BlockStateProperties.AGE_3, 1));
                                             }
                                         }
-                                        if (block == Blocks.SUGAR_CANE || block == Blocks.CACTUS || block == Blocks.BAMBOO || block == Blocks.KELP_PLANT) {
-                                            if (stack.getItem() == ModItems.FARMERS_HOE_LEVEL_2.get() ||
-                                                    stack.getItem() == ModItems.FARMERS_HOE_LEVEL_3.get() ||
-                                                    stack.getItem() == ModItems.FARMERS_HOE_LEVEL_4.get()) {
+                                        if (block.getDescriptionId().equals("block.farmersdelight.tomatoes")) {
+                                            if (CropHandler.stateToAge(state) == 7) {
                                                 exp += 2;
-                                                ModItemUtils.damageItem(2, stack, player);
-                                                if (block == Blocks.SUGAR_CANE || block == Blocks.CACTUS || block == Blocks.BAMBOO) {
-                                                    Block tempBlock = Blocks.SUGAR_CANE;
-                                                    if (block == Blocks.CACTUS) tempBlock = Blocks.CACTUS;
-                                                    if (block == Blocks.BAMBOO) tempBlock = Blocks.BAMBOO;
-                                                    ArrayList<BlockPos> array = new ArrayList<>();
-                                                    array.add(blockPos);
-                                                    BlockPos pos = blockPos.above();
-                                                    while (level.getBlockState(pos).getBlock() == tempBlock) {
-                                                        array.add(pos);
-                                                        pos = pos.above();
-                                                    }
-                                                    for (int i = array.size() - 1; i >= 0; i--) {
-                                                        level.removeBlock(array.get(i), false);
-                                                        player.addItem(tempBlock.asItem().getDefaultInstance());
-                                                    }
+                                                ModItemUtils.damageItem(1, stack, player);
+                                                event.setCanceled(true);
+                                                List<ItemStack> drops = state.getDrops(drops(level, blockPos, player, stack));
+                                                for (ItemStack drop : drops) {
+                                                    dropHandler(drop, player, level, blockPos);
                                                 }
-                                                if (block == Blocks.KELP_PLANT) {
-                                                    ArrayList<BlockPos> array = new ArrayList<>();
+                                                level.setBlockAndUpdate(blockPos, block.defaultBlockState().setValue(BlockStateProperties.AGE_7, 5));
+                                            }
+                                        }
+                                        if (block == Blocks.SUGAR_CANE || block == Blocks.CACTUS || block == Blocks.BAMBOO || block == Blocks.KELP_PLANT) {
+                                            ArrayList<BlockPos> array = new ArrayList<>();
+                                            if (stack.getItem() != ModItems.FARMERS_HOE_LEVEL_1.get()) {
+                                                ModItemUtils.damageItem(2, stack, player);
+                                                if (block == Blocks.KELP) {
                                                     array.add(blockPos);
                                                     BlockPos pos = blockPos.above();
                                                     while (level.getBlockState(pos).getBlock() == Blocks.KELP_PLANT
@@ -187,6 +179,26 @@ public class FarmersHoeEvents {
                                                             player.addItem(Items.KELP.getDefaultInstance());
                                                         }
                                                         array.remove(i);
+                                                        if (!FarmerEvents.blockPosArrayList.contains(blockPos)) {
+                                                            exp += ExpHandler.getEXPLow();
+                                                        }
+                                                    }
+                                                } else {
+                                                    Block tempBlock = Blocks.SUGAR_CANE;
+                                                    if (block == Blocks.CACTUS) tempBlock = Blocks.CACTUS;
+                                                    if (block == Blocks.BAMBOO) tempBlock = Blocks.BAMBOO;
+                                                    array.add(blockPos);
+                                                    BlockPos pos = blockPos.above();
+                                                    while (level.getBlockState(pos).getBlock() == tempBlock) {
+                                                        array.add(pos);
+                                                        pos = pos.above();
+                                                    }
+                                                    for (int i = array.size() - 1; i >= 0; i--) {
+                                                        level.removeBlock(array.get(i), false);
+                                                        player.addItem(tempBlock.asItem().getDefaultInstance());
+                                                        if (!FarmerEvents.blockPosArrayList.contains(blockPos)) {
+                                                            exp += ExpHandler.getEXPLow();
+                                                        }
                                                     }
                                                 }
                                             } else {
@@ -243,7 +255,7 @@ public class FarmersHoeEvents {
                 player.addItem(drop);
             }
             if (dropCount != 0) {
-                ItemEntity itemEntity = new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new ItemStack(drop.getItem(), dropCount));
+                ItemEntity itemEntity = new ItemEntity(level, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, new ItemStack(drop.getItem(), dropCount));
                 level.addFreshEntity(itemEntity);
             }
         }
