@@ -24,7 +24,10 @@ public class EventServerChat {
         Component component = event.getComponent();
         if (event.getPlayer() != null) {
             Player player = event.getPlayer();
-
+            if (event.getMessage().equals("command execute job display NONE")) {
+                event.setCanceled(true);
+                JobSetters.setDisplay(player, -1);
+            }
             player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
                 /* Job start verification */
                 if (handler.getVerification()[CapType.START_VERIFICATION_FREE.get()] == 1 ||

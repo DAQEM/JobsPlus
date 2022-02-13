@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.init.ModEffects;
 import me.daqem.jobsplus.init.ModItems;
@@ -19,6 +20,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -131,6 +133,20 @@ public class JobsScreen extends Screen {
             super.renderTooltip(poseStack, new TranslatableComponent("jobsplus.gui.job_powerups"), mouseX + startX, mouseY + startY);
         } else if (isBetween(mouseX, mouseY, 6 + 28 + 28 + 28 + 150, -22, 32 + 28 + 28 + 28 + 150, 0)) {
             super.renderTooltip(poseStack, new TranslatableComponent("jobsplus.gui.job_how_to_get_exp"), mouseX + startX, mouseY + startY);
+        } else if (isBetween(mouseX, mouseY, 305, 6, 319, 20)) {
+            if (jobId >= 0) {
+                if (array[jobId * 2] != 0) {
+                    List<Component> list;
+                    if (array[62] == 0) {
+                        list = List.of(new TranslatableComponent("jobsplus.gui.toggle_prefix"),
+                                new TranslatableComponent("jobsplus.gui.active", ChatColor.boldBlue() + "NONE"));
+                    } else {
+                        list = List.of(new TranslatableComponent("jobsplus.gui.toggle_prefix"),
+                                new TranslatableComponent("jobsplus.gui.active", ChatHandler.ColorizedJobName(Objects.requireNonNull(Jobs.getJobFromInt(array[62] - 1))).replace(" ", "")));
+                    }
+                    super.renderTooltip(poseStack, list, Optional.empty(), mouseX + startX, mouseY + startY + 17);
+                }
+            }
         }
     }
 
@@ -300,7 +316,6 @@ public class JobsScreen extends Screen {
                     RenderSystem.setShaderColor(1F, 1F, 1F, 1);
                 }
             }
-
             // CRAFTING RECIPE BUTTONS
         } else if (activeRightButton == 1) {
             if (jobId != -1) {
@@ -444,6 +459,13 @@ public class JobsScreen extends Screen {
                 int l = i / 5;
                 int yOffset = y + 20 + l * 27 + 2;
                 minecraft.getItemRenderer().renderAndDecorateItem(jobItemsArray.get(i), xOffset, yOffset);
+            }
+        }
+        if (activeRightButton == 0) {
+            if (jobId >= 0) {
+                if (array[jobId * 2] != 0) {
+                    minecraft.getItemRenderer().renderAndDecorateItem(Items.NAME_TAG.getDefaultInstance(), startX + 305, startY + 5);
+                }
             }
         }
     }
@@ -807,6 +829,20 @@ public class JobsScreen extends Screen {
                             Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to stop performing this job for " + 5 + " coins?", "stop", Jobs.getJobFromInt(jobId)));
                         } else {
                             Minecraft.getInstance().setScreen(new ConfirmationScreen("You do not have enough coins to stop performing this job.", "not_enough_coins_stop", Jobs.getJobFromInt(jobId)));
+                        }
+                    }
+                }
+                if (jobId >= 0) {
+                    if (array[jobId * 2] != 0) {
+                        if (isBetween(mouseX, mouseY, 305, 6, 320, 21)) {
+                            String menucommand = "/jobs menu " + jobId + " " + activeLeftButton + " " + activeRightButton + " " + selectedButton + " " + scrollOffs + " " + startIndex;
+                            if (jobId + 1 == array[62]) {
+                                Minecraft.getInstance().player.chat("command execute job display NONE");
+                                Minecraft.getInstance().player.chat(menucommand);
+                            } else {
+                                Minecraft.getInstance().player.chat("/job display " + Jobs.getString(jobId));
+                                Minecraft.getInstance().player.chat(menucommand);
+                            }
                         }
                     }
                 }

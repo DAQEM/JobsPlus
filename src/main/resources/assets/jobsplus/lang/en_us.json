@@ -73,6 +73,8 @@
   "jobsplus.gui.job_crafting_recipes": "Job Crafting Recipes",
   "jobsplus.gui.job_powerups": "Job Powerups",
   "jobsplus.gui.job_how_to_get_exp": "How To Get EXP",
+  "jobsplus.gui.toggle_prefix": "Toggle Prefix",
+  "jobsplus.gui.active": "Active: %s",
   "keys.jobsplus.category": "Jobs+ Key Binds",
   "keys.jobsplus.open_gui": "Open Jobs+ Menu",
   "keys.jobsplus.vein_miner": "Vein Miner (Hold)"

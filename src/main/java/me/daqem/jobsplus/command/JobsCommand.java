@@ -146,7 +146,8 @@ public class JobsCommand {
                         JobGetters.getSuperPower(player, Jobs.DIGGER), JobGetters.getSuperPower(player, Jobs.ENCHANTER),
                         JobGetters.getSuperPower(player, Jobs.FARMER), JobGetters.getSuperPower(player, Jobs.FISHERMAN),
                         JobGetters.getSuperPower(player, Jobs.HUNTER), JobGetters.getSuperPower(player, Jobs.LUMBERJACK),
-                        JobGetters.getSuperPower(player, Jobs.MINER), JobGetters.getSuperPower(player, Jobs.SMITH)
+                        JobGetters.getSuperPower(player, Jobs.MINER), JobGetters.getSuperPower(player, Jobs.SMITH),
+                        JobGetters.getDisplay(player)
                 }, jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
                 try {
                     for (ServerPlayer player1 : Objects.requireNonNull(player.getServer()).getPlayerList().getPlayers()) {

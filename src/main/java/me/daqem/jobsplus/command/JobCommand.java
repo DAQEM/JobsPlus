@@ -36,13 +36,6 @@ public class JobCommand {
                                         EntityArgument.getPlayer(context, "target")
                                 )))
                         .executes(context -> coins(context.getSource())))
-//                .then(Commands.literal("info")
-//                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-//                                .executes(context -> jobInfo(
-//                                        context.getSource(),
-//                                        context.getArgument("job", Jobs.class)
-//                                )))
-//                        .executes(context -> info(context.getSource())))
                 .then(Commands.literal("start")
                         .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
                                 .then(Commands.literal("force")
@@ -96,13 +89,6 @@ public class JobCommand {
                                                 context.getSource(),
                                                 context.getArgument("job", Jobs.class)
                                         )))))
-//                .then(Commands.literal("crafting")
-//                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-//                                .executes(context -> jobCrafting(
-//                                        context.getSource(),
-//                                        context.getArgument("job", Jobs.class)
-//                                )))
-//                        .executes(context -> crafting(context.getSource())))
                 .then(Commands.literal("display")
                         .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
                                 .executes(context -> jobDisplay(
@@ -510,8 +496,6 @@ public class JobCommand {
     private static int jobDisplay(CommandSourceStack source, Jobs job) {
         if (source.getEntity() instanceof Player player) {
             if (JobGetters.jobIsEnabled(player, job)) {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkGreen() +
-                        "[JOBS+] " + ChatColor.green() + "Your chat and tab display has been changed to " + ChatHandler.capitalizeWord(job.toString()));
                 JobSetters.setDisplay(player, job.get());
             } else {
                 ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
