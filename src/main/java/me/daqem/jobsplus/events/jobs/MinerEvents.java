@@ -3,8 +3,6 @@ package me.daqem.jobsplus.events.jobs;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
-import me.daqem.jobsplus.handlers.ModPacketHandler;
-import me.daqem.jobsplus.packet.PacketDisableVeinMiner;
 import me.daqem.jobsplus.utils.BlockPosUtil;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
@@ -34,7 +32,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +41,7 @@ import java.util.UUID;
 public class MinerEvents {
 
     public final static ArrayList<String> lowList = new ArrayList<>(List.of("andesite", "diorite", "granite", "calcite", "dripstone", "dripstone_block", "sandstone", "blackstone"));
-    public final static ArrayList<String> lowestList = new ArrayList<>(List.of("stone", "deepslate", "netherrack", "end_stone"));
+    public final static ArrayList<String> lowestList = new ArrayList<>(List.of("stone", "deepslate", "netherrack", "end_stone", "cobblestone"));
     public static final ArrayList<BlockPos> timeoutList = new ArrayList<>();
     public static final ArrayList<UUID> veinMinerArray = new ArrayList<>();
     public static final int ORE_BREAK_DELAY = 1;
@@ -53,9 +50,9 @@ public class MinerEvents {
     private static void dropItems(Level level, List<ItemStack> stacks, BlockPos pos, int exp) {
         for (ItemStack stack : stacks) {
             if (exp > 0) {
-                level.addFreshEntity(new ExperienceOrb(level, pos.getX(), pos.getY(), pos.getZ(), exp));
+                level.addFreshEntity(new ExperienceOrb(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, exp));
             }
-            level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack));
+            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack));
         }
     }
 
@@ -94,7 +91,7 @@ public class MinerEvents {
                     } else {
                         timeoutList.remove(event.getPos());
                     }
-                    if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
+                    if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get()) && !veinMinerArray.contains(player.getUUID())) {
                         if (BlockTags.IRON_ORES.contains(block) || BlockTags.GOLD_ORES.contains(block) || BlockTags.COPPER_ORES.contains(block)) {
                             List<ItemStack> drops = Block.getDrops(event.getState(), (ServerLevel) event.getWorld(), event.getPos(), null, player, player.getMainHandItem());
                             event.setCanceled(true);
@@ -122,72 +119,68 @@ public class MinerEvents {
     @SubscribeEvent
     public void onVeinMine(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
-        if (veinMinerArray.contains(player.getUUID())) {
-            if (JobGetters.jobIsEnabled(player, Jobs.MINER)) {
-                if (JobGetters.getPowerup(player, Jobs.MINER, CapType.POWERUP1.get()) == 1) {
-                    Level level = (Level) event.getWorld();
-                    if (!level.isClientSide()) {
-                        Item itemInHand = player.getMainHandItem().getItem();
-                        if (itemInHand instanceof PickaxeItem) {
-                            int maxOres = 16 * 16 * 16;
-                            ArrayList<BlockPos> ores = new ArrayList<>();
-                            ArrayList<BlockPos> candidates = new ArrayList<>();
-                            candidates.add(event.getPos());
+        Level level = (Level) event.getWorld();
+        Item itemInHand = player.getMainHandItem().getItem();
+        ArrayList<BlockPos> ores = new ArrayList<>();
+        ArrayList<BlockPos> candidates = new ArrayList<>();
 
-                            for (int i = 0; i < candidates.size(); i++) {
-                                if (ores.size() > maxOres) {
-                                    if (!timeoutList.contains(event.getPos())) {
-                                        ExpHandler.addEXPMid(player, Jobs.MINER);
-                                    }
-                                    HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "This vein is too big to mine.");
-                                    return;
-                                }
+        if (!(itemInHand instanceof PickaxeItem)) return;
+        if (!JobGetters.jobIsEnabled(player, Jobs.MINER)) return;
+        if (!(JobGetters.getPowerup(player, Jobs.MINER, CapType.POWERUP1.get()) == 1)) return;
+        if (level.isClientSide()) return;
+        if (!veinMinerArray.contains(player.getUUID())) return;
 
-                                BlockPos candidate = candidates.get(i);
-                                Block block = level.getBlockState(candidate).getBlock();
+        event.setCanceled(true);
+        candidates.add(event.getPos());
 
-                                if (block instanceof OreBlock || block instanceof RedStoneOreBlock || (!(block.getDescriptionId().startsWith("block.minecraft.")) && block.getDescriptionId().endsWith("_ore"))) {
-                                    ores.add(candidate);
-                                    for (int x = -1; x <= 1; x++) {
-                                        for (int y = -1; y <= 1; y++) {
-                                            for (int z = -1; z <= 1; z++) {
-                                                BlockPos neighbor = candidate.offset(x, y, z);
-                                                if (candidates.contains(neighbor)) continue;
-                                                candidates.add(neighbor);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (ores.size() == 0) return;
-                            MinecraftForge.EVENT_BUS.register(new Object() {
-                                int delay = ORE_BREAK_DELAY;
-                                int i = 0;
+        for (int i = 0; i < candidates.size(); i++) {
+            if (ores.size() > 16 * 16 * 16) {
+                if (!timeoutList.contains(event.getPos())) ExpHandler.addEXPMid(player, Jobs.MINER);
+                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "This vein is too big to mine.");
+                return;
+            }
 
-                                @SubscribeEvent
-                                public void onTick(TickEvent.WorldTickEvent event) {
-                                    if (delay-- > 0) return;
-                                    delay = ORE_BREAK_DELAY;
-                                    if (i < ores.size()) {
-                                        BlockPos ore = ores.get(i);
-                                        attemptBreak(level, ore, player);
-                                        if (!timeoutList.contains(ore)) {
-                                            ExpHandler.addEXPMid(player, Jobs.MINER);
-                                        }
-                                        i++;
-                                    } else {
-                                        MinecraftForge.EVENT_BUS.unregister(this);
-                                    }
-                                }
-                            });
+            BlockPos candidate = candidates.get(i);
+            Block block = level.getBlockState(candidate).getBlock();
+
+            if (block instanceof OreBlock || block instanceof RedStoneOreBlock || (!(block.getDescriptionId().startsWith("block.minecraft.")) && block.getDescriptionId().endsWith("_ore"))) {
+                ores.add(candidate);
+                for (int x = -1; x <= 1; x++) {
+                    for (int y = -1; y <= 1; y++) {
+                        for (int z = -1; z <= 1; z++) {
+                            BlockPos neighbor = candidate.offset(x, y, z);
+                            if (candidates.contains(neighbor)) continue;
+                            candidates.add(neighbor);
                         }
                     }
                 }
             }
-            if (player instanceof ServerPlayer serverPlayer) {
-                ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new PacketDisableVeinMiner());
-            }
         }
+
+        if (ores.size() == 0) return;
+
+        MinecraftForge.EVENT_BUS.register(new Object() {
+            int delay = ORE_BREAK_DELAY, i = 0;
+
+            @SubscribeEvent
+            public void onTick(TickEvent.WorldTickEvent event) {
+                if (delay-- > 0) return;
+                if (i == ores.size()) {
+                    MinecraftForge.EVENT_BUS.unregister(this);
+                    return;
+                }
+
+                delay = ORE_BREAK_DELAY;
+                BlockPos ore = ores.get(i);
+                attemptBreak(level, ore, player);
+
+                if (!timeoutList.contains(ore)) ExpHandler.addEXPMid(player, Jobs.MINER);
+
+                i++;
+            }
+        });
+
+        veinMinerArray.remove(player.getUUID());
     }
 
     public void attemptBreak(Level level, BlockPos pos, Player player) {
@@ -200,13 +193,14 @@ public class MinerEvents {
             if (isEffective && !witherImmune) {
                 level.destroyBlock(pos, false);
                 if (!player.isCreative()) {
-                    Block.dropResources(state, level, pos, null, player, player.getMainHandItem());
+                    List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
                     int bonusLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
                     int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
                     int exp = state.getExpDrop(level, pos, bonusLevel, silkLevel);
-                    if (exp > 0) {
-                        level.addFreshEntity(new ExperienceOrb(level, pos.getX(), pos.getY(), pos.getZ(), exp));
-                    }
+                    if ((BlockTags.IRON_ORES.contains(block) || BlockTags.GOLD_ORES.contains(block) || BlockTags.COPPER_ORES.contains(block))
+                            && JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get()))
+                        exp = 1;
+                    dropItems(level, ItemHandler.smeltedRawMaterials(player, drops), pos, exp);
                 }
             }
         }

@@ -77,5 +77,6 @@
   "jobsplus.gui.active": "Active: %s",
   "keys.jobsplus.category": "Jobs+ Key Binds",
   "keys.jobsplus.open_gui": "Open Jobs+ Menu",
-  "keys.jobsplus.vein_miner": "Vein Miner (Hold)"
+  "keys.jobsplus.vein_miner": "Vein Miner (Hold)",
+  "keys.jobsplus.double_jump": "Double Jump"
 }

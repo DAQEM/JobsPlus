@@ -29,6 +29,17 @@ public class EXPJarItem extends Item {
         super(properties);
     }
 
+    private static int sum(int n, int a0, int d) {
+        return n * (2 * a0 + (n - 1) * d) / 2;
+    }
+
+    public static int getExperienceForLevel(int level) {
+        if (level == 0) return 0;
+        if (level <= 15) return sum(level, 7, 2);
+        if (level <= 30) return 315 + sum(level - 15, 37, 5);
+        return 1395 + sum(level - 30, 112, 9);
+    }
+
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         if (!level.isClientSide) {
@@ -56,18 +67,19 @@ public class EXPJarItem extends Item {
                             nbt.putInt("EXP", 0);
                         }
                     } else {
-                        HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "This feature is temporarily disabled due to a bug.");
-//                        if (stack.getOrCreateTag().contains("EXP")) {
-//                            nbt.putInt("EXP", nbt.getInt("EXP") + player.totalExperience);
-//                        } else {
-//                            nbt.putInt("EXP", player.totalExperience);
-//                        }
-//                        if (player.totalExperience != 0) {
-//                            HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("success.exp.insert", player.totalExperience));
-//                            SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
-//                        }
-//                        player.giveExperiencePoints(-player.totalExperience);
-//                        stack.setTag(nbt);
+//                        HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "This feature is temporarily disabled due to a bug.");
+                        int totalExperience = (int) (getExperienceForLevel(player.experienceLevel) + (player.experienceProgress * player.getXpNeededForNextLevel()));
+                        if (stack.getOrCreateTag().contains("EXP")) {
+                            nbt.putInt("EXP", nbt.getInt("EXP") + totalExperience);
+                        } else {
+                            nbt.putInt("EXP", totalExperience);
+                        }
+                        if (totalExperience != 0) {
+                            HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("success.exp.insert", totalExperience));
+                            SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
+                        }
+                        player.giveExperiencePoints(-totalExperience);
+                        stack.setTag(nbt);
                     }
                     return InteractionResultHolder.success(stack);
                 }

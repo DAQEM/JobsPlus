@@ -137,12 +137,12 @@ public class JobsScreen extends Screen {
             if (jobId >= 0) {
                 if (array[jobId * 2] != 0) {
                     List<Component> list;
-                    if (array[62] == 0) {
-                        list = List.of(new TranslatableComponent("jobsplus.gui.toggle_prefix"),
-                                new TranslatableComponent("jobsplus.gui.active", ChatColor.boldBlue() + "NONE"));
-                    } else {
+                    if (array[62] != 0 && Jobs.getJobFromInt(array[62] - 1) != null) {
                         list = List.of(new TranslatableComponent("jobsplus.gui.toggle_prefix"),
                                 new TranslatableComponent("jobsplus.gui.active", ChatHandler.ColorizedJobName(Objects.requireNonNull(Jobs.getJobFromInt(array[62] - 1))).replace(" ", "")));
+                    } else {
+                        list = List.of(new TranslatableComponent("jobsplus.gui.toggle_prefix"),
+                                new TranslatableComponent("jobsplus.gui.active", ChatColor.boldBlue() + "NONE"));
                     }
                     super.renderTooltip(poseStack, list, Optional.empty(), mouseX + startX, mouseY + startY + 17);
                 }

@@ -19,21 +19,15 @@ public class CurseBreakEvents {
         ItemStack left = event.getLeft();
         ItemStack right = event.getRight();
         ItemStack out;
-        if (JobGetters.getJobLevel(event.getPlayer(), Jobs.ENCHANTER) >= 10) {
-            if (!left.isEmpty()
-                    && !right.isEmpty()
-                    && right.getItem() == ModItems.CURSE_BREAKER.get()) {
-                out = left.copy();
-                Map<Enchantment, Integer> map = new HashMap<>();
-                EnchantmentHelper.deserializeEnchantments(out.getEnchantmentTags()).forEach((key, value) -> {
-                    if (!key.isCurse()) {
-                        map.put(key, value);
-                    }
-                });
-                EnchantmentHelper.setEnchantments(map, out);
-                event.setCost(30);
-                event.setOutput(out);
-            }
+        if (JobGetters.getJobLevel(event.getPlayer(), Jobs.ENCHANTER) >= 10 && !left.isEmpty() && !right.isEmpty() && right.getItem() == ModItems.CURSE_BREAKER.get()) {
+            out = left.copy();
+            Map<Enchantment, Integer> map = new HashMap<>();
+            EnchantmentHelper.deserializeEnchantments(out.getEnchantmentTags()).forEach((key, value) -> {
+                if (!key.isCurse()) map.put(key, value);
+            });
+            EnchantmentHelper.setEnchantments(map, out);
+            event.setCost(30);
+            event.setOutput(out);
         }
     }
 }

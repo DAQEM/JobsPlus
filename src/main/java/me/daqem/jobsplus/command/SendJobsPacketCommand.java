@@ -49,11 +49,7 @@ public class SendJobsPacketCommand {
 
     private static int doubleJump(CommandSourceStack source) {
         if (source.getEntity() instanceof ServerPlayer player) {
-            try {
-                DoubleJumpEvents.attemptPlayerJump(player, new int[]{JobGetters.hasSuperPowerEnabled(player, Jobs.BUILDER) ? 1 : 0, JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWERUP3.get()) ? 1 : 0});
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            DoubleJumpEvents.attemptPlayerJump(player, new int[]{JobGetters.hasSuperPowerEnabled(player, Jobs.BUILDER) ? 1 : 0, JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWERUP3.get()) ? 1 : 0});
 //            ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketSendBuilderInfo(
 //                    new int[]{JobGetters.hasSuperPowerEnabled(player, Jobs.BUILDER) ? 1 : 0, JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWERUP3.get()) ? 1 : 0}));
         }

@@ -59,7 +59,7 @@ public class BuilderEvents {
                                                 if (!giveBlockBack(player, block)) {
                                                     itemInBackpack.setCount(itemInBackpack.getCount() - 1);
                                                 }
-                                                giveItemBack(player);
+                                                giveItemBack(player, block);
                                                 return;
                                             }
                                         }
@@ -93,7 +93,7 @@ public class BuilderEvents {
                         || block == Blocks.CALCITE || block == Blocks.TUFF || block == Blocks.DRIPSTONE_BLOCK || block == Blocks.POLISHED_BASALT
                         || block == Blocks.BASALT || block == Blocks.BLACKSTONE || block == Blocks.POLISHED_BLACKSTONE || block == Blocks.GILDED_BLACKSTONE
                         || block == Blocks.CHISELED_POLISHED_BLACKSTONE || block == Blocks.POLISHED_BLACKSTONE_BRICKS) {
-                    giveItemBack(player);
+                    giveItemBack(player, block);
                     return true;
                 }
             }
@@ -101,9 +101,9 @@ public class BuilderEvents {
         return false;
     }
 
-    public void giveItemBack(Player player) {
+    public void giveItemBack(Player player, Block block) {
         MinecraftForge.EVENT_BUS.register(new Object() {
-            final Item item = player.getInventory().getSelected().getItem();
+            final Item item = block.asItem();
             int delay = 1;
 
             @SubscribeEvent

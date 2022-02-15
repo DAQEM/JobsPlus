@@ -363,7 +363,7 @@ public class ModFishingHook extends FishingHook {
                         CriteriaTriggers.FISHING_ROD_HOOKED.trigger((ServerPlayer) player, stack, this, list);
                         for (ItemStack itemstack : list) {
                             itemstack.hurtAndBreak(1, player, (player1) -> player1.broadcastBreakEvent(hand));
-                            ItemEntity itementity = new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), itemstack);
+                            ItemEntity itementity = new ItemEntity(this.level, this.getX() + 0.5, this.getY() + 0.5, this.getZ() + 0.5, itemstack);
                             double d0 = player.getX() - this.getX();
                             double d1 = player.getY() - this.getY();
                             double d2 = player.getZ() - this.getZ();
