@@ -6,10 +6,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
+import me.daqem.jobsplus.handlers.ModPacketHandler;
 import me.daqem.jobsplus.init.ModEffects;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.init.ModPotions;
 import me.daqem.jobsplus.jei.JobsPlusJeiPlugin;
+import me.daqem.jobsplus.packet.PacketOpenMenu;
 import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import mezz.jei.api.recipe.IFocus;
@@ -17,6 +19,7 @@ import mezz.jei.api.recipe.IRecipeManager;
 import mezz.jei.api.runtime.IRecipesGui;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -63,6 +66,18 @@ public class JobsScreen extends Screen {
         this.startIndex = startIndex;
     }
 
+    public static void drawRightAlignedString(@NotNull PoseStack p_93209_, Font p_93210_, @NotNull String p_93211_, int p_93212_, int p_93213_, int p_93214_) {
+        p_93210_.draw(p_93209_, p_93211_, (float) p_93212_ - p_93210_.width(p_93211_), (float) p_93213_, p_93214_);
+    }
+
+    public static void drawCenteredStringNew(@NotNull PoseStack p_93209_, Font p_93210_, @NotNull String p_93211_, int p_93212_, int p_93213_, int p_93214_) {
+        p_93210_.draw(p_93209_, p_93211_, (float) (p_93212_ - p_93210_.width(p_93211_) / 2), (float) p_93213_, p_93214_);
+    }
+
+    public static void drawCenteredPowerupsString(@NotNull PoseStack p_93209_, Font p_93210_, @NotNull String p_93211_, int p_93212_, int p_93213_, int p_93214_) {
+        p_93210_.draw(p_93209_, p_93211_, (float) (p_93212_ - p_93210_.width(p_93211_) / 2), (float) p_93213_, p_93214_);
+    }
+
 //.RRRRRRRRRR........EEEEEEEEEEE...... NNN...NNNN....... DDDDDDDD......... EEEEEEEEEE...... RRRRRRRRR....
 //.RRRRRRRRRRR.......EEEEEEEEEEE...... NNNN..NNNN....... DDDDDDDDD........ EEEEEEEEEE...... RRRRRRRRRR...
 //.RRRRRRRRRRR.......EEEEEEEEEEE...... NNNN..NNNN....... DDDDDDDDDD....... EEEEEEEEEE...... RRRRRRRRRR...
@@ -97,8 +112,8 @@ public class JobsScreen extends Screen {
         this.renderItems(startX, startY);
         drawTexts(poseStack, i1, j1);
         poseStack.popPose();
-        font.draw(poseStack, new KeybindComponent(ChatColor.darkGray() + "Jobs               Coins: " + array[20]).copy(),
-                startX + 7, startY + 6, 16777215);
+        font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.jobs").getString(), startX + 7, startY + 6, 16777215);
+        drawRightAlignedString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.coins.top", array[20]).getString(), startX + 140, startY + 6, 16777215);
         super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
@@ -133,16 +148,30 @@ public class JobsScreen extends Screen {
             super.renderTooltip(poseStack, new TranslatableComponent("jobsplus.gui.job_powerups"), mouseX + startX, mouseY + startY);
         } else if (isBetween(mouseX, mouseY, 6 + 28 + 28 + 28 + 150, -22, 32 + 28 + 28 + 28 + 150, 0)) {
             super.renderTooltip(poseStack, new TranslatableComponent("jobsplus.gui.job_how_to_get_exp"), mouseX + startX, mouseY + startY);
-        } else if (isBetween(mouseX, mouseY, 305, 6, 319, 20)) {
+        } else if (isBetween(mouseX, mouseY, imageWidth, 6, imageWidth + 21, 31)) {
             if (jobId >= 0) {
-                if (array[jobId * 2] != 0) {
+                if (getSelectedJobLevel() != 0) {
                     List<Component> list;
                     if (array[62] != 0 && Jobs.getJobFromInt(array[62] - 1) != null) {
                         list = List.of(new TranslatableComponent("jobsplus.gui.toggle_prefix"),
                                 new TranslatableComponent("jobsplus.gui.active", ChatHandler.ColorizedJobName(Objects.requireNonNull(Jobs.getJobFromInt(array[62] - 1))).replace(" ", "")));
                     } else {
                         list = List.of(new TranslatableComponent("jobsplus.gui.toggle_prefix"),
-                                new TranslatableComponent("jobsplus.gui.active", ChatColor.boldBlue() + "NONE"));
+                                new TranslatableComponent("jobsplus.gui.active", ChatColor.boldBlue() + new TranslatableComponent("job.none").getString()));
+                    }
+                    super.renderTooltip(poseStack, list, Optional.empty(), mouseX + startX, mouseY + startY + 17);
+                }
+            }
+        } else if (isBetween(mouseX, mouseY, imageWidth, 35, imageWidth + 21, 60)) {
+            if (jobId >= 0) {
+                if (getSelectedJobLevel() != 0) {
+                    List<Component> list;
+                    if (array[63] != -1 && Jobs.getJobFromInt(array[63]) != null) {
+                        list = List.of(new TranslatableComponent("jobsplus.gui.toggle_boss_bar"),
+                                new TranslatableComponent("jobsplus.gui.active", ChatHandler.ColorizedJobName(Objects.requireNonNull(Jobs.getJobFromInt(array[63]))).replace(" ", "")));
+                    } else {
+                        list = List.of(new TranslatableComponent("jobsplus.gui.toggle_boss_bar"),
+                                new TranslatableComponent("jobsplus.gui.active", ChatColor.boldBlue() + new TranslatableComponent("job.none").getString()));
                     }
                     super.renderTooltip(poseStack, list, Optional.empty(), mouseX + startX, mouseY + startY + 17);
                 }
@@ -187,12 +216,12 @@ public class JobsScreen extends Screen {
                 int exp = array[i * 2 + 1];
                 if (activeLeftButton == 1) {
                     if (level != 0) {
-                        map.put(Jobs.valueOf(Jobs.getString(i)), new int[]{level, exp});
+                        map.put(Jobs.valueOf(Jobs.getEnglishString(i)), new int[]{level, exp});
                     }
                 }
                 if (activeLeftButton == 2) {
                     if (level == 0) {
-                        map.put(Jobs.valueOf(Jobs.getString(i)), new int[]{level, exp});
+                        map.put(Jobs.valueOf(Jobs.getEnglishString(i)), new int[]{level, exp});
                     }
                 }
             }
@@ -261,14 +290,14 @@ public class JobsScreen extends Screen {
                     if (level != 0) {
                         ints.add(level);
                         ints.add(exp);
-                        ints.add(Jobs.getJobInt(Jobs.valueOf(Jobs.getString(i))));
+                        ints.add(Jobs.getJobInt(Jobs.valueOf(Jobs.getEnglishString(i))));
                     }
                 }
                 if (activeLeftButton == 2) {
                     if (level == 0) {
                         ints.add(level);
                         ints.add(exp);
-                        ints.add(Jobs.getJobInt(Jobs.valueOf(Jobs.getString(i))));
+                        ints.add(Jobs.getJobInt(Jobs.valueOf(Jobs.getEnglishString(i))));
                     }
                 }
             }
@@ -414,6 +443,16 @@ public class JobsScreen extends Screen {
                 RenderSystem.setShaderColor(1F, 1F, 1F, 1);
             }
         }
+        if (jobId != -1) {
+            if (getSelectedJobLevel() != 0) {
+                if (array[62] == jobId + 1) blitThis(poseStack, imageWidth, 6, 142, 234, 22, 26);
+                else blitThis(poseStack, imageWidth, 6, 164, 234, 19, 26);
+                if (array[63] == jobId) blitThis(poseStack, imageWidth, 9 + 26, 142, 234, 22, 26);
+                else blitThis(poseStack, imageWidth, 9 + 26, 164, 234, 19, 26);
+                if (array[63] == jobId) blitThis(poseStack, imageWidth + 2, 9 + 32, 164 + 19, 234, 15, 14);
+                else blitThis(poseStack, imageWidth + 1, 9 + 32, 164 + 19, 234, 15, 14);
+            }
+        }
     }
 
     public void renderItems(int x, int y) {
@@ -461,11 +500,12 @@ public class JobsScreen extends Screen {
                 minecraft.getItemRenderer().renderAndDecorateItem(jobItemsArray.get(i), xOffset, yOffset);
             }
         }
-        if (activeRightButton == 0) {
-            if (jobId >= 0) {
-                if (array[jobId * 2] != 0) {
-                    minecraft.getItemRenderer().renderAndDecorateItem(Items.NAME_TAG.getDefaultInstance(), startX + 305, startY + 5);
-                }
+        if (jobId >= 0) {
+            if (getSelectedJobLevel() != 0) {
+                if (array[62] == jobId + 1)
+                    minecraft.getItemRenderer().renderAndDecorateItem(Items.NAME_TAG.getDefaultInstance(), startX + 328, startY + 11);
+                else
+                    minecraft.getItemRenderer().renderAndDecorateItem(Items.NAME_TAG.getDefaultInstance(), startX + 327, startY + 11);
             }
         }
     }
@@ -494,15 +534,15 @@ public class JobsScreen extends Screen {
                 if (level != 0) {
                     int maxExp = LevelHandler.calcExp(level);
                     font.draw(poseStack, ChatColor.boldGreen() + Jobs.getString(i), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                    font.draw(poseStack, ChatColor.aqua() + "Level: " + ChatColor.white() + level, startX + 7 + 3 + 35, i1 + 14, 16777215);
-                    font.draw(poseStack, ChatColor.aqua() + "EXP: " + ChatColor.white() + (int) ((double) exp / maxExp * 100) + "%", startX + 7 + 3 + 35, i1 + 23, 16777215);
+                    font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.level", ChatColor.reset(), level).getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
+                    font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                 } else {
                     font.draw(poseStack, ChatColor.boldRed() + Jobs.getString(i), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                    font.draw(poseStack, ChatColor.aqua() + "Want this job?", startX + 7 + 3 + 35, i1 + 14, 16777215);
+                    font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.want_this_job").getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
                     if (array[21] < 2) {
-                        font.draw(poseStack, ChatColor.aqua() + "Cost: " + ChatColor.reset() + 0 + " coins", startX + 7 + 3 + 35, i1 + 23, 16777215);
+                        font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 0).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                     } else {
-                        font.draw(poseStack, ChatColor.aqua() + "Cost: " + ChatColor.reset() + 10 + " coins", startX + 7 + 3 + 35, i1 + 23, 16777215);
+                        font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 10).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                     }
                 }
             }
@@ -516,14 +556,14 @@ public class JobsScreen extends Screen {
                     if (level != 0) {
                         ints.add(level);
                         ints.add(exp);
-                        ints.add(Jobs.getJobInt(Jobs.valueOf(Jobs.getString(i))));
+                        ints.add(Jobs.getJobInt(Jobs.valueOf(Jobs.getEnglishString(i))));
                     }
                 }
                 if (activeLeftButton == 2) {
                     if (level == 0) {
                         ints.add(level);
                         ints.add(exp);
-                        ints.add(Jobs.getJobInt(Jobs.valueOf(Jobs.getString(i))));
+                        ints.add(Jobs.getJobInt(Jobs.valueOf(Jobs.getEnglishString(i))));
                     }
                 }
             }
@@ -537,34 +577,25 @@ public class JobsScreen extends Screen {
                     if (level != 0) {
                         int maxExp = LevelHandler.calcExp(level);
                         font.draw(poseStack, ChatColor.boldGreen() + Jobs.getString(currentJobArray[2]), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                        font.draw(poseStack, ChatColor.aqua() + "Level: " + ChatColor.white() + level, startX + 7 + 3 + 35, i1 + 14, 16777215);
-                        font.draw(poseStack, ChatColor.aqua() + "EXP: " + ChatColor.white() + (int) ((double) exp / maxExp * 100) + "%", startX + 7 + 3 + 35, i1 + 23, 16777215);
+                        font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.level", ChatColor.reset(), level).getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
+                        font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                     } else {
                         font.draw(poseStack, ChatColor.boldRed() + Jobs.getString(currentJobArray[2]), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                        font.draw(poseStack, ChatColor.aqua() + "Want this job?", startX + 7 + 3 + 35, i1 + 14, 16777215);
+                        font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.want_this_job").getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
                         if (array[21] < 2) {
-                            font.draw(poseStack, ChatColor.aqua() + "Cost: " + ChatColor.reset() + 0 + " coins", startX + 7 + 3 + 35, i1 + 23, 16777215);
+                            font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 0).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                         } else {
-                            font.draw(poseStack, ChatColor.aqua() + "Cost: " + ChatColor.reset() + 10 + " coins", startX + 7 + 3 + 35, i1 + 23, 16777215);
+                            font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 10).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                         }
                     }
                 }
             }
         }
         if (jobId == -1) {
-            if (activeRightButton == 0) {
-                font.draw(poseStack, ChatColor.darkGray() + "Select a job for more info.", startX + 168, startY + 60, 16777215);
-            } else if (activeRightButton == 1) {
-                font.draw(poseStack, ChatColor.darkGray() + "Select a job to view", startX + 183, startY + 60, 16777215);
-                font.draw(poseStack, ChatColor.darkGray() + "its crafting recipes.", startX + 184, startY + 60 + 9, 16777215);
-            } else if (activeRightButton == 2) {
-                font.draw(poseStack, ChatColor.darkGray() + "Select a job to view", startX + 183, startY + 60, 16777215);
-                font.draw(poseStack, ChatColor.darkGray() + "its powerups.", startX + 199, startY + 60 + 9, 16777215);
-            } else if (activeRightButton == 3) {
-                font.draw(poseStack, ChatColor.darkGray() + "Select a job to view", startX + 183, startY + 60, 16777215);
-                font.draw(poseStack, ChatColor.darkGray() + "the possible ways to", startX + 182, startY + 60 + 9, 16777215);
-                font.draw(poseStack, ChatColor.darkGray() + "get EXP for the job.", startX + 183, startY + 60 + 18, 16777215);
-            }
+            if (activeRightButton == 0) drawNoJobSelected(poseStack, "info");
+            else if (activeRightButton == 1) drawNoJobSelected(poseStack, "crafting");
+            else if (activeRightButton == 2) drawNoJobSelected(poseStack, "powerups");
+            else if (activeRightButton == 3) drawNoJobSelected(poseStack, "how_to_get_exp");
         } else {
             if (activeRightButton == 0) {
                 poseStack.pushPose();
@@ -572,149 +603,37 @@ public class JobsScreen extends Screen {
                 font.draw(poseStack, getSelectedJobLevel() != 0 ? ChatColor.boldGreen() + Jobs.getString(jobId) : ChatColor.boldRed() + Jobs.getString(jobId), (startX + 156) / 2, (startY + 5) / 2, 16777215);
                 poseStack.popPose();
                 if (getSelectedJobLevel() != 0) {
-                    font.draw(poseStack, ChatColor.darkGray() + "Level: " + ChatColor.white() + getSelectedJobLevel(), startX + 156, startY + 22, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "EXP: " + ChatColor.white() + "[" + getSelectedJobEXP() + "/" + getSelectedJobMaxEXP() + "]", startX + 216, startY + 22, 16777215);
-                    font.draw(poseStack, ChatFormatting.STRIKETHROUGH + "                                        ", startX + 156, startY + 28, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.level", ChatColor.reset(), getSelectedJobLevel()).getString(), startX + 156, startY + 22, 16777215);
+                    if (getSelectedJobLevel() != 100)
+                        font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.exp", ChatColor.reset(), "[" + getSelectedJobEXP() + "/" + getSelectedJobMaxEXP() + "]").getString(), startX + 216, startY + 22, 16777215);
                 } else {
-                    font.draw(poseStack, ChatColor.darkGray() + "Want this job?", startX + 156, startY + 22, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.want_this_job").getString(), startX + 156, startY + 22, 16777215);
                     if (array[21] < 2) {
-                        font.draw(poseStack, ChatColor.darkGray() + "Cost: " + ChatColor.reset() + 0 + " coins", startX + 236, startY + 22, 16777215);
+                        drawRightAlignedString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 0).getString(), startX + imageWidth - 10, startY + 22, 16777215);
                     } else {
-                        font.draw(poseStack, ChatColor.darkGray() + "Cost: " + ChatColor.reset() + 10 + " coins", startX + 236, startY + 22, 16777215);
+                        drawRightAlignedString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 10).getString(), startX + imageWidth - 10, startY + 22, 16777215);
                     }
-                    font.draw(poseStack, ChatFormatting.STRIKETHROUGH + "                                        ", startX + 156, startY + 28, 16777215);
                 }
-                if (jobId == 0) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Alchemist job adds 2", startX + 173, startY + 42, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "custom potion effects:", startX + 180, startY + 42 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.boldWhite() + "Jesus " + ChatColor.darkGray() + "and " + ChatColor.boldWhite() + "Flying", startX + 187, startY + 42 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Jesus allows you to walk on", startX + 166, startY + 42 + 36, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "water and flying allows you", startX + 167, startY + 42 + 36 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "to fly. It also increases the", startX + 166, startY + 42 + 36 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "duration and strength of", startX + 172, startY + 42 + 36 + 27, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "some existing potions.", startX + 182, startY + 42 + 36 + 36, 16777215);
-                } else if (jobId == 1) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Builder job adds 5", startX + 177, startY + 42 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "different types of backpacks:", startX + 162, startY + 42 + 9 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.boldWhite() + "Small" + ChatColor.darkGray() + ", 9 slots. " + ChatColor.boldWhite() + "Medium" + ChatColor.darkGray() + ", 18 slots.", startX + 157, startY + 42 + 18 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.boldWhite() + "Large" + ChatColor.darkGray() + ", 36 slots. " + ChatColor.boldWhite() + "Huge" + ChatColor.darkGray() + ", 54 slots.", startX + 157, startY + 42 + 27 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.boldWhite() + "Ender" + ChatColor.darkGray() + ", opens your enderchest.", startX + 158, startY + 42 + 36 + 9, 16777215);
-                } else if (jobId == 2) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Digger job adds a new", startX + 169, startY + 42 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "tool called the " + ChatColor.boldWhite() + "Excavator" + ChatColor.darkGray() + ".", startX + 168, startY + 42 + 9 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "The " + ChatColor.boldWhite() + "Excavator" + ChatColor.darkGray() + " can mine", startX + 173, startY + 42 + 18 + 9 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "multiple blocks at once.", startX + 180, startY + 42 + 27 + 9 + 18, 16777215);
-                } else if (jobId == 3) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Enchanter job adds 2", startX + 169, startY + 42, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "new items. The " + ChatColor.boldWhite() + "EXP jar" + ChatColor.darkGray() + " is a", startX + 166, startY + 42 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "jar that can store EXP. The", startX + 167, startY + 42 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.boldWhite() + "Curse Breaker" + ChatColor.darkGray() + " is a book that", startX + 158, startY + 42 + 18 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "removes curses from an item.", startX + 166, startY + 42 + 27 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "It also adds the ability", startX + 179, startY + 42 + 27 + 27, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "to craft and upgrade", startX + 182, startY + 42 + 27 + 36, 16777215);
-                    font.draw(poseStack, ChatColor.boldWhite() + "Bottles 'o Enchanting" + ChatColor.darkGray() + ".", startX + 173, startY + 42 + 36 + 36, 16777215);
-                } else if (jobId == 4) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Farmer job adds a new", startX + 168, startY + 42 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "tool called the " + ChatColor.boldWhite() + "Farmers Hoe" + ChatColor.darkGray() + ".", startX + 162, startY + 42 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "The " + ChatColor.boldWhite() + "Farmers Hoe" + ChatColor.darkGray() + " can harvest", startX + 157, startY + 42 + 18 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "multiple crops at once. Including", startX + 157, startY + 42 + 27 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "crops like sugarcane and cactus.", startX + 154, startY + 42 + 27 + 27, 16777215);
-                } else if (jobId == 5) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Fisherman job adds a new", startX + 161, startY + 42 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "fishing rod called the", startX + 182, startY + 42 + 9 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.boldWhite() + "Fishermans Rod" + ChatColor.darkGray() + ".", startX + 189, startY + 42 + 18 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "The " + ChatColor.boldWhite() + "Fishermans Rod" + ChatColor.darkGray() + " can", startX + 169, startY + 42 + 18 + 18 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "catch multiple fish or", startX + 183, startY + 42 + 27 + 18 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "treasures at once.", startX + 188, startY + 42 + 27 + 18 + 18, 16777215);
-                } else if (jobId == 6) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Hunter job adds 2 new", startX + 168, startY + 42 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "weapons a " + ChatColor.boldWhite() + "Hunters Sword", startX + 166, startY + 42 + 9 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "and a " + ChatColor.boldWhite() + "Hunters Bow" + ChatColor.darkGray() + ".", startX + 183, startY + 42 + 18 + 18, 16777215);
-                } else if (jobId == 7) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Lumberjack job adds", startX + 172, startY + 42 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "a new tool called the ", startX + 185, startY + 42 + 9 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.boldWhite() + "Lumberjack Axe" + ChatColor.darkGray() + ".", startX + 190, startY + 42 + 18 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "The " + ChatColor.boldWhite() + "Lumberjack Axe" + ChatColor.darkGray() + " can chop", startX + 155, startY + 42 + 18 + 18 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "an entire tree down at once.", startX + 165, startY + 42 + 27 + 18 + 18, 16777215);
-                } else if (jobId == 8) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Miner job adds a new", startX + 171, startY + 42 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "tool called the " + ChatColor.boldWhite() + "Hammer" + ChatColor.darkGray() + ".", startX + 176, startY + 42 + 9 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "The " + ChatColor.boldWhite() + "Hammer" + ChatColor.darkGray() + " can mine", startX + 182, startY + 42 + 18 + 9 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "multiple blocks at once.", startX + 181, startY + 42 + 27 + 9 + 18, 16777215);
-                } else if (jobId == 9) {
-                    font.draw(poseStack, ChatColor.darkGray() + "The Smith job adds 4", startX + 181, startY + 42 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "new sets of armor:", startX + 186, startY + 42 + 9 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "- " + ChatColor.boldWhite() + "Reinforced Iron", startX + 182, startY + 42 + 18 + 9, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "- " + ChatColor.boldWhite() + "Obsidian", startX + 202, startY + 42 + 18 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "- " + ChatColor.boldWhite() + "Reinforced Diamond", startX + 173, startY + 42 + 27 + 18, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "- " + ChatColor.boldWhite() + "Reinforced Netherite", startX + 168, startY + 42 + 36 + 18, 16777215);
-                }
-
+                font.draw(poseStack, ChatFormatting.STRIKETHROUGH + "                                        ", startX + 156, startY + 28, 16777215);
+                drawJobInfo(poseStack);
                 if (getSelectedJobLevel() == 0) {
-                    font.draw(poseStack, ChatColor.white() + "Start performing this job.", startX + 174, startY + 137, 16777215);
+                    drawCenteredStringNew(poseStack, font, ChatColor.white() + new TranslatableComponent("jobsplus.gui.job.start").getString(), startX + (imageWidth + 150) / 2, startY + 137, 16777215);
                 } else {
-                    font.draw(poseStack, ChatColor.white() + "Stop performing this job.", startX + 175, startY + 137, 16777215);
+                    drawCenteredStringNew(poseStack, font, ChatColor.white() + new TranslatableComponent("jobsplus.gui.job.stop").getString(), startX + (imageWidth + 150) / 2, startY + 137, 16777215);
                 }
             } else if (activeRightButton == 1) {
-                font.draw(poseStack, ChatColor.darkGray() + "Available Crafting Recipes", startX + 172, startY + 6, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.crafting").getString(), startX + (imageWidth + 150) / 2, startY + 6, 16777215);
             } else if (activeRightButton == 2 && (jobId == 0 || jobId == 1 || jobId == 8)) {
-                font.draw(poseStack, ChatColor.darkGray() + "Power-ups", startX + 209, startY + 6, 16777215);
-                font.draw(poseStack, ChatColor.gray() + "10 Coins Each", startX + 200, startY + 16, 16777215);
-                font.draw(poseStack, ChatColor.darkGray() + "Superpower", startX + 207, startY + 110, 16777215);
-                font.draw(poseStack, ChatColor.gray() + "Unlocked at Level 100", startX + 181, startY + 120, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups.powerups").getString(), startX + (imageWidth + 150) / 2, startY + 6, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.gray() + new TranslatableComponent("jobsplus.gui.powerups.cost").getString(), startX + (imageWidth + 150) / 2, startY + 16, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups.superpowers").getString(), startX + (imageWidth + 150) / 2, startY + 110, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.gray() + new TranslatableComponent("jobsplus.gui.powerups.superpowers.cost").getString(), startX + (imageWidth + 150) / 2, startY + 120, 16777215);
                 poseStack.pushPose();
                 poseStack.scale(0.72F, 0.72F, 0.72F);
-                if (jobId == 0) {
-                    font.draw(poseStack, ChatColor.darkGray() + "Harmful potion immunity", (startX + 197) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "1.5x Potion duration", (startX + 202) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Double Health with Potion of Healing", (startX + 175) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "2x Potion duration", (startX + 205) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                } else if (jobId == 1) {
-                    font.draw(poseStack, ChatColor.darkGray() + "A chance you get your block back", (startX + 176) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Use blocks in backpack first", (startX + 186) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Double jump and less fall damage", (startX + 178) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Triple jump and no fall damage", (startX + 181) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                } else if (jobId == 2) {
-                    font.draw(poseStack, ChatColor.darkGray() + "Blocks mined go into your inventory", (startX + 174) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "A Change to dig up minerals", (startX + 188) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Haste I when digging", (startX + 200) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Haste II and Speed I when digging", (startX + 177) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                } else if (jobId == 3) {
-                    font.draw(poseStack, ChatColor.darkGray() + "Remove curses using a grinder", (startX + 182) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "+1 Enchantment level on enchanting", (startX + 174) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Double experience", (startX + 203) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Enchantments in an anvil add up", (startX + 181) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                } else if (jobId == 4) {
-                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get double drops", (startX + 184) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "A Chance to get better drops", (startX + 184) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "+1 Random color wool when shearing", (startX + 172) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Double crop and wool drops", (startX + 187) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                } else if (jobId == 5) {
-                    font.draw(poseStack, ChatColor.darkGray() + "Double job-exp", (startX + 207) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get 2 extra drops", (startX + 182) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "A Change to catch minerals", (startX + 188) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get 5 extra drops", (startX + 182) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                } else if (jobId == 6) {
-                    font.draw(poseStack, ChatColor.darkGray() + "Meat give one extra hunger bar", (startX + 180) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Strength II and Speed I on kill", (startX + 182) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Chance to drop the head", (startX + 192) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Shoot 3 arrows & 25% more damage", (startX + 175) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                } else if (jobId == 7) {
-                    font.draw(poseStack, ChatColor.darkGray() + "A change to get a double log drop", (startX + 176) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "A chance to get Haste II on harvest", (startX + 173) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Get better apples from leaves", (startX + 183) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Logs go into your inventory", (startX + 186) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                } else if (jobId == 8) {
-                    font.draw(poseStack, ChatColor.darkGray() + "Ore vein miner", (startX + 210) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Automatically smelt ores", (startX + 194) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Haste I when mining", (startX + 203) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Haste II and Speed I when mining", (startX + 179) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                } else if (jobId == 9) {
-                    font.draw(poseStack, ChatColor.darkGray() + "Mobs can freeze when they hit you", (startX + 175) / 0.72F, (startY + 33) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Enchantments from items to books", (startX + 177) / 0.72F, (startY + 33 + 25) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Jobs+ armor gives Fire Protection", (startX + 176) / 0.72F, (startY + 33 + 50) / 0.72F, 16777215);
-                    font.draw(poseStack, ChatColor.darkGray() + "Crafted items are unbreakable", (startX + 181) / 0.72F, (startY + 136) / 0.72F, 16777215);
-                }
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".1").getString(), (int) ((startX + (imageWidth + 150) / 2) / 0.72F), (int) ((startY + 33) / 0.72F), 16777215);
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".2").getString(), (int) ((startX + (imageWidth + 150) / 2) / 0.72F), (int) ((startY + 58) / 0.72F), 16777215);
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".3").getString(), (int) ((startX + (imageWidth + 150) / 2) / 0.72F), (int) ((startY + 83) / 0.72F), 16777215);
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".4").getString(), (int) ((startX + (imageWidth + 150) / 2) / 0.72F), (int) ((startY + 137) / 0.72F), 16777215);
                 poseStack.popPose();
             } else {
                 font.draw(poseStack, ChatColor.darkGray() + "Coming soon!", startX + 203, startY + 69, 16777215);
@@ -760,6 +679,23 @@ public class JobsScreen extends Screen {
         }
         mouseX = mouseX - startX;
         mouseY = mouseY - startY;
+
+        if (jobId >= 0) {
+            if (getSelectedJobLevel() != 0) {
+                if (isBetween(mouseX, mouseY, imageWidth, 6, imageWidth + 21, 31)) {
+                    if (jobId + 1 == array[62])
+                        Minecraft.getInstance().player.chat("command execute job display NONE");
+                    else Minecraft.getInstance().player.chat("/job display " + Jobs.getEnglishString(jobId));
+                    ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Minecraft.getInstance().player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                }
+                if (isBetween(mouseX, mouseY, imageWidth, 35, imageWidth + 21, 60)) {
+                    if (jobId == array[63]) Minecraft.getInstance().player.chat("/job progress NONE");
+                    else Minecraft.getInstance().player.chat("/job progress " + Jobs.getEnglishString(jobId));
+                    ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Minecraft.getInstance().player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                }
+            }
+        }
+
         //ALL JOBS BUTTON
         if (isBetween(mouseX, mouseY, 6, -22, 32, 0)) {
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -813,37 +749,22 @@ public class JobsScreen extends Screen {
                 if (isBetween(mouseX, mouseY, 169, 132, 169 + 138, 132 + 18)) {
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     if (getSelectedJobLevel() == 0) {
-                        if (array[21] <= 2) {
-                            Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to start performing this job?", "start", Jobs.getJobFromInt(jobId)));
+                        if (array[21] < 2) {
+                            openConfirmScreen(new TranslatableComponent("confirm.start"), "start");
                         } else {
-                            if (array[20] >= 10) {
-                                Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to start performing this job for " + 10 + " coins?", "start_paid", Jobs.getJobFromInt(jobId)));
-                            } else {
-                                Minecraft.getInstance().setScreen(new ConfirmationScreen("You do not have enough coins to start performing this job.", "not_enough_coins_start", Jobs.getJobFromInt(jobId)));
-                            }
+                            if (array[20] >= 10)
+                                openConfirmScreen(new TranslatableComponent("confirm.start_paid", 10), "start_paid");
+                            else
+                                openConfirmScreen(new TranslatableComponent("confirm.not_enough_coins_start"), "not_enough_coins_start");
+
                         }
                     } else if (getSelectedJobLevel() == 1) {
-                        Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to stop performing this job?", "stop_free", Jobs.getJobFromInt(jobId)));
+                        openConfirmScreen(new TranslatableComponent("confirm.stop_free"), "stop_free");
                     } else {
-                        if (array[20] >= 5) {
-                            Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to stop performing this job for " + 5 + " coins?", "stop", Jobs.getJobFromInt(jobId)));
-                        } else {
-                            Minecraft.getInstance().setScreen(new ConfirmationScreen("You do not have enough coins to stop performing this job.", "not_enough_coins_stop", Jobs.getJobFromInt(jobId)));
-                        }
-                    }
-                }
-                if (jobId >= 0) {
-                    if (array[jobId * 2] != 0) {
-                        if (isBetween(mouseX, mouseY, 305, 6, 320, 21)) {
-                            String menucommand = "/jobs menu " + jobId + " " + activeLeftButton + " " + activeRightButton + " " + selectedButton + " " + scrollOffs + " " + startIndex;
-                            if (jobId + 1 == array[62]) {
-                                Minecraft.getInstance().player.chat("command execute job display NONE");
-                                Minecraft.getInstance().player.chat(menucommand);
-                            } else {
-                                Minecraft.getInstance().player.chat("/job display " + Jobs.getString(jobId));
-                                Minecraft.getInstance().player.chat(menucommand);
-                            }
-                        }
+                        if (array[20] >= 5) openConfirmScreen(new TranslatableComponent("confirm.stop", 5), "stop");
+                        else
+                            openConfirmScreen(new TranslatableComponent("confirm.not_enough_coins_stop"), "not_enough_coins_stop");
+
                     }
                 }
             }
@@ -1037,38 +958,25 @@ public class JobsScreen extends Screen {
             }
             if (activeRightButton == 2) {
                 if (Minecraft.getInstance().player != null) {
-                    String menuCommand = "/jobs menu " + jobId + " " + activeLeftButton + " " + activeRightButton + " " + selectedButton + " " + scrollOffs + " " + startIndex;
-                    String powerupSwitchCommand = "/job powerups switch " + Jobs.getString(jobId);
-                    if (isBetween(mouseX, mouseY, 169, 27, 169 + 139, 27 + 18)) {
-                        if (array[21 + (jobId * 3) + 1] == 1 || array[21 + (jobId * 3) + 1] == 2) {
-                            Minecraft.getInstance().player.chat(powerupSwitchCommand + " 1");
-                            Minecraft.getInstance().player.chat(menuCommand);
+                    int clicked = 0;
+                    if (isBetween(mouseX, mouseY, 169, 27, 169 + 139, 27 + 18)) clicked = 1;
+                    if (isBetween(mouseX, mouseY, 169, 27 + 25, 169 + 139, 27 + 18 + 25)) clicked = 2;
+                    if (isBetween(mouseX, mouseY, 169, 27 + 50, 169 + 139, 27 + 18 + 50)) clicked = 3;
+                    if (clicked != 0) {
+                        if (array[21 + (jobId * 3) + clicked] == 1 || array[21 + (jobId * 3) + clicked] == 2) {
+                            Minecraft.getInstance().player.chat("/job powerups switch " + Jobs.getEnglishString(jobId) + " " + clicked);
+                            ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Minecraft.getInstance().player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
                         } else {
-                            Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to buy this power-up for 10 coins?", "powerup", Jobs.getJobFromInt(jobId), 1));
-                        }
-                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                    }
-                    if (isBetween(mouseX, mouseY, 169, 27 + 25, 169 + 139, 27 + 18 + 25)) {
-                        if (array[21 + (jobId * 3) + 2] == 1 || array[21 + (jobId * 3) + 2] == 2) {
-                            Minecraft.getInstance().player.chat(powerupSwitchCommand + " 2");
-                            Minecraft.getInstance().player.chat(menuCommand);
-                        } else {
-                            Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to buy this power-up for 10 coins?", "powerup", Jobs.getJobFromInt(jobId), 2));
-                        }
-                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                    }
-                    if (isBetween(mouseX, mouseY, 169, 27 + 50, 169 + 139, 27 + 18 + 50)) {
-                        if (array[21 + (jobId * 3) + 3] == 1 || array[21 + (jobId * 3) + 3] == 2) {
-                            Minecraft.getInstance().player.chat(powerupSwitchCommand + " 3");
-                            Minecraft.getInstance().player.chat(menuCommand);
-                        } else {
-                            Minecraft.getInstance().setScreen(new ConfirmationScreen("Are you sure you want to buy this power-up for 10 coins?", "powerup", Jobs.getJobFromInt(jobId), 3));
+                            if (getSelectedJobLevel() == 0)
+                                openConfirmScreen(new TranslatableComponent("confirm.job_not_enabled"), "job_not_enabled", clicked);
+                            else
+                                openConfirmScreen(new TranslatableComponent("confirm.powerup"), "powerup", clicked);
                         }
                         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     }
                     if (isBetween(mouseX, mouseY, 169, 27 + 103, 169 + 139, 27 + 18 + 103)) {
-                        Minecraft.getInstance().player.chat("/job superpower switch " + Jobs.getString(jobId));
-                        Minecraft.getInstance().player.chat(menuCommand);
+                        Minecraft.getInstance().player.chat("/job superpower switch " + Jobs.getEnglishString(jobId));
+                        ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Minecraft.getInstance().player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
                         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     }
                 }
@@ -1132,4 +1040,25 @@ public class JobsScreen extends Screen {
         return LevelHandler.calcExp(getSelectedJobLevel());
     }
 
+    public void openConfirmScreen(Component component, String string) {
+        Minecraft.getInstance().setScreen(new ConfirmationScreen(component, string, Jobs.getJobFromInt(jobId), activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+
+    }
+
+    public void openConfirmScreen(Component component, String string, int index) {
+        Minecraft.getInstance().setScreen(new ConfirmationScreen(component, string, Jobs.getJobFromInt(jobId), index, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+
+    }
+
+    private void drawNoJobSelected(PoseStack poseStack, String string) {
+        for (int i = 1; i < 6; i++) {
+            drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.no_job_selected." + string + "." + i).getString(), startX + (imageWidth + 150) / 2, startY + 42 + (i * 9), 16777215);
+        }
+    }
+
+    private void drawJobInfo(PoseStack poseStack) {
+        for (int i = 1; i < 10; i++) {
+            drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.info." + Jobs.getEnglishString(jobId).toLowerCase() + "." + i, "" + ChatColor.boldWhite(), "" + ChatColor.darkGray(), "" + ChatColor.boldWhite(), "" + ChatColor.darkGray()).getString(), startX + (imageWidth + 150) / 2, startY + 35 + (i * 9), 16777215);
+        }
+    }
 }

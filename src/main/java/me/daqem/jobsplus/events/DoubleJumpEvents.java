@@ -66,7 +66,7 @@ public class DoubleJumpEvents {
             if (!cancelPlayerFallDamage.contains(player)) cancelPlayerFallDamage.add(player);
             for (int x = -1; x <= 1; x++) {
                 for (int z = -1; z <= 1; z++) {
-                    serverWorld.sendParticles(serverPlayer, ParticleTypes.CLOUD, false, player.getX() + x < 0 ? x + 0.65 : x > 0 ? x - 0.65 : 0, player.getY(), player.getZ() + z < 0 ? z + 0.65 : z > 0 ? z - 0.65 : 0, 1, 0, 0, 0, 0);
+                    serverWorld.sendParticles(serverPlayer, ParticleTypes.CLOUD, false, player.getX() + (x < 0 ? x + 0.65 : x > 0 ? x - 0.65 : 0), player.getY(), player.getZ() + (z < 0 ? z + 0.65 : z > 0 ? z - 0.65 : 0), 1, 0, 0, 0, 0);
                 }
             }
             player.level.playSound(null, player.blockPosition(), SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 0.4F, 0.75F);

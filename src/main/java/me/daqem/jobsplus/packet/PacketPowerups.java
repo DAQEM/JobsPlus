@@ -31,13 +31,11 @@ public record PacketPowerups(String str, UUID uuid) {
             } else if (str.equals("disable_veinminer")) {
                 MinerEvents.veinMinerArray.remove(uuid);
             } else if (str.equals("doublejump")) {
-                if (!EventPlayerTick.doublejumpList.contains(uuid)) {
-                    EventPlayerTick.doublejumpList.add(uuid);
+                if (!EventPlayerTick.doubleJumpList.contains(uuid)) {
+                    EventPlayerTick.doubleJumpList.add(uuid);
                 }
             }
             context.get().setPacketHandled(true);
         }
     }
-
-
 }

@@ -86,6 +86,7 @@ public class ExpHandler {
                             " +" + exp + " EXP"), ChatType.GAME_INFO, player.getUUID());
                 }
             }
+            BossBarHandler.updateBossBar(player);
         }
     }
 }

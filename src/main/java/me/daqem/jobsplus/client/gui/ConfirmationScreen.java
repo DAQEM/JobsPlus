@@ -3,46 +3,72 @@ package me.daqem.jobsplus.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.handlers.ModPacketHandler;
+import me.daqem.jobsplus.packet.PacketOpenMenu;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.KeybindComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 
 public class ConfirmationScreen extends Screen {
 
     private static final Component TITLE = new KeybindComponent("Confirmation");
     private static final ResourceLocation BACKGROUND = JobsPlus.getId("textures/gui/confirmation_screen.png");
+    private static final String[] backButton = new String[]{"not_enough_coins_stop", "not_enough_coins_start", "not_enough_coins_powerup", "job_not_enabled"};
     private final int imageWidth = 300;
     private final int imageHeight = 50;
-    private final String confirmationText;
+    private final Component confirmationText;
     private final String action;
     private final Jobs job;
+    private final int activeLeftButton;
+    private final int activeRightButton;
+    private final int selectedButton;
+    private final float scrollOffs;
+    private final int startIndex;
     private int startX;
     private int startY;
     private int powerUp;
 
-
-    protected ConfirmationScreen(String confirmationText, String action, Jobs job) {
+    protected ConfirmationScreen(Component confirmationText, String action, Jobs job, int activeLeftButton, int activeRightButton, int selectedButton, float scrollOffs, int startIndex) {
         super(TITLE);
 
         this.confirmationText = confirmationText;
         this.action = action;
         this.job = job;
+        this.activeLeftButton = activeLeftButton;
+        this.activeRightButton = activeRightButton;
+        this.selectedButton = selectedButton;
+        this.scrollOffs = scrollOffs;
+        this.startIndex = startIndex;
     }
 
-    protected ConfirmationScreen(String confirmationText, String action, Jobs job, int powerUp) {
+    protected ConfirmationScreen(Component confirmationText, String action, Jobs job, int powerUp, int activeLeftButton, int activeRightButton, int selectedButton, float scrollOffs, int startIndex) {
         super(TITLE);
 
         this.confirmationText = confirmationText;
         this.action = action;
         this.job = job;
         this.powerUp = powerUp;
+        this.activeLeftButton = activeLeftButton;
+        this.activeRightButton = activeRightButton;
+        this.selectedButton = selectedButton;
+        this.scrollOffs = scrollOffs;
+        this.startIndex = startIndex;
+    }
+
+    public static void drawCenteredString(@NotNull PoseStack p_93209_, Font p_93210_, @NotNull Component p_93211_, int p_93212_, int p_93213_, int p_93214_) {
+        p_93210_.draw(p_93209_, p_93211_, (float) (p_93212_ - p_93210_.width(p_93211_) / 2), (float) p_93213_, p_93214_);
     }
 
     @Override
@@ -54,32 +80,24 @@ public class ConfirmationScreen extends Screen {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.setShaderTexture(0, BACKGROUND);
-        if (action.equals("stop_free") || action.equals("start"))
-            blit(poseStack, (this.width - 300) / 2, (this.height - 30) / 2, 0, 0, 300, 30, 300, 300 / 5 * 3);
-        else blit(poseStack, (this.width - 350) / 2, (this.height - 30) / 2, 0, 0, 350, 30, 350, 300 / 5 * 3);
+        int boxWidth = font.width(confirmationText) + 16;
+        blit(poseStack, (this.width - boxWidth) / 2, (this.height - 30) / 2, 0, 0, boxWidth, 30, boxWidth, 300 / 5 * 3);
         renderButtons(poseStack, mouseX, mouseY);
         poseStack.popPose();
-        switch (action) {
-            case "start" -> font.draw(poseStack, confirmationText, startX + 15, startY + 15, 16777215);
-            case "stop" -> font.draw(poseStack, confirmationText, startX - 13, startY + 15, 16777215);
-            case "stop_free" -> font.draw(poseStack, confirmationText, startX + 16, startY + 15, 16777215);
-            case "not_enough_coins_stop" -> font.draw(poseStack, confirmationText, startX, startY + 15, 16777215);
-            case "start_paid" -> font.draw(poseStack, confirmationText, startX - 18, startY + 15, 16777215);
-            case "not_enough_coins_start" -> font.draw(poseStack, confirmationText, startX - 1, startY + 15, 16777215);
-            case "powerup" -> font.draw(poseStack, confirmationText, startX, startY + 15, 16777215);
-        }
-        if (!action.equals("not_enough_coins_stop") && !action.equals("not_enough_coins_start") && !action.equals("not_enough_coins_powerup")) {
-            font.draw(poseStack, "Yes", startX + 102, startY + 33, 16777215);
-            font.draw(poseStack, "Cancel", startX + 174, startY + 33, 16777215);
+        drawCenteredString(poseStack, font, confirmationText, width / 2, startY + 15, 16777215);
+        if (!Arrays.stream(backButton).toList().contains(action)) {
+            // YES AND CANCEL BUTTON TEXT
+            drawCenteredString(poseStack, font, new TranslatableComponent("confirm.yes"), startX + (imageWidth / 2) - (75 / 2) - 3, startY + 33, 16777215);
+            drawCenteredString(poseStack, font, new TranslatableComponent("confirm.cancel"), startX + (imageWidth / 2) + 3 + (75 / 2), startY + 33, 16777215);
         } else {
-            // BACK BUTTON TEXT if NOT ENOUGH COINS
-            font.draw(poseStack, "Back", startX + 139, startY + 33, 16777215);
+            // BACK BUTTON TEXT
+            drawCenteredString(poseStack, font, new TranslatableComponent("confirm.back"), startX + (imageWidth / 2), startY + 33, 16777215);
         }
         super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
     private void renderButtons(PoseStack poseStack, int mouseX, int mouseY) {
-        if (!action.equals("not_enough_coins_stop") && !action.equals("not_enough_coins_start") && !action.equals("not_enough_coins_powerup")) {
+        if (!Arrays.stream(backButton).toList().contains(action)) {
             // YES BUTTON
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 - 78, imageHeight - 22, imageWidth / 2 - 4, imageHeight - 5)) {
                 RenderSystem.setShaderColor(0.6F, 0.6F, 1F, 1);
@@ -110,30 +128,30 @@ public class ConfirmationScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int p_94697_) {
-        if (!action.equals("not_enough_coins_stop") && !action.equals("not_enough_coins_start") && !action.equals("not_enough_coins_powerup")) {
-            int activeRightButton = 0;
-            if (action.equals("powerup")) activeRightButton = 2;
+        final LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return super.mouseClicked(mouseX, mouseY, p_94697_);
+        if (!Arrays.stream(backButton).toList().contains(action)) {
             // YES BUTTON
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 - 78, imageHeight - 22, imageWidth / 2 - 4, imageHeight - 5)) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 if (action.equals("start") || action.equals("start_paid"))
-                    Minecraft.getInstance().player.chat("/job start " + job.name() + " force");
+                    player.chat("/job start " + job.name() + " force");
                 if (action.equals("stop") || action.equals("stop_free"))
-                    Minecraft.getInstance().player.chat("/job stop " + job.name() + " force");
+                    player.chat("/job stop " + job.name() + " force");
                 if (action.equals("powerup"))
-                    Minecraft.getInstance().player.chat("/job powerups buy " + Jobs.getString(Jobs.getJobInt(job)) + " " + powerUp);
-                Minecraft.getInstance().player.chat("/jobs menu " + Jobs.getJobInt(job) + " 0 " + activeRightButton + " -1 0 0");
+                    player.chat("/job powerups buy " + job.name() + " " + powerUp);
+                ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(player.getUUID(), Jobs.getJobInt(job), activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
             }
             // CANCEL BUTTON
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 + 3, imageHeight - 22, imageWidth / 2 + 77, imageHeight - 5)) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                Minecraft.getInstance().player.chat("/jobs menu " + Jobs.getJobInt(job) + " 0 " + activeRightButton + " -1 0 0");
+                ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(player.getUUID(), Jobs.getJobInt(job), activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
             }
         } else {
             // BACK BUTTON if NOT ENOUGH COINS
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 - 38, imageHeight - 22, imageWidth / 2 + 36, imageHeight - 5)) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                Minecraft.getInstance().player.chat("/jobs menu -1 0 0 -1 0 0");
+                ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(player.getUUID(), Jobs.getJobInt(job), activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
             }
         }
         return super.mouseClicked(mouseX, mouseY, p_94697_);

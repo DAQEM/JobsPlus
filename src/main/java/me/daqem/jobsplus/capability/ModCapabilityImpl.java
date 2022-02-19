@@ -11,10 +11,11 @@ public class ModCapabilityImpl implements IModCapability {
 
     public static final ResourceLocation ID = JobsPlus.getId("jobs");
 
-    public static Capability<IModCapability> MOD_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static Capability<IModCapability> MOD_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     private int[] farmerMap = new int[]{0, 0, 0, 0, 0};
-    private int[] butcherMap = new int[]{0, 0, 0, 0, 0};
+    private int[] settingsMap = new int[]{0, 0, 0, 0, 0};
     private int[] minerMap = new int[]{0, 0, 0, 0, 0};
     private int[] lumberjackMap = new int[]{0, 0, 0, 0, 0};
     private int[] builderMap = new int[]{0, 0, 0, 0, 0};
@@ -41,13 +42,13 @@ public class ModCapabilityImpl implements IModCapability {
     }
 
     @Override
-    public int[] getButcher() {
-        return this.butcherMap;
+    public int[] getSettings() {
+        return this.settingsMap;
     }
 
     @Override
-    public void setButcher(int[] value) {
-        this.butcherMap = value;
+    public void setSettings(int[] value) {
+        this.settingsMap = value;
     }
 
     @Override
@@ -151,33 +152,49 @@ public class ModCapabilityImpl implements IModCapability {
     }
 
     @Override
-    public int getCoins() { return this.coins; }
+    public int getCoins() {
+        return this.coins;
+    }
 
     @Override
-    public void setCoins(int value) { this.coins = value; }
+    public void setCoins(int value) {
+        this.coins = value;
+    }
 
     @Override
-    public int[] getVerification() { return this.verification; }
+    public int[] getVerification() {
+        return this.verification;
+    }
 
     @Override
-    public void setVerification(int[] value) { this.verification = value; }
+    public void setVerification(int[] value) {
+        this.verification = value;
+    }
 
     @Override
-    public int[] getSelector() { return this.selector; }
+    public int[] getSelector() {
+        return this.selector;
+    }
 
     @Override
-    public void setSelector(int[] value) { this.selector = value; }
+    public void setSelector(int[] value) {
+        this.selector = value;
+    }
 
     @Override
-    public int getDisplay() { return display; }
+    public int getDisplay() {
+        return display;
+    }
 
     @Override
-    public void setDisplay(int value) { this.display = value; }
+    public void setDisplay(int value) {
+        this.display = value;
+    }
 
     @Override
     public void copyForRespawn(ModCapabilityImpl oldStore) {
         this.farmerMap = oldStore.farmerMap;
-        this.butcherMap = oldStore.butcherMap;
+        this.settingsMap = oldStore.settingsMap;
         this.minerMap = oldStore.minerMap;
         this.lumberjackMap = oldStore.lumberjackMap;
         this.builderMap = oldStore.builderMap;
@@ -197,7 +214,7 @@ public class ModCapabilityImpl implements IModCapability {
     public CompoundTag serializeNBT() {
         final CompoundTag nbt = new CompoundTag();
         nbt.putIntArray("farmer", this.getFarmer());
-        nbt.putIntArray("butcher", this.getButcher());
+        nbt.putIntArray("butcher", this.getSettings());
         nbt.putIntArray("miner", this.getMiner());
         nbt.putIntArray("lumberjack", this.getLumberjack());
         nbt.putIntArray("builder", this.getBuilder());
@@ -217,7 +234,7 @@ public class ModCapabilityImpl implements IModCapability {
 
     public void deserializeNBT(CompoundTag nbt) {
         this.setFarmer(nbt.getIntArray("farmer"));
-        this.setButcher(nbt.getIntArray("butcher"));
+        this.setSettings(nbt.getIntArray("butcher"));
         this.setMiner(nbt.getIntArray("miner"));
         this.setLumberjack(nbt.getIntArray("lumberjack"));
         this.setBuilder(nbt.getIntArray("builder"));

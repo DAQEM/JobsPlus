@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.handlers;
 
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.packet.PacketOpenMenu;
 import me.daqem.jobsplus.packet.PacketPowerups;
 import me.daqem.jobsplus.packet.PacketSendMainMenuData;
 import net.minecraft.client.player.LocalPlayer;
@@ -21,6 +22,7 @@ public class ModPacketHandler {
         int id = 0;
         INSTANCE.registerMessage(++id, PacketSendMainMenuData.class, PacketSendMainMenuData::encode, PacketSendMainMenuData::decode, PacketSendMainMenuData::handle);
         INSTANCE.registerMessage(++id, PacketPowerups.class, PacketPowerups::encode, PacketPowerups::decode, PacketPowerups::handle);
+        INSTANCE.registerMessage(++id, PacketOpenMenu.class, PacketOpenMenu::encode, PacketOpenMenu::decode, PacketOpenMenu::handle);
     }
 
     public static void sendPowerupPacket(String str, LocalPlayer player) {

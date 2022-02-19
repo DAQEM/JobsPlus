@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.utils;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
 import me.daqem.jobsplus.utils.enums.CapType;
@@ -200,5 +201,35 @@ public class JobGetters {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         player.getCapability(SuperPowerCapabilityImpl.SUPERPOWER_CAPABILITY).ifPresent(handler -> atomicBoolean.set(getSuperPower(player, job) == 0 && JobGetters.getJobLevel(player, job) == 100));
         return atomicBoolean.get();
+    }
+
+    public static int getActiveBossBar(Player player) {
+        if (player.getServer() != null) {
+            for (Jobs job : Jobs.values()) {
+                if (player.getServer().getCustomBossEvents().get(JobsPlus.getId(player.getUUID() + "-" + job.get())) != null)
+                    return job.get();
+            }
+        }
+        return -1;
+    }
+
+    public static int[] getAllSettings(Player player) {
+        AtomicInteger expHotbarSetting = new AtomicInteger(), levelUpNotificationSetting = new AtomicInteger(), three = new AtomicInteger(), four = new AtomicInteger(), five = new AtomicInteger();
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            expHotbarSetting.set(handler.getSettings()[0]);
+            levelUpNotificationSetting.set(handler.getSettings()[1]);
+            three.set(handler.getSettings()[2]);
+            four.set(handler.getSettings()[3]);
+            five.set(handler.getSettings()[4]);
+        });
+        return new int[]{expHotbarSetting.get(), levelUpNotificationSetting.get(), three.get(), four.get(), five.get()};
+    }
+
+    public static boolean getEXPHotBarSetting(Player player) {
+        return getAllSettings(player)[0] == 0;
+    }
+
+    public static boolean getLevelUpNotificationSetting(Player player) {
+        return getAllSettings(player)[1] == 0;
     }
 }

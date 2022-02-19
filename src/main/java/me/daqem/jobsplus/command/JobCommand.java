@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
+import me.daqem.jobsplus.handlers.BossBarHandler;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.utils.JobGetters;
@@ -15,6 +16,7 @@ import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.server.command.EnumArgument;
 
@@ -170,8 +172,36 @@ public class JobCommand {
                                         context.getSource(),
                                         null)))
                         .executes(context -> admin(context.getSource())))
+                .then(Commands.literal("progress")
+                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+                                .executes(context -> setProgress(
+                                        context.getSource(),
+                                        context.getArgument("job", Jobs.class),
+                                        true
+                                )))
+                        .then(Commands.literal("NONE")
+                                .executes(context -> setProgress(
+                                        context.getSource(),
+                                        null,
+                                        false
+                                ))))
                 .executes(context -> help(context.getSource())));
 
+    }
+
+    private static int setProgress(CommandSourceStack source, Jobs job, boolean notNone) {
+        if (source.getEntity() instanceof Player player && player.getServer() != null) {
+            if (notNone) {
+                if (JobGetters.jobIsEnabled(player, job)) {
+                    BossBarHandler.createBossBar(player, job);
+                } else {
+                    ChatHandler.sendMessage(player, new TranslatableComponent("error.job.not_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
+                }
+            } else {
+                BossBarHandler.removeAllActiveBossBars(player, player.getServer().getCustomBossEvents());
+            }
+        }
+        return 1;
     }
 
     private static int switchJobPowerUps(CommandSourceStack source, Jobs job, int powerUp) {
@@ -184,8 +214,7 @@ public class JobCommand {
                     JobSetters.setPowerUp(job, player, powerUp, 1);
                 }
             } else {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "You have not bought this power-up yet.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.powerup.not_bought", ChatColor.boldDarkRed(), ChatColor.red()).getString());
             }
         }
         return 1;
@@ -200,8 +229,7 @@ public class JobCommand {
                     JobSetters.setSuperPower(player, job, 0);
                 }
             } else {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "You must be level 100 to perform this action.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.level.must_be_100", ChatColor.boldDarkRed(), ChatColor.red()).getString());
             }
         }
         return 1;
@@ -365,8 +393,6 @@ public class JobCommand {
 
     private static int jobInfo(CommandSourceStack source, Jobs job) {
         if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                    "[JOBS+] " + ChatColor.red() + "This command is not done yet.");
             //TODO JOB INFO
         }
         return 1;
@@ -400,16 +426,14 @@ public class JobCommand {
                     if (JobGetters.getAmountOfEnabledJobs(player) == 1) JobSetters.setDisplay(player, job.get());
                 } else {
                     if (JobGetters.getCoins(player) < 10) {
-                        ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                                "[JOBS+] " + ChatColor.red() + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                        ChatHandler.sendMessage(player, new TranslatableComponent("error.coins.not_enough.need_10", ChatColor.boldDarkRed(), ChatColor.red()).getString());
                     } else {
                         JobSetters.setLevel(job, player, 1);
                         JobSetters.removeCoins(player, 10);
                     }
                 }
             } else {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "You are already performing this job.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.job.already_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
             }
         }
         return 1;
@@ -445,16 +469,14 @@ public class JobCommand {
                         JobSetters.set(job, player, 0, 0, 0, 0, 0);
                         JobSetters.removeCoins(player, 5);
                     } else {
-                        ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                                "[JOBS+] " + ChatColor.red() + "You need 5 job-coins to stop a job.");
+                        ChatHandler.sendMessage(player, new TranslatableComponent("error.coins.need_5_to_stop_job", ChatColor.boldDarkRed(), ChatColor.red()).getString());
                     }
                 }
                 if (job.get() + 1 == JobGetters.getDisplay(player)) {
                     JobSetters.setDisplay(player, -1);
                 }
             } else {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "You are not performing this job.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.powerup.not_bought", ChatColor.boldDarkRed(), ChatColor.red()).getString());
             }
         }
         return 1;
@@ -477,8 +499,7 @@ public class JobCommand {
                             "[JOBS+] " + ChatColor.red() + "You have already bought this power-up.");
                 }
             } else {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "You are not performing this job.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.job.not_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
             }
         }
         return 1;
@@ -486,8 +507,6 @@ public class JobCommand {
 
     private static int jobCrafting(CommandSourceStack source, Jobs job) {
         if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                    "[JOBS+] " + ChatColor.red() + "This command is not done yet.");
             //TODO JOB CRAFTING
         }
         return 1;
@@ -498,8 +517,7 @@ public class JobCommand {
             if (JobGetters.jobIsEnabled(player, job)) {
                 JobSetters.setDisplay(player, job.get());
             } else {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "You are not performing this job.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.job.not_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
             }
         }
         return 1;
@@ -559,7 +577,7 @@ public class JobCommand {
                     ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "-level to " + level);
             ChatHandler.sendMessage(player, ChatHandler.footer(9));
             JobSetters.setLevel(job, target, level);
-
+            BossBarHandler.updateBossBar(player);
         }
         return 1;
     }
@@ -567,20 +585,17 @@ public class JobCommand {
     private static int setEXP(CommandSourceStack source, Player target, Jobs job, int exp) {
         if (source.getEntity() instanceof Player player) {
             if (JobGetters.getJobLevel(player, job) == 0) {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "Cannot set job-EXP because the job-level is 0.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.exp.level_is_0", ChatColor.boldDarkRed(), ChatColor.red()).getString());
                 return 1;
             }
             int maxJobEXP = LevelHandler.calcExp(JobGetters.getJobLevel(target, job)) - 1;
             if (exp > maxJobEXP) {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "The exp cannot be higher than the " +
-                        "max job-exp for this level. Max: " + maxJobEXP + ".");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.exp.cannot_be_higher_than_max", ChatColor.boldDarkRed(), ChatColor.red(), maxJobEXP).getString());
                 return 1;
             }
             if (exp < 0) {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "The exp cannot be negative.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.exp.cannot_be_negative", ChatColor.boldDarkRed(), ChatColor.red()).getString());
+
                 return 1;
             }
             ChatHandler.sendMessage(player, ChatHandler.header("SET EXP"));
@@ -588,6 +603,7 @@ public class JobCommand {
                     ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "-EXP to " + exp);
             ChatHandler.sendMessage(player, ChatHandler.footer(7));
             JobSetters.setEXP(job, target, exp);
+            BossBarHandler.updateBossBar(player);
         }
         return 1;
     }
@@ -595,8 +611,7 @@ public class JobCommand {
     private static int setCoins(CommandSourceStack source, Player target, int coins) {
         if (source.getEntity() instanceof Player player) {
             if (coins < 0) {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "The coins cannot be negative.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.coins.cannot_be_negative", ChatColor.boldDarkRed(), ChatColor.red()).getString());
                 return 1;
             }
             target.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
@@ -619,8 +634,7 @@ public class JobCommand {
                 ChatHandler.sendMessage(player, ChatHandler.footer(11));
                 JobSetters.setDisplay(target, job.get());
             } else {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + target.getScoreboardName() + " is not performing this job.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.job.target_not_performing", ChatColor.boldDarkRed(), ChatColor.red(), target.getScoreboardName()).getString());
             }
         }
         return 1;
@@ -712,8 +726,7 @@ public class JobCommand {
                     /* Has to pay for job */
                 } else {
                     if (coins < 10) {
-                        ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                                "[JOBS+] " + ChatColor.red() + "You do not have enough job-coins. You need 10 job-coins to start another job.");
+                        ChatHandler.sendMessage(player, new TranslatableComponent("error.coins.not_enough.need_10", ChatColor.boldDarkRed(), ChatColor.red()).getString());
                     } else {
                         JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
                         JobSetters.setSelector(player, capType.get());
@@ -729,12 +742,10 @@ public class JobCommand {
                     }
                 }
             } else {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "You are already performing another operation.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.operation.already_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
             }
         } else {
-            ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                    "[JOBS+] " + ChatColor.red() + "You are already performing this job.");
+            ChatHandler.sendMessage(player, new TranslatableComponent("error.job.already_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
         }
     }
 
@@ -767,17 +778,14 @@ public class JobCommand {
                                     ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? This will cost 5 job-coins. Say yes in chat.");
                         }
                     } else {
-                        ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                                "[JOBS+] " + ChatColor.red() + "You need 5 job-coins to stop a job.");
+                        ChatHandler.sendMessage(player, new TranslatableComponent("error.coins.need_5_to_stop_job", ChatColor.boldDarkRed(), ChatColor.red()).getString());
                     }
                 }
             } else {
-                ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                        "[JOBS+] " + ChatColor.red() + "You are already performing another operation.");
+                ChatHandler.sendMessage(player, new TranslatableComponent("error.operation.already_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
             }
         } else {
-            ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                    "[JOBS+] " + ChatColor.red() + "You are not performing this job.");
+            ChatHandler.sendMessage(player, new TranslatableComponent("error.job.not_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
         }
     }
 }

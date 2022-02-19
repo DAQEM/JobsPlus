@@ -1,5 +1,7 @@
 package me.daqem.jobsplus.utils.enums;
 
+import net.minecraft.network.chat.TranslatableComponent;
+
 public enum Jobs {
     ALCHEMIST(0),
     BUILDER(1),
@@ -19,6 +21,15 @@ public enum Jobs {
     }
 
     public static String getString(int value) {
+        for (Jobs jobs : Jobs.values()) {
+            if (value == jobs.get()) {
+                return new TranslatableComponent("job." + jobs.name().toLowerCase()).getString();
+            }
+        }
+        return "";
+    }
+
+    public static String getEnglishString(int value) {
         for (Jobs jobs : Jobs.values()) {
             if (value == jobs.get()) {
                 return jobs.name();
