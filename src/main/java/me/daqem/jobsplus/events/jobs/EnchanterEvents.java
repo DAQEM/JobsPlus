@@ -29,6 +29,7 @@ public class EnchanterEvents {
 
     private final Map<Player, ArrayList<Object>> multiMap = new HashMap<>();
     private final Jobs job = Jobs.ENCHANTER;
+    private final ArrayList<Player> matrixList = new ArrayList<>();
 
     @SubscribeEvent
     public void onEnchant(TickEvent.PlayerTickEvent event) {
@@ -77,6 +78,19 @@ public class EnchanterEvents {
                 }
                 if (!containerMenu.getSlot(0).getItem().isEnchanted() && !containerMenu.getSlot(0).getItem().getOrCreateTag().contains("StoredEnchantments")) {
                     multiMap.put(player, new ArrayList<>(List.of(false, lapisCount)));
+                }
+            } else if (containerMenu.toString().contains("MatrixEnchantingMenu")) {
+                if (containerMenu.getSlot(0).hasItem() && containerMenu.getSlot(2).hasItem()) {
+                    if (!this.matrixList.contains(player)) this.matrixList.add(player);
+                } else {
+                    if (matrixList.contains(player)) {
+                        if (!containerMenu.getSlot(0).hasItem() && !containerMenu.getSlot(2).hasItem()) {
+                            if (containerMenu.getCarried().isEnchanted()) {
+                                ExpHandler.addEXPTwoLapis(player, job);
+                            }
+                        }
+                    }
+                    this.matrixList.remove(player);
                 }
             }
         }
