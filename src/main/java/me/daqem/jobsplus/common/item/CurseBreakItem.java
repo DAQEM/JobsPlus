@@ -29,7 +29,7 @@ public class CurseBreakItem extends Item {
         if (Screen.hasShiftDown()) {
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + 35));
+            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + 10));
             tooltip.add(new KeybindComponent(" "));
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "About:"));
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Combine this item with an item containing a curse in an anvil to remove the curses."));

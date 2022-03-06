@@ -30,45 +30,46 @@ public class BuilderEvents {
     public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
         if (!event.getWorld().isClientSide()) {
             if (event.getEntity() instanceof Player player) {
-                if (!player.isCreative()) {
-                    if (JobGetters.jobIsEnabled(player, Jobs.BUILDER)) {
-                        Block block = event.getPlacedBlock().getBlock();
-                        ArrayList<String> bannedBlocks = new ArrayList<>(List.of("cobblestone", "farmland"));
-                        if (!bannedBlocks.contains(block.getDescriptionId().replace("block.minecraft.", ""))
-                                && event.getPlacedBlock().getMaterial().isSolid()
-                                && !block.getDescriptionId().endsWith(".twig")) {
-                            float destroySpeed = event.getPlacedBlock().getDestroySpeed(player.level, event.getPos());
-                            if (destroySpeed <= 2.5) {
-                                ExpHandler.addEXPLowest(player, Jobs.BUILDER);
-                            }
-                            if (destroySpeed <= 5) {
-                                ExpHandler.addEXPLow(player, Jobs.BUILDER);
-                            } else {
-                                ExpHandler.addEXPMid(player, Jobs.BUILDER);
-                            }
+                if (player.isCreative()) return;
+                if (player.getMainHandItem().getDescriptionId().contains("structurize")
+                        || player.getOffhandItem().getDescriptionId().contains("structurize")) return;
+                if (JobGetters.jobIsEnabled(player, Jobs.BUILDER)) {
+                    Block block = event.getPlacedBlock().getBlock();
+                    ArrayList<String> bannedBlocks = new ArrayList<>(List.of("cobblestone", "farmland"));
+                    if (!bannedBlocks.contains(block.getDescriptionId().replace("block.minecraft.", ""))
+                            && event.getPlacedBlock().getMaterial().isSolid()
+                            && !block.getDescriptionId().endsWith(".twig")) {
+                        float destroySpeed = event.getPlacedBlock().getDestroySpeed(player.level, event.getPos());
+                        if (destroySpeed <= 2.5) {
+                            ExpHandler.addEXPLowest(player, Jobs.BUILDER);
                         }
-                        if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWERUP2.get())) {
-                            for (ItemStack item : player.getInventory().items) {
-                                if (!Objects.equals(item.getItem(), Items.AIR)) {
-                                    if (item.getItem() instanceof BackpackItem) {
-                                        BackpackSavedData data = BackpackItem.getData(item);
-                                        for (int i = 0; i < Objects.requireNonNull(data).getHandler().getSlots(); ++i) {
-                                            ItemStack itemInBackpack = data.getHandler().getStackInSlot(i);
+                        if (destroySpeed <= 5) {
+                            ExpHandler.addEXPLow(player, Jobs.BUILDER);
+                        } else {
+                            ExpHandler.addEXPMid(player, Jobs.BUILDER);
+                        }
+                    }
+                    if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWERUP2.get())) {
+                        for (ItemStack item : player.getInventory().items) {
+                            if (!Objects.equals(item.getItem(), Items.AIR)) {
+                                if (item.getItem() instanceof BackpackItem) {
+                                    BackpackSavedData data = BackpackItem.getData(item);
+                                    for (int i = 0; i < Objects.requireNonNull(data).getHandler().getSlots(); ++i) {
+                                        ItemStack itemInBackpack = data.getHandler().getStackInSlot(i);
 
-                                            if (itemInBackpack.getItem() == player.getInventory().getSelected().getItem()) {
-                                                if (!giveBlockBack(player, block)) {
-                                                    itemInBackpack.setCount(itemInBackpack.getCount() - 1);
-                                                }
-                                                giveItemBack(player, block);
-                                                return;
+                                        if (itemInBackpack.getItem() == player.getInventory().getSelected().getItem()) {
+                                            if (!giveBlockBack(player, block)) {
+                                                itemInBackpack.setCount(itemInBackpack.getCount() - 1);
                                             }
+                                            giveItemBack(player, block);
+                                            return;
                                         }
                                     }
                                 }
                             }
-                        } else {
-                            giveBlockBack(player, block);
                         }
+                    } else {
+                        giveBlockBack(player, block);
                     }
                 }
             }

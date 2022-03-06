@@ -203,6 +203,7 @@ public class SmithEvents {
         ItemStack out = new ItemStack(Items.ENCHANTED_BOOK);
         if (left.isEmpty() || right.isEmpty()) return;
         if (!EnchantmentHelper.getEnchantments(right).isEmpty()) return;
+        if (right.getItem() != Items.BOOK) return;
         final Map<Enchantment, Integer> enchantmentsLeft = EnchantmentHelper.getEnchantments(left);
         if (enchantmentsLeft.isEmpty()) return;
         EnchantmentHelper.setEnchantments(enchantmentsLeft, out);
