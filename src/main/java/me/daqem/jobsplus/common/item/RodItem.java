@@ -4,9 +4,10 @@ import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.entity.ModFishingHook;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
+import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.TranslatableString;
-import me.daqem.jobsplus.utils.enums.ChatColor;
+import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -18,18 +19,23 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class RodItem extends FishingRodItem {
+
+    private long lastUsedTime = 0;
 
     public RodItem(Properties properties) {
         super(properties.tab(JobsPlus.TAB));
@@ -39,6 +45,7 @@ public class RodItem extends FishingRodItem {
         ItemStack itemstack = player.getItemInHand(hand);
         Jobs job = Jobs.FISHERMAN;
         int jobLevel = JobGetters.getJobLevel(player, job);
+        final FishingHook fishing = player.fishing;
         if (JobGetters.jobIsEnabled(player, job)) {
             boolean isAllowedToUseRod = itemstack.getItem() == ModItems.FISHERMANS_ROD_LEVEL_1.get() && jobLevel >= 5;
             if (itemstack.getItem() == ModItems.FISHERMANS_ROD_LEVEL_2.get() && jobLevel >= 25)
@@ -48,9 +55,9 @@ public class RodItem extends FishingRodItem {
             if (itemstack.getItem() == ModItems.FISHERMANS_ROD_LEVEL_4.get() && jobLevel >= 75)
                 isAllowedToUseRod = true;
             if (isAllowedToUseRod) {
-                if (player.fishing != null) {
+                if (fishing != null) {
                     if (!level.isClientSide) {
-                        int i = player.fishing.retrieve(itemstack);
+                        int i = fishing.retrieve(itemstack);
                         itemstack.hurtAndBreak(i, player, (player1) -> player1.broadcastBreakEvent(hand));
                     }
                     level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_RETRIEVE, SoundSource.NEUTRAL, 1.0F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
@@ -73,6 +80,22 @@ public class RodItem extends FishingRodItem {
             if (!level.isClientSide)
                 HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
         }
+
+        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP3.get())) {
+            if (fishing != null && fishing.tickCount != 0 && !level.isClientSide) {
+                if (lastUsedTime + 2000 < System.currentTimeMillis() || player.isCreative()) {
+                    if (level.getBlockState(fishing.blockPosition()) == Blocks.AIR.defaultBlockState()) {
+                        player.setDeltaMovement((fishing.position().x - player.position().x) / 2, 1.1, (fishing.position().z - player.position().z) / 2);
+                        player.hurtMarked = true;
+                        lastUsedTime = System.currentTimeMillis();
+                        player.addTag("cancelFallDamageForFisherman");
+                    }
+                } else {
+                    HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "Cooldown: " + new DecimalFormat("0.00").format((double) ((lastUsedTime - System.currentTimeMillis()) + 2000) / 1000) + "s");
+                }
+            }
+        }
+
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
 

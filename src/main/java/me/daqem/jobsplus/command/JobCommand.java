@@ -8,10 +8,10 @@ import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
 import me.daqem.jobsplus.handlers.BossBarHandler;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
+import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
 import me.daqem.jobsplus.utils.enums.CapType;
-import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -571,20 +571,20 @@ public class JobCommand {
 
     private static int setLevel(CommandSourceStack source, Player target, Jobs job, int level) {
         if (source.getEntity() instanceof Player player) {
-            if (level == 0) JobSetters.set(job, player, 0, 0, 0, 0, 0);
+            if (level == 0) JobSetters.set(job, target, 0, 0, 0, 0, 0);
             ChatHandler.sendMessage(player, ChatHandler.header("SET LEVEL"));
             ChatHandler.sendMessage(player, ChatColor.green() + "Set " + target.getScoreboardName() + "s " +
                     ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "-level to " + level);
             ChatHandler.sendMessage(player, ChatHandler.footer(9));
             JobSetters.setLevel(job, target, level);
-            BossBarHandler.updateBossBar(player);
+            BossBarHandler.updateBossBar(target);
         }
         return 1;
     }
 
     private static int setEXP(CommandSourceStack source, Player target, Jobs job, int exp) {
         if (source.getEntity() instanceof Player player) {
-            if (JobGetters.getJobLevel(player, job) == 0) {
+            if (JobGetters.getJobLevel(target, job) == 0) {
                 ChatHandler.sendMessage(player, new TranslatableComponent("error.exp.level_is_0", ChatColor.boldDarkRed(), ChatColor.red()).getString());
                 return 1;
             }
@@ -603,7 +603,7 @@ public class JobCommand {
                     ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "-EXP to " + exp);
             ChatHandler.sendMessage(player, ChatHandler.footer(7));
             JobSetters.setEXP(job, target, exp);
-            BossBarHandler.updateBossBar(player);
+            BossBarHandler.updateBossBar(target);
         }
         return 1;
     }

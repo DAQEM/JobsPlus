@@ -10,6 +10,7 @@ import me.daqem.jobsplus.events.item.FarmersHoeEvents;
 import me.daqem.jobsplus.events.jobs.*;
 import me.daqem.jobsplus.handlers.ModPacketHandler;
 import me.daqem.jobsplus.init.*;
+import me.daqem.jobsplus.utils.HeadData;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -69,6 +70,7 @@ public class SideProxy {
         eventBus.addListener(ModDataGenerator::gatherData);
 
         ModPacketHandler.init();
+        HeadData.loadHeadData();
     }
 
     @SubscribeEvent
@@ -94,13 +96,14 @@ public class SideProxy {
             IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
             MinecraftForge.EVENT_BUS.register(new EventKeyInput());
             eventBus.addListener(this::clientStuff);
+            eventBus.addListener(ModItemProperties::clientSetupHandler);
         }
 
         private void clientStuff(final FMLClientSetupEvent event) {
             MenuScreens.register(ModContainers.BACKPACK_CONTAINER.get(), BackpackGUI::new);
             EntityRenderers.register(ModEntities.FISHING_BOBBER.get(), ModFishingHookRenderer::new);
             EntityRenderers.register(ModEntities.EXPERIENCE_BOTTLE.get(), ThrownItemRenderer::new);
-            ModItemProperties.register();
+
             ClientRegistry.registerKeyBinding(OPEN_GUI_KEYBIND);
             ClientRegistry.registerKeyBinding(VEIN_MINER_KEYBIND);
             ClientRegistry.registerKeyBinding(DOUBLE_JUMP_KEYBIND);

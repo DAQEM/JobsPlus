@@ -4,9 +4,11 @@ import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.ModPacketHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.packet.PacketSendMainMenuData;
+import me.daqem.jobsplus.packet.PacketUserSettingsClient;
+import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.JobSetters;
 import me.daqem.jobsplus.utils.enums.CapType;
-import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -28,19 +30,49 @@ public class EventPlayerTick {
     public static HashMap<Player, Integer> levelUpHashMap = new HashMap<>();
     public static ArrayList<UUID> doubleJumpList = new ArrayList<>();
     public static Map<UUID, Map<Float, int[]>> openMenuMap = new HashMap<>();
+    public static Map<UUID, String> settingsMap = new HashMap<>();
+
+    public static ArrayList<UUID> setHotBarEXPSetting = new ArrayList<>();
+    public static ArrayList<UUID> setLevelUpSound = new ArrayList<>();
+    public static ArrayList<UUID> setLevelUpChat = new ArrayList<>();
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side == LogicalSide.SERVER) {
             Player player = event.player;
-            if (doubleJumpList.contains(player.getUUID())) {
+            final UUID uuid = player.getUUID();
+
+            if (doubleJumpList.contains(uuid)) {
                 DoubleJumpEvents.attemptPlayerJump(player, new int[]{JobGetters.hasSuperPowerEnabled(player, Jobs.BUILDER) ? 1 : 0, JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWERUP3.get()) ? 1 : 0});
-                doubleJumpList.remove(player.getUUID());
+                doubleJumpList.remove(uuid);
             }
 
-            if (openMenuMap.containsKey(player.getUUID())) {
+            if (settingsMap.containsKey(uuid)) {
+                ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), settingsMap.get(uuid)));
+                settingsMap.remove(uuid);
+            }
+
+            if (setHotBarEXPSetting.contains(uuid)) {
+                JobSetters.setEXPHotBarSetting(player, JobGetters.getEXPHotBarSetting(player) == 0 ? 1 : 0);
+                ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), "HOTBAR"));
+                setHotBarEXPSetting.remove(uuid);
+            }
+
+            if (setLevelUpSound.contains(uuid)) {
+                JobSetters.setLevelUpSoundSetting(player, JobGetters.getLevelUpSoundSetting(player) == 0 ? 1 : 0);
+                ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), "LEVEL_UP"));
+                setLevelUpSound.remove(uuid);
+            }
+
+            if (setLevelUpChat.contains(uuid)) {
+                JobSetters.setLevelUpChatSetting(player, JobGetters.getLevelUpChatSetting(player) == 0 ? 1 : JobGetters.getLevelUpChatSetting(player) == 1 ? 2 : 0);
+                ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), "LEVEL_UP"));
+                setLevelUpChat.remove(uuid);
+            }
+
+            if (openMenuMap.containsKey(uuid)) {
                 AtomicReference<Float> scrollOffset = new AtomicReference<>((float) 0);
-                final Map<Float, int[]> map = openMenuMap.get(player.getUUID());
+                final Map<Float, int[]> map = openMenuMap.get(uuid);
                 map.forEach((key, value) -> scrollOffset.set(key));
                 int[] array = map.get(scrollOffset.get());
                 ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new PacketSendMainMenuData(new int[]{
@@ -92,7 +124,7 @@ public class EventPlayerTick {
                         JobGetters.getSuperPower(player, Jobs.MINER), JobGetters.getSuperPower(player, Jobs.SMITH),
                         JobGetters.getDisplay(player), JobGetters.getActiveBossBar(player)
                 }, array[0], array[1], array[2], array[3], scrollOffset.get(), array[4]));
-                openMenuMap.remove(player.getUUID());
+                openMenuMap.remove(uuid);
             }
 
             if (event.phase == TickEvent.Phase.START) {

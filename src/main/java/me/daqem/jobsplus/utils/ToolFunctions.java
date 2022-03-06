@@ -6,11 +6,14 @@ import me.daqem.jobsplus.events.jobs.DiggerEvents;
 import me.daqem.jobsplus.events.jobs.MinerEvents;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
+import me.daqem.jobsplus.handlers.MobEffectHandler;
+import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -54,7 +57,7 @@ public class ToolFunctions {
                                 minerExp += ExpHandler.getEXPLowest();
                             } else if (block instanceof OreBlock) {
                                 minerExp += ExpHandler.getEXPMid();
-                            } else if (MinerEvents.lowList.contains(blockString)) {
+                            } else if (MinerEvents.lowList.contains(blockString) || BlockTags.TERRACOTTA.contains(block)) {
                                 minerExp += ExpHandler.getEXPLow();
                             }
                             player.awardStat(Stats.BLOCK_MINED.get(block));
@@ -75,11 +78,19 @@ public class ToolFunctions {
                     level.removeBlock(pos, false);
 
                     if (!player.isCreative()) {
-                        BlockPos offsetPos = new BlockPos(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
                         int bonusLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
                         int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
                         final List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
-                        dropItems(level, ItemHandler.smeltedRawMaterials(player, drops), offsetPos, state.getExpDrop(level, pos, bonusLevel, silkLevel));
+                        final List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops);
+                        final int exp = state.getExpDrop(level, pos, bonusLevel, silkLevel);
+                        if (JobGetters.hasEnabledPowerup(player, digger, CapType.POWERUP1.get())) {
+                            for (ItemStack itemStack : stacks) {
+                                ItemHandler.addItemsToInventoryOrDrop(itemStack, player, level, pos, exp);
+                            }
+                        } else {
+                            dropItems(level, stacks, pos, exp);
+                        }
+                        DiggerEvents.dropMinerals(player, level, pos);
                     }
 
                     if (damageTool) {
@@ -90,26 +101,26 @@ public class ToolFunctions {
             }
             if (minerExp != 0) {
                 ExpHandler.addJobEXP(player, miner, minerExp);
-                MinerEvents.addPlayerPowerUpEffects(player, Jobs.MINER);
+                MobEffectHandler.addPlayerPowerUpEffects(player, miner);
             }
             if (diggerExp != 0) {
                 ExpHandler.addJobEXP(player, digger, diggerExp);
+                MobEffectHandler.addPlayerPowerUpEffects(player, digger);
             }
         }
     }
 
     public static List<BlockPos> getBreakBlocks(Level level, Player player, int radius, int mode) {
         ArrayList<BlockPos> potentialBrokenBlocks = new ArrayList<>();
-
         Vec3 eyePosition = player.getEyePosition(1);
         Vec3 rotation = player.getViewVector(1);
         Vec3 combined = eyePosition.add(rotation.x * 5, rotation.y * 5, rotation.z * 5);
-
         BlockHitResult rayTraceResult = level.clip(new ClipContext(eyePosition, combined, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
 
         if (rayTraceResult.getType() == BlockHitResult.Type.BLOCK) {
             Direction.Axis axis = rayTraceResult.getDirection().getAxis();
             ArrayList<BlockPos> positions = new ArrayList<>();
+            BlockPos origin = rayTraceResult.getBlockPos();
 
             for (int x = -radius; x <= radius; x++) {
                 for (int y = -radius; y <= radius; y++) {
@@ -118,8 +129,6 @@ public class ToolFunctions {
                     }
                 }
             }
-
-            BlockPos origin = rayTraceResult.getBlockPos();
             for (BlockPos pos : positions) {
                 if (mode == 0 || mode == 2) {
                     if (axis == Direction.Axis.Y) {

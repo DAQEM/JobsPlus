@@ -1,10 +1,11 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.handlers.ExperienceHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
+import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.TranslatableString;
-import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -27,17 +28,6 @@ public class EXPJarItem extends Item {
 
     public EXPJarItem(Properties properties) {
         super(properties);
-    }
-
-    private static int sum(int n, int a0, int d) {
-        return n * (2 * a0 + (n - 1) * d) / 2;
-    }
-
-    public static int getExperienceForLevel(int level) {
-        if (level == 0) return 0;
-        if (level <= 15) return sum(level, 7, 2);
-        if (level <= 30) return 315 + sum(level - 15, 37, 5);
-        return 1395 + sum(level - 30, 112, 9);
     }
 
     @Override
@@ -67,8 +57,7 @@ public class EXPJarItem extends Item {
                             nbt.putInt("EXP", 0);
                         }
                     } else {
-//                        HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "This feature is temporarily disabled due to a bug.");
-                        int totalExperience = (int) (getExperienceForLevel(player.experienceLevel) + (player.experienceProgress * player.getXpNeededForNextLevel()));
+                        int totalExperience = (int) (ExperienceHandler.getExperienceForLevel(player.experienceLevel) + (player.experienceProgress * player.getXpNeededForNextLevel()));
                         if (stack.getOrCreateTag().contains("EXP")) {
                             nbt.putInt("EXP", nbt.getInt("EXP") + totalExperience);
                         } else {

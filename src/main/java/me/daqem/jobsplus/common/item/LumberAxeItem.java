@@ -2,11 +2,13 @@ package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
+import me.daqem.jobsplus.handlers.ItemHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.init.ModItems;
+import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.TranslatableString;
-import me.daqem.jobsplus.utils.enums.ChatColor;
+import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -36,7 +38,6 @@ import java.util.Objects;
 public class LumberAxeItem extends AxeItem {
 
     public static final int LOG_BREAK_DELAY = 1;
-    public static int mineRadius = 1, mineDepth = 0;
 
     public LumberAxeItem(Tier tier, int attackDamage, float attackSpeed, Properties properties) {
         super(tier, attackDamage, attackSpeed, properties);
@@ -50,7 +51,19 @@ public class LumberAxeItem extends AxeItem {
 
             if (isEffective && !witherImmune) {
                 level.destroyBlock(pos, false);
-                Block.dropResources(state, level, pos, null, player, player.getMainHandItem());
+                final Jobs job = Jobs.LUMBERJACK;
+
+                // Drop Extra Block
+                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP1.get()) && Math.random() * 100 < 5) {
+                    if (JobGetters.hasSuperPowerEnabled(player, job))
+                        ItemHandler.addItemsToInventoryOrDrop(new ItemStack(state.getBlock().asItem()), player, player.getLevel(), pos, 0);
+                    else ItemHandler.addFreshItemEntity(player.getLevel(), pos, state.getBlock().asItem());
+                }
+
+                //Drop Normal Drop
+                if (JobGetters.hasSuperPowerEnabled(player, job))
+                    ItemHandler.addItemsToInventoryOrDrop(new ItemStack(state.getBlock().asItem()), player, player.getLevel(), pos, 0);
+                else Block.dropResources(state, level, pos, null, player, player.getMainHandItem());
             }
         }
     }
@@ -152,11 +165,8 @@ public class LumberAxeItem extends AxeItem {
         if (player.isCrouching() && !level.isClientSide) {
             CompoundTag tag = stack.getOrCreateTag();
             if (tag.contains("mode")) {
-                if (tag.getInt("mode") == 0) {
-                    tag.putInt("mode", 1);
-                } else {
-                    tag.putInt("mode", 0);
-                }
+                if (tag.getInt("mode") == 0) tag.putInt("mode", 1);
+                else tag.putInt("mode", 0);
             } else {
                 tag.putInt("mode", 0);
             }

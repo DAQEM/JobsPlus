@@ -19,13 +19,10 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.ArrayList;
-
 public class DoubleJumpEvents {
 
     private static final String DOUBLE_JUMP_TAG = "jobsplus:double_jump";
     private static final String JUMPS = "jobsplus.jumps";
-    private static final ArrayList<Player> cancelPlayerFallDamage = new ArrayList<>();
 
     public static void attemptPlayerJump(Player player, int[] builderInfo) {
         if (isPlayerAllowedToDoubleJump(player)) {
@@ -63,7 +60,6 @@ public class DoubleJumpEvents {
     public void multiJump(DoubleJumpEvent.MultiJump.Post event) {
         Player player = event.getPlayer();
         if (event.getPlayer().getLevel() instanceof ServerLevel serverWorld && player instanceof ServerPlayer serverPlayer) {
-            if (!cancelPlayerFallDamage.contains(player)) cancelPlayerFallDamage.add(player);
             for (int x = -1; x <= 1; x++) {
                 for (int z = -1; z <= 1; z++) {
                     serverWorld.sendParticles(serverPlayer, ParticleTypes.CLOUD, false, player.getX() + (x < 0 ? x + 0.65 : x > 0 ? x - 0.65 : 0), player.getY(), player.getZ() + (z < 0 ? z + 0.65 : z > 0 ? z - 0.65 : 0), 1, 0, 0, 0, 0);

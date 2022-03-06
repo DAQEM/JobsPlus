@@ -31,6 +31,7 @@ import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -269,7 +270,7 @@ public class ModFishingHook extends FishingHook {
                 double d0 = this.getX() + (double) (f1 * (float) this.timeUntilHooked * 0.1F);
                 double d1 = (float) Mth.floor(this.getY()) + 1.0F;
                 double d2 = this.getZ() + (double) (f2 * (float) this.timeUntilHooked * 0.1F);
-                if (serverlevel.getBlockState(new BlockPos((int) d0, (int) d1 - 1, (int) d2)).getMaterial() == net.minecraft.world.level.material.Material.WATER) {
+                if (serverlevel.getBlockState(new BlockPos((int) d0, (int) d1 - 1, (int) d2)).getMaterial() == Material.WATER) {
                     if (this.random.nextFloat() < 0.15F) {
                         serverlevel.sendParticles(ParticleTypes.BUBBLE, d0, d1 - (double) 0.1F, d2, 1, f1, 0.1D, f2, 0.0D);
                     }
@@ -304,7 +305,7 @@ public class ModFishingHook extends FishingHook {
                 double d4 = this.getX() + (double) (Mth.sin(f6) * f7 * 0.1F);
                 double d5 = (float) Mth.floor(this.getY()) + 1.0F;
                 double d6 = this.getZ() + (double) (Mth.cos(f6) * f7 * 0.1F);
-                if (serverlevel.getBlockState(new BlockPos(d4, d5 - 1.0D, d6)).getMaterial() == net.minecraft.world.level.material.Material.WATER) {
+                if (serverlevel.getBlockState(new BlockPos(d4, d5 - 1.0D, d6)).getMaterial() == Material.WATER) {
                     serverlevel.sendParticles(ParticleTypes.SPLASH, d4, d5, d6, 2 + this.random.nextInt(2), 0.1F, 0.0D, 0.1F, 0.0D);
                 }
             }

@@ -2,11 +2,20 @@ package me.daqem.jobsplus.events.jobs;
 
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.EnchantmentMenu;
+import net.minecraft.world.inventory.GrindstoneMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -35,15 +44,34 @@ public class EnchanterEvents {
                         if (mapInt > lapisCount) {
                             int lapisUsed = mapInt - lapisCount;
                             if (lapisUsed == 1) {
-                                ExpHandler.addEXPLow(player, job);
+                                ExpHandler.addEXPOneLapis(player, job);
                             }
                             if (lapisUsed == 2) {
-                                ExpHandler.addEXPMid(player, job);
+                                ExpHandler.addEXPTwoLapis(player, job);
                             }
                             if (lapisUsed == 3) {
-                                ExpHandler.addEXPHighest(player, job);
+                                ExpHandler.addEXPTheeLapis(player, job);
                             }
                             multiMap.remove(player);
+                            final ItemStack enchantedItem = containerMenu.getSlot(0).getItem();
+                            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
+                                if (enchantedItem.isEnchanted()) {
+                                    Map<Enchantment, Integer> newMap = new HashMap<>();
+                                    for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(enchantedItem).entrySet()) {
+                                        if (entry.getKey() == Enchantments.SILK_TOUCH || entry.getKey() == Enchantments.AQUA_AFFINITY ||
+                                                entry.getKey() == Enchantments.MENDING || entry.getKey() == Enchantments.INFINITY_ARROWS ||
+                                                entry.getKey() == Enchantments.FLAMING_ARROWS || entry.getKey() == Enchantments.MULTISHOT ||
+                                                entry.getKey() == Enchantments.CHANNELING) {
+                                            newMap.put(entry.getKey(), entry.getValue());
+                                        } else {
+                                            newMap.put(entry.getKey(), entry.getValue() + 1);
+                                        }
+                                    }
+                                    EnchantmentHelper.setEnchantments(newMap, enchantedItem);
+                                    containerMenu.getSlot(0).set(enchantedItem);
+                                    containerMenu.getSlot(0).setChanged();
+                                }
+                            }
                         }
                     }
                 }
@@ -52,5 +80,57 @@ public class EnchanterEvents {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onPlayerEXPPickup(PlayerXpEvent.PickupXp event) {
+        if (JobGetters.hasEnabledPowerup(event.getPlayer(), Jobs.ENCHANTER, CapType.POWERUP3.get())) {
+            event.getOrb().value = event.getOrb().value * 2;
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerTickGrindstone(TickEvent.PlayerTickEvent event) {
+        Player player = event.player;
+        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP1.get())) {
+            AbstractContainerMenu containerMenu = player.containerMenu;
+            if (containerMenu instanceof GrindstoneMenu grindstoneMenu) {
+                final Slot slot = grindstoneMenu.getSlot(2);
+                final ItemStack item = slot.getItem();
+                Map<Enchantment, Integer> map = new HashMap<>();
+                EnchantmentHelper.deserializeEnchantments(item.getEnchantmentTags()).forEach((key, value) -> {
+                    if (!key.isCurse()) map.put(key, value);
+                });
+                EnchantmentHelper.setEnchantments(map, item);
+                slot.set(item);
+                slot.setChanged();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onAnvilUpdateCurseBreak(AnvilUpdateEvent event) {
+        ItemStack left = event.getLeft();
+        ItemStack right = event.getRight();
+        ItemStack out;
+        if (!(left.getDescriptionId().contains("item.minecraft.") || right.getDescriptionId().contains("item.minecraft.")
+                || left.getDescriptionId().contains("item.jobsplus.") || right.getDescriptionId().contains("item.jobsplus.")))
+            return;
+        if (!JobGetters.hasSuperPowerEnabled(event.getPlayer(), job) && left.isEmpty() && right.isEmpty()) return;
+        if (left.getItem() != right.getItem()) return;
+
+        final Map<Enchantment, Integer> leftEnchantments = EnchantmentHelper.getEnchantments(left);
+        for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(right).entrySet()) {
+
+            if (!leftEnchantments.containsKey(entry.getKey())) {
+                leftEnchantments.put(entry.getKey(), entry.getValue());
+            } else {
+                leftEnchantments.put(entry.getKey(), Math.min(entry.getValue() + leftEnchantments.get(entry.getKey()), entry.getKey().getMaxLevel() + 1));
+            }
+        }
+        out = left.copy();
+        EnchantmentHelper.setEnchantments(leftEnchantments, out);
+        event.setOutput(out);
+        event.setCost(3);
     }
 }

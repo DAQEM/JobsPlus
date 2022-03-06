@@ -2,9 +2,9 @@ package me.daqem.jobsplus.events;
 
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModEffects;
+import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
-import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -58,7 +58,16 @@ public class PotionEvents {
                 }
                 if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP1.get())) {
                     if (effect.getEffect().getCategory() == MobEffectCategory.HARMFUL) {
-                        player.removeEffect(effect.getEffect());
+                        MinecraftForge.EVENT_BUS.register(new Object() {
+                            int delay = 1;
+
+                            @SubscribeEvent
+                            public void onTick(TickEvent.WorldTickEvent event) {
+                                if (delay-- > 0) return;
+                                player.removeEffect(effect.getEffect());
+                                MinecraftForge.EVENT_BUS.unregister(this);
+                            }
+                        });
                         if (player instanceof ServerPlayer serverPlayer) {
                             HotbarMessageHandler.sendHotbarMessage(serverPlayer, ChatColor.green() + "Removed bad effect.");
                         }

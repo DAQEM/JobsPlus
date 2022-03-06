@@ -2,10 +2,10 @@ package me.daqem.jobsplus.events;
 
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.handlers.ChatHandler;
+import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
 import me.daqem.jobsplus.utils.enums.CapType;
-import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;

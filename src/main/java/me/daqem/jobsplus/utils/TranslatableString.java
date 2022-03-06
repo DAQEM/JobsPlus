@@ -1,7 +1,5 @@
 package me.daqem.jobsplus.utils;
 
-import me.daqem.jobsplus.utils.enums.ChatColor;
-
 public class TranslatableString extends ChatColor {
 
     public static String get(String message) {

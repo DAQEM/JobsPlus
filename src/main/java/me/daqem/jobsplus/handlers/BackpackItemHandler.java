@@ -17,8 +17,7 @@ public class BackpackItemHandler extends ItemStackHandler {
     }
 
     public void upgrade(int slots) {
-        if (slots <= this.stacks.size())
-            return;
+        if (slots <= this.stacks.size()) return;
         NonNullList<ItemStack> oldStacks = this.stacks;
         this.stacks = NonNullList.withSize(slots, ItemStack.EMPTY);
         for (int i = 0; i < oldStacks.size(); i++) {

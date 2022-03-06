@@ -121,23 +121,23 @@ public class JobSetters {
     public static void setSuperPower(Player player, Jobs job, int superpower) {
         player.getCapability(SuperPowerCapabilityImpl.SUPERPOWER_CAPABILITY).ifPresent(handler -> {
             int[] array = handler.getSuperpower();
-            int alchemist = array[0], builder = array[1], digger = array[2], farmer = array[3], fisherman = array[4],
-                    enchanter = array[5], hunter = array[6], lumberjack = array[7], miner = array[8], smith = array[9];
+            int alchemist = array[0], builder = array[1], digger = array[2], enchanter = array[3], farmer = array[4],
+                    fisherman = array[5], hunter = array[6], lumberjack = array[7], miner = array[8], smith = array[9];
             for (int i = 0; i < 10; ++i) {
                 if (i == Jobs.getJobInt(job)) {
                     if (job == Jobs.ALCHEMIST) alchemist = superpower;
                     if (job == Jobs.BUILDER) builder = superpower;
                     if (job == Jobs.DIGGER) digger = superpower;
+                    if (job == Jobs.ENCHANTER) enchanter = superpower;
                     if (job == Jobs.FARMER) farmer = superpower;
                     if (job == Jobs.FISHERMAN) fisherman = superpower;
-                    if (job == Jobs.ENCHANTER) enchanter = superpower;
                     if (job == Jobs.HUNTER) hunter = superpower;
                     if (job == Jobs.LUMBERJACK) lumberjack = superpower;
                     if (job == Jobs.MINER) miner = superpower;
                     if (job == Jobs.SMITH) smith = superpower;
                 }
             }
-            handler.setSuperpower(new int[]{alchemist, builder, digger, farmer, fisherman, enchanter, hunter, lumberjack, miner, smith});
+            handler.setSuperpower(new int[]{alchemist, builder, digger, enchanter, farmer, fisherman, hunter, lumberjack, miner, smith});
         });
     }
 
@@ -183,6 +183,10 @@ public class JobSetters {
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> handler.setCoins(handler.getCoins() - amount));
     }
 
+    public static void addCoins(Player player, int amount) {
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> handler.setCoins(handler.getCoins() + amount));
+    }
+
     private static int[] arrayGenerator(ArrayList<Integer> arrayList, int[] intArray) {
         for (int j : arrayList) {
             if (arrayList.get(j) == -1) arrayList.set(j, intArray[j]);
@@ -222,5 +226,23 @@ public class JobSetters {
         if (powerUp == CapType.POWERUP3.get())
             return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], i};
         return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
+    }
+
+    public static void setEXPHotBarSetting(Player player, int value) {
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            handler.setSettings(new int[]{value, handler.getSettings()[1], handler.getSettings()[2], handler.getSettings()[3], handler.getSettings()[4]});
+        });
+    }
+
+    public static void setLevelUpSoundSetting(Player player, int value) {
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            handler.setSettings(new int[]{handler.getSettings()[0], value, handler.getSettings()[2], handler.getSettings()[3], handler.getSettings()[4]});
+        });
+    }
+
+    public static void setLevelUpChatSetting(Player player, int value) {
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+            handler.setSettings(new int[]{handler.getSettings()[0], handler.getSettings()[1], value, handler.getSettings()[3], handler.getSettings()[4]});
+        });
     }
 }

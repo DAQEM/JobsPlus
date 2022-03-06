@@ -75,7 +75,7 @@ public class JobsPlusJeiPlugin implements IModPlugin {
         final List<ItemStack> STRONG_LUCK_POTIONS = List.of(LUCK, LONG_LUCK);
         final List<ItemStack> HONEY_BOTTLE = List.of(new ItemStack(Items.HONEY_BOTTLE));
         final List<ItemStack> GLOW_INK_SAC = List.of(new ItemStack(Items.GLOW_INK_SAC));
-        final List<ItemStack> FEATHER = List.of(new ItemStack(Items.GLOW_INK_SAC));
+        final List<ItemStack> FEATHER = List.of(new ItemStack(Items.FEATHER));
         final List<ItemStack> NETHER_STAR = List.of(new ItemStack(Items.NETHER_STAR));
 
         IJeiBrewingRecipe haste = factory.createBrewingRecipe(HONEY_BOTTLE, AWKWARD, HASTE);

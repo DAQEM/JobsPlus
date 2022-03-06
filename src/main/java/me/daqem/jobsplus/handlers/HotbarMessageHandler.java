@@ -8,6 +8,5 @@ public class HotbarMessageHandler {
 
     public static void sendHotbarMessage(ServerPlayer serverPlayer, String message) {
         serverPlayer.sendMessage(new KeybindComponent(message), ChatType.GAME_INFO, serverPlayer.getUUID());
-
     }
 }

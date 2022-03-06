@@ -24,7 +24,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> EXP_JAR = ITEMS.register("exp_jar", () -> new EXPJarItem(new Item.Properties().tab(JobsPlus.TAB).stacksTo(1).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> EXPERIENCE_BOTTLE = ITEMS.register("experience_bottle", () -> new ModExperienceBottleItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
-    public static final RegistryObject<Item> CURSE_BREAKER = ITEMS.register("curse_breaker", () -> new CurseBreakItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> CURSE_BREAKER = ITEMS.register("curse_breaker", () -> new CurseBreakItem(new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE).stacksTo(1)));
 
     public static final RegistryObject<Item> HUNTERS_SWORD_LEVEL_1 = ITEMS.register("hunters_sword_level_1", () -> new HunterSwordItem(ItemTiers.LEVEL_1, 6, -2.4F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
     public static final RegistryObject<Item> HUNTERS_SWORD_LEVEL_2 = ITEMS.register("hunters_sword_level_2", () -> new HunterSwordItem(ItemTiers.LEVEL_2, 7, -2.3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));

@@ -1,7 +1,10 @@
 package me.daqem.jobsplus.handlers;
 
-import me.daqem.jobsplus.utils.enums.ChatColor;
+import me.daqem.jobsplus.utils.ChatColor;
+import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +26,21 @@ public class ChatHandler {
 
     public static void sendMessage(Player player, String message) {
         player.sendMessage(new KeybindComponent(message), player.getUUID());
+    }
+
+    public static void sendLevelUpMessage(Player player, String message) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(ChatColor.boldWhite()).append("Levels:").append(ChatColor.reset());
+        for (Jobs job1 : Jobs.values()) {
+            if (JobGetters.getJobLevel(player, job1) > 0) {
+                stringBuilder.append("\n").append(ChatHandler.ColorizedJobName(job1)).append(ChatColor.boldDarkGray()).append("> ").append(ChatColor.white()).append(JobGetters.getJobLevel(player, job1));
+            }
+        }
+        player.sendMessage(new KeybindComponent(message).withStyle(new KeybindComponent("").getStyle()
+                .withHoverEvent(
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, new KeybindComponent(stringBuilder.toString())))
+                .withClickEvent(
+                        new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tell " + player.getScoreboardName() + " "))), player.getUUID());
     }
 
     public static String capitalizeWord(String str) {

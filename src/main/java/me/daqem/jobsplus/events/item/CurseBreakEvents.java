@@ -26,7 +26,7 @@ public class CurseBreakEvents {
                 if (!key.isCurse()) map.put(key, value);
             });
             EnchantmentHelper.setEnchantments(map, out);
-            event.setCost(30);
+            event.setCost(10);
             event.setOutput(out);
         }
     }

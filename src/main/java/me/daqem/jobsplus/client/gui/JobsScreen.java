@@ -12,7 +12,8 @@ import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.init.ModPotions;
 import me.daqem.jobsplus.jei.JobsPlusJeiPlugin;
 import me.daqem.jobsplus.packet.PacketOpenMenu;
-import me.daqem.jobsplus.utils.enums.ChatColor;
+import me.daqem.jobsplus.packet.PacketUserSettingsServer;
+import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IRecipeManager;
@@ -194,6 +195,15 @@ public class JobsScreen extends Screen {
 //.BBBBBBBBBB..........UUUUUUU............TTTT............TTTT............OOOOOO..........NNNN...NNNN........SSSSSSSS....
 
     public void renderButtons(PoseStack poseStack, int mouseX, int mouseY, int p_99345_, int something, int occurrences) {
+        if (isBetween(mouseX, mouseY, 3, height - 20, 18, height - 4)) {
+            poseStack.pushPose();
+            RenderSystem.setShaderColor(0.8F, 0.8F, 0.8F, 1);
+            blit(poseStack, 3, height - 20, 276, 166, 16, 16, 362, 362);
+            RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+            poseStack.popPose();
+        } else {
+            blit(poseStack, 3, height - 20, 276, 166, 16, 16, 362, 362);
+        }
         // JOB BUTTONS
         if (activeLeftButton == 0) {
             for (int i = this.startIndex; i < occurrences && i < Jobs.values().length; ++i) {
@@ -365,7 +375,7 @@ public class JobsScreen extends Screen {
                     }
                 }
             }
-        } else if (activeRightButton == 2 && (jobId == 0 || jobId == 1 || jobId == 8)) {
+        } else if (activeRightButton == 2) {
             if (jobId != -1) {
                 //POWER-UP 1
                 if (array[21 + (jobId * 3) + 1] == 1) {
@@ -623,17 +633,17 @@ public class JobsScreen extends Screen {
                 }
             } else if (activeRightButton == 1) {
                 drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.crafting").getString(), startX + (imageWidth + 150) / 2, startY + 6, 16777215);
-            } else if (activeRightButton == 2 && (jobId == 0 || jobId == 1 || jobId == 8)) {
+            } else if (activeRightButton == 2) {
                 drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups.powerups").getString(), startX + (imageWidth + 150) / 2, startY + 6, 16777215);
                 drawCenteredStringNew(poseStack, font, ChatColor.gray() + new TranslatableComponent("jobsplus.gui.powerups.cost").getString(), startX + (imageWidth + 150) / 2, startY + 16, 16777215);
                 drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups.superpowers").getString(), startX + (imageWidth + 150) / 2, startY + 110, 16777215);
                 drawCenteredStringNew(poseStack, font, ChatColor.gray() + new TranslatableComponent("jobsplus.gui.powerups.superpowers.cost").getString(), startX + (imageWidth + 150) / 2, startY + 120, 16777215);
                 poseStack.pushPose();
                 poseStack.scale(0.72F, 0.72F, 0.72F);
-                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".1").getString(), (int) ((startX + (imageWidth + 150) / 2) / 0.72F), (int) ((startY + 33) / 0.72F), 16777215);
-                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".2").getString(), (int) ((startX + (imageWidth + 150) / 2) / 0.72F), (int) ((startY + 58) / 0.72F), 16777215);
-                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".3").getString(), (int) ((startX + (imageWidth + 150) / 2) / 0.72F), (int) ((startY + 83) / 0.72F), 16777215);
-                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".4").getString(), (int) ((startX + (imageWidth + 150) / 2) / 0.72F), (int) ((startY + 137) / 0.72F), 16777215);
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".1").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 33) / 0.72F), 16777215);
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".2").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 58) / 0.72F), 16777215);
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".3").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 83) / 0.72F), 16777215);
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".superpower").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 137) / 0.72F), 16777215);
                 poseStack.popPose();
             } else {
                 font.draw(poseStack, ChatColor.darkGray() + "Coming soon!", startX + 203, startY + 69, 16777215);
@@ -654,6 +664,9 @@ public class JobsScreen extends Screen {
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int p_99320_) {
+        if (isBetween(mouseX, mouseY, 3, height - 20, 19, height - 4)) {
+            ModPacketHandler.INSTANCE.sendToServer(new PacketUserSettingsServer(Minecraft.getInstance().player.getUUID(), "MAIN"));
+        }
         this.scrolling = false;
         int i = this.startX + 7;
         int j = this.startY + 16;

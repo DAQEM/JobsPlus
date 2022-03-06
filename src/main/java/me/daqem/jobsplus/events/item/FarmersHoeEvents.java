@@ -10,17 +10,16 @@ import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.ModItemUtils;
 import me.daqem.jobsplus.utils.TranslatableString;
+import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -28,9 +27,6 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -61,18 +57,30 @@ public class FarmersHoeEvents {
                 if (!stack.getOrCreateTag().contains("mode")) stack.getOrCreateTag().putInt("mode", 0);
                 int mode = stack.getOrCreateTag().getInt("mode");
                 if (mode == 0 || mode == 1 || mode == 2) {
-                    Vec3 eyePosition = player.getEyePosition(1);
-                    Vec3 rotation = player.getViewVector(1);
+                    Item itemUsed = player.getMainHandItem().getItem();
                     for (int x = -mode; x <= mode; x++) {
                         for (int z = -mode; z <= mode; z++) {
-                            BlockPos blockPos = level.clip(new ClipContext(eyePosition, eyePosition.add(rotation.x * 5, rotation.y * 5, rotation.z * 5), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos().offset(x, 0, z);
+                            BlockPos blockPos = new BlockPos(event.getPos().offset(x, 0, z));
                             BlockState state = level.getBlockState(blockPos);
                             Block block = state.getBlock();
                             if (block instanceof CropBlock cropBlock) {
                                 if (cropBlock.isMaxAge(state)) {
+                                    if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
+                                        if (Math.random() * 100 < 10) {
+                                            if (block == Blocks.WHEAT) {
+                                                dropBetterItem(player, level, blockPos, Items.HAY_BLOCK, itemUsed);
+                                            } else if (block == Blocks.CARROTS) {
+                                                dropBetterItem(player, level, blockPos, Items.GOLDEN_CARROT, itemUsed);
+                                            } else if (block == Blocks.POTATOES) {
+                                                dropBetterItem(player, level, blockPos, Items.BAKED_POTATO, itemUsed);
+                                            } else if (block == Blocks.BEETROOTS) {
+                                                dropBetterItem(player, level, blockPos, Items.BEETROOT_SOUP, itemUsed);
+                                            }
+                                        }
+                                    }
                                     exp += 1;
                                     ModItemUtils.damageItem(1, stack, player);
-                                    List<ItemStack> drops = state.getDrops(drops(level, blockPos, player, stack));
+                                    List<ItemStack> drops = state.getDrops(ItemHandler.drops(level, blockPos, player, stack));
                                     for (ItemStack drop : drops) {
                                         if (drop.getCount() > 1) {
                                             drop.setCount(drop.getCount() - 1);
@@ -85,11 +93,30 @@ public class FarmersHoeEvents {
                                 }
                             }
                             if (block == Blocks.MELON || block == Blocks.PUMPKIN) {
-                                exp += 2;
+                                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
+                                    if (block == Blocks.MELON) {
+                                        if (Math.random() * 100 < 10) {
+                                            dropBetterItem(player, level, blockPos, Items.GLISTERING_MELON_SLICE, itemUsed);
+                                        }
+                                    } else {
+                                        if (Math.random() * 100 < 5) {
+                                            dropBetterItem(player, level, blockPos, Items.PUMPKIN_PIE, itemUsed);
+                                        } else if (Math.random() * 100 < 10) {
+                                            dropBetterItem(player, level, blockPos, Items.CARVED_PUMPKIN, itemUsed);
+                                        }
+                                    }
+                                }
+                                if (!FarmerEvents.blockPosArrayList.contains(blockPos)) {
+                                    exp += 2;
+                                }
                                 ModItemUtils.damageItem(2, stack, player);
-                                List<ItemStack> drops = state.getDrops(drops(level, blockPos, player, stack));
+                                List<ItemStack> drops = state.getDrops(ItemHandler.drops(level, blockPos, player, stack));
                                 for (ItemStack drop : drops) {
-                                    dropHandler(drop, player, level, blockPos);
+                                    if (!FarmerEvents.blockPosArrayList.contains(blockPos)) {
+                                        dropHandler(drop, player, level, blockPos);
+                                    } else {
+                                        dropItems(drop, player, level, blockPos);
+                                    }
                                 }
                                 level.removeBlock(blockPos, false);
                             }
@@ -97,7 +124,7 @@ public class FarmersHoeEvents {
                                 if (CropHandler.stateToAge(state) == 3) {
                                     exp += 2;
                                     ModItemUtils.damageItem(2, stack, player);
-                                    List<ItemStack> drops = state.getDrops(drops(level, blockPos, player, stack));
+                                    List<ItemStack> drops = state.getDrops(ItemHandler.drops(level, blockPos, player, stack));
                                     for (ItemStack drop : drops) {
                                         if (drop.getCount() > 1) {
                                             drop.setCount(drop.getCount() - 1);
@@ -119,7 +146,7 @@ public class FarmersHoeEvents {
                                         ModItemUtils.damageItem(2, stack, player);
                                     }
                                     event.setCanceled(true);
-                                    List<ItemStack> drops = state.getDrops(drops(level, blockPos, player, stack));
+                                    List<ItemStack> drops = state.getDrops(ItemHandler.drops(level, blockPos, player, stack));
                                     for (ItemStack drop : drops) {
                                         dropHandler(drop, player, level, blockPos);
                                     }
@@ -131,7 +158,7 @@ public class FarmersHoeEvents {
                                     exp += 2;
                                     ModItemUtils.damageItem(1, stack, player);
                                     event.setCanceled(true);
-                                    List<ItemStack> drops = state.getDrops(drops(level, blockPos, player, stack));
+                                    List<ItemStack> drops = state.getDrops(ItemHandler.drops(level, blockPos, player, stack));
                                     for (ItemStack drop : drops) {
                                         dropHandler(drop, player, level, blockPos);
                                     }
@@ -162,7 +189,7 @@ public class FarmersHoeEvents {
                                                 }
                                             }
                                             if (giveDrop) {
-                                                ItemHandler.addItemsToInventoryOrDrop(Items.KELP.getDefaultInstance(), player, level, blockPos);
+                                                ItemHandler.addItemsToInventoryOrDrop(Items.KELP.getDefaultInstance(), player, level, blockPos, 0);
                                             }
                                             array.remove(i);
                                             if (!FarmerEvents.blockPosArrayList.contains(blockPos)) {
@@ -181,7 +208,7 @@ public class FarmersHoeEvents {
                                         }
                                         for (int i = array.size() - 1; i >= 0; i--) {
                                             level.removeBlock(array.get(i), false);
-                                            ItemHandler.addItemsToInventoryOrDrop(tempBlock.asItem().getDefaultInstance(), player, level, blockPos);
+                                            ItemHandler.addItemsToInventoryOrDrop(tempBlock.asItem().getDefaultInstance(), player, level, blockPos, 0);
                                             if (!FarmerEvents.blockPosArrayList.contains(blockPos)) {
                                                 exp += ExpHandler.getEXPLow();
                                             }
@@ -201,20 +228,26 @@ public class FarmersHoeEvents {
         }
     }
 
-
-    public LootContext.Builder drops(Level level, BlockPos pos, Player player, ItemStack stack) {
-        return new LootContext.Builder((ServerLevel) level)
-                .withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ()))
-                .withParameter(LootContextParams.BLOCK_STATE, level.getBlockState(pos))
-                .withParameter(LootContextParams.THIS_ENTITY, player)
-                .withParameter(LootContextParams.TOOL, stack);
+    public void dropHandler(ItemStack drop, Player player, Level level, BlockPos blockPos) {
+        dropItems(drop, player, level, blockPos);
+        if (JobGetters.hasSuperPowerEnabled(player, Jobs.FARMER)) dropItems(drop, player, level, blockPos);
+        if (Math.random() * 100 < 20 && JobGetters.hasEnabledPowerup(player, Jobs.FARMER, CapType.POWERUP1.get())) {
+            dropItems(drop, player, level, blockPos);
+        }
     }
 
-    public void dropHandler(ItemStack drop, Player player, Level level, BlockPos blockPos) {
+    public void dropItems(ItemStack drop, Player player, Level level, BlockPos blockPos) {
         if (player.getMainHandItem().getItem() == ModItems.FARMERS_HOE_LEVEL_4.get())
-            ItemHandler.addItemsToInventoryOrDrop(drop, player, level, blockPos);
+            ItemHandler.addItemsToInventoryOrDrop(drop, player, level, blockPos, 0);
         else
-            level.addFreshEntity(new ItemEntity(level, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, new ItemStack(drop.getItem(), drop.getCount())));
+            ItemHandler.addFreshItemEntity(level, blockPos, new ItemStack(drop.getItem(), drop.getCount()));
+    }
 
+    public void dropBetterItem(Player player, Level level, BlockPos blockPos, Item item, Item itemUsed) {
+        if (itemUsed == ModItems.FARMERS_HOE_LEVEL_4.get()) {
+            ItemHandler.addItemsToInventoryOrDrop(item.getDefaultInstance(), player, level, blockPos, 0);
+        } else {
+            ItemHandler.addFreshItemEntity(level, blockPos, item);
+        }
     }
 }

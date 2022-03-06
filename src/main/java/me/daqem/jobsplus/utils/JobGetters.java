@@ -127,6 +127,7 @@ public class JobGetters {
 
     public static boolean hasEnabledPowerup(Player player, Jobs job, int powerUp) {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+        if (!JobGetters.jobIsEnabled(player, job)) return false;
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
             switch (job) {
                 case ALCHEMIST -> atomicBoolean.set(handler.getAlchemist()[powerUp] == 1);
@@ -214,22 +215,26 @@ public class JobGetters {
     }
 
     public static int[] getAllSettings(Player player) {
-        AtomicInteger expHotbarSetting = new AtomicInteger(), levelUpNotificationSetting = new AtomicInteger(), three = new AtomicInteger(), four = new AtomicInteger(), five = new AtomicInteger();
+        AtomicInteger expHotbarSetting = new AtomicInteger(), levelUpSoundSetting = new AtomicInteger(), levelUpChatSetting = new AtomicInteger(), four = new AtomicInteger(), five = new AtomicInteger();
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
             expHotbarSetting.set(handler.getSettings()[0]);
-            levelUpNotificationSetting.set(handler.getSettings()[1]);
-            three.set(handler.getSettings()[2]);
+            levelUpSoundSetting.set(handler.getSettings()[1]);
+            levelUpChatSetting.set(handler.getSettings()[2]);
             four.set(handler.getSettings()[3]);
             five.set(handler.getSettings()[4]);
         });
-        return new int[]{expHotbarSetting.get(), levelUpNotificationSetting.get(), three.get(), four.get(), five.get()};
+        return new int[]{expHotbarSetting.get(), levelUpSoundSetting.get(), levelUpChatSetting.get(), four.get(), five.get()};
     }
 
-    public static boolean getEXPHotBarSetting(Player player) {
-        return getAllSettings(player)[0] == 0;
+    public static int getEXPHotBarSetting(Player player) {
+        return getAllSettings(player)[0];
     }
 
-    public static boolean getLevelUpNotificationSetting(Player player) {
-        return getAllSettings(player)[1] == 0;
+    public static int getLevelUpSoundSetting(Player player) {
+        return getAllSettings(player)[1];
+    }
+
+    public static int getLevelUpChatSetting(Player player) {
+        return getAllSettings(player)[2];
     }
 }

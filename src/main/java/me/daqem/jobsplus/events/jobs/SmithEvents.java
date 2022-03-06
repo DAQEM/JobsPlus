@@ -1,14 +1,25 @@
 package me.daqem.jobsplus.events.jobs;
 
+import me.daqem.jobsplus.common.item.ModArmorItem;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.AirItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -18,6 +29,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SmithEvents {
@@ -30,6 +42,12 @@ public class SmithEvents {
     @SubscribeEvent
     public void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
         craftAndRepair(event.getPlayer(), event.getCrafting());
+
+        if (JobGetters.hasSuperPowerEnabled(event.getPlayer(), job)) {
+            if (event.getCrafting().getMaxDamage() > 0) {
+                event.getCrafting().getOrCreateTag().putBoolean("Unbreakable", true);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -133,7 +151,10 @@ public class SmithEvents {
                                 }
 
                             }
-                            ArrayList<String> acceptedItems = new ArrayList<>(List.of("iron_ingot", "gold_ingot", "diamond", "emerald", "copper_ingot", "netherite_scrap"));
+                            ArrayList<String> acceptedItems = new ArrayList<>(List.of("iron_ingot", "gold_ingot", "diamond", "emerald", "copper_ingot",
+                                    "netherite_scrap", "item.malum.soulstone_cluster", "item.malum.brilliance_cluster", "item.create.raw_zinc",
+                                    "item.stardewarmory.raw_iridium", "item.occultism.raw_silver", "item.occultism.raw_iesnium", "item.byg.raw_pendorite",
+                                    "item.blue_skies.raw_falsite", "item.blue_skies.raw_ventium", "item.blue_skies.raw_horizonite"));
                             if (acceptedItems.contains(item.getItem().getDescriptionId().replace("item.minecraft.", ""))) {
                                 furnaceHashmap.put(player, itemCount);
                             }
@@ -147,5 +168,45 @@ public class SmithEvents {
     @SubscribeEvent
     public void onInventoryClose(PlayerContainerEvent.Close event) {
         furnaceHashmap.remove(event.getPlayer());
+    }
+
+    @SubscribeEvent
+    public void onDamageSmith(LivingHurtEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            if (event.getSource().getEntity() instanceof LivingEntity source && !(event.getSource().getEntity() instanceof Player)) {
+                if (!JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP1.get())) return;
+                if (!(Math.random() * 100 < 20)) return;
+                source.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 9));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onAttackSmith(LivingAttackEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            if (event.getSource().isFire()) {
+                if (!JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP3.get())) return;
+                int pieces = 0;
+                for (ItemStack armorSlot : player.getArmorSlots()) {
+                    if (armorSlot.getItem() instanceof ModArmorItem) pieces++;
+                }
+                if (pieces == 4) event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onAnvilUpdate(AnvilUpdateEvent event) {
+        if (!JobGetters.hasEnabledPowerup(event.getPlayer(), job, CapType.POWERUP2.get())) return;
+        ItemStack left = event.getLeft();
+        ItemStack right = event.getRight();
+        ItemStack out = new ItemStack(Items.ENCHANTED_BOOK);
+        if (left.isEmpty() || right.isEmpty()) return;
+        if (!EnchantmentHelper.getEnchantments(right).isEmpty()) return;
+        final Map<Enchantment, Integer> enchantmentsLeft = EnchantmentHelper.getEnchantments(left);
+        if (enchantmentsLeft.isEmpty()) return;
+        EnchantmentHelper.setEnchantments(enchantmentsLeft, out);
+        event.setCost(5);
+        event.setOutput(out);
     }
 }

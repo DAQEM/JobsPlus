@@ -3,23 +3,21 @@ package me.daqem.jobsplus.events.jobs;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
+import me.daqem.jobsplus.handlers.MobEffectHandler;
 import me.daqem.jobsplus.utils.BlockPosUtil;
+import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
-import me.daqem.jobsplus.utils.enums.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -56,15 +54,6 @@ public class MinerEvents {
         }
     }
 
-    public static void addPlayerPowerUpEffects(Player player, Jobs job) {
-        if (JobGetters.hasSuperPowerEnabled(player, job)) {
-            player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 5 * 20, 1));
-            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 5 * 20));
-        } else if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP3.get())) {
-            player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 5 * 20));
-        }
-    }
-
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
@@ -77,16 +66,13 @@ public class MinerEvents {
                                 || (!(block.getDescriptionId().startsWith("block.minecraft.")) && block.getDescriptionId().endsWith("_ore"))
                                 || block.getDescriptionId().equals("block.minecraft.ancient_debris")) {
                             ExpHandler.addEXPMid(player, job);
-                            addPlayerPowerUpEffects(player, job);
+                            MobEffectHandler.addPlayerPowerUpEffects(player, job);
                         } else if (lowestList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
                             ExpHandler.addEXPLowest(player, job);
-                            addPlayerPowerUpEffects(player, job);
-                        } else if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
+                            MobEffectHandler.addPlayerPowerUpEffects(player, job);
+                        } else if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", "")) || BlockTags.TERRACOTTA.contains(block)) {
                             ExpHandler.addEXPLow(player, job);
-                            addPlayerPowerUpEffects(player, job);
-                        } else if (BlockTags.TERRACOTTA.contains(block)) {
-                            ExpHandler.addEXPLow(player, job);
-                            addPlayerPowerUpEffects(player, job);
+                            MobEffectHandler.addPlayerPowerUpEffects(player, job);
                         }
                     } else {
                         timeoutList.remove(event.getPos());
@@ -124,7 +110,7 @@ public class MinerEvents {
         ArrayList<BlockPos> ores = new ArrayList<>();
         ArrayList<BlockPos> candidates = new ArrayList<>();
 
-        if (!(itemInHand instanceof PickaxeItem)) return;
+        if (!itemInHand.isCorrectToolForDrops(event.getState())) return;
         if (!JobGetters.jobIsEnabled(player, Jobs.MINER)) return;
         if (!(JobGetters.getPowerup(player, Jobs.MINER, CapType.POWERUP1.get()) == 1)) return;
         if (level.isClientSide()) return;

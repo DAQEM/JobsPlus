@@ -1,7 +1,7 @@
 package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.init.ModItems;
-import me.daqem.jobsplus.utils.enums.ChatColor;
+import me.daqem.jobsplus.utils.ChatColor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.KeybindComponent;
