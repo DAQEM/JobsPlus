@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -31,10 +32,11 @@ public class LumberjackEvents {
         Player player = event.getPlayer();
         if (player.getLevel().isClientSide) return;
         if (!JobGetters.jobIsEnabled(player, job)) return;
-        Block block = event.getState().getBlock();
+        BlockState state = event.getState();
+        Block block = state.getBlock();
         if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP3.get())) {
             if (block == Blocks.OAK_LEAVES || block == Blocks.DARK_OAK_LEAVES) {
-                if (Block.getDrops(event.getState(), (ServerLevel) player.getLevel(), event.getPos(), null, player, player.getMainHandItem()).isEmpty()) {
+                if (Block.getDrops(state, (ServerLevel) player.getLevel(), event.getPos(), null, player, player.getMainHandItem()).isEmpty()) {
                     double random = Math.random() * 100;
                     if (random < 1)
                         ItemHandler.addFreshItemEntity(player.getLevel(), event.getPos(), Items.ENCHANTED_GOLDEN_APPLE.getDefaultInstance());
@@ -43,7 +45,7 @@ public class LumberjackEvents {
                 }
             }
         }
-        if (!block.getTags().contains(BlockTags.LOGS.getName())) return;
+        if (!state.is(BlockTags.LOGS)) return;
         final BlockPos pos = event.getPos();
         Item itemInHand = player.getMainHandItem().getItem();
         if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
@@ -52,7 +54,7 @@ public class LumberjackEvents {
         if (itemInHand instanceof LumberAxeItem lumberAxeItem) {
             if (JobGetters.hasSuperPowerEnabled(player, job)) {
                 event.setCanceled(true);
-                lumberAxeItem.mineBlock(player.getMainHandItem(), player.getLevel(), event.getState(), pos, player);
+                lumberAxeItem.mineBlock(player.getMainHandItem(), player.getLevel(), state, pos, player);
                 player.getLevel().removeBlock(pos, false);
                 ExpHandler.addEXPLow(player, Jobs.LUMBERJACK);
                 ItemHandler.addItemsToInventoryOrDrop(new ItemStack(block.asItem()), player, player.getLevel(), pos, 0);

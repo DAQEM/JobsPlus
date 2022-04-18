@@ -22,6 +22,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.OreBlock;
 import net.minecraft.world.level.block.RedStoneOreBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,7 +39,7 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MinerEvents {
 
-    public final static ArrayList<String> lowList = new ArrayList<>(List.of("andesite", "diorite", "granite", "calcite", "dripstone", "dripstone_block", "sandstone", "blackstone"));
+    public final static ArrayList<String> lowList = new ArrayList<>(List.of("andesite", "diorite", "granite", "calcite", "dripstone", "dripstone_block", "sandstone", "blackstone", "budding_amethyst", "amethyst_block"));
     public final static ArrayList<String> lowestList = new ArrayList<>(List.of("stone", "deepslate", "netherrack", "end_stone", "cobblestone"));
     public static final ArrayList<BlockPos> timeoutList = new ArrayList<>();
     public static final ArrayList<UUID> veinMinerArray = new ArrayList<>();
@@ -57,49 +58,47 @@ public class MinerEvents {
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
-        if (!player.isCreative()) {
-            if (!event.getWorld().isClientSide()) {
-                if (JobGetters.jobIsEnabled(player, job)) {
-                    Block block = event.getState().getBlock();
-                    if (BlockPosUtil.testAllSides(timeoutList, event.getPos())) {
-                        if (block instanceof OreBlock || block instanceof RedStoneOreBlock
-                                || (!(block.getDescriptionId().startsWith("block.minecraft.")) && block.getDescriptionId().endsWith("_ore"))
-                                || block.getDescriptionId().equals("block.minecraft.ancient_debris")) {
-                            ExpHandler.addEXPMid(player, job);
-                            MobEffectHandler.addPlayerPowerUpEffects(player, job);
-                        } else if (lowestList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
-                            ExpHandler.addEXPLowest(player, job);
-                            MobEffectHandler.addPlayerPowerUpEffects(player, job);
-                        } else if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", "")) || BlockTags.TERRACOTTA.contains(block)) {
-                            ExpHandler.addEXPLow(player, job);
-                            MobEffectHandler.addPlayerPowerUpEffects(player, job);
-                        }
-                    } else {
-                        timeoutList.remove(event.getPos());
-                    }
-                    if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get()) && !veinMinerArray.contains(player.getUUID())) {
-                        if (BlockTags.IRON_ORES.contains(block) || BlockTags.GOLD_ORES.contains(block) || BlockTags.COPPER_ORES.contains(block)) {
-                            List<ItemStack> drops = Block.getDrops(event.getState(), (ServerLevel) event.getWorld(), event.getPos(), null, player, player.getMainHandItem());
-                            event.setCanceled(true);
-                            event.getWorld().removeBlock(event.getPos(), false);
-                            dropItems((Level) event.getWorld(), ItemHandler.smeltedRawMaterials(player, drops), event.getPos(), 1);
-                        }
-                    }
-                }
+        BlockState state = event.getState();
+        Block block = state.getBlock();
+
+        if (event.getWorld().isClientSide()) return;
+        if (!JobGetters.jobIsEnabled(player, job)) return;
+
+        if (BlockPosUtil.testAllSides(timeoutList, event.getPos())) {
+            if (block instanceof OreBlock || block instanceof RedStoneOreBlock
+                    || block.getDescriptionId().endsWith("_ore")
+                    || block == Blocks.ANCIENT_DEBRIS) {
+                ExpHandler.addEXPMid(player, job);
+                MobEffectHandler.addPlayerPowerUpEffects(player, job);
+            } else if (lowestList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
+                ExpHandler.addEXPLowest(player, job);
+                MobEffectHandler.addPlayerPowerUpEffects(player, job);
+            } else if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", "")) || state.is(BlockTags.TERRACOTTA)) {
+                ExpHandler.addEXPLow(player, job);
+                MobEffectHandler.addPlayerPowerUpEffects(player, job);
+            }
+        } else {
+            timeoutList.remove(event.getPos());
+        }
+        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get()) && !veinMinerArray.contains(player.getUUID())) {
+            if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES)) {
+                List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getWorld(), event.getPos(), null, player, player.getMainHandItem());
+                event.setCanceled(true);
+                event.getWorld().removeBlock(event.getPos(), false);
+                dropItems((Level) event.getWorld(), ItemHandler.smeltedRawMaterials(player, drops), event.getPos(), 1);
             }
         }
     }
 
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            if (JobGetters.jobIsEnabled(player, job)) {
-                if (!(timeoutList.size() < 10000)) {
-                    timeoutList.remove(0);
-                }
-                timeoutList.add(event.getPos());
-            }
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (!JobGetters.jobIsEnabled(player, job)) return;
+
+        if (!(timeoutList.size() < 10000)) {
+            timeoutList.remove(0);
         }
+        timeoutList.add(event.getPos());
     }
 
     @SubscribeEvent
@@ -129,14 +128,16 @@ public class MinerEvents {
             BlockPos candidate = candidates.get(i);
             Block block = level.getBlockState(candidate).getBlock();
 
-            if (block instanceof OreBlock || block instanceof RedStoneOreBlock || (!(block.getDescriptionId().startsWith("block.minecraft.")) && block.getDescriptionId().endsWith("_ore"))) {
-                ores.add(candidate);
-                for (int x = -1; x <= 1; x++) {
-                    for (int y = -1; y <= 1; y++) {
-                        for (int z = -1; z <= 1; z++) {
-                            BlockPos neighbor = candidate.offset(x, y, z);
-                            if (candidates.contains(neighbor)) continue;
-                            candidates.add(neighbor);
+            if (block instanceof OreBlock || block instanceof RedStoneOreBlock || block.getDescriptionId().endsWith("_ore") || block == Blocks.ANCIENT_DEBRIS) {
+                if (block == event.getState().getBlock()) {
+                    ores.add(candidate);
+                    for (int x = -1; x <= 1; x++) {
+                        for (int y = -1; y <= 1; y++) {
+                            for (int z = -1; z <= 1; z++) {
+                                BlockPos neighbor = candidate.offset(x, y, z);
+                                if (candidates.contains(neighbor)) continue;
+                                candidates.add(neighbor);
+                            }
                         }
                     }
                 }
@@ -170,25 +171,25 @@ public class MinerEvents {
     }
 
     public void attemptBreak(Level level, BlockPos pos, Player player) {
-        if (!level.isClientSide) {
-            BlockState state = level.getBlockState(pos);
-            Block block = state.getBlock();
-            boolean isEffective = block instanceof OreBlock || block instanceof RedStoneOreBlock || (!(block.getDescriptionId().startsWith("block.minecraft.")) && block.getDescriptionId().endsWith("_ore"));
-            boolean witherImmune = BlockTags.WITHER_IMMUNE.contains(state.getBlock());
+        if (level.isClientSide) return;
+        BlockState state = level.getBlockState(pos);
+        Block block = state.getBlock();
+        boolean isEffective = block instanceof OreBlock || block instanceof RedStoneOreBlock || (!(block.getDescriptionId().startsWith("block.minecraft.")) && block.getDescriptionId().endsWith("_ore"));
+        boolean witherImmune = state.is(BlockTags.WITHER_IMMUNE);
 
-            if (isEffective && !witherImmune) {
-                level.destroyBlock(pos, false);
-                if (!player.isCreative()) {
-                    List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
-                    int bonusLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
-                    int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
-                    int exp = state.getExpDrop(level, pos, bonusLevel, silkLevel);
-                    if ((BlockTags.IRON_ORES.contains(block) || BlockTags.GOLD_ORES.contains(block) || BlockTags.COPPER_ORES.contains(block))
-                            && JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get()))
-                        exp = 1;
-                    dropItems(level, ItemHandler.smeltedRawMaterials(player, drops), pos, exp);
-                }
-            }
-        }
+        if (!isEffective && witherImmune) return;
+
+        level.destroyBlock(pos, false);
+
+        if (player.isCreative()) return;
+
+        List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
+        int bonusLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
+        int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
+        int exp = state.getExpDrop(level, pos, bonusLevel, silkLevel);
+        if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES)
+                && JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get()))
+            exp = 1;
+        dropItems(level, ItemHandler.smeltedRawMaterials(player, drops), pos, exp);
     }
 }

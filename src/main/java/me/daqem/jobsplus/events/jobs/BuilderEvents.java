@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -34,12 +35,13 @@ public class BuilderEvents {
                 if (player.getMainHandItem().getDescriptionId().contains("structurize")
                         || player.getOffhandItem().getDescriptionId().contains("structurize")) return;
                 if (JobGetters.jobIsEnabled(player, Jobs.BUILDER)) {
-                    Block block = event.getPlacedBlock().getBlock();
-                    ArrayList<String> bannedBlocks = new ArrayList<>(List.of("cobblestone", "farmland"));
+                    final BlockState state = event.getPlacedBlock();
+                    Block block = state.getBlock();
+                    ArrayList<String> bannedBlocks = new ArrayList<>(List.of("farmland"));
                     if (!bannedBlocks.contains(block.getDescriptionId().replace("block.minecraft.", ""))
-                            && event.getPlacedBlock().getMaterial().isSolid()
+                            && state.getMaterial().isSolid()
                             && !block.getDescriptionId().endsWith(".twig")) {
-                        float destroySpeed = event.getPlacedBlock().getDestroySpeed(player.level, event.getPos());
+                        float destroySpeed = state.getDestroySpeed(player.level, event.getPos());
                         if (destroySpeed <= 2.5) {
                             ExpHandler.addEXPLowest(player, Jobs.BUILDER);
                         }
@@ -58,7 +60,7 @@ public class BuilderEvents {
                                         ItemStack itemInBackpack = data.getHandler().getStackInSlot(i);
 
                                         if (itemInBackpack.getItem() == player.getInventory().getSelected().getItem()) {
-                                            if (!giveBlockBack(player, block)) {
+                                            if (!giveBlockBack(player, state)) {
                                                 itemInBackpack.setCount(itemInBackpack.getCount() - 1);
                                             }
                                             giveItemBack(player, block);
@@ -69,26 +71,27 @@ public class BuilderEvents {
                             }
                         }
                     } else {
-                        giveBlockBack(player, block);
+                        giveBlockBack(player, state);
                     }
                 }
             }
         }
     }
 
-    public boolean giveBlockBack(Player player, Block block) {
+    public boolean giveBlockBack(Player player, BlockState state) {
         if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWERUP1.get())) {
             if (Math.random() * 100 < 5) {
-                if (BlockTags.LOGS.contains(block) || BlockTags.PLANKS.contains(block) || BlockTags.WOOL.contains(block)
-                        || BlockTags.STONE_BRICKS.contains(block) || BlockTags.BUTTONS.contains(block) || BlockTags.CARPETS.contains(block)
-                        || BlockTags.DOORS.contains(block) || BlockTags.SAND.contains(block) || BlockTags.STAIRS.contains(block)
-                        || BlockTags.SLABS.contains(block) || BlockTags.WALLS.contains(block) || BlockTags.RAILS.contains(block)
-                        || BlockTags.LEAVES.contains(block) || BlockTags.TRAPDOORS.contains(block) || BlockTags.FENCES.contains(block)
-                        || BlockTags.CANDLES.contains(block) || BlockTags.DIRT.contains(block) || BlockTags.TERRACOTTA.contains(block)
-                        || BlockTags.FLOWER_POTS.contains(block) || BlockTags.ENDERMAN_HOLDABLE.contains(block) || BlockTags.ICE.contains(block)
-                        || BlockTags.IMPERMEABLE.contains(block) || BlockTags.CORALS.contains(block) || BlockTags.SIGNS.contains(block)
-                        || BlockTags.NYLIUM.contains(block) || BlockTags.CLIMBABLE.contains(block) || BlockTags.FENCE_GATES.contains(block)
-                        || BlockTags.SNOW.contains(block) || block == Blocks.STONE || block == Blocks.COBBLESTONE || block == Blocks.GRANITE
+                Block block = state.getBlock();
+                if (state.is(BlockTags.LOGS) || state.is(BlockTags.PLANKS) || state.is(BlockTags.WOOL)
+                        || state.is(BlockTags.STONE_BRICKS) || state.is(BlockTags.BUTTONS) || state.is(BlockTags.CARPETS)
+                        || state.is(BlockTags.DOORS) || state.is(BlockTags.SAND) || state.is(BlockTags.STAIRS)
+                        || state.is(BlockTags.SLABS) || state.is(BlockTags.WALLS) || state.is(BlockTags.RAILS)
+                        || state.is(BlockTags.LEAVES) || state.is(BlockTags.TRAPDOORS) || state.is(BlockTags.FENCES)
+                        || state.is(BlockTags.CANDLES) || state.is(BlockTags.DIRT) || state.is(BlockTags.TERRACOTTA)
+                        || state.is(BlockTags.FLOWER_POTS) || state.is(BlockTags.ENDERMAN_HOLDABLE) || state.is(BlockTags.ICE)
+                        || state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.CORALS) || state.is(BlockTags.SIGNS)
+                        || state.is(BlockTags.NYLIUM) || state.is(BlockTags.CLIMBABLE) || state.is(BlockTags.FENCE_GATES)
+                        || state.is(BlockTags.SNOW) || block == Blocks.STONE || block == Blocks.COBBLESTONE || block == Blocks.GRANITE
                         || block == Blocks.POLISHED_GRANITE || block == Blocks.DIORITE || block == Blocks.POLISHED_DIORITE || block == Blocks.ANDESITE
                         || block == Blocks.POLISHED_ANDESITE || block == Blocks.DEEPSLATE || block == Blocks.COBBLED_DEEPSLATE || block == Blocks.POLISHED_DEEPSLATE
                         || block == Blocks.CALCITE || block == Blocks.TUFF || block == Blocks.DRIPSTONE_BLOCK || block == Blocks.POLISHED_BASALT

@@ -12,4 +12,15 @@ public class ExperienceHandler {
         if (level <= 30) return 315 + sum(level - 15, 37, 5);
         return 1395 + sum(level - 30, 112, 9);
     }
+
+    public static int getLevelFromExperience(int points) {
+        int i = 0;
+        while (points >= 0) {
+            if (i < 16) points -= (2 * i) + 7;
+            else if (i < 31) points -= (5 * i) - 38;
+            else points -= (9 * i) - 158;
+            i++;
+        }
+        return i - 1;
+    }
 }

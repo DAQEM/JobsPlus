@@ -46,8 +46,8 @@ public class LumberAxeItem extends AxeItem {
     public static void attemptBreak(Level level, BlockPos pos, Player player) {
         if (!level.isClientSide) {
             BlockState state = level.getBlockState(pos);
-            boolean isEffective = state.getBlock().getTags().contains(BlockTags.LOGS.getName());
-            boolean witherImmune = BlockTags.WITHER_IMMUNE.contains(state.getBlock());
+            boolean isEffective = state.is(BlockTags.LOGS);
+            boolean witherImmune = state.is(BlockTags.WITHER_IMMUNE);
 
             if (isEffective && !witherImmune) {
                 level.destroyBlock(pos, false);
@@ -71,7 +71,7 @@ public class LumberAxeItem extends AxeItem {
     @Override
     public boolean mineBlock(@NotNull ItemStack stack, @NotNull Level level, @NotNull BlockState state, @NotNull BlockPos pos, @NotNull LivingEntity entityLiving) {
         if (entityLiving instanceof Player player) {
-            if (BlockTags.LOGS.contains(state.getBlock())) {
+            if (state.is(BlockTags.LOGS)) {
                 if (player.getMainHandItem().getOrCreateTag().getInt("mode") == 0) {
                     stack.hurtAndBreak(3, entityLiving, entityLiving1 -> {
                     });
@@ -122,9 +122,8 @@ public class LumberAxeItem extends AxeItem {
                 }
 
                 BlockPos candidate = candidates.get(i);
-                Block block = level.getBlockState(candidate).getBlock();
 
-                if (BlockTags.LOGS.contains(block)) {
+                if (level.getBlockState(candidate).is(BlockTags.LOGS)) {
                     logs.add(candidate);
                     for (int x = -1; x <= 1; x++) {
                         for (int y = 0; y <= 1; y++) {

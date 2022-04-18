@@ -14,6 +14,7 @@ import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -21,6 +22,8 @@ public class EventServerChat {
 
     @SubscribeEvent
     public void onPlayerChat(ServerChatEvent event) {
+        if (ModList.get().isLoaded("ftbranks")) return;
+
         Component component = event.getComponent();
         if (event.getPlayer() != null) {
             Player player = event.getPlayer();

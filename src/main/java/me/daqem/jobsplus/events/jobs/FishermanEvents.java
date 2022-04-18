@@ -47,7 +47,7 @@ public class FishermanEvents {
                     exp += 25;
                 } else {
                     ArrayList<Item> treasure = new ArrayList<>(List.of(Items.BOW, Items.FISHING_ROD, Items.NAME_TAG, Items.ENCHANTED_BOOK, Items.NAUTILUS_SHELL, Items.SADDLE));
-                    if (ItemTags.FISHES.contains(item.asItem())) {
+                    if (itemStack.is(ItemTags.FISHES)) {
                         exp += ExpHandler.getEXPHigh();
                     } else if (treasure.contains(item)) {
                         exp += ExpHandler.getEXPFishing();

@@ -221,8 +221,6 @@ public class FarmersHoeEvents {
                         }
                     }
                 }
-            } else {
-                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
             }
             if (exp > 0) ExpHandler.addJobEXP(player, job, exp);
         }

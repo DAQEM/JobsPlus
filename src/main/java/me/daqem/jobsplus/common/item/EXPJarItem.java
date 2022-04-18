@@ -93,7 +93,16 @@ public class EXPJarItem extends Item {
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Shift + right-click to extract EXP."));
         } else {
             if (stack.getOrCreateTag().contains("EXP")) {
-                tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + stack.getOrCreateTag().getInt("EXP")));
+                final int exp = stack.getOrCreateTag().getInt("EXP");
+                if (exp == 0) {
+                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + "Empty"));
+                } else if (ExperienceHandler.getLevelFromExperience(exp) == 0) {
+                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp));
+                } else if (ExperienceHandler.getLevelFromExperience(exp) == 1) {
+                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp + ", or " + ExperienceHandler.getLevelFromExperience(exp) + " level"));
+                } else {
+                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp + ", or " + ExperienceHandler.getLevelFromExperience(exp) + " levels"));
+                }
             }
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }

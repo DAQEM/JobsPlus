@@ -49,7 +49,7 @@ public class ToolFunctions {
             for (BlockPos pos : brokenBlocks) {
                 BlockState state = level.getBlockState(pos);
                 if (breakValidator.canBreak(state)) {
-                    Block block = level.getBlockState(pos).getBlock();
+                    Block block = state.getBlock();
                     String blockString = block.getDescriptionId().replace("block.minecraft.", "");
                     if (player.getMainHandItem().getItem() instanceof HammerItem) {
                         if (!MinerEvents.timeoutList.contains(pos)) {
@@ -57,14 +57,15 @@ public class ToolFunctions {
                                 minerExp += ExpHandler.getEXPLowest();
                             } else if (block instanceof OreBlock) {
                                 minerExp += ExpHandler.getEXPMid();
-                            } else if (MinerEvents.lowList.contains(blockString) || BlockTags.TERRACOTTA.contains(block)) {
+                            } else if (MinerEvents.lowList.contains(blockString) || state.is(BlockTags.TERRACOTTA)) {
                                 minerExp += ExpHandler.getEXPLow();
                             }
                             player.awardStat(Stats.BLOCK_MINED.get(block));
                         }
                         MinerEvents.timeoutList.remove(pos);
                     }
-                    if (player.getMainHandItem().getItem() instanceof ExcavatorItem) {
+                    final boolean isExcavator = player.getMainHandItem().getItem() instanceof ExcavatorItem;
+                    if (isExcavator) {
                         if (!DiggerEvents.timeoutList.contains(pos)) {
                             if (DiggerEvents.lowestList.contains(blockString)) {
                                 diggerExp += ExpHandler.getEXPLowest();
@@ -83,14 +84,16 @@ public class ToolFunctions {
                         final List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
                         final List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops);
                         final int exp = state.getExpDrop(level, pos, bonusLevel, silkLevel);
-                        if (JobGetters.hasEnabledPowerup(player, digger, CapType.POWERUP1.get())) {
+                        if (JobGetters.hasEnabledPowerup(player, digger, CapType.POWERUP1.get()) && isExcavator) {
                             for (ItemStack itemStack : stacks) {
                                 ItemHandler.addItemsToInventoryOrDrop(itemStack, player, level, pos, exp);
                             }
                         } else {
                             dropItems(level, stacks, pos, exp);
                         }
-                        DiggerEvents.dropMinerals(player, level, pos);
+                        if (isExcavator) {
+                            DiggerEvents.dropMinerals(player, level, pos);
+                        }
                     }
 
                     if (damageTool) {

@@ -446,7 +446,7 @@ public class ModFishingHook extends FishingHook {
         super.recreateFromPacket(clientboundAddEntityPacket);
         if (this.getPlayerOwner() == null) {
             int i = clientboundAddEntityPacket.getData();
-            LOGGER.error("Failed to recreate fishing hook on client. {} (id: {}) is not a valid owner.", this.level.getEntity(i), i);
+            JobsPlus.LOGGER.error("Failed to recreate fishing hook on client. {} (id: {}) is not a valid owner.", this.level.getEntity(i), i);
             this.kill();
         }
 
