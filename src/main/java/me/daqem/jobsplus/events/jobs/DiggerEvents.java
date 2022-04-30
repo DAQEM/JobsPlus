@@ -42,12 +42,12 @@ public class DiggerEvents {
 
     public static void dropMinerals(Player player, Level level, BlockPos pos) {
         if (JobGetters.hasEnabledPowerup(player, Jobs.DIGGER, CapType.POWERUP2.get())) {
-            if (Math.random() * 100 <= 4) addFreshItemEntity(player, level, pos, Items.GOLD_NUGGET);
-            else if (Math.random() * 100 <= 2) addFreshItemEntity(player, level, pos, Items.GOLD_INGOT);
-            else if (Math.random() * 100 <= 0.1) addFreshItemEntity(player, level, pos, Items.GOLD_BLOCK);
-            if (Math.random() * 100 <= 4) addFreshItemEntity(player, level, pos, Items.IRON_NUGGET);
-            else if (Math.random() * 100 <= 2) addFreshItemEntity(player, level, pos, Items.IRON_INGOT);
-            else if (Math.random() * 100 <= 0.1) addFreshItemEntity(player, level, pos, Items.IRON_BLOCK);
+            if (Math.random() * 100 <= 2) addFreshItemEntity(player, level, pos, Items.GOLD_NUGGET);
+            else if (Math.random() * 100 <= 1) addFreshItemEntity(player, level, pos, Items.RAW_GOLD);
+            else if (Math.random() * 100 <= 0.05) addFreshItemEntity(player, level, pos, Items.RAW_GOLD_BLOCK);
+            if (Math.random() * 100 <= 2) addFreshItemEntity(player, level, pos, Items.IRON_NUGGET);
+            else if (Math.random() * 100 <= 1) addFreshItemEntity(player, level, pos, Items.RAW_IRON);
+            else if (Math.random() * 100 <= 0.05) addFreshItemEntity(player, level, pos, Items.RAW_IRON_BLOCK);
         }
     }
 
