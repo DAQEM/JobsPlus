@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.events.jobs.MinerEvents;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
@@ -45,10 +46,14 @@ public class HammerItem extends PickaxeItem {
                 boolean allowedToUseHammer = false;
                 Item item = player.getMainHandItem().getItem();
                 int jobLevel = JobGetters.getJobLevel(player, Jobs.MINER);
-                if (jobLevel >= 5 && item == ModItems.MINERS_HAMMER_LEVEL_1.get()) allowedToUseHammer = true;
-                if (jobLevel >= 25 && item == ModItems.MINERS_HAMMER_LEVEL_2.get()) allowedToUseHammer = true;
-                if (jobLevel >= 50 && item == ModItems.MINERS_HAMMER_LEVEL_3.get()) allowedToUseHammer = true;
-                if (jobLevel >= 75 && item == ModItems.MINERS_HAMMER_LEVEL_4.get()) allowedToUseHammer = true;
+                if (jobLevel >= Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_1.get() && item == ModItems.MINERS_HAMMER_LEVEL_1.get())
+                    allowedToUseHammer = true;
+                if (jobLevel >= Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_2.get() && item == ModItems.MINERS_HAMMER_LEVEL_2.get())
+                    allowedToUseHammer = true;
+                if (jobLevel >= Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_3.get() && item == ModItems.MINERS_HAMMER_LEVEL_3.get())
+                    allowedToUseHammer = true;
+                if (jobLevel >= Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_4.get() && item == ModItems.MINERS_HAMMER_LEVEL_4.get())
+                    allowedToUseHammer = true;
                 if (allowedToUseHammer) {
                     if (player.getMainHandItem().getItem() instanceof HammerItem) {
                         float originHardness = level.getBlockState(pos).getDestroySpeed(null, null);
@@ -127,19 +132,19 @@ public class HammerItem extends PickaxeItem {
             String modes = "";
             Item item = stack.getItem();
             if (item == ModItems.MINERS_HAMMER_LEVEL_1.get()) {
-                level = 5;
+                level = Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_1.get();
                 modes = "3x3";
             }
             if (item == ModItems.MINERS_HAMMER_LEVEL_2.get()) {
-                level = 25;
+                level = Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_2.get();
                 modes = "3x3, 3x3x3";
             }
             if (item == ModItems.MINERS_HAMMER_LEVEL_3.get()) {
-                level = 50;
+                level = Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_3.get();
                 modes = "3x3, 3x3x3, 5x5";
             }
             if (item == ModItems.MINERS_HAMMER_LEVEL_4.get()) {
-                level = 75;
+                level = Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_4.get();
                 modes = "3x3, 3x3x3, 5x5, 5x5x5";
             }
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));

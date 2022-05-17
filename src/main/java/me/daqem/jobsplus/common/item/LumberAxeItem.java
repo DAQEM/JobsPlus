@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
@@ -77,13 +78,13 @@ public class LumberAxeItem extends AxeItem {
                     });
                     int jobLevel = JobGetters.getJobLevel(player, Jobs.LUMBERJACK);
                     Item itemInHand = player.getMainHandItem().getItem();
-                    boolean isAllowedToUseAxe = jobLevel >= 5 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_1.get();
+                    boolean isAllowedToUseAxe = jobLevel >= Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_1.get() && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_1.get();
                     if (!isAllowedToUseAxe)
-                        isAllowedToUseAxe = jobLevel >= 25 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_2.get();
+                        isAllowedToUseAxe = jobLevel >= Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_2.get() && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_2.get();
                     if (!isAllowedToUseAxe)
-                        isAllowedToUseAxe = jobLevel >= 50 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_3.get();
+                        isAllowedToUseAxe = jobLevel >= Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_3.get() && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_3.get();
                     if (!isAllowedToUseAxe)
-                        isAllowedToUseAxe = jobLevel >= 75 && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_4.get();
+                        isAllowedToUseAxe = jobLevel >= Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_4.get() && itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_4.get();
                     if (isAllowedToUseAxe) {
                         attemptFellTree(level, pos, player);
                     } else {
@@ -182,19 +183,19 @@ public class LumberAxeItem extends AxeItem {
             int level = 0, logs = 0;
             Item item = stack.getItem();
             if (item == ModItems.LUMBERJACK_AXE_LEVEL_1.get()) {
-                level = 5;
+                level = Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_1.get();
                 logs = 16;
             }
             if (item == ModItems.LUMBERJACK_AXE_LEVEL_2.get()) {
-                level = 25;
+                level = Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_2.get();
                 logs = 48;
             }
             if (item == ModItems.LUMBERJACK_AXE_LEVEL_3.get()) {
-                level = 50;
+                level = Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_3.get();
                 logs = 128;
             }
             if (item == ModItems.LUMBERJACK_AXE_LEVEL_4.get()) {
-                level = 75;
+                level = Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_4.get();
                 logs = 256;
             }
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));

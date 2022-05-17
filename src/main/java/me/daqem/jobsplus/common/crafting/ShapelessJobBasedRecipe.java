@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.common.crafting;
 
 import com.google.gson.JsonObject;
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.init.ModRecipes;
 import me.daqem.jobsplus.utils.JobGetters;
@@ -41,8 +42,7 @@ public class ShapelessJobBasedRecipe extends ShapelessRecipe {
     }
 
     private ItemStack assemble(Player player, CraftingContainer container) {
-        if (JobGetters.jobIsEnabled(player, Jobs.HUNTER)
-                && JobGetters.getJobLevel(player, Jobs.HUNTER) >= 1
+        if (JobGetters.getJobLevel(player, Jobs.HUNTER) >= Config.REQUIRED_LEVEL_HUNTER_WOOL.get()
                 && Objects.requireNonNull(getResultItem().getItem().getRegistryName()).toString().equals("minecraft:white_wool")) {
             return super.assemble(container);
         }

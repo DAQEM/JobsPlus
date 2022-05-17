@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.entity.ModFishingHook;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
@@ -47,12 +48,12 @@ public class RodItem extends FishingRodItem {
         int jobLevel = JobGetters.getJobLevel(player, job);
         final FishingHook fishing = player.fishing;
         if (JobGetters.jobIsEnabled(player, job)) {
-            boolean isAllowedToUseRod = itemstack.getItem() == ModItems.FISHERMANS_ROD_LEVEL_1.get() && jobLevel >= 5;
-            if (itemstack.getItem() == ModItems.FISHERMANS_ROD_LEVEL_2.get() && jobLevel >= 25)
+            boolean isAllowedToUseRod = itemstack.getItem() == ModItems.FISHERMANS_ROD_LEVEL_1.get() && jobLevel >= Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_1.get();
+            if (itemstack.getItem() == ModItems.FISHERMANS_ROD_LEVEL_2.get() && jobLevel >= Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_2.get())
                 isAllowedToUseRod = true;
-            if (itemstack.getItem() == ModItems.FISHERMANS_ROD_LEVEL_3.get() && jobLevel >= 50)
+            if (itemstack.getItem() == ModItems.FISHERMANS_ROD_LEVEL_3.get() && jobLevel >= Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_3.get())
                 isAllowedToUseRod = true;
-            if (itemstack.getItem() == ModItems.FISHERMANS_ROD_LEVEL_4.get() && jobLevel >= 75)
+            if (itemstack.getItem() == ModItems.FISHERMANS_ROD_LEVEL_4.get() && jobLevel >= Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_4.get())
                 isAllowedToUseRod = true;
             if (isAllowedToUseRod) {
                 if (fishing != null) {
@@ -111,22 +112,22 @@ public class RodItem extends FishingRodItem {
             String four = ChatColor.green() + "10% " + ChatColor.reset() + "4 drops";
             String five = ChatColor.green() + "5% " + ChatColor.reset() + "5 drops";
             if (item == ModItems.FISHERMANS_ROD_LEVEL_1.get()) {
-                level = 5;
+                level = Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_1.get();
                 dropList.add(two);
             }
             if (item == ModItems.FISHERMANS_ROD_LEVEL_2.get()) {
-                level = 25;
+                level = Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_2.get();
                 dropList.add(two);
                 dropList.add(three);
             }
             if (item == ModItems.FISHERMANS_ROD_LEVEL_3.get()) {
-                level = 50;
+                level = Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_3.get();
                 dropList.add(two);
                 dropList.add(three);
                 dropList.add(four);
             }
             if (item == ModItems.FISHERMANS_ROD_LEVEL_4.get()) {
-                level = 75;
+                level = Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_4.get();
                 dropList.add(two);
                 dropList.add(three);
                 dropList.add(four);

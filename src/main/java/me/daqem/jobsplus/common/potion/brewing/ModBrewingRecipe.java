@@ -31,11 +31,8 @@ public class ModBrewingRecipe implements IBrewingRecipe {
     }
 
     @Override
-    public ItemStack getOutput(@NotNull ItemStack input, @NotNull ItemStack ingredient) {
-        if (isInput(input) && isIngredient(ingredient)) {
-            return this.output.copy();
-        } else {
-            return ItemStack.EMPTY;
-        }
+    public @NotNull ItemStack getOutput(@NotNull ItemStack input, @NotNull ItemStack ingredient) {
+        if (isInput(input) && isIngredient(ingredient)) return this.output.copy();
+        else return ItemStack.EMPTY;
     }
 }

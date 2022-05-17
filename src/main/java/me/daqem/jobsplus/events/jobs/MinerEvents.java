@@ -39,7 +39,7 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MinerEvents {
 
-    public final static ArrayList<String> lowList = new ArrayList<>(List.of("andesite", "diorite", "granite", "calcite", "dripstone", "dripstone_block", "sandstone", "blackstone", "budding_amethyst", "amethyst_block"));
+    public final static ArrayList<String> lowList = new ArrayList<>(List.of("andesite", "diorite", "granite", "calcite", "dripstone", "dripstone_block", "sandstone", "blackstone", "budding_amethyst", "amethyst_block", "tuff"));
     public final static ArrayList<String> lowestList = new ArrayList<>(List.of("stone", "deepslate", "netherrack", "end_stone", "cobblestone"));
     public static final ArrayList<BlockPos> timeoutList = new ArrayList<>();
     public static final ArrayList<UUID> veinMinerArray = new ArrayList<>();

@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.ChatColor;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,18 +26,10 @@ public class HunterSwordItem extends SwordItem {
         if (Screen.hasShiftDown()) {
             int level = 0;
             Item item = stack.getItem();
-            if (item == ModItems.HUNTERS_SWORD_LEVEL_1.get()) {
-                level = 5;
-            }
-            if (item == ModItems.HUNTERS_SWORD_LEVEL_2.get()) {
-                level = 25;
-            }
-            if (item == ModItems.HUNTERS_SWORD_LEVEL_3.get()) {
-                level = 50;
-            }
-            if (item == ModItems.HUNTERS_SWORD_LEVEL_4.get()) {
-                level = 75;
-            }
+            if (item == ModItems.HUNTERS_SWORD_LEVEL_1.get()) level = Config.REQUIRED_LEVEL_HUNTERS_SWORD_LEVEL_1.get();
+            if (item == ModItems.HUNTERS_SWORD_LEVEL_2.get()) level = Config.REQUIRED_LEVEL_HUNTERS_SWORD_LEVEL_2.get();
+            if (item == ModItems.HUNTERS_SWORD_LEVEL_3.get()) level = Config.REQUIRED_LEVEL_HUNTERS_SWORD_LEVEL_3.get();
+            if (item == ModItems.HUNTERS_SWORD_LEVEL_4.get()) level = Config.REQUIRED_LEVEL_HUNTERS_SWORD_LEVEL_4.get();
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Hunter"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));

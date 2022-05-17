@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.common.entity.ModThrownExperienceBottle;
 import me.daqem.jobsplus.utils.ChatColor;
 import net.minecraft.client.gui.screens.Screen;
@@ -83,23 +84,14 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
             String level;
-            if (tier == 1) {
-                level = Integer.toString(10);
-            } else if (tier == 2) {
-                level = Integer.toString(20);
-            } else if (tier == 3) {
-                level = Integer.toString(35);
-            } else if (tier == 4) {
-                level = Integer.toString(50);
-            } else if (tier == 5) {
-                level = Integer.toString(75);
-            } else if (tier == 6) {
-                level = Integer.toString(100);
-            } else if (exp != 0) {
-                level = Integer.toString(25);
-            } else {
-                level = "depends on use.";
-            }
+            if (tier == 1) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_1.get();
+            else if (tier == 2) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_2.get();
+            else if (tier == 3) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_3.get();
+            else if (tier == 4) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_4.get();
+            else if (tier == 5) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_5.get();
+            else if (tier == 6) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_6.get();
+            else if (exp != 0) level = "" + Config.REQUIRED_LEVEL_EXP_JAR_TO_EXPERIENCE_BOTTLE.get();
+            else level = "depends on use.";
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
         } else {
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));

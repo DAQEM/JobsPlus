@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.init.ModItems;
@@ -68,19 +69,19 @@ public class FarmersHoeItem extends HoeItem {
             String modes = "";
             Item item = stack.getItem();
             if (item == ModItems.FARMERS_HOE_LEVEL_1.get()) {
-                level = 5;
+                level = Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_1.get();
                 modes = "Single Block";
             }
             if (item == ModItems.FARMERS_HOE_LEVEL_2.get()) {
-                level = 25;
+                level = Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_2.get();
                 modes = "Single Block, 3x3";
             }
             if (item == ModItems.FARMERS_HOE_LEVEL_3.get()) {
-                level = 50;
+                level = Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_3.get();
                 modes = "Single Block, 3x3, 5x5";
             }
             if (item == ModItems.FARMERS_HOE_LEVEL_4.get()) {
-                level = 75;
+                level = Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_4.get();
                 modes = "Single Block, 3x3, 5x5";
             }
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));

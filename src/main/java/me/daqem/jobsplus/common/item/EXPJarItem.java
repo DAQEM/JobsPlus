@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.handlers.ExperienceHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
@@ -33,7 +34,7 @@ public class EXPJarItem extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         if (!level.isClientSide) {
-            if (JobGetters.getJobLevel(player, Jobs.ENCHANTER) >= 5) {
+            if (JobGetters.getJobLevel(player, Jobs.ENCHANTER) >= Config.REQUIRED_LEVEL_EXP_JAR.get()) {
                 InteractionHand usedHand = InteractionHand.OFF_HAND;
                 if (player.getMainHandItem().getItem() instanceof EXPJarItem) {
                     usedHand = InteractionHand.MAIN_HAND;
@@ -86,7 +87,7 @@ public class EXPJarItem extends Item {
         if (Screen.hasShiftDown()) {
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + 5));
+            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + Config.REQUIRED_LEVEL_EXP_JAR.get()));
             tooltip.add(new KeybindComponent(""));
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Controls:"));
             tooltip.add(new KeybindComponent(ChatColor.gray() + "Right-click to insert EXP"));

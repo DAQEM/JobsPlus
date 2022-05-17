@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.container.backpack.BackpackContainer;
 import me.daqem.jobsplus.common.container.backpack.BackpackHandler;
@@ -77,34 +78,25 @@ public class BackpackItem extends Item {
         ItemStack backpack = player.getItemInHand(hand);
         if (!level.isClientSide && player instanceof ServerPlayer && backpack.getItem() instanceof BackpackItem) {
             Jobs job = Jobs.BUILDER;
-            boolean canOpenBackpack = backpack.getItem() == ModItems.SMALL_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 5;
-            if (backpack.getItem() == ModItems.MEDIUM_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 15)
-                canOpenBackpack = true;
-            if (backpack.getItem() == ModItems.LARGE_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 25)
-                canOpenBackpack = true;
-            if (backpack.getItem() == ModItems.HUGE_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 50)
-                canOpenBackpack = true;
-            if (backpack.getItem() == ModItems.ENDER_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= 10)
-                canOpenBackpack = true;
+            BackpackSavedData data = BackpackItem.getData(backpack);
+            Backpack itemTier = ((BackpackItem) backpack.getItem()).tier;
+            UUID uuid = Objects.requireNonNull(data).getUuid();
+
+            boolean canOpenBackpack = (backpack.getItem() == ModItems.SMALL_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_SMALL_BACKPACK.get())
+                    || (backpack.getItem() == ModItems.MEDIUM_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_MEDIUM_BACKPACK.get())
+                    || (backpack.getItem() == ModItems.LARGE_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_LARGE_BACKPACK.get())
+                    || (backpack.getItem() == ModItems.HUGE_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_HUGE_BACKPACK.get())
+                    || (backpack.getItem() == ModItems.ENDER_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_ENDER_BACKPACK.get());
             if (!canOpenBackpack) {
                 HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
                 return InteractionResultHolder.success(player.getItemInHand(hand));
             }
-
-            BackpackSavedData data = BackpackItem.getData(backpack);
-
             if (backpack.getOrCreateTag().contains("Inventory")) {
                 ((BackpackItemHandler) Objects.requireNonNull(data).getHandler()).deserializeNBT(Objects.requireNonNull(backpack.getTag()).getCompound("Inventory"));
-
                 backpack.getTag().remove("Inventory");
             }
-            Backpack itemTier = ((BackpackItem) backpack.getItem()).tier;
-            UUID uuid = Objects.requireNonNull(data).getUuid();
-
-            if (data.getTier().ordinal() < itemTier.ordinal()) {
-                data.upgrade(itemTier);
-            }
-            if (!Objects.equals(backpack.getItem().getRegistryName(), JobsPlus.getId("ender_backpack"))) {
+            if (data.getTier().ordinal() < itemTier.ordinal()) data.upgrade(itemTier);
+            if (!backpack.is(ModItems.ENDER_BACKPACK.get())) {
                 NetworkHooks.openGui(((ServerPlayer) player), new SimpleMenuProvider((windowId, playerInventory, playerEntity) -> new BackpackContainer(windowId, playerInventory, uuid, data.getTier(), data.getHandler()), backpack.getHoverName()), (buffer -> buffer.writeUUID(uuid).writeInt(data.getTier().ordinal())));
             } else {
                 PlayerEnderChestContainer playerenderchestcontainer = player.getEnderChestInventory();
@@ -127,22 +119,13 @@ public class BackpackItem extends Item {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
         if (Screen.hasShiftDown()) {
-            String level = "";
-            if (stack.getItem() == ModItems.SMALL_BACKPACK.get()) {
-                level = "5";
-            }
-            if (stack.getItem() == ModItems.MEDIUM_BACKPACK.get()) {
-                level = "15";
-            }
-            if (stack.getItem() == ModItems.LARGE_BACKPACK.get()) {
-                level = "25";
-            }
-            if (stack.getItem() == ModItems.HUGE_BACKPACK.get()) {
-                level = "50";
-            }
-            if (stack.getItem() == ModItems.ENDER_BACKPACK.get()) {
-                level = "10";
-            }
+            int level = 0;
+            final Item item = stack.getItem();
+            if (item == ModItems.SMALL_BACKPACK.get()) level = Config.REQUIRED_LEVEL_SMALL_BACKPACK.get();
+            if (item == ModItems.MEDIUM_BACKPACK.get()) level = Config.REQUIRED_LEVEL_MEDIUM_BACKPACK.get();
+            if (item == ModItems.LARGE_BACKPACK.get()) level = Config.REQUIRED_LEVEL_LARGE_BACKPACK.get();
+            if (item == ModItems.HUGE_BACKPACK.get()) level = Config.REQUIRED_LEVEL_HUGE_BACKPACK.get();
+            if (item == ModItems.ENDER_BACKPACK.get()) level = Config.REQUIRED_LEVEL_ENDER_BACKPACK.get();
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Builder"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));

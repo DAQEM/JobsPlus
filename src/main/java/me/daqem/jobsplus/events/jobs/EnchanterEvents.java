@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.events.jobs;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
@@ -10,6 +11,7 @@ import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.inventory.GrindstoneMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -56,9 +58,10 @@ public class EnchanterEvents {
                             multiMap.remove(player);
                             final ItemStack enchantedItem = containerMenu.getSlot(0).getItem();
                             if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
-                                if (enchantedItem.isEnchanted()) {
+                                if (enchantedItem.isEnchanted() || enchantedItem.is(Items.ENCHANTED_BOOK)) {
                                     Map<Enchantment, Integer> newMap = new HashMap<>();
                                     for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(enchantedItem).entrySet()) {
+                                        JobsPlus.LOGGER.info(entry);
                                         if (entry.getKey() == Enchantments.SILK_TOUCH || entry.getKey() == Enchantments.AQUA_AFFINITY ||
                                                 entry.getKey() == Enchantments.MENDING || entry.getKey() == Enchantments.INFINITY_ARROWS ||
                                                 entry.getKey() == Enchantments.FLAMING_ARROWS || entry.getKey() == Enchantments.MULTISHOT ||
@@ -68,6 +71,7 @@ public class EnchanterEvents {
                                             newMap.put(entry.getKey(), entry.getValue() + 1);
                                         }
                                     }
+                                    JobsPlus.LOGGER.info(EnchantmentHelper.getEnchantments(enchantedItem) + " 1");
                                     EnchantmentHelper.setEnchantments(newMap, enchantedItem);
                                     containerMenu.getSlot(0).set(enchantedItem);
                                     containerMenu.getSlot(0).setChanged();
@@ -130,7 +134,7 @@ public class EnchanterEvents {
         if (!(left.getDescriptionId().contains("item.minecraft.") || right.getDescriptionId().contains("item.minecraft.")
                 || left.getDescriptionId().contains("item.jobsplus.") || right.getDescriptionId().contains("item.jobsplus.")))
             return;
-        if (!JobGetters.hasSuperPowerEnabled(event.getPlayer(), job) && left.isEmpty() && right.isEmpty()) return;
+        if (!JobGetters.hasSuperPowerEnabled(event.getPlayer(), job) || left.isEmpty() || right.isEmpty()) return;
         if (left.getItem() != right.getItem()) return;
 
         final Map<Enchantment, Integer> leftEnchantments = EnchantmentHelper.getEnchantments(left);

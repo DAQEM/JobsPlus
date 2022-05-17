@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.ChatColor;
 import net.minecraft.client.gui.screens.Screen;
@@ -24,40 +25,35 @@ public class ModArmorItem extends ArmorItem {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
         if (Screen.hasShiftDown()) {
-            String level = "";
+            int level = 0;
             Item item = stack.getItem();
-            if (item == ModItems.REINFORCED_IRON_HELMET.get()
-                    || item == ModItems.REINFORCED_IRON_BOOTS.get()) {
-                level = "1";
-            }
-            if (item == ModItems.OBSIDIAN_HELMET.get()
-                    || item == ModItems.OBSIDIAN_BOOTS.get()
-                    || item == ModItems.REINFORCED_IRON_LEGGINGS.get()) {
-                level = "5";
-            }
-            if (item == ModItems.OBSIDIAN_LEGGINGS.get()
-                    || item == ModItems.REINFORCED_IRON_CHESTPLATE.get()) {
-                level = "10";
-            }
-            if (item == ModItems.REINFORCED_DIAMOND_HELMET.get()
-                    || item == ModItems.REINFORCED_DIAMOND_BOOTS.get()
-                    || item == ModItems.OBSIDIAN_CHESTPLATE.get()) {
-                level = "20";
-            }
-            if (item == ModItems.REINFORCED_DIAMOND_LEGGINGS.get()) {
-                level = "35";
-            }
-            if (item == ModItems.REINFORCED_DIAMOND_CHESTPLATE.get()
-                    || item == ModItems.REINFORCED_NETHERITE_HELMET.get()
-                    || item == ModItems.REINFORCED_NETHERITE_BOOTS.get()) {
-                level = "50";
-            }
-            if (item == ModItems.REINFORCED_NETHERITE_LEGGINGS.get()) {
-                level = "75";
-            }
-            if (item == ModItems.REINFORCED_NETHERITE_CHESTPLATE.get()) {
-                level = "100";
-            }
+            if (item == ModItems.REINFORCED_IRON_HELMET.get())
+                level = Config.REQUIRED_LEVEL_REINFORCED_IRON_HELMET.get();
+            if (item == ModItems.REINFORCED_IRON_BOOTS.get()) level = Config.REQUIRED_LEVEL_REINFORCED_IRON_BOOTS.get();
+            if (item == ModItems.OBSIDIAN_HELMET.get()) level = Config.REQUIRED_LEVEL_OBSIDIAN_HELMET.get();
+            if (item == ModItems.OBSIDIAN_BOOTS.get()) level = Config.REQUIRED_LEVEL_OBSIDIAN_BOOTS.get();
+            if (item == ModItems.REINFORCED_IRON_LEGGINGS.get())
+                level = Config.REQUIRED_LEVEL_REINFORCED_IRON_LEGGINGS.get();
+            if (item == ModItems.OBSIDIAN_LEGGINGS.get()) level = Config.REQUIRED_LEVEL_OBSIDIAN_LEGGINGS.get();
+            if (item == ModItems.REINFORCED_IRON_CHESTPLATE.get())
+                level = Config.REQUIRED_LEVEL_REINFORCED_IRON_CHESTPLATE.get();
+            if (item == ModItems.REINFORCED_DIAMOND_HELMET.get())
+                level = Config.REQUIRED_LEVEL_REINFORCED_DIAMOND_HELMET.get();
+            if (item == ModItems.REINFORCED_DIAMOND_BOOTS.get())
+                level = Config.REQUIRED_LEVEL_REINFORCED_DIAMOND_BOOTS.get();
+            if (item == ModItems.OBSIDIAN_CHESTPLATE.get()) level = Config.REQUIRED_LEVEL_OBSIDIAN_CHESTPLATE.get();
+            if (item == ModItems.REINFORCED_DIAMOND_LEGGINGS.get())
+                level = Config.REQUIRED_LEVEL_REINFORCED_DIAMOND_LEGGINGS.get();
+            if (item == ModItems.REINFORCED_DIAMOND_CHESTPLATE.get())
+                level = Config.REQUIRED_LEVEL_REINFORCED_DIAMOND_CHESTPLATE.get();
+            if (item == ModItems.REINFORCED_NETHERITE_HELMET.get())
+                level = Config.REQUIRED_LEVEL_REINFORCED_NETHERITE_HELMET.get();
+            if (item == ModItems.REINFORCED_NETHERITE_BOOTS.get())
+                level = Config.REQUIRED_LEVEL_REINFORCED_NETHERITE_BOOTS.get();
+            if (item == ModItems.REINFORCED_NETHERITE_LEGGINGS.get())
+                level = Config.REQUIRED_LEVEL_REINFORCED_NETHERITE_LEGGINGS.get();
+            if (item == ModItems.REINFORCED_NETHERITE_CHESTPLATE.get())
+                level = Config.REQUIRED_LEVEL_REINFORCED_NETHERITE_CHESTPLATE.get();
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Smith"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));

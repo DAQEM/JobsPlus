@@ -6,6 +6,7 @@ import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,6 +15,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -26,6 +28,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mod.EventBusSubscriber
@@ -155,6 +158,22 @@ public class PotionEvents {
                 (player.getAbilities()).flying = false;
                 tag.putBoolean("mayfly", false);
                 player.onUpdateAbilities();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void doJesus(TickEvent.PlayerTickEvent event) {
+        Player player = event.player;
+        if (player.hasEffect(ModEffects.JESUS.get())) {
+            if (Objects.equals(Objects.requireNonNull(player.level.getBlockState(new BlockPos(player.getX(), player.getBlockY(), player.getZ())).getBlock().getRegistryName()).toString(), "minecraft:water") &&
+                    player.level.getBlockState(new BlockPos(player.getX(), player.getBlockY() + 1, player.getZ())).isAir()) {
+                Vec3 vec3 = player.getDeltaMovement();
+                player.setDeltaMovement(vec3.x, 0.05D, vec3.z);
+                if (player.isFallFlying()) {
+                    player.setDeltaMovement(vec3.x, vec3.y, vec3.z);
+                }
+                player.flyingSpeed = 0.05F;
             }
         }
     }

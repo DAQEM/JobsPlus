@@ -33,40 +33,40 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("ILI")
                 .pattern("LSL")
                 .pattern("ILI")
-                .define('I', Tags.Items.STORAGE_BLOCKS_IRON)
+                .define('I', Tags.Items.INGOTS_IRON)
                 .define('L', Tags.Items.LEATHER)
                 .define('S', Tags.Items.STRING)
-                .unlockedBy("iron_block", has(Items.IRON_BLOCK))
+                .unlockedBy("iron_ingot", has(Items.IRON_INGOT))
                 .save(RecipeInjector.Inject(consumer, ModRecipes.SHAPED_JOB_BASED_RECIPE.get()));
 
         ShapedRecipeBuilder.shaped(ModItems.MEDIUM_BACKPACK.get())
                 .pattern("GLG")
                 .pattern("LBL")
                 .pattern("GLG")
-                .define('G', Tags.Items.STORAGE_BLOCKS_GOLD)
+                .define('G', Tags.Items.INGOTS_GOLD)
                 .define('L', Tags.Items.LEATHER)
                 .define('B', ModItems.SMALL_BACKPACK.get())
-                .unlockedBy("gold_block", has(Items.GOLD_BLOCK))
+                .unlockedBy("gold_ingot", has(Items.GOLD_INGOT))
                 .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
 
         ShapedRecipeBuilder.shaped(ModItems.LARGE_BACKPACK.get())
                 .pattern("DLD")
                 .pattern("LBL")
                 .pattern("DLD")
-                .define('D', Tags.Items.STORAGE_BLOCKS_DIAMOND)
+                .define('D', Tags.Items.GEMS_DIAMOND)
                 .define('L', Tags.Items.LEATHER)
                 .define('B', ModItems.MEDIUM_BACKPACK.get())
-                .unlockedBy("diamond_block", has(Items.DIAMOND_BLOCK))
+                .unlockedBy("diamond", has(Items.DIAMOND))
                 .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
 
         ShapedRecipeBuilder.shaped(ModItems.HUGE_BACKPACK.get())
                 .pattern("ELE")
                 .pattern("LBL")
                 .pattern("ELE")
-                .define('E', Tags.Items.STORAGE_BLOCKS_EMERALD)
+                .define('E', Tags.Items.GEMS_EMERALD)
                 .define('L', Tags.Items.LEATHER)
                 .define('B', ModItems.LARGE_BACKPACK.get())
-                .unlockedBy("emerald_block", has(Items.EMERALD_BLOCK))
+                .unlockedBy("emerald", has(Items.EMERALD))
                 .save(RecipeInjector.Inject(consumer, ModRecipes.UPGRADE_RECIPE.get()));
 
         ShapedRecipeBuilder.shaped(ModItems.ENDER_BACKPACK.get())

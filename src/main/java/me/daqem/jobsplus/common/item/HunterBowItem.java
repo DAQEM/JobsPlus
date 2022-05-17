@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.ChatColor;
@@ -66,12 +67,12 @@ public class HunterBowItem extends BowItem {
 
                 float f = getPowerForTime(i);
                 Jobs job = Jobs.HUNTER;
-                boolean isAllowedToUseBow = JobGetters.getJobLevel(player, job) >= 5 && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get();
-                if (JobGetters.getJobLevel(player, job) >= 25 && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get())
+                boolean isAllowedToUseBow = JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_1.get() && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get();
+                if (JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_2.get() && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get())
                     isAllowedToUseBow = true;
-                if (JobGetters.getJobLevel(player, job) >= 50 && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get())
+                if (JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_3.get() && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get())
                     isAllowedToUseBow = true;
-                if (JobGetters.getJobLevel(player, job) >= 75 && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get())
+                if (JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_4.get() && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get())
                     isAllowedToUseBow = true;
                 if (!isAllowedToUseBow) f = 0.1F;
                 if (!isAllowedToUseBow)
@@ -134,18 +135,10 @@ public class HunterBowItem extends BowItem {
         if (Screen.hasShiftDown()) {
             int level = 0;
             Item item = stack.getItem();
-            if (item == ModItems.HUNTERS_BOW_LEVEL_1.get()) {
-                level = 5;
-            }
-            if (item == ModItems.HUNTERS_BOW_LEVEL_2.get()) {
-                level = 25;
-            }
-            if (item == ModItems.HUNTERS_BOW_LEVEL_3.get()) {
-                level = 50;
-            }
-            if (item == ModItems.HUNTERS_BOW_LEVEL_4.get()) {
-                level = 75;
-            }
+            if (item == ModItems.HUNTERS_BOW_LEVEL_1.get()) level = Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_1.get();
+            if (item == ModItems.HUNTERS_BOW_LEVEL_2.get()) level = Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_2.get();
+            if (item == ModItems.HUNTERS_BOW_LEVEL_3.get()) level = Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_3.get();
+            if (item == ModItems.HUNTERS_BOW_LEVEL_4.get()) level = Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_4.get();
             tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Hunter"));
             tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
