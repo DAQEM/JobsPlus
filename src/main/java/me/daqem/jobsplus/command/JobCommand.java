@@ -402,16 +402,16 @@ public class JobCommand {
         if (source.getEntity() instanceof Player player) {
             player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
                 switch (job) {
-                    case ALCHEMIST -> jobStartMethod(player, job, CapType.SELCTOR_ALCHEMIST, handler.getCoins());
-                    case BUILDER -> jobStartMethod(player, job, CapType.SELCTOR_BUILDER, handler.getCoins());
-                    case DIGGER -> jobStartMethod(player, job, CapType.SELCTOR_DIGGER, handler.getCoins());
-                    case ENCHANTER -> jobStartMethod(player, job, CapType.SELCTOR_ENCHANTER, handler.getCoins());
-                    case FARMER -> jobStartMethod(player, job, CapType.SELCTOR_FARMER, handler.getCoins());
-                    case FISHERMAN -> jobStartMethod(player, job, CapType.SELCTOR_FISHERMAN, handler.getCoins());
-                    case HUNTER -> jobStartMethod(player, job, CapType.SELCTOR_HUNTER, handler.getCoins());
-                    case LUMBERJACK -> jobStartMethod(player, job, CapType.SELCTOR_LUMBERJACK, handler.getCoins());
-                    case MINER -> jobStartMethod(player, job, CapType.SELCTOR_MINER, handler.getCoins());
-                    case SMITH -> jobStartMethod(player, job, CapType.SELCTOR_SMITH, handler.getCoins());
+                    case ALCHEMIST -> jobStartMethod(player, job, CapType.SELECTOR_ALCHEMIST, handler.getCoins());
+                    case BUILDER -> jobStartMethod(player, job, CapType.SELECTOR_BUILDER, handler.getCoins());
+                    case DIGGER -> jobStartMethod(player, job, CapType.SELECTOR_DIGGER, handler.getCoins());
+                    case ENCHANTER -> jobStartMethod(player, job, CapType.SELECTOR_ENCHANTER, handler.getCoins());
+                    case FARMER -> jobStartMethod(player, job, CapType.SELECTOR_FARMER, handler.getCoins());
+                    case FISHERMAN -> jobStartMethod(player, job, CapType.SELECTOR_FISHERMAN, handler.getCoins());
+                    case HUNTER -> jobStartMethod(player, job, CapType.SELECTOR_HUNTER, handler.getCoins());
+                    case LUMBERJACK -> jobStartMethod(player, job, CapType.SELECTOR_LUMBERJACK, handler.getCoins());
+                    case MINER -> jobStartMethod(player, job, CapType.SELECTOR_MINER, handler.getCoins());
+                    case SMITH -> jobStartMethod(player, job, CapType.SELECTOR_SMITH, handler.getCoins());
                 }
             });
         }
@@ -443,16 +443,16 @@ public class JobCommand {
         if (source.getEntity() instanceof Player player) {
             player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
                 switch (job) {
-                    case ALCHEMIST -> jobStopMethod(player, job, CapType.SELCTOR_ALCHEMIST, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case BUILDER -> jobStopMethod(player, job, CapType.SELCTOR_BUILDER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case DIGGER -> jobStopMethod(player, job, CapType.SELCTOR_DIGGER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case ENCHANTER -> jobStopMethod(player, job, CapType.SELCTOR_ENCHANTER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case FARMER -> jobStopMethod(player, job, CapType.SELCTOR_FARMER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case FISHERMAN -> jobStopMethod(player, job, CapType.SELCTOR_FISHERMAN, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case HUNTER -> jobStopMethod(player, job, CapType.SELCTOR_HUNTER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case LUMBERJACK -> jobStopMethod(player, job, CapType.SELCTOR_LUMBERJACK, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case MINER -> jobStopMethod(player, job, CapType.SELCTOR_MINER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case SMITH -> jobStopMethod(player, job, CapType.SELCTOR_SMITH, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case ALCHEMIST -> jobStopMethod(player, job, CapType.SELECTOR_ALCHEMIST, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case BUILDER -> jobStopMethod(player, job, CapType.SELECTOR_BUILDER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case DIGGER -> jobStopMethod(player, job, CapType.SELECTOR_DIGGER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case ENCHANTER -> jobStopMethod(player, job, CapType.SELECTOR_ENCHANTER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case FARMER -> jobStopMethod(player, job, CapType.SELECTOR_FARMER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case FISHERMAN -> jobStopMethod(player, job, CapType.SELECTOR_FISHERMAN, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case HUNTER -> jobStopMethod(player, job, CapType.SELECTOR_HUNTER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case LUMBERJACK -> jobStopMethod(player, job, CapType.SELECTOR_LUMBERJACK, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case MINER -> jobStopMethod(player, job, CapType.SELECTOR_MINER, handler.getCoins(), JobGetters.getJobLevel(player, job));
+                    case SMITH -> jobStopMethod(player, job, CapType.SELECTOR_SMITH, handler.getCoins(), JobGetters.getJobLevel(player, job));
                 }
             });
         }

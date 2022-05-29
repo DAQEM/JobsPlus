@@ -23,7 +23,7 @@ public class ItemHandler {
 
     public static List<ItemStack> smeltedRawMaterials(Player player, List<ItemStack> drops) {
         List<ItemStack> newDrops = new ArrayList<>();
-        if (!JobGetters.hasEnabledPowerup(player, Jobs.MINER, CapType.POWERUP2.get())) return drops;
+        if (!JobGetters.hasEnabledPowerup(player, Jobs.MINER, CapType.POWER_UP2.get())) return drops;
         for (ItemStack drop : drops) {
             final Item item = drop.getItem();
             final int count = drop.getCount();

@@ -13,7 +13,7 @@ public class MobEffectHandler {
         if (JobGetters.hasSuperPowerEnabled(player, job)) {
             player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 5 * 20, 1));
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 5 * 20));
-        } else if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP3.get())) {
+        } else if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) {
             player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 5 * 20));
         }
     }

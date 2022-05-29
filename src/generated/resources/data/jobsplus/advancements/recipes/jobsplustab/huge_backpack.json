@@ -6,13 +6,13 @@
     ]
   },
   "criteria": {
-    "emerald_block": {
+    "emerald": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:emerald_block"
+              "minecraft:emerald"
             ]
           }
         ]
@@ -27,7 +27,7 @@
   },
   "requirements": [
     [
-      "emerald_block",
+      "emerald",
       "has_the_recipe"
     ]
   ]

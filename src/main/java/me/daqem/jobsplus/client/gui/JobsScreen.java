@@ -22,7 +22,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.KeybindComponent;
@@ -38,6 +40,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class JobsScreen extends Screen {
 
@@ -93,6 +96,32 @@ public class JobsScreen extends Screen {
 //.RRRR...RRRRR......EEEEEEEEEEE...... NNN..NNNNN....... DDDDDDDDD........ EEEEEEEEEE...... RRR...RRRRR..
 //.RRRR....RRRR......EEEEEEEEEEE...... NNN...NNNN....... DDDDDDDD......... EEEEEEEEEE...... RRR....RRRR..
 
+    public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Integer.parseInt(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+//.TTTTTTTTTTT.......OOOOOOO............OOOOOOO..........LLLL............TTTTTTTTTTT.... IIII......PPPPPPPPP.........SSSSSSS.....
+//.TTTTTTTTTTT......OOOOOOOOOO.........OOOOOOOOOO........LLLL............TTTTTTTTTTT.... IIII......PPPPPPPPPP....... SSSSSSSS....
+//.TTTTTTTTTTT.....OOOOOOOOOOOO.......OOOOOOOOOOOO.......LLLL............TTTTTTTTTTT.... IIII......PPPPPPPPPPP...... SSSSSSSSS...
+//....TTTT.........OOOOO..OOOOO.......OOOOO..OOOOO.......LLLL...............TTTT........ IIII......PPPP...PPPP..... SSS..SSSS...
+//....TTTT........ OOOO....OOOOO..... OOOO....OOOOO......LLLL...............TTTT........ IIII......PPPP...PPPP..... SSS.........
+//....TTTT........ OOO......OOOO..... OOO......OOOO......LLLL...............TTTT........ IIII......PPPPPPPPPPP...... SSSSSS......
+//....TTTT........ OOO......OOOO..... OOO......OOOO......LLLL...............TTTT........ IIII......PPPPPPPPPP........SSSSSSSSS...
+//....TTTT........ OOO......OOOO..... OOO......OOOO......LLLL...............TTTT........ IIII......PPPPPPPPP...........SSSSSSS...
+//....TTTT........ OOOO....OOOOO..... OOOO....OOOOO......LLLL...............TTTT........ IIII......PPPP...................SSSSS..
+//....TTTT.........OOOOO..OOOOO.......OOOOO..OOOOO.......LLLL...............TTTT........ IIII......PPPP............ SS....SSSS..
+//....TTTT.........OOOOOOOOOOOO.......OOOOOOOOOOOO.......LLLLLLLLLL.........TTTT........ IIII......PPPP............ SSSSSSSSSS..
+//....TTTT..........OOOOOOOOOO.........OOOOOOOOOO........LLLLLLLLLL.........TTTT........ IIII......PPPP............. SSSSSSSSS...
+//....TTTT............OOOOOO.............OOOOOO..........LLLLLLLLLL.........TTTT........ IIII......PPPP..............SSSSSSSS....
+
     @Override
     public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(poseStack);
@@ -118,19 +147,19 @@ public class JobsScreen extends Screen {
         super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
-//.TTTTTTTTTTT.......OOOOOOO............OOOOOOO..........LLLL............TTTTTTTTTTT.... IIII......PPPPPPPPP.........SSSSSSS.....
-//.TTTTTTTTTTT......OOOOOOOOOO.........OOOOOOOOOO........LLLL............TTTTTTTTTTT.... IIII......PPPPPPPPPP....... SSSSSSSS....
-//.TTTTTTTTTTT.....OOOOOOOOOOOO.......OOOOOOOOOOOO.......LLLL............TTTTTTTTTTT.... IIII......PPPPPPPPPPP...... SSSSSSSSS...
-//....TTTT.........OOOOO..OOOOO.......OOOOO..OOOOO.......LLLL...............TTTT........ IIII......PPPP...PPPP..... SSS..SSSS...
-//....TTTT........ OOOO....OOOOO..... OOOO....OOOOO......LLLL...............TTTT........ IIII......PPPP...PPPP..... SSS.........
-//....TTTT........ OOO......OOOO..... OOO......OOOO......LLLL...............TTTT........ IIII......PPPPPPPPPPP...... SSSSSS......
-//....TTTT........ OOO......OOOO..... OOO......OOOO......LLLL...............TTTT........ IIII......PPPPPPPPPP........SSSSSSSSS...
-//....TTTT........ OOO......OOOO..... OOO......OOOO......LLLL...............TTTT........ IIII......PPPPPPPPP...........SSSSSSS...
-//....TTTT........ OOOO....OOOOO..... OOOO....OOOOO......LLLL...............TTTT........ IIII......PPPP...................SSSSS..
-//....TTTT.........OOOOO..OOOOO.......OOOOO..OOOOO.......LLLL...............TTTT........ IIII......PPPP............ SS....SSSS..
-//....TTTT.........OOOOOOOOOOOO.......OOOOOOOOOOOO.......LLLLLLLLLL.........TTTT........ IIII......PPPP............ SSSSSSSSSS..
-//....TTTT..........OOOOOOOOOO.........OOOOOOOOOO........LLLLLLLLLL.........TTTT........ IIII......PPPP............. SSSSSSSSS...
-//....TTTT............OOOOOO.............OOOOOO..........LLLLLLLLLL.........TTTT........ IIII......PPPP..............SSSSSSSS....
+//.BBBBBBBBBB........UUUU...UUUU.......TTTTTTTTTTT.....TTTTTTTTTTT.......OOOOOOO..........NNNN...NNNN........SSSSSSS.....
+//.BBBBBBBBBBB.......UUUU...UUUU.......TTTTTTTTTTT.....TTTTTTTTTTT......OOOOOOOOOO........NNNNN..NNNN.......SSSSSSSSS....
+//.BBBBBBBBBBB.......UUUU...UUUU.......TTTTTTTTTTT.....TTTTTTTTTTT.....OOOOOOOOOOOO.......NNNNN..NNNN.......SSSSSSSSSS...
+//.BBBB...BBBB.......UUUU...UUUU..........TTTT............TTTT.........OOOOO..OOOOO.......NNNNNN.NNNN...... SSSS..SSSS...
+//.BBBB...BBBB.......UUUU...UUUU..........TTTT............TTTT........OOOOO....OOOOO......NNNNNN.NNNN...... SSSS.........
+//.BBBBBBBBBBB.......UUUU...UUUU..........TTTT............TTTT........OOOO......OOOO......NNNNNNNNNNN.......SSSSSSS......
+//.BBBBBBBBBB........UUUU...UUUU..........TTTT............TTTT........OOOO......OOOO......NNNNNNNNNNN........SSSSSSSSS...
+//.BBBBBBBBBBB.......UUUU...UUUU..........TTTT............TTTT........OOOO......OOOO......NNNNNNNNNNN..........SSSSSSS...
+//.BBBB....BBBB......UUUU...UUUU..........TTTT............TTTT........OOOOO....OOOOO......NNNNNNNNNNN.............SSSSS..
+//.BBBB....BBBB......UUUU...UUUU..........TTTT............TTTT.........OOOOO..OOOOO.......NNNN.NNNNNN...... SSS....SSSS..
+//.BBBBBBBBBBBB......UUUUUUUUUUU..........TTTT............TTTT.........OOOOOOOOOOOO.......NNNN..NNNNN...... SSSSSSSSSSS..
+//.BBBBBBBBBBB........UUUUUUUUU...........TTTT............TTTT..........OOOOOOOOOO........NNNN..NNNNN.......SSSSSSSSSS...
+//.BBBBBBBBBB..........UUUUUUU............TTTT............TTTT............OOOOOO..........NNNN...NNNN........SSSSSSSS....
 
     protected void renderTooltip(@NotNull PoseStack poseStack, int mouseX, int mouseY) {
         mouseX = mouseX - startX;
@@ -180,20 +209,6 @@ public class JobsScreen extends Screen {
         }
     }
 
-//.BBBBBBBBBB........UUUU...UUUU.......TTTTTTTTTTT.....TTTTTTTTTTT.......OOOOOOO..........NNNN...NNNN........SSSSSSS.....
-//.BBBBBBBBBBB.......UUUU...UUUU.......TTTTTTTTTTT.....TTTTTTTTTTT......OOOOOOOOOO........NNNNN..NNNN.......SSSSSSSSS....
-//.BBBBBBBBBBB.......UUUU...UUUU.......TTTTTTTTTTT.....TTTTTTTTTTT.....OOOOOOOOOOOO.......NNNNN..NNNN.......SSSSSSSSSS...
-//.BBBB...BBBB.......UUUU...UUUU..........TTTT............TTTT.........OOOOO..OOOOO.......NNNNNN.NNNN...... SSSS..SSSS...
-//.BBBB...BBBB.......UUUU...UUUU..........TTTT............TTTT........OOOOO....OOOOO......NNNNNN.NNNN...... SSSS.........
-//.BBBBBBBBBBB.......UUUU...UUUU..........TTTT............TTTT........OOOO......OOOO......NNNNNNNNNNN.......SSSSSSS......
-//.BBBBBBBBBB........UUUU...UUUU..........TTTT............TTTT........OOOO......OOOO......NNNNNNNNNNN........SSSSSSSSS...
-//.BBBBBBBBBBB.......UUUU...UUUU..........TTTT............TTTT........OOOO......OOOO......NNNNNNNNNNN..........SSSSSSS...
-//.BBBB....BBBB......UUUU...UUUU..........TTTT............TTTT........OOOOO....OOOOO......NNNNNNNNNNN.............SSSSS..
-//.BBBB....BBBB......UUUU...UUUU..........TTTT............TTTT.........OOOOO..OOOOO.......NNNN.NNNNNN...... SSS....SSSS..
-//.BBBBBBBBBBBB......UUUUUUUUUUU..........TTTT............TTTT.........OOOOOOOOOOOO.......NNNN..NNNNN...... SSSSSSSSSSS..
-//.BBBBBBBBBBB........UUUUUUUUU...........TTTT............TTTT..........OOOOOOOOOO........NNNN..NNNNN.......SSSSSSSSSS...
-//.BBBBBBBBBB..........UUUUUUU............TTTT............TTTT............OOOOOO..........NNNN...NNNN........SSSSSSSS....
-
     public void renderButtons(PoseStack poseStack, int mouseX, int mouseY, int p_99345_, int something, int occurrences) {
         if (isBetween(mouseX, mouseY, 3, height - 20, 18, height - 4)) {
             poseStack.pushPose();
@@ -208,10 +223,9 @@ public class JobsScreen extends Screen {
         if (activeLeftButton == 0) {
             for (int i = this.startIndex; i < occurrences && i < Jobs.values().length; ++i) {
                 int j = i - this.startIndex;
-                int k = p_99345_ + j % 1 * (16 * 4);
                 int i1 = something + j * 35;
                 int j1 = this.imageHeight;
-                if (mouseX >= k && mouseY >= i1 && mouseX < k + 116 && mouseY < i1 + 35) {
+                if (mouseX >= p_99345_ && mouseY >= i1 && mouseX < p_99345_ + 116 && mouseY < i1 + 35) {
                     if (i != this.selectedButton) j1 += 35;
                 }
                 if (i == this.selectedButton) blitThis(poseStack, 7, i1 - startY, 26, j1 + 35 * 2, 116, 35);
@@ -237,10 +251,9 @@ public class JobsScreen extends Screen {
             }
             for (int i = this.startIndex; i < occurrences && i < map.size(); ++i) {
                 int j = i - this.startIndex;
-                int k = p_99345_ + j % 1 * (16 * 4);
                 int i1 = something + j * 35;
                 int j1 = this.imageHeight;
-                if (mouseX >= k && mouseY >= i1 && mouseX < k + 116 && mouseY < i1 + 35) {
+                if (mouseX >= p_99345_ && mouseY >= i1 && mouseX < p_99345_ + 116 && mouseY < i1 + 35) {
                     if (i != this.selectedButton) j1 += 35;
                 }
                 if (i == this.selectedButton) blitThis(poseStack, 7, i1 - startY, 26, j1 + 35 * 2, 116, 35);
@@ -465,7 +478,23 @@ public class JobsScreen extends Screen {
         }
     }
 
+//.TTTTTTTTTTT...EEEEEEEEEEEE...EXXX..XXXXX...XTTTTTTTTT.....SSSSSSS.....
+//.TTTTTTTTTTT...EEEEEEEEEEE....EXXX..XXXX....XTTTTTTTTT....TSSSSSSSS....
+//.TTTTTTTTTTT...EEEEEEEEEEE....EXXXXXXXXX....XTTTTTTTTT...TTSSSSSSSSS...
+//....TTTT.......EEEE............XXXXXXXX........TTTT......TTSSS..SSSS...
+//....TTTT.......EEEE.............XXXXXX.........TTTT......TTSSS.........
+//....TTTT.......EEEEEEEEEE.......XXXXXX.........TTTT.......TSSSSSS......
+//....TTTT.......EEEEEEEEEE.......XXXXX..........TTTT........SSSSSSSSS...
+//....TTTT.......EEEEEEEEEE.......XXXXXX.........TTTT..........SSSSSSS...
+//....TTTT.......EEEE............XXXXXXXX........TTTT.............SSSSS..
+//....TTTT.......EEEE............XXXXXXXX........TTTT......TTSS....SSSS..
+//....TTTT.......EEEEEEEEEEE....EXXX.XXXXX.......TTTT......TTSSSSSSSSSS..
+//....TTTT.......EEEEEEEEEEEE...EXXX..XXXXX......TTTT.......TSSSSSSSSS...
+//....TTTT.......EEEEEEEEEEEE...EXX....XXXX......TTTT........SSSSSSSS....
+
     public void renderItems(int x, int y) {
+        if (minecraft == null) return;
+        ItemRenderer itemRenderer = minecraft.getItemRenderer();
         if (activeRightButton == 1) {
             ArrayList<ItemStack> jobItemsArray = new ArrayList<>();
             if (jobId == 0) {
@@ -507,32 +536,18 @@ public class JobsScreen extends Screen {
                 int xOffset = x + 176 + i % 5 * 27;
                 int l = i / 5;
                 int yOffset = y + 20 + l * 27 + 2;
-                minecraft.getItemRenderer().renderAndDecorateItem(jobItemsArray.get(i), xOffset, yOffset);
+                itemRenderer.renderAndDecorateItem(jobItemsArray.get(i), xOffset, yOffset);
             }
         }
         if (jobId >= 0) {
             if (getSelectedJobLevel() != 0) {
                 if (array[62] == jobId + 1)
-                    minecraft.getItemRenderer().renderAndDecorateItem(Items.NAME_TAG.getDefaultInstance(), startX + 328, startY + 11);
+                    itemRenderer.renderAndDecorateItem(Items.NAME_TAG.getDefaultInstance(), startX + 328, startY + 11);
                 else
-                    minecraft.getItemRenderer().renderAndDecorateItem(Items.NAME_TAG.getDefaultInstance(), startX + 327, startY + 11);
+                    itemRenderer.renderAndDecorateItem(Items.NAME_TAG.getDefaultInstance(), startX + 327, startY + 11);
             }
         }
     }
-
-//.TTTTTTTTTTT...EEEEEEEEEEEE...EXXX..XXXXX...XTTTTTTTTT.....SSSSSSS.....
-//.TTTTTTTTTTT...EEEEEEEEEEE....EXXX..XXXX....XTTTTTTTTT....TSSSSSSSS....
-//.TTTTTTTTTTT...EEEEEEEEEEE....EXXXXXXXXX....XTTTTTTTTT...TTSSSSSSSSS...
-//....TTTT.......EEEE............XXXXXXXX........TTTT......TTSSS..SSSS...
-//....TTTT.......EEEE.............XXXXXX.........TTTT......TTSSS.........
-//....TTTT.......EEEEEEEEEE.......XXXXXX.........TTTT.......TSSSSSS......
-//....TTTT.......EEEEEEEEEE.......XXXXX..........TTTT........SSSSSSSSS...
-//....TTTT.......EEEEEEEEEE.......XXXXXX.........TTTT..........SSSSSSS...
-//....TTTT.......EEEE............XXXXXXXX........TTTT.............SSSSS..
-//....TTTT.......EEEE............XXXXXXXX........TTTT......TTSS....SSSS..
-//....TTTT.......EEEEEEEEEEE....EXXX.XXXXX.......TTTT......TTSSSSSSSSSS..
-//....TTTT.......EEEEEEEEEEEE...EXXX..XXXXX......TTTT.......TSSSSSSSSS...
-//....TTTT.......EEEEEEEEEEEE...EXX....XXXX......TTTT........SSSSSSSS....
 
     public void drawTexts(PoseStack poseStack, int something, int occurrences) {
         if (activeLeftButton == 0) {
@@ -607,37 +622,22 @@ public class JobsScreen extends Screen {
             else if (activeRightButton == 2) drawNoJobSelected(poseStack, "powerups");
             else if (activeRightButton == 3) drawNoJobSelected(poseStack, "how_to_get_exp");
         } else {
+            int centerR = startX + (imageWidth + 150) / 2;
             if (activeRightButton == 0) {
-                poseStack.pushPose();
-                poseStack.scale(2F, 2F, 2F);
-                font.draw(poseStack, getSelectedJobLevel() != 0 ? ChatColor.boldGreen() + Jobs.getString(jobId) : ChatColor.boldRed() + Jobs.getString(jobId), (startX + 156) / 2, (startY + 5) / 2, 16777215);
-                poseStack.popPose();
-                if (getSelectedJobLevel() != 0) {
-                    font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.level", ChatColor.reset(), getSelectedJobLevel()).getString(), startX + 156, startY + 22, 16777215);
-                    if (getSelectedJobLevel() != 100)
-                        font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.exp", ChatColor.reset(), "[" + getSelectedJobEXP() + "/" + getSelectedJobMaxEXP() + "]").getString(), startX + 216, startY + 22, 16777215);
-                } else {
-                    font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.want_this_job").getString(), startX + 156, startY + 22, 16777215);
-                    if (array[21] < 2) {
-                        drawRightAlignedString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 0).getString(), startX + imageWidth - 10, startY + 22, 16777215);
-                    } else {
-                        drawRightAlignedString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 10).getString(), startX + imageWidth - 10, startY + 22, 16777215);
-                    }
-                }
-                font.draw(poseStack, ChatFormatting.STRIKETHROUGH + "                                        ", startX + 156, startY + 28, 16777215);
+                drawnBigJobTitle(poseStack);
                 drawJobInfo(poseStack);
                 if (getSelectedJobLevel() == 0) {
-                    drawCenteredStringNew(poseStack, font, ChatColor.white() + new TranslatableComponent("jobsplus.gui.job.start").getString(), startX + (imageWidth + 150) / 2, startY + 137, 16777215);
+                    drawCenteredStringNew(poseStack, font, ChatColor.white() + new TranslatableComponent("jobsplus.gui.job.start").getString(), centerR, startY + 137, 16777215);
                 } else {
-                    drawCenteredStringNew(poseStack, font, ChatColor.white() + new TranslatableComponent("jobsplus.gui.job.stop").getString(), startX + (imageWidth + 150) / 2, startY + 137, 16777215);
+                    drawCenteredStringNew(poseStack, font, ChatColor.white() + new TranslatableComponent("jobsplus.gui.job.stop").getString(), centerR, startY + 137, 16777215);
                 }
             } else if (activeRightButton == 1) {
-                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.crafting").getString(), startX + (imageWidth + 150) / 2, startY + 6, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.crafting").getString(), centerR, startY + 6, 16777215);
             } else if (activeRightButton == 2) {
-                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups.powerups").getString(), startX + (imageWidth + 150) / 2, startY + 6, 16777215);
-                drawCenteredStringNew(poseStack, font, ChatColor.gray() + new TranslatableComponent("jobsplus.gui.powerups.cost").getString(), startX + (imageWidth + 150) / 2, startY + 16, 16777215);
-                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups.superpowers").getString(), startX + (imageWidth + 150) / 2, startY + 110, 16777215);
-                drawCenteredStringNew(poseStack, font, ChatColor.gray() + new TranslatableComponent("jobsplus.gui.powerups.superpowers.cost").getString(), startX + (imageWidth + 150) / 2, startY + 120, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups.powerups").getString(), centerR, startY + 6, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.gray() + new TranslatableComponent("jobsplus.gui.powerups.cost").getString(), centerR, startY + 16, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups.superpowers").getString(), centerR, startY + 110, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.gray() + new TranslatableComponent("jobsplus.gui.powerups.superpowers.cost").getString(), centerR, startY + 120, 16777215);
                 poseStack.pushPose();
                 poseStack.scale(0.72F, 0.72F, 0.72F);
                 drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".1").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 33) / 0.72F), 16777215);
@@ -645,10 +645,45 @@ public class JobsScreen extends Screen {
                 drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".3").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 83) / 0.72F), 16777215);
                 drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".superpower").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 137) / 0.72F), 16777215);
                 poseStack.popPose();
-            } else {
-                font.draw(poseStack, ChatColor.darkGray() + "Coming soon!", startX + 203, startY + 69, 16777215);
+            } else if (activeRightButton == 3) {
+                drawnBigJobTitle(poseStack);
+                drawCenteredStringNew(poseStack, font, ChatFormatting.STRIKETHROUGH + "             ", centerR, startY + 47, 16777215);
+                IntStream.range(1, 10).forEach(n -> drawCenteredStringNew(poseStack, font, getTCText("exp", n), centerR, startY + 50 + (n * 10), getTCTextColor("exp", n)));
+                poseStack.pushPose();
+                poseStack.scale(1.2F, 1.2F, 1.2F);
+                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.exp.title").getString(), (int) ((centerR) / 1.2), (int) ((startY + 37) / 1.2), 16777215);
             }
         }
+    }
+
+    private String getTCText(String cat, int num) {
+        String[] split = (new TranslatableComponent("jobsplus.gui." + cat + "." + Jobs.getEnglishString(jobId).toLowerCase() + "." + num).getString()).split(">text:");
+        return split.length > 1 ? split[1] : "";
+    }
+
+    private int getTCTextColor(String cat, int num) {
+        String replace = (new TranslatableComponent("jobsplus.gui." + cat + "." + Jobs.getEnglishString(jobId).toLowerCase() + "." + num).getString()).split(">text:")[0].replace("color:<", "");
+        return isNumeric(replace) ? Integer.parseInt(replace) : 16777215;
+    }
+
+    public void drawnBigJobTitle(PoseStack poseStack) {
+        poseStack.pushPose();
+        poseStack.scale(2F, 2F, 2F);
+        font.draw(poseStack, getSelectedJobLevel() != 0 ? ChatColor.boldGreen() + Jobs.getString(jobId) : ChatColor.boldRed() + Jobs.getString(jobId), (startX + 156) / 2F, (startY + 5) / 2F, 16777215);
+        poseStack.popPose();
+        if (getSelectedJobLevel() != 0) {
+            font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.level", ChatColor.reset(), getSelectedJobLevel()).getString(), startX + 156, startY + 22, 16777215);
+            if (getSelectedJobLevel() != 100)
+                font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.exp", ChatColor.reset(), "[" + getSelectedJobEXP() + "/" + getSelectedJobMaxEXP() + "]").getString(), startX + 216, startY + 22, 16777215);
+        } else {
+            font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.want_this_job").getString(), startX + 156, startY + 22, 16777215);
+            if (array[21] < 2) {
+                drawRightAlignedString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 0).getString(), startX + imageWidth - 10, startY + 22, 16777215);
+            } else {
+                drawRightAlignedString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 10).getString(), startX + imageWidth - 10, startY + 22, 16777215);
+            }
+        }
+        font.draw(poseStack, ChatFormatting.STRIKETHROUGH + "                                        ", startX + 156, startY + 28, 16777215);
     }
 
     @Override
@@ -664,8 +699,10 @@ public class JobsScreen extends Screen {
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int p_99320_) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return false;
         if (isBetween(mouseX, mouseY, 3, height - 20, 19, height - 4)) {
-            ModPacketHandler.INSTANCE.sendToServer(new PacketUserSettingsServer(Minecraft.getInstance().player.getUUID(), "MAIN"));
+            ModPacketHandler.INSTANCE.sendToServer(new PacketUserSettingsServer(player.getUUID(), "MAIN"));
         }
         this.scrolling = false;
         int i = this.startX + 7;
@@ -697,14 +734,14 @@ public class JobsScreen extends Screen {
             if (getSelectedJobLevel() != 0) {
                 if (isBetween(mouseX, mouseY, imageWidth, 6, imageWidth + 21, 31)) {
                     if (jobId + 1 == array[62])
-                        Minecraft.getInstance().player.chat("command execute job display NONE");
-                    else Minecraft.getInstance().player.chat("/job display " + Jobs.getEnglishString(jobId));
-                    ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Minecraft.getInstance().player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                        player.chat("command execute job display NONE");
+                    else player.chat("/job display " + Jobs.getEnglishString(jobId));
+                    ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
                 }
                 if (isBetween(mouseX, mouseY, imageWidth, 35, imageWidth + 21, 60)) {
-                    if (jobId == array[63]) Minecraft.getInstance().player.chat("/job progress NONE");
-                    else Minecraft.getInstance().player.chat("/job progress " + Jobs.getEnglishString(jobId));
-                    ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Minecraft.getInstance().player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                    if (jobId == array[63]) player.chat("/job progress NONE");
+                    else player.chat("/job progress " + Jobs.getEnglishString(jobId));
+                    ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
                 }
             }
         }
@@ -970,28 +1007,26 @@ public class JobsScreen extends Screen {
                 }
             }
             if (activeRightButton == 2) {
-                if (Minecraft.getInstance().player != null) {
-                    int clicked = 0;
-                    if (isBetween(mouseX, mouseY, 169, 27, 169 + 139, 27 + 18)) clicked = 1;
-                    if (isBetween(mouseX, mouseY, 169, 27 + 25, 169 + 139, 27 + 18 + 25)) clicked = 2;
-                    if (isBetween(mouseX, mouseY, 169, 27 + 50, 169 + 139, 27 + 18 + 50)) clicked = 3;
-                    if (clicked != 0) {
-                        if (array[21 + (jobId * 3) + clicked] == 1 || array[21 + (jobId * 3) + clicked] == 2) {
-                            Minecraft.getInstance().player.chat("/job powerups switch " + Jobs.getEnglishString(jobId) + " " + clicked);
-                            ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Minecraft.getInstance().player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
-                        } else {
-                            if (getSelectedJobLevel() == 0)
-                                openConfirmScreen(new TranslatableComponent("confirm.job_not_enabled"), "job_not_enabled", clicked);
-                            else
-                                openConfirmScreen(new TranslatableComponent("confirm.powerup"), "powerup", clicked);
-                        }
-                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                int clicked = 0;
+                if (isBetween(mouseX, mouseY, 169, 27, 169 + 139, 27 + 18)) clicked = 1;
+                if (isBetween(mouseX, mouseY, 169, 27 + 25, 169 + 139, 27 + 18 + 25)) clicked = 2;
+                if (isBetween(mouseX, mouseY, 169, 27 + 50, 169 + 139, 27 + 18 + 50)) clicked = 3;
+                if (clicked != 0) {
+                    if (array[21 + (jobId * 3) + clicked] == 1 || array[21 + (jobId * 3) + clicked] == 2) {
+                        player.chat("/job powerups switch " + Jobs.getEnglishString(jobId) + " " + clicked);
+                        ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                    } else {
+                        if (getSelectedJobLevel() == 0)
+                            openConfirmScreen(new TranslatableComponent("confirm.job_not_enabled"), "job_not_enabled", clicked);
+                        else
+                            openConfirmScreen(new TranslatableComponent("confirm.powerup"), "powerup", clicked);
                     }
-                    if (isBetween(mouseX, mouseY, 169, 27 + 103, 169 + 139, 27 + 18 + 103)) {
-                        Minecraft.getInstance().player.chat("/job superpower switch " + Jobs.getEnglishString(jobId));
-                        ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Minecraft.getInstance().player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
-                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                    }
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                }
+                if (isBetween(mouseX, mouseY, 169, 27 + 103, 169 + 139, 27 + 18 + 103)) {
+                    player.chat("/job superpower switch " + Jobs.getEnglishString(jobId));
+                    ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(player.getUUID(), jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 }
             }
         }

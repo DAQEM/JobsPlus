@@ -51,7 +51,7 @@ public class BuilderEvents {
                             ExpHandler.addEXPMid(player, Jobs.BUILDER);
                         }
                     }
-                    if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWERUP2.get())) {
+                    if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWER_UP2.get())) {
                         for (ItemStack item : player.getInventory().items) {
                             if (!Objects.equals(item.getItem(), Items.AIR)) {
                                 if (item.getItem() instanceof BackpackItem) {
@@ -79,7 +79,7 @@ public class BuilderEvents {
     }
 
     public boolean giveBlockBack(Player player, BlockState state) {
-        if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWERUP1.get())) {
+        if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWER_UP1.get())) {
             if (Math.random() * 100 < 5) {
                 Block block = state.getBlock();
                 if (state.is(BlockTags.LOGS) || state.is(BlockTags.PLANKS) || state.is(BlockTags.WOOL)

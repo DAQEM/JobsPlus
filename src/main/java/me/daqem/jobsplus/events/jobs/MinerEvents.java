@@ -18,6 +18,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -39,7 +40,7 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MinerEvents {
 
-    public final static ArrayList<String> lowList = new ArrayList<>(List.of("andesite", "diorite", "granite", "calcite", "dripstone", "dripstone_block", "sandstone", "blackstone", "budding_amethyst", "amethyst_block", "tuff"));
+    public final static ArrayList<String> lowList = new ArrayList<>(List.of("andesite", "diorite", "granite", "calcite", "dripstone", "dripstone_block", "sandstone", "blackstone", "gilded_blackstone", "basalt", "budding_amethyst", "amethyst_block", "tuff", "obsidian"));
     public final static ArrayList<String> lowestList = new ArrayList<>(List.of("stone", "deepslate", "netherrack", "end_stone", "cobblestone"));
     public static final ArrayList<BlockPos> timeoutList = new ArrayList<>();
     public static final ArrayList<UUID> veinMinerArray = new ArrayList<>();
@@ -73,14 +74,16 @@ public class MinerEvents {
             } else if (lowestList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
                 ExpHandler.addEXPLowest(player, job);
                 MobEffectHandler.addPlayerPowerUpEffects(player, job);
-            } else if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", "")) || state.is(BlockTags.TERRACOTTA)) {
+            } else if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))
+                    || state.is(BlockTags.TERRACOTTA)
+                    || (player.getMainHandItem().getItem() instanceof PickaxeItem && player.getMainHandItem().isCorrectToolForDrops(state))) {
                 ExpHandler.addEXPLow(player, job);
                 MobEffectHandler.addPlayerPowerUpEffects(player, job);
             }
         } else {
             timeoutList.remove(event.getPos());
         }
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get()) && !veinMinerArray.contains(player.getUUID())) {
+        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()) && !veinMinerArray.contains(player.getUUID())) {
             if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES)) {
                 List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getWorld(), event.getPos(), null, player, player.getMainHandItem());
                 event.setCanceled(true);
@@ -111,7 +114,7 @@ public class MinerEvents {
 
         if (!itemInHand.isCorrectToolForDrops(event.getState())) return;
         if (!JobGetters.jobIsEnabled(player, Jobs.MINER)) return;
-        if (!(JobGetters.getPowerup(player, Jobs.MINER, CapType.POWERUP1.get()) == 1)) return;
+        if (!(JobGetters.getPowerup(player, Jobs.MINER, CapType.POWER_UP1.get()) == 1)) return;
         if (level.isClientSide()) return;
         if (!veinMinerArray.contains(player.getUUID())) return;
 
@@ -188,7 +191,7 @@ public class MinerEvents {
         int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
         int exp = state.getExpDrop(level, pos, bonusLevel, silkLevel);
         if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES)
-                && JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get()))
+                && JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()))
             exp = 1;
         dropItems(level, ItemHandler.smeltedRawMaterials(player, drops), pos, exp);
     }

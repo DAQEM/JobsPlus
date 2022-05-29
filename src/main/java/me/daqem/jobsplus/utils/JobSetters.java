@@ -196,36 +196,36 @@ public class JobSetters {
     }
 
     private static int[] addEXPGenerator(int[] array, int exp) {
-        return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()] + exp, array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
+        return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()] + exp, array[CapType.POWER_UP1.get()], array[CapType.POWER_UP2.get()], array[CapType.POWER_UP3.get()]};
     }
 
     private static int[] setEXPGenerator(int[] array, int exp) {
-        return new int[]{array[CapType.LEVEL.get()], exp, array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
+        return new int[]{array[CapType.LEVEL.get()], exp, array[CapType.POWER_UP1.get()], array[CapType.POWER_UP2.get()], array[CapType.POWER_UP3.get()]};
     }
 
     private static int[] addLevelGenerator(int[] array, int level) {
         if (level == -2) level = array[CapType.LEVEL.get()] + 1;
-        return new int[]{level, array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
+        return new int[]{level, array[CapType.EXP.get()], array[CapType.POWER_UP1.get()], array[CapType.POWER_UP2.get()], array[CapType.POWER_UP3.get()]};
     }
 
     private static int[] addPowerUpGenerator(int[] array, int powerUp) {
-        if (powerUp == CapType.POWERUP1.get())
-            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], 1, array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
-        if (powerUp == CapType.POWERUP2.get())
-            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], 1, array[CapType.POWERUP3.get()]};
-        if (powerUp == CapType.POWERUP3.get())
-            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], 1};
-        return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
+        if (powerUp == CapType.POWER_UP1.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], 1, array[CapType.POWER_UP2.get()], array[CapType.POWER_UP3.get()]};
+        if (powerUp == CapType.POWER_UP2.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWER_UP1.get()], 1, array[CapType.POWER_UP3.get()]};
+        if (powerUp == CapType.POWER_UP3.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWER_UP1.get()], array[CapType.POWER_UP2.get()], 1};
+        return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWER_UP1.get()], array[CapType.POWER_UP2.get()], array[CapType.POWER_UP3.get()]};
     }
 
     private static int[] setPowerUpGenerator(int[] array, int powerUp, int i) {
-        if (powerUp == CapType.POWERUP1.get())
-            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], i, array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
-        if (powerUp == CapType.POWERUP2.get())
-            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], i, array[CapType.POWERUP3.get()]};
-        if (powerUp == CapType.POWERUP3.get())
-            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], i};
-        return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWERUP1.get()], array[CapType.POWERUP2.get()], array[CapType.POWERUP3.get()]};
+        if (powerUp == CapType.POWER_UP1.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], i, array[CapType.POWER_UP2.get()], array[CapType.POWER_UP3.get()]};
+        if (powerUp == CapType.POWER_UP2.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWER_UP1.get()], i, array[CapType.POWER_UP3.get()]};
+        if (powerUp == CapType.POWER_UP3.get())
+            return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWER_UP1.get()], array[CapType.POWER_UP2.get()], i};
+        return new int[]{array[CapType.LEVEL.get()], array[CapType.EXP.get()], array[CapType.POWER_UP1.get()], array[CapType.POWER_UP2.get()], array[CapType.POWER_UP3.get()]};
     }
 
     public static void setEXPHotBarSetting(Player player, int value) {

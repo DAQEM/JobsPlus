@@ -3,9 +3,9 @@ package me.daqem.jobsplus.utils.enums;
 public enum CapType {
     LEVEL(0),
     EXP(1),
-    POWERUP1(2),
-    POWERUP2(3),
-    POWERUP3(4),
+    POWER_UP1(2),
+    POWER_UP2(3),
+    POWER_UP3(4),
 
     START_VERIFICATION_FREE(0),
     START_VERIFICATION_PAID(1),
@@ -13,16 +13,16 @@ public enum CapType {
     STOP_VERIFICATION_PAID(3),
     POWER_UP_VERIFICATION(4),
 
-    SELCTOR_ALCHEMIST(0),
-    SELCTOR_BUILDER(1),
-    SELCTOR_DIGGER(2),
-    SELCTOR_FARMER(3),
-    SELCTOR_FISHERMAN(4),
-    SELCTOR_ENCHANTER(5),
-    SELCTOR_HUNTER(6),
-    SELCTOR_LUMBERJACK(7),
-    SELCTOR_MINER(8),
-    SELCTOR_SMITH(9);
+    SELECTOR_ALCHEMIST(0),
+    SELECTOR_BUILDER(1),
+    SELECTOR_DIGGER(2),
+    SELECTOR_ENCHANTER(3),
+    SELECTOR_FARMER(4),
+    SELECTOR_FISHERMAN(5),
+    SELECTOR_HUNTER(6),
+    SELECTOR_LUMBERJACK(7),
+    SELECTOR_MINER(8),
+    SELECTOR_SMITH(9);
 
     private final int value;
 
@@ -30,5 +30,7 @@ public enum CapType {
         value = newValue;
     }
 
-    public int get() {return value;}
+    public int get() {
+        return value;
+    }
 }

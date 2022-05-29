@@ -75,7 +75,7 @@ public class DoubleJumpEvents {
             if (player.getLevel().isClientSide) return;
             if (JobGetters.hasSuperPowerEnabled(player, Jobs.BUILDER)) {
                 event.setCanceled(true);
-            } else if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWERUP3.get())) {
+            } else if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWER_UP3.get())) {
                 event.setDistance(event.getDistance() - 3F);
             }
         }

@@ -150,42 +150,42 @@ public class JobGetters {
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
             if (powerUp == 2) {
                 switch (job) {
-                    case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.POWERUP1.get()]);
-                    case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.POWERUP1.get()]);
-                    case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.POWERUP1.get()]);
-                    case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.POWERUP1.get()]);
-                    case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.POWERUP1.get()]);
-                    case FISHERMAN -> atomicInteger.set(handler.getFisherman()[CapType.POWERUP1.get()]);
-                    case HUNTER -> atomicInteger.set(handler.getHunter()[CapType.POWERUP1.get()]);
-                    case LUMBERJACK -> atomicInteger.set(handler.getLumberjack()[CapType.POWERUP1.get()]);
-                    case MINER -> atomicInteger.set(handler.getMiner()[CapType.POWERUP1.get()]);
-                    case SMITH -> atomicInteger.set(handler.getSmith()[CapType.POWERUP1.get()]);
+                    case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.POWER_UP1.get()]);
+                    case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.POWER_UP1.get()]);
+                    case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.POWER_UP1.get()]);
+                    case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.POWER_UP1.get()]);
+                    case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.POWER_UP1.get()]);
+                    case FISHERMAN -> atomicInteger.set(handler.getFisherman()[CapType.POWER_UP1.get()]);
+                    case HUNTER -> atomicInteger.set(handler.getHunter()[CapType.POWER_UP1.get()]);
+                    case LUMBERJACK -> atomicInteger.set(handler.getLumberjack()[CapType.POWER_UP1.get()]);
+                    case MINER -> atomicInteger.set(handler.getMiner()[CapType.POWER_UP1.get()]);
+                    case SMITH -> atomicInteger.set(handler.getSmith()[CapType.POWER_UP1.get()]);
                 }
             } else if (powerUp == 3) {
                 switch (job) {
-                    case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.POWERUP2.get()]);
-                    case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.POWERUP2.get()]);
-                    case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.POWERUP2.get()]);
-                    case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.POWERUP2.get()]);
-                    case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.POWERUP2.get()]);
-                    case FISHERMAN -> atomicInteger.set(handler.getFisherman()[CapType.POWERUP2.get()]);
-                    case HUNTER -> atomicInteger.set(handler.getHunter()[CapType.POWERUP2.get()]);
-                    case LUMBERJACK -> atomicInteger.set(handler.getLumberjack()[CapType.POWERUP2.get()]);
-                    case MINER -> atomicInteger.set(handler.getMiner()[CapType.POWERUP2.get()]);
-                    case SMITH -> atomicInteger.set(handler.getSmith()[CapType.POWERUP2.get()]);
+                    case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.POWER_UP2.get()]);
+                    case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.POWER_UP2.get()]);
+                    case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.POWER_UP2.get()]);
+                    case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.POWER_UP2.get()]);
+                    case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.POWER_UP2.get()]);
+                    case FISHERMAN -> atomicInteger.set(handler.getFisherman()[CapType.POWER_UP2.get()]);
+                    case HUNTER -> atomicInteger.set(handler.getHunter()[CapType.POWER_UP2.get()]);
+                    case LUMBERJACK -> atomicInteger.set(handler.getLumberjack()[CapType.POWER_UP2.get()]);
+                    case MINER -> atomicInteger.set(handler.getMiner()[CapType.POWER_UP2.get()]);
+                    case SMITH -> atomicInteger.set(handler.getSmith()[CapType.POWER_UP2.get()]);
                 }
             } else if (powerUp == 4) {
                 switch (job) {
-                    case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.POWERUP3.get()]);
-                    case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.POWERUP3.get()]);
-                    case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.POWERUP3.get()]);
-                    case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.POWERUP3.get()]);
-                    case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.POWERUP3.get()]);
-                    case FISHERMAN -> atomicInteger.set(handler.getFisherman()[CapType.POWERUP3.get()]);
-                    case HUNTER -> atomicInteger.set(handler.getHunter()[CapType.POWERUP3.get()]);
-                    case LUMBERJACK -> atomicInteger.set(handler.getLumberjack()[CapType.POWERUP3.get()]);
-                    case MINER -> atomicInteger.set(handler.getMiner()[CapType.POWERUP3.get()]);
-                    case SMITH -> atomicInteger.set(handler.getSmith()[CapType.POWERUP3.get()]);
+                    case ALCHEMIST -> atomicInteger.set(handler.getAlchemist()[CapType.POWER_UP3.get()]);
+                    case BUILDER -> atomicInteger.set(handler.getBuilder()[CapType.POWER_UP3.get()]);
+                    case DIGGER -> atomicInteger.set(handler.getDigger()[CapType.POWER_UP3.get()]);
+                    case ENCHANTER -> atomicInteger.set(handler.getEnchanter()[CapType.POWER_UP3.get()]);
+                    case FARMER -> atomicInteger.set(handler.getFarmer()[CapType.POWER_UP3.get()]);
+                    case FISHERMAN -> atomicInteger.set(handler.getFisherman()[CapType.POWER_UP3.get()]);
+                    case HUNTER -> atomicInteger.set(handler.getHunter()[CapType.POWER_UP3.get()]);
+                    case LUMBERJACK -> atomicInteger.set(handler.getLumberjack()[CapType.POWER_UP3.get()]);
+                    case MINER -> atomicInteger.set(handler.getMiner()[CapType.POWER_UP3.get()]);
+                    case SMITH -> atomicInteger.set(handler.getSmith()[CapType.POWER_UP3.get()]);
                 }
             }
         });

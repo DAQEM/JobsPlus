@@ -34,7 +34,7 @@ public class LumberjackEvents {
         if (!JobGetters.jobIsEnabled(player, job)) return;
         BlockState state = event.getState();
         Block block = state.getBlock();
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP3.get())) {
+        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) {
             if (block == Blocks.OAK_LEAVES || block == Blocks.DARK_OAK_LEAVES) {
                 if (Block.getDrops(state, (ServerLevel) player.getLevel(), event.getPos(), null, player, player.getMainHandItem()).isEmpty()) {
                     double random = Math.random() * 100;
@@ -48,7 +48,7 @@ public class LumberjackEvents {
         if (!state.is(BlockTags.LOGS)) return;
         final BlockPos pos = event.getPos();
         Item itemInHand = player.getMainHandItem().getItem();
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
+        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
             player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 50, 1));
         }
         if (itemInHand instanceof LumberAxeItem lumberAxeItem) {
@@ -61,7 +61,7 @@ public class LumberjackEvents {
             }
         } else {
             ExpHandler.addEXPLow(player, job);
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP1.get()) && Math.random() * 100 < 5) {
+            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get()) && Math.random() * 100 < 5) {
                 if (JobGetters.hasSuperPowerEnabled(player, job))
                     ItemHandler.addItemsToInventoryOrDrop(new ItemStack(block.asItem()), player, player.getLevel(), pos, 0);
                 else ItemHandler.addFreshItemEntity(player.getLevel(), pos, block.asItem());

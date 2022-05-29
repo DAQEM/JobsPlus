@@ -63,7 +63,7 @@ public class FishermanEvents {
             LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) player.level)).withParameter(LootContextParams.ORIGIN, player.getPosition(player.getOnPos().asLong())).withParameter(LootContextParams.TOOL, usedItem.getDefaultInstance()).withParameter(LootContextParams.THIS_ENTITY, new ModFishingHook(player, player.level, luck, lure)).withRandom(new Random()).withLuck((float) luck + player.getLuck());
             lootcontext$builder.withParameter(LootContextParams.KILLER_ENTITY, player).withParameter(LootContextParams.THIS_ENTITY, new ModFishingHook(player, player.level, luck, lure));
 
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
+            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
                 if (Math.random() * 100 < 20) {
                     for (int i = 0; i < 2; ++i) {
                         LootTable loottable = Objects.requireNonNull(player.level.getServer()).getLootTables().get(new ResourceLocation("gameplay/fishing"));
@@ -88,7 +88,7 @@ public class FishermanEvents {
             }
 
             if (exp != 0) {
-                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP1.get())) exp = exp * 2;
+                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) exp = exp * 2;
                 ExpHandler.addJobEXP(player, job, exp);
             }
         }

@@ -33,7 +33,7 @@ public class DiggerEvents {
     private final Jobs job = Jobs.DIGGER;
 
     public static void addFreshItemEntity(Player player, Level level, BlockPos pos, Item item) {
-        if (JobGetters.hasEnabledPowerup(player, Jobs.DIGGER, CapType.POWERUP1.get())) {
+        if (JobGetters.hasEnabledPowerup(player, Jobs.DIGGER, CapType.POWER_UP1.get())) {
             ItemHandler.addItemsToInventoryOrDrop(item.getDefaultInstance(), player, level, pos, 1);
         } else {
             ItemHandler.addFreshItemEntity(level, pos, item.getDefaultInstance());
@@ -41,7 +41,7 @@ public class DiggerEvents {
     }
 
     public static void dropMinerals(Player player, Level level, BlockPos pos) {
-        if (JobGetters.hasEnabledPowerup(player, Jobs.DIGGER, CapType.POWERUP2.get())) {
+        if (JobGetters.hasEnabledPowerup(player, Jobs.DIGGER, CapType.POWER_UP2.get())) {
             if (Math.random() * 100 <= 2) addFreshItemEntity(player, level, pos, Items.GOLD_NUGGET);
             else if (Math.random() * 100 <= 1) addFreshItemEntity(player, level, pos, Items.RAW_GOLD);
             else if (Math.random() * 100 <= 0.05) addFreshItemEntity(player, level, pos, Items.RAW_GOLD_BLOCK);
@@ -80,7 +80,7 @@ public class DiggerEvents {
     }
 
     public void handleBreak(Player player, BlockState state, BlockPos pos) {
-        if (!JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP1.get())) return;
+        if (!JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) return;
         player.getLevel().removeBlock(pos, false);
         for (ItemStack drop : state.getDrops(ItemHandler.drops(player.getLevel(), pos, player, player.getMainHandItem()))) {
             ItemHandler.addItemsToInventoryOrDrop(drop, player, player.getLevel(), pos, 0);

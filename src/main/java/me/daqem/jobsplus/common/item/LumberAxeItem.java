@@ -55,7 +55,7 @@ public class LumberAxeItem extends AxeItem {
                 final Jobs job = Jobs.LUMBERJACK;
 
                 // Drop Extra Block
-                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP1.get()) && Math.random() * 100 < 5) {
+                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get()) && Math.random() * 100 < 5) {
                     if (JobGetters.hasSuperPowerEnabled(player, job))
                         ItemHandler.addItemsToInventoryOrDrop(new ItemStack(state.getBlock().asItem()), player, player.getLevel(), pos, 0);
                     else ItemHandler.addFreshItemEntity(player.getLevel(), pos, state.getBlock().asItem());
@@ -160,7 +160,8 @@ public class LumberAxeItem extends AxeItem {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
+    public @NotNull
+    InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getMainHandItem();
         if (player.isCrouching() && !level.isClientSide) {
             CompoundTag tag = stack.getOrCreateTag();

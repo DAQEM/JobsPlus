@@ -57,7 +57,7 @@ public class EnchanterEvents {
                             }
                             multiMap.remove(player);
                             final ItemStack enchantedItem = containerMenu.getSlot(0).getItem();
-                            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
+                            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
                                 if (enchantedItem.isEnchanted() || enchantedItem.is(Items.ENCHANTED_BOOK)) {
                                     Map<Enchantment, Integer> newMap = new HashMap<>();
                                     for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(enchantedItem).entrySet()) {
@@ -102,7 +102,7 @@ public class EnchanterEvents {
 
     @SubscribeEvent
     public void onPlayerEXPPickup(PlayerXpEvent.PickupXp event) {
-        if (JobGetters.hasEnabledPowerup(event.getPlayer(), Jobs.ENCHANTER, CapType.POWERUP3.get())) {
+        if (JobGetters.hasEnabledPowerup(event.getPlayer(), Jobs.ENCHANTER, CapType.POWER_UP3.get())) {
             event.getOrb().value = event.getOrb().value * 2;
         }
     }
@@ -110,7 +110,7 @@ public class EnchanterEvents {
     @SubscribeEvent
     public void onPlayerTickGrindstone(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP1.get())) {
+        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
             AbstractContainerMenu containerMenu = player.containerMenu;
             if (containerMenu instanceof GrindstoneMenu grindstoneMenu) {
                 final Slot slot = grindstoneMenu.getSlot(2);

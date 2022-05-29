@@ -80,7 +80,7 @@ public class FarmerEvents {
             if (cropBlock.isMaxAge(event.getState())) {
                 ExpHandler.addEXPLow(player, job);
             }
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
+            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
                 if (Math.random() * 100 < 10) doubleCropDrop(state, level, pos, player);
             }
             if (JobGetters.hasSuperPowerEnabled(player, job)) doubleCropDrop(state, level, pos, player);
@@ -105,7 +105,7 @@ public class FarmerEvents {
             } else if (block == Blocks.MELON || block == Blocks.PUMPKIN) {
                 if (!blockPosArrayList.contains(pos)) {
                     ExpHandler.addEXPLow(player, job);
-                    if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
+                    if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
                         if (block == Blocks.MELON) {
                             if (Math.random() * 100 < 10) {
                                 ItemHandler.addFreshItemEntity(level, pos, Items.GLISTERING_MELON_SLICE);
@@ -148,7 +148,7 @@ public class FarmerEvents {
                     if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() == Items.SHEARS) {
                         ExpHandler.addEXPLow(player, job);
                         Random random = new Random();
-                        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP3.get())) {
+                        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) {
                             dropWool(sheep, random, DyeColor.byId(new Random().nextInt(16)));
                         }
                         if (JobGetters.hasSuperPowerEnabled(player, job)) {

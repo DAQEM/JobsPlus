@@ -42,7 +42,8 @@ public class RodItem extends FishingRodItem {
         super(properties.tab(JobsPlus.TAB));
     }
 
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+    public @NotNull
+    InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         Jobs job = Jobs.FISHERMAN;
         int jobLevel = JobGetters.getJobLevel(player, job);
@@ -82,7 +83,7 @@ public class RodItem extends FishingRodItem {
                 HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
         }
 
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP3.get())) {
+        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) {
             if (fishing != null && fishing.tickCount != 0 && !level.isClientSide) {
                 if (lastUsedTime + 2000 < System.currentTimeMillis() || player.isCreative()) {
                     if (level.getBlockState(fishing.blockPosition()) == Blocks.AIR.defaultBlockState()) {

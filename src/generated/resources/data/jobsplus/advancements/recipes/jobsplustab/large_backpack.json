@@ -6,13 +6,13 @@
     ]
   },
   "criteria": {
-    "diamond_block": {
+    "diamond": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:diamond_block"
+              "minecraft:diamond"
             ]
           }
         ]
@@ -27,7 +27,7 @@
   },
   "requirements": [
     [
-      "diamond_block",
+      "diamond",
       "has_the_recipe"
     ]
   ]

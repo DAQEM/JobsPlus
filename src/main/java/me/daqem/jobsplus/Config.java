@@ -16,7 +16,7 @@ public class Config {
     public static final String CATEGORY_CRAFTING_TOOLS_FISHERMAN = "fisherman";
     public static final String CATEGORY_CRAFTING_ARMOR = "armor";
     public static final String CATEGORY_CRAFTING_OTHER = "other";
-    public static final String CATEGORY_CRAFTING_OTHER_ENCHNATER = "enchanter";
+    public static final String CATEGORY_CRAFTING_OTHER_ENCHANTER = "enchanter";
     public static final String CATEGORY_CRAFTING_OTHER_BUILDER = "builder";
 
     public static ForgeConfigSpec SERVER_CONFIG;
@@ -155,7 +155,7 @@ public class Config {
         serverBuilder.pop();
         serverBuilder.push(CATEGORY_CRAFTING_OTHER);
         REQUIRED_LEVEL_HUNTER_WOOL = serverBuilder.defineInRange("required_level_hunter_wool", 1, 0, 100);
-        serverBuilder.push(CATEGORY_CRAFTING_OTHER_ENCHNATER);
+        serverBuilder.push(CATEGORY_CRAFTING_OTHER_ENCHANTER);
         REQUIRED_LEVEL_EXP_JAR = serverBuilder.defineInRange("required_level_exp_jar", 5, 0, 100);
         REQUIRED_LEVEL_CURSE_BREAKER = serverBuilder.defineInRange("required_level_curse_breaker", 10, 0, 100);
         REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_1 = serverBuilder.defineInRange("required_level_experience_bottle_tier_1", 10, 0, 100);

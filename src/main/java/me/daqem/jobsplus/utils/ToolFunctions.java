@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
@@ -46,6 +47,7 @@ public class ToolFunctions {
             Jobs digger = Jobs.DIGGER;
             int minerExp = 0;
             int diggerExp = 0;
+            int toolDamage = -1;
             for (BlockPos pos : brokenBlocks) {
                 BlockState state = level.getBlockState(pos);
                 if (breakValidator.canBreak(state)) {
@@ -57,7 +59,9 @@ public class ToolFunctions {
                                 minerExp += ExpHandler.getEXPLowest();
                             } else if (block instanceof OreBlock) {
                                 minerExp += ExpHandler.getEXPMid();
-                            } else if (MinerEvents.lowList.contains(blockString) || state.is(BlockTags.TERRACOTTA)) {
+                            } else if (MinerEvents.lowList.contains(blockString)
+                                    || state.is(BlockTags.TERRACOTTA)
+                                    || (player.getMainHandItem().getItem() instanceof PickaxeItem && player.getMainHandItem().isCorrectToolForDrops(state))) {
                                 minerExp += ExpHandler.getEXPLow();
                             }
                             player.awardStat(Stats.BLOCK_MINED.get(block));
@@ -84,7 +88,7 @@ public class ToolFunctions {
                         final List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
                         final List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops);
                         final int exp = state.getExpDrop(level, pos, bonusLevel, silkLevel);
-                        if (JobGetters.hasEnabledPowerup(player, digger, CapType.POWERUP1.get()) && isExcavator) {
+                        if (JobGetters.hasEnabledPowerup(player, digger, CapType.POWER_UP1.get()) && isExcavator) {
                             for (ItemStack itemStack : stacks) {
                                 ItemHandler.addItemsToInventoryOrDrop(itemStack, player, level, pos, exp);
                             }
@@ -97,8 +101,7 @@ public class ToolFunctions {
                     }
 
                     if (damageTool) {
-                        player.getInventory().getSelected().hurtAndBreak(1, player, player1 -> {
-                        });
+                        toolDamage++;
                     }
                 }
             }
@@ -109,6 +112,10 @@ public class ToolFunctions {
             if (diggerExp != 0) {
                 ExpHandler.addJobEXP(player, digger, diggerExp);
                 MobEffectHandler.addPlayerPowerUpEffects(player, digger);
+            }
+            if (toolDamage > 0) {
+                player.getInventory().getSelected().hurtAndBreak(toolDamage, player, player1 -> {
+                });
             }
         }
     }

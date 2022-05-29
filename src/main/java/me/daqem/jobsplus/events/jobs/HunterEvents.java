@@ -92,7 +92,7 @@ public class HunterEvents {
             if (event.getSource().isProjectile()) ExpHandler.addEXPHigh(player, job);
             else ExpHandler.addEXPMid(player, job);
 
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP3.get()) && Math.random() * 100 < 5) {
+            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get()) && Math.random() * 100 < 5) {
                 if (entity instanceof Zombie)
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.ZOMBIE_HEAD);
                 if (entity instanceof Creeper)
@@ -115,7 +115,7 @@ public class HunterEvents {
                     }
                 }
             }
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP2.get())) {
+            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 60, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 60));
             }
@@ -212,7 +212,7 @@ public class HunterEvents {
     public void onEat(LivingEntityUseItemEvent.Finish event) {
         if (!event.getItem().isEdible()) return;
         if (event.getEntity() instanceof Player player) {
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWERUP1.get())) {
+            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
                 final Item item = event.getItem().getItem();
                 if (item == Items.COOKED_BEEF || item == Items.COOKED_CHICKEN || item == Items.COOKED_MUTTON || item == Items.COOKED_RABBIT || item == Items.COOKED_PORKCHOP) {
 
