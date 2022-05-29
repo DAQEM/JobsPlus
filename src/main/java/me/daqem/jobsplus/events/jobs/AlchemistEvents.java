@@ -39,10 +39,8 @@ public class AlchemistEvents {
         Player player = event.getPlayer();
         if (itemStackArrayList.contains(event.getStack())) {
             itemStackArrayList.remove(event.getStack());
-            if (!player.isCreative()) {
-                if (JobGetters.jobIsEnabled(player, job)) {
-                    ExpHandler.addEXPBrewing(player, job);
-                }
+            if (JobGetters.jobIsEnabled(player, job)) {
+                ExpHandler.addEXPBrewing(player, job);
             }
         }
     }
@@ -94,16 +92,14 @@ public class AlchemistEvents {
     @SubscribeEvent
     public void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            if (!player.isCreative()) {
-                if (JobGetters.jobIsEnabled(player, job)) {
-                    Item item = event.getCrafting().getItem();
-                    String itemName = item.getDescriptionId();
-                    ArrayList<String> items = new ArrayList<>(List.of("item.minecraft.fermented_spider_eye",
-                            "item.minecraft.blaze_powder", "item.minecraft.glistering_melon_slice",
-                            "item.minecraft.magma_cream", "item.minecraft.golden_carrot", "item.minecraft.turtle_helmet"));
-                    if (items.contains(itemName)) {
-                        ExpHandler.addEXPLowest(player, job);
-                    }
+            if (JobGetters.jobIsEnabled(player, job)) {
+                Item item = event.getCrafting().getItem();
+                String itemName = item.getDescriptionId();
+                ArrayList<String> items = new ArrayList<>(List.of("item.minecraft.fermented_spider_eye",
+                        "item.minecraft.blaze_powder", "item.minecraft.glistering_melon_slice",
+                        "item.minecraft.magma_cream", "item.minecraft.golden_carrot", "item.minecraft.turtle_helmet"));
+                if (items.contains(itemName)) {
+                    ExpHandler.addEXPLowest(player, job);
                 }
             }
         }
@@ -113,15 +109,13 @@ public class AlchemistEvents {
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
         if (event.getSource().getEntity() instanceof ServerPlayer player) {
-            if (!player.isCreative()) {
-                if (JobGetters.jobIsEnabled(player, job)) {
-                    Entity target = event.getEntity();
-                    if (target instanceof Phantom || target instanceof Rabbit) {
-                        ExpHandler.addEXPMid(player, job);
-                    }
-                    if (target instanceof Ghast || target instanceof Pufferfish) {
-                        ExpHandler.addEXPHigh(player, job);
-                    }
+            if (JobGetters.jobIsEnabled(player, job)) {
+                Entity target = event.getEntity();
+                if (target instanceof Phantom || target instanceof Rabbit) {
+                    ExpHandler.addEXPMid(player, job);
+                }
+                if (target instanceof Ghast || target instanceof Pufferfish) {
+                    ExpHandler.addEXPHigh(player, job);
                 }
             }
         }
@@ -130,14 +124,12 @@ public class AlchemistEvents {
     //  ON NETHER WART HARVEST
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
-        ServerPlayer player = (ServerPlayer) event.getPlayer();
+        Player player = event.getPlayer();
         Block block = event.getState().getBlock();
-        if (!player.isCreative()) {
-            if (JobGetters.jobIsEnabled(player, job)) {
-                if (block instanceof NetherWartBlock) {
-                    if (CropHandler.stateToAge(event.getState()) == 3) {
-                        ExpHandler.addEXPLow(player, job);
-                    }
+        if (JobGetters.jobIsEnabled(player, job)) {
+            if (block instanceof NetherWartBlock) {
+                if (CropHandler.stateToAge(event.getState()) == 3) {
+                    ExpHandler.addEXPLow(player, job);
                 }
             }
         }

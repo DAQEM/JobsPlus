@@ -42,9 +42,9 @@ public class UpgradeRecipe extends ShapedRecipe {
                     bowPresent = false, rodPresent = false, expBottlePresent = false, expJarPresent = false;
             for (int index = 0; index < container.getContainerSize(); ++index) {
                 final var slotStack = container.getItem(index);
-                if (!slotStack.isEmpty()) {
-                    final var item = slotStack.getItem();
-                    final CompoundTag copy = Objects.requireNonNull(slotStack.getTag()).copy();
+                final var item = slotStack.getItem();
+                if (slotStack.hasTag() || item instanceof BackpackItem) {
+                    CompoundTag copy = slotStack.hasTag() ? Objects.requireNonNull(slotStack.getTag()).copy() : new CompoundTag();
                     if (item instanceof BackpackItem) {
                         if (backpackPresent) return ItemStack.EMPTY;
                         backpackPresent = true;
