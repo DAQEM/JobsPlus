@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.handlers;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
@@ -78,6 +79,19 @@ public class ExpHandler {
     public static void addJobEXP(Player player, Jobs job, int exp) {
         if (player.isCreative()) return;
         if (JobGetters.getJobLevel(player, job) >= 100) return;
+
+        //Job-EXP Multipliers.
+        final Double global = Config.GLOBAL_EXP_MULTIPLIER.get();
+        if (job == Jobs.ALCHEMIST) exp = (int) ((exp * Config.ALCHEMIST_EXP_MULTIPLIER.get()) * global);
+        if (job == Jobs.BUILDER) exp = (int) ((exp * Config.BUILDER_EXP_MULTIPLIER.get()) * global);
+        if (job == Jobs.DIGGER) exp = (int) ((exp * Config.DIGGER_EXP_MULTIPLIER.get()) * global);
+        if (job == Jobs.ENCHANTER) exp = (int) ((exp * Config.ENCHANTER_EXP_MULTIPLIER.get()) * global);
+        if (job == Jobs.FARMER) exp = (int) ((exp * Config.FARMER_EXP_MULTIPLIER.get()) * global);
+        if (job == Jobs.FISHERMAN) exp = (int) ((exp * Config.FISHERMAN_EXP_MULTIPLIER.get()) * global);
+        if (job == Jobs.HUNTER) exp = (int) ((exp * Config.HUNTER_EXP_MULTIPLIER.get()) * global);
+        if (job == Jobs.LUMBERJACK) exp = (int) ((exp * Config.LUMBERJACK_EXP_MULTIPLIER.get()) * global);
+        if (job == Jobs.MINER) exp = (int) ((exp * Config.MINER_EXP_MULTIPLIER.get()) * global);
+        if (job == Jobs.SMITH) exp = (int) ((exp * Config.SMITH_EXP_MULTIPLIER.get()) * global);
 
         JobSetters.addEXP(job, player, exp);
         int maxEXP = LevelHandler.calcExp(JobGetters.getJobLevel(player, job));

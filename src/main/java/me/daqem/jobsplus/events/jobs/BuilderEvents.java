@@ -37,7 +37,7 @@ public class BuilderEvents {
                 if (JobGetters.jobIsEnabled(player, Jobs.BUILDER)) {
                     final BlockState state = event.getPlacedBlock();
                     Block block = state.getBlock();
-                    ArrayList<String> bannedBlocks = new ArrayList<>(List.of("farmland"));
+                    ArrayList<String> bannedBlocks = new ArrayList<>(List.of("farmland", "jukebox"));
                     if (!bannedBlocks.contains(block.getDescriptionId().replace("block.minecraft.", ""))
                             && state.getMaterial().isSolid()
                             && !block.getDescriptionId().endsWith(".twig")) {

@@ -4,6 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.ModPacketHandler;
+import me.daqem.jobsplus.packet.PacketJobStartStop;
+import me.daqem.jobsplus.packet.PacketMenuPowerUp;
 import me.daqem.jobsplus.packet.PacketOpenMenu;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.Minecraft;
@@ -25,7 +27,7 @@ public class ConfirmationScreen extends Screen {
 
     private static final Component TITLE = new KeybindComponent("Confirmation");
     private static final ResourceLocation BACKGROUND = JobsPlus.getId("textures/gui/confirmation_screen.png");
-    private static final String[] backButton = new String[]{"not_enough_coins_stop", "not_enough_coins_start", "not_enough_coins_powerup", "job_not_enabled"};
+    private static final String[] backButton = new String[]{"not_enough_coins_stop", "not_enough_coins_start", "not_enough_coins_powerup", "job_not_enabled", "must_be_level_100"};
     private final int imageWidth = 300;
     private final int imageHeight = 50;
     private final Component confirmationText;
@@ -135,23 +137,23 @@ public class ConfirmationScreen extends Screen {
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 - 78, imageHeight - 22, imageWidth / 2 - 4, imageHeight - 5)) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 if (action.equals("start") || action.equals("start_paid"))
-                    player.chat("/job start " + job.name() + " force");
+                    ModPacketHandler.INSTANCE.sendToServer(new PacketJobStartStop(true, job));
                 if (action.equals("stop") || action.equals("stop_free"))
-                    player.chat("/job stop " + job.name() + " force");
+                    ModPacketHandler.INSTANCE.sendToServer(new PacketJobStartStop(false, job));
                 if (action.equals("powerup"))
-                    player.chat("/job powerups buy " + job.name() + " " + powerUp);
-                ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(player.getUUID(), Jobs.getJobInt(job), activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                    ModPacketHandler.INSTANCE.sendToServer(new PacketMenuPowerUp(false, job, powerUp + 1));
+                ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Jobs.getJobInt(job), activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
             }
             // CANCEL BUTTON
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 + 3, imageHeight - 22, imageWidth / 2 + 77, imageHeight - 5)) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(player.getUUID(), Jobs.getJobInt(job), activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Jobs.getJobInt(job), activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
             }
         } else {
             // BACK BUTTON if NOT ENOUGH COINS
             if (isBetween(mouseX - startX, mouseY - startY, imageWidth / 2 - 38, imageHeight - 22, imageWidth / 2 + 36, imageHeight - 5)) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(player.getUUID(), Jobs.getJobInt(job), activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Jobs.getJobInt(job), activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
             }
         }
         return super.mouseClicked(mouseX, mouseY, p_94697_);

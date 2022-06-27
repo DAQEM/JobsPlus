@@ -27,7 +27,7 @@ public class ItemHandler {
         for (ItemStack drop : drops) {
             final Item item = drop.getItem();
             final int count = drop.getCount();
-            newDrops.add(item == Items.RAW_COPPER ? new ItemStack(Items.COPPER_INGOT, count) : item == Items.RAW_IRON ? new ItemStack(Items.IRON_INGOT, count) : item == Items.RAW_GOLD ? new ItemStack(Items.GOLD_INGOT, count) : drop);
+            newDrops.add(item == Items.RAW_COPPER ? new ItemStack(Items.COPPER_INGOT, count) : item == Items.RAW_IRON ? new ItemStack(Items.IRON_INGOT, count) : item == Items.RAW_GOLD ? new ItemStack(Items.GOLD_INGOT, count) : item == Items.ANCIENT_DEBRIS ? new ItemStack(Items.NETHERITE_SCRAP, count) : drop);
         }
         if (newDrops.isEmpty()) return drops;
         return newDrops;

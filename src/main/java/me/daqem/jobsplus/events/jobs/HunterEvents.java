@@ -93,7 +93,7 @@ public class HunterEvents {
             else ExpHandler.addEXPMid(player, job);
 
             if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get()) && Math.random() * 100 < 5) {
-                if (entity instanceof Zombie)
+                if (entity instanceof Zombie && !(entity instanceof Drowned) && !(entity instanceof ZombieVillager) && !(entity instanceof ZombifiedPiglin))
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.ZOMBIE_HEAD);
                 if (entity instanceof Creeper)
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.CREEPER_HEAD);

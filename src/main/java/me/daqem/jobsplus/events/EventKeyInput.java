@@ -25,7 +25,7 @@ public class EventKeyInput {
                 Screen screen = Minecraft.getInstance().screen;
                 if (screen instanceof JobsScreen) screen.onClose();
                 if (screen == null)
-                    ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(player.getUUID(), -1, 0, 0, -1, 0, 0));
+                    ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(-1, 0, 0, -1, 0, 0));
             }
             if (key == Client.VEIN_MINER_KEYBIND.getKey().getValue()) {
                 if (action == 1) ModPacketHandler.sendPowerupPacket("enable_veinminer", player);

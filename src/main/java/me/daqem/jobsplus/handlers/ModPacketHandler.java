@@ -19,13 +19,18 @@ public class ModPacketHandler {
     public static void init() {
         int id = 0;
         INSTANCE.registerMessage(++id, PacketSendMainMenuData.class, PacketSendMainMenuData::encode, PacketSendMainMenuData::decode, PacketSendMainMenuData::handle);
-        INSTANCE.registerMessage(++id, PacketPowerups.class, PacketPowerups::encode, PacketPowerups::decode, PacketPowerups::handle);
+        INSTANCE.registerMessage(++id, PacketPowerUps.class, PacketPowerUps::encode, PacketPowerUps::decode, PacketPowerUps::handle);
         INSTANCE.registerMessage(++id, PacketOpenMenu.class, PacketOpenMenu::encode, PacketOpenMenu::decode, PacketOpenMenu::handle);
         INSTANCE.registerMessage(++id, PacketUserSettingsServer.class, PacketUserSettingsServer::encode, PacketUserSettingsServer::decode, PacketUserSettingsServer::handle);
         INSTANCE.registerMessage(++id, PacketUserSettingsClient.class, PacketUserSettingsClient::encode, PacketUserSettingsClient::decode, PacketUserSettingsClient::handle);
+        INSTANCE.registerMessage(++id, PacketJobDisplay.class, PacketJobDisplay::encode, PacketJobDisplay::decode, PacketJobDisplay::handle);
+        INSTANCE.registerMessage(++id, PacketJobStartStop.class, PacketJobStartStop::encode, PacketJobStartStop::decode, PacketJobStartStop::handle);
+        INSTANCE.registerMessage(++id, PacketBossBarr.class, PacketBossBarr::encode, PacketBossBarr::decode, PacketBossBarr::handle);
+        INSTANCE.registerMessage(++id, PacketSwitchSuperpower.class, PacketSwitchSuperpower::encode, PacketSwitchSuperpower::decode, PacketSwitchSuperpower::handle);
+        INSTANCE.registerMessage(++id, PacketMenuPowerUp.class, PacketMenuPowerUp::encode, PacketMenuPowerUp::decode, PacketMenuPowerUp::handle);
     }
 
     public static void sendPowerupPacket(String str, LocalPlayer player) {
-        ModPacketHandler.INSTANCE.sendToServer(new PacketPowerups(str, player.getUUID()));
+        ModPacketHandler.INSTANCE.sendToServer(new PacketPowerUps(str, player.getUUID()));
     }
 }

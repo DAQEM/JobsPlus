@@ -11,7 +11,6 @@ import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
-import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -27,212 +26,79 @@ public class JobCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
                 .literal("job")
-                .then(Commands.literal("help")
-                        .executes(context -> help(context.getSource())))
-                .then(Commands.literal("about")
-                        .executes(context -> about(context.getSource())))
-                .then(Commands.literal("coins")
+                .requires(commandSourceStack -> commandSourceStack.hasPermission(2))
+                .then(Commands.literal("debug")
                         .then(Commands.argument("target", EntityArgument.players())
-                                .executes(context -> coinsPlayer(
+                                .executes(context -> debug(
                                         context.getSource(),
-                                        EntityArgument.getPlayer(context, "target")
-                                )))
-                        .executes(context -> coins(context.getSource())))
-                .then(Commands.literal("start")
-                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                .then(Commands.literal("force")
-                                        .executes(context -> forceJobStart(
-                                                context.getSource(),
-                                                context.getArgument("job", Jobs.class)
-                                        )))
-                                .executes(context -> jobStart(
-                                        context.getSource(),
-                                        context.getArgument("job", Jobs.class)
-                                )))
-                        .executes(context -> start(context.getSource())))
-                .then(Commands.literal("stop")
-                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                .then(Commands.literal("force")
-                                        .executes(context -> forceJobStop(
-                                                context.getSource(),
-                                                context.getArgument("job", Jobs.class)
-                                        )))
-                                .executes(context -> jobStop(
-                                        context.getSource(),
-                                        context.getArgument("job", Jobs.class)
-                                )))
-                        .executes(context -> stop(context.getSource())))
-                .then(Commands.literal("powerups")
-                        .then(Commands.literal("buy")
-                                .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                        .then(Commands.argument("powerup", IntegerArgumentType.integer(1, 3))
-                                                .executes(context -> jobPowerUps(
-                                                        context.getSource(),
-                                                        context.getArgument("job", Jobs.class),
-                                                        IntegerArgumentType.getInteger(context, "powerup")
-                                                )))
-                                        .executes(context -> powerups(context.getSource())))
-                                .executes(context -> powerups(context.getSource())))
-                        .then(Commands.literal("switch")
-                                .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                        .then(Commands.argument("powerup", IntegerArgumentType.integer(1, 3))
-                                                .executes(context -> switchJobPowerUps(
-                                                        context.getSource(),
-                                                        context.getArgument("job", Jobs.class),
-                                                        IntegerArgumentType.getInteger(context, "powerup")
-                                                )))
-                                        .executes(context -> powerups(context.getSource())))
-                                .executes(context -> powerups(context.getSource())))
-                        .executes(context -> powerups(context.getSource())))
-                .then(Commands.literal("superpower")
-                        .then(Commands.literal("switch")
-                                .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                        .executes(context -> switchSuperpower(
-                                                context.getSource(),
-                                                context.getArgument("job", Jobs.class)
-                                        )))))
-                .then(Commands.literal("display")
-                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                .executes(context -> jobDisplay(
-                                        context.getSource(),
-                                        context.getArgument("job", Jobs.class)
-                                )))
-                        .executes(context -> display(context.getSource())))
-                .then(Commands.literal("admin")
-                        .requires(commandSourceStack -> commandSourceStack.hasPermission(2))
-                        .then(Commands.literal("set")
-                                .then(Commands.literal("level")
-                                        .then(Commands.argument("target", EntityArgument.players())
-                                                .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                                        .then(Commands.argument("level", IntegerArgumentType.integer(0, 100))
-                                                                .executes(context -> setLevel(
-                                                                        context.getSource(),
-                                                                        EntityArgument.getPlayer(context, "target"),
-                                                                        context.getArgument("job", Jobs.class),
-                                                                        IntegerArgumentType.getInteger(context, "level"))))
-                                                        .executes(context -> setLevelHelp(context.getSource())))
+                                        EntityArgument.getPlayer(context, "target"))))
+                        .executes(context -> debug(
+                                context.getSource(),
+                                null)))
+                .then(Commands.literal("set")
+                        .then(Commands.literal("level")
+                                .then(Commands.argument("target", EntityArgument.players())
+                                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+                                                .then(Commands.argument("level", IntegerArgumentType.integer(0, 100))
+                                                        .executes(context -> setLevel(
+                                                                context.getSource(),
+                                                                EntityArgument.getPlayer(context, "target"),
+                                                                context.getArgument("job", Jobs.class),
+                                                                IntegerArgumentType.getInteger(context, "level"))))
                                                 .executes(context -> setLevelHelp(context.getSource())))
                                         .executes(context -> setLevelHelp(context.getSource())))
-                                .then(Commands.literal("exp")
-                                        .then(Commands.argument("target", EntityArgument.players())
-                                                .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                                        .then(Commands.argument("exp", IntegerArgumentType.integer())
-                                                                .executes(context -> setEXP(
+                                .executes(context -> setLevelHelp(context.getSource())))
+                        .then(Commands.literal("exp")
+                                .then(Commands.argument("target", EntityArgument.players())
+                                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+                                                .then(Commands.argument("exp", IntegerArgumentType.integer())
+                                                        .executes(context -> setEXP(
+                                                                context.getSource(),
+                                                                EntityArgument.getPlayer(context, "target"),
+                                                                context.getArgument("job", Jobs.class),
+                                                                IntegerArgumentType.getInteger(context, "exp"))))
+                                                .executes(context -> setEXPHelp(context.getSource())))
+                                        .executes(context -> setEXPHelp(context.getSource())))
+                                .executes(context -> setEXPHelp(context.getSource())))
+                        .then(Commands.literal("coins")
+                                .then(Commands.argument("target", EntityArgument.players())
+                                        .then(Commands.argument("coins", IntegerArgumentType.integer())
+                                                .executes(context -> setCoins(
+                                                        context.getSource(),
+                                                        EntityArgument.getPlayer(context, "target"),
+                                                        IntegerArgumentType.getInteger(context, "coins")
+                                                )))
+                                        .executes(context -> setCoinsHelp(context.getSource())))
+                                .executes(context -> setCoinsHelp(context.getSource())))
+                        .then(Commands.literal("display")
+                                .then(Commands.argument("target", EntityArgument.players())
+                                        .then(Commands.argument("display", EnumArgument.enumArgument(Jobs.class))
+                                                .executes(context -> setDisplay(
+                                                        context.getSource(),
+                                                        EntityArgument.getPlayer(context, "target"),
+                                                        context.getArgument("display", Jobs.class)
+                                                )))
+                                        .executes(context -> setDisplayHelp(context.getSource())))
+                                .executes(context -> setDisplayHelp(context.getSource())))
+                        .then(Commands.literal("powerup")
+                                .then(Commands.argument("target", EntityArgument.players())
+                                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
+                                                .then(Commands.argument("powerup", IntegerArgumentType.integer(1, 3))
+                                                        .then(Commands.argument("int", IntegerArgumentType.integer(0, 2))
+                                                                .executes(context -> setPowerUp(
                                                                         context.getSource(),
                                                                         EntityArgument.getPlayer(context, "target"),
                                                                         context.getArgument("job", Jobs.class),
-                                                                        IntegerArgumentType.getInteger(context, "exp"))))
-                                                        .executes(context -> setEXPHelp(context.getSource())))
-                                                .executes(context -> setEXPHelp(context.getSource())))
-                                        .executes(context -> setEXPHelp(context.getSource())))
-                                .then(Commands.literal("coins")
-                                        .then(Commands.argument("target", EntityArgument.players())
-                                                .then(Commands.argument("coins", IntegerArgumentType.integer())
-                                                        .executes(context -> setCoins(
-                                                                context.getSource(),
-                                                                EntityArgument.getPlayer(context, "target"),
-                                                                IntegerArgumentType.getInteger(context, "coins")
-                                                        )))
-                                                .executes(context -> setCoinsHelp(context.getSource())))
-                                        .executes(context -> setCoinsHelp(context.getSource())))
-                                .then(Commands.literal("display")
-                                        .then(Commands.argument("target", EntityArgument.players())
-                                                .then(Commands.argument("display", EnumArgument.enumArgument(Jobs.class))
-                                                        .executes(context -> setDisplay(
-                                                                context.getSource(),
-                                                                EntityArgument.getPlayer(context, "target"),
-                                                                context.getArgument("display", Jobs.class)
-                                                        )))
-                                                .executes(context -> setDisplayHelp(context.getSource())))
-                                        .executes(context -> setDisplayHelp(context.getSource())))
-                                .then(Commands.literal("powerup")
-                                        .then(Commands.argument("target", EntityArgument.players())
-                                                .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                                        .then(Commands.argument("powerup", IntegerArgumentType.integer(1, 3))
-                                                                .then(Commands.argument("int", IntegerArgumentType.integer(0, 2))
-                                                                        .executes(context -> setPowerUp(
-                                                                                context.getSource(),
-                                                                                EntityArgument.getPlayer(context, "target"),
-                                                                                context.getArgument("job", Jobs.class),
-                                                                                IntegerArgumentType.getInteger(context, "powerup"),
-                                                                                IntegerArgumentType.getInteger(context, "int"))
-                                                                        )
+                                                                        IntegerArgumentType.getInteger(context, "powerup"),
+                                                                        IntegerArgumentType.getInteger(context, "int"))
                                                                 )
                                                         )
                                                 )
                                         )
                                 )
-                                .executes(context -> adminSet(context.getSource())))
-                        .then(Commands.literal("debug")
-                                .then(Commands.argument("target", EntityArgument.players())
-                                        .executes(context -> debug(
-                                                context.getSource(),
-                                                EntityArgument.getPlayer(context, "target"))))
-                                .executes(context -> debug(
-                                        context.getSource(),
-                                        null)))
-                        .executes(context -> admin(context.getSource())))
-                .then(Commands.literal("progress")
-                        .then(Commands.argument("job", EnumArgument.enumArgument(Jobs.class))
-                                .executes(context -> setProgress(
-                                        context.getSource(),
-                                        context.getArgument("job", Jobs.class),
-                                        true
-                                )))
-                        .then(Commands.literal("NONE")
-                                .executes(context -> setProgress(
-                                        context.getSource(),
-                                        null,
-                                        false
-                                ))))
-                .executes(context -> help(context.getSource())));
-
-    }
-
-    private static int setProgress(CommandSourceStack source, Jobs job, boolean notNone) {
-        if (source.getEntity() instanceof Player player && player.getServer() != null) {
-            if (notNone) {
-                if (JobGetters.jobIsEnabled(player, job)) {
-                    BossBarHandler.createBossBar(player, job);
-                } else {
-                    ChatHandler.sendMessage(player, new TranslatableComponent("error.job.not_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-                }
-            } else {
-                BossBarHandler.removeAllActiveBossBars(player, player.getServer().getCustomBossEvents());
-            }
-        }
-        return 1;
-    }
-
-    private static int switchJobPowerUps(CommandSourceStack source, Jobs job, int powerUp) {
-        if (source.getEntity() instanceof Player player) {
-            ++powerUp;
-            if (JobGetters.getPowerup(player, job, powerUp) == 1 || JobGetters.getPowerup(player, job, powerUp) == 2) {
-                if (JobGetters.getPowerup(player, job, powerUp) == 1) {
-                    JobSetters.setPowerUp(job, player, powerUp, 2);
-                } else {
-                    JobSetters.setPowerUp(job, player, powerUp, 1);
-                }
-            } else {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.powerup.not_bought", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-            }
-        }
-        return 1;
-    }
-
-    private static int switchSuperpower(CommandSourceStack source, Jobs job) {
-        if (source.getEntity() instanceof Player player) {
-            if (JobGetters.getJobLevel(player, job) == 100) {
-                if (JobGetters.getSuperPower(player, job) == 0) {
-                    JobSetters.setSuperPower(player, job, 1);
-                } else {
-                    JobSetters.setSuperPower(player, job, 0);
-                }
-            } else {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.level.must_be_100", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-            }
-        }
-        return 1;
+                        )
+                )
+        );
     }
 
     private static int setPowerUp(CommandSourceStack source, Player target, Jobs job, int powerUp, int i) {
@@ -262,264 +128,6 @@ public class JobCommand {
             }
         }
         JobSetters.setPowerUp(job, target, powerUp + 1, i);
-        return 1;
-    }
-
-    private static int help(CommandSourceStack source) {
-        if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatHandler.header("HELP"));
-            ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Available commands: \n\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/jobs\n\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "about\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "coins\n" +
-//                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "crafting [job]\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "display [job]\n" +
-//                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "info [job]\n" +
-//                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "powerups [job]\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "start [job]\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job " + ChatColor.green() + "stop [job]");
-            ChatHandler.sendMessage(player, ChatHandler.footer(4));
-        }
-        return 1;
-    }
-
-    private static int about(CommandSourceStack source) {
-        if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatHandler.header("ABOUT"));
-            ChatHandler.sendMessage(player, ChatColor.green() + "Jobs+ is a mod that adds 10 jobs " +
-                    "to the game. These jobs each have their own power-ups, superpower and tasks. You can level-up " +
-                    "your job by doing tasks that fit the job. Think of mining, building, killing, etc. Every time " +
-                    "you level-up your job, you get a job-coin. With this coin you can buy new jobs and power-ups." +
-                    " Once you reach job-level 100, your job will obtain its superpower. This superpower will give " +
-                    "you a massive benefit that fits the job. Each job also has its own craftable items that will be " +
-                    "unlocked once you reach a certain job-level.");
-            ChatHandler.sendMessage(player, ChatHandler.footer(5));
-        }
-        return 1;
-    }
-
-    private static int coins(CommandSourceStack source) {
-        if (source.getEntity() instanceof Player player) {
-            player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-                ChatHandler.sendMessage(player, ChatHandler.header("COINS"));
-                ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Your job coins: " +
-                        ChatColor.green() + handler.getCoins());
-                ChatHandler.sendMessage(player, ChatHandler.footer(5));
-            });
-        }
-        return 1;
-    }
-
-    private static int coinsPlayer(CommandSourceStack source, Player target) {
-        if (source.getEntity() instanceof Player player) {
-            if (target.getScoreboardName().equals(source.getEntity().getScoreboardName())) {
-                coins(source);
-            } else {
-                target.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-                    ChatHandler.sendMessage(player, ChatHandler.header("COINS"));
-                    ChatHandler.sendMessage(player, ChatColor.darkGreen() + target.getScoreboardName() +
-                            "s job coins: " + ChatColor.green() + handler.getCoins());
-                    ChatHandler.sendMessage(player, ChatHandler.footer(5));
-                });
-            }
-
-        }
-        return 1;
-    }
-
-    private static int info(CommandSourceStack source) {
-        if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatHandler.header("INFO"));
-            ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
-                    ChatColor.green() + "/job info [job]\n\n This command will show you some useful information " +
-                    "about a certain job.");
-            ChatHandler.sendMessage(player, ChatHandler.footer(4));
-        }
-        return 1;
-    }
-
-    private static int start(CommandSourceStack source) {
-        if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatHandler.header("START"));
-            ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
-                    ChatColor.green() + "/job start [job]\n\n This command will start a certain job.");
-            ChatHandler.sendMessage(player, ChatHandler.footer(5));
-        }
-        return 1;
-    }
-
-    private static int stop(CommandSourceStack source) {
-        if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatHandler.header("STOP"));
-            ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
-                    ChatColor.green() + "/job stop [job]\n\n This command will stop a certain job if your job level " +
-                    "is still level 1 or by paying 10 job coins.");
-            ChatHandler.sendMessage(player, ChatHandler.footer(4));
-        }
-        return 1;
-    }
-
-    private static int powerups(CommandSourceStack source) {
-        if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatHandler.header("POWER-UPS"));
-            ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
-                    ChatColor.green() + "/job powerups buy [job]\n\n This command will buy one of the available power-ups.");
-            ChatHandler.sendMessage(player, ChatHandler.footer(9));
-        }
-        return 1;
-    }
-
-    private static int crafting(CommandSourceStack source) {
-        if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatHandler.header("CRAFTING"));
-            ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
-                    ChatColor.green() + "/job crafting [job]\n\n This command will show you some useful information " +
-                    "about the custom crafting recipes a certain job has.");
-            ChatHandler.sendMessage(player, ChatHandler.footer(8));
-        }
-        return 1;
-    }
-
-    private static int display(CommandSourceStack source) {
-        if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatHandler.header("DISPLAY"));
-            ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
-                    ChatColor.green() + "/job display [job]\n\n This command will change the job that is shown in " +
-                    "front of your name in tab and chat. By default, this is the first job you chose.");
-            ChatHandler.sendMessage(player, ChatHandler.footer(7));
-        }
-        return 1;
-    }
-
-    private static int jobInfo(CommandSourceStack source, Jobs job) {
-        if (source.getEntity() instanceof Player player) {
-            //TODO JOB INFO
-        }
-        return 1;
-    }
-
-    private static int jobStart(CommandSourceStack source, Jobs job) {
-        if (source.getEntity() instanceof Player player) {
-            player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-                switch (job) {
-                    case ALCHEMIST -> jobStartMethod(player, job, CapType.SELECTOR_ALCHEMIST, handler.getCoins());
-                    case BUILDER -> jobStartMethod(player, job, CapType.SELECTOR_BUILDER, handler.getCoins());
-                    case DIGGER -> jobStartMethod(player, job, CapType.SELECTOR_DIGGER, handler.getCoins());
-                    case ENCHANTER -> jobStartMethod(player, job, CapType.SELECTOR_ENCHANTER, handler.getCoins());
-                    case FARMER -> jobStartMethod(player, job, CapType.SELECTOR_FARMER, handler.getCoins());
-                    case FISHERMAN -> jobStartMethod(player, job, CapType.SELECTOR_FISHERMAN, handler.getCoins());
-                    case HUNTER -> jobStartMethod(player, job, CapType.SELECTOR_HUNTER, handler.getCoins());
-                    case LUMBERJACK -> jobStartMethod(player, job, CapType.SELECTOR_LUMBERJACK, handler.getCoins());
-                    case MINER -> jobStartMethod(player, job, CapType.SELECTOR_MINER, handler.getCoins());
-                    case SMITH -> jobStartMethod(player, job, CapType.SELECTOR_SMITH, handler.getCoins());
-                }
-            });
-        }
-        return 1;
-    }
-
-    private static int forceJobStart(CommandSourceStack source, Jobs job) {
-        if (source.getEntity() instanceof Player player) {
-            if (!JobGetters.jobIsEnabled(player, job)) {
-                if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
-                    JobSetters.setLevel(job, player, 1);
-                    if (JobGetters.getAmountOfEnabledJobs(player) == 1) JobSetters.setDisplay(player, job.get());
-                } else {
-                    if (JobGetters.getCoins(player) < 10) {
-                        ChatHandler.sendMessage(player, new TranslatableComponent("error.coins.not_enough.need_10", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-                    } else {
-                        JobSetters.setLevel(job, player, 1);
-                        JobSetters.removeCoins(player, 10);
-                    }
-                }
-            } else {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.job.already_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-            }
-        }
-        return 1;
-    }
-
-    private static int jobStop(CommandSourceStack source, Jobs job) {
-        if (source.getEntity() instanceof Player player) {
-            player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-                switch (job) {
-                    case ALCHEMIST -> jobStopMethod(player, job, CapType.SELECTOR_ALCHEMIST, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case BUILDER -> jobStopMethod(player, job, CapType.SELECTOR_BUILDER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case DIGGER -> jobStopMethod(player, job, CapType.SELECTOR_DIGGER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case ENCHANTER -> jobStopMethod(player, job, CapType.SELECTOR_ENCHANTER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case FARMER -> jobStopMethod(player, job, CapType.SELECTOR_FARMER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case FISHERMAN -> jobStopMethod(player, job, CapType.SELECTOR_FISHERMAN, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case HUNTER -> jobStopMethod(player, job, CapType.SELECTOR_HUNTER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case LUMBERJACK -> jobStopMethod(player, job, CapType.SELECTOR_LUMBERJACK, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case MINER -> jobStopMethod(player, job, CapType.SELECTOR_MINER, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                    case SMITH -> jobStopMethod(player, job, CapType.SELECTOR_SMITH, handler.getCoins(), JobGetters.getJobLevel(player, job));
-                }
-            });
-        }
-        return 1;
-    }
-
-    private static int forceJobStop(CommandSourceStack source, Jobs job) {
-        if (source.getEntity() instanceof Player player) {
-            if (JobGetters.jobIsEnabled(player, job)) {
-                if (JobGetters.getJobLevel(player, job) == 1) {
-                    JobSetters.set(job, player, 0, 0, 0, 0, 0);
-                } else {
-                    if (JobGetters.getCoins(player) >= 5) {
-                        JobSetters.set(job, player, 0, 0, 0, 0, 0);
-                        JobSetters.removeCoins(player, 5);
-                    } else {
-                        ChatHandler.sendMessage(player, new TranslatableComponent("error.coins.need_5_to_stop_job", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-                    }
-                }
-                if (job.get() + 1 == JobGetters.getDisplay(player)) {
-                    JobSetters.setDisplay(player, -1);
-                }
-            } else {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.powerup.not_bought", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-            }
-        }
-        return 1;
-    }
-
-    private static int jobPowerUps(CommandSourceStack source, Jobs job, int powerUp) {
-        if (source.getEntity() instanceof Player player) {
-            powerUp = powerUp + 1;
-            if (JobGetters.jobIsEnabled(player, job)) {
-                if (!JobGetters.hasEnabledPowerup(player, job, powerUp)) {
-                    if (!(JobGetters.getCoins(player) < 10)) {
-                        JobSetters.addPowerUp(job, player, powerUp);
-                        JobSetters.removeCoins(player, 10);
-                    } else {
-                        ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                                "[JOBS+] " + ChatColor.red() + "You need 10 job-coins to buy a power-up.");
-                    }
-                } else {
-                    ChatHandler.sendMessage(player, ChatColor.boldDarkRed() +
-                            "[JOBS+] " + ChatColor.red() + "You have already bought this power-up.");
-                }
-            } else {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.job.not_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-            }
-        }
-        return 1;
-    }
-
-    private static int jobCrafting(CommandSourceStack source, Jobs job) {
-        if (source.getEntity() instanceof Player player) {
-            //TODO JOB CRAFTING
-        }
-        return 1;
-    }
-
-    private static int jobDisplay(CommandSourceStack source, Jobs job) {
-        if (source.getEntity() instanceof Player player) {
-            if (JobGetters.jobIsEnabled(player, job)) {
-                JobSetters.setDisplay(player, job.get());
-            } else {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.job.not_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-            }
-        }
         return 1;
     }
 
@@ -640,31 +248,6 @@ public class JobCommand {
         return 1;
     }
 
-    private static int adminSet(CommandSourceStack source) {
-        if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatHandler.header("HELP"));
-            ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Available commands: \n\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job admin set " + ChatColor.green() + "coins [player] [coins]\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job admin set " + ChatColor.green() + "exp [player] [job] [exp]\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job admin set " + ChatColor.green() + "level [player] [job] [level]\n");
-            ChatHandler.sendMessage(player, ChatHandler.footer(4));
-        }
-        return 1;
-    }
-
-    private static int admin(CommandSourceStack source) {
-        if (source.getEntity() instanceof Player player) {
-            ChatHandler.sendMessage(player, ChatHandler.header("HELP"));
-            ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Available commands: \n\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job admin " + ChatColor.green() + "debug [player]\n\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job admin set " + ChatColor.green() + "coins [player] [coins]\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job admin set " + ChatColor.green() + "exp [player] [job] [exp]\n" +
-                    ChatColor.darkGray() + " - " + ChatColor.darkGreen() + "/job admin set " + ChatColor.green() + "level [player] [job] [level]\n");
-            ChatHandler.sendMessage(player, ChatHandler.footer(4));
-        }
-        return 1;
-    }
-
     private static int debug(CommandSourceStack source, Player target) {
         if (source.getEntity() instanceof Player player) {
             if (target == null) target = player;
@@ -705,87 +288,5 @@ public class JobCommand {
             }));
         }
         return 1;
-    }
-
-    private static void jobStartMethod(Player player, Jobs job, CapType capType, int coins) {
-        if (!JobGetters.jobIsEnabled(player, job)) {
-            if (JobGetters.noVerificationEnabled(player)) {
-                if (JobGetters.getAmountOfEnabledJobs(player) < 2) {
-                    /* Free job */
-                    JobSetters.setVerification(player, CapType.START_VERIFICATION_FREE.get());
-                    JobSetters.setSelector(player, capType.get());
-                    if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
-                        ChatHandler.sendMessage(player, ChatColor.boldDarkGreen() +
-                                "[JOBS+] " + ChatColor.green() + "Are you sure you want to become an " +
-                                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? Say yes in chat.");
-                    } else {
-                        ChatHandler.sendMessage(player, ChatColor.boldDarkGreen() +
-                                "[JOBS+] " + ChatColor.green() + "Are you sure you want to become a " +
-                                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? Say yes in chat.");
-                    }
-                    /* Has to pay for job */
-                } else {
-                    if (coins < 10) {
-                        ChatHandler.sendMessage(player, new TranslatableComponent("error.coins.not_enough.need_10", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-                    } else {
-                        JobSetters.setVerification(player, CapType.START_VERIFICATION_PAID.get());
-                        JobSetters.setSelector(player, capType.get());
-                        if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
-                            ChatHandler.sendMessage(player, ChatColor.boldDarkGreen() +
-                                    "[JOBS+] " + ChatColor.green() + "Are you sure you want to become an " +
-                                    ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? This will cost 10 job-coins. Say yes in chat.");
-                        } else {
-                            ChatHandler.sendMessage(player, ChatColor.boldDarkGreen() +
-                                    "[JOBS+] " + ChatColor.green() + "Are you sure you want to become a " +
-                                    ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? This will cost 10 job-coins. Say yes in chat.");
-                        }
-                    }
-                }
-            } else {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.operation.already_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-            }
-        } else {
-            ChatHandler.sendMessage(player, new TranslatableComponent("error.job.already_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-        }
-    }
-
-    private static void jobStopMethod(Player player, Jobs job, CapType capType, int coins, int level) {
-        if (JobGetters.jobIsEnabled(player, job)) {
-            if (JobGetters.noVerificationEnabled(player)) {
-                if (level == 1) {
-                    JobSetters.setVerification(player, CapType.STOP_VERIFICATION_FREE.get());
-                    JobSetters.setSelector(player, capType.get());
-                    if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
-                        ChatHandler.sendMessage(player, ChatColor.boldDarkGreen() +
-                                "[JOBS+] " + ChatColor.green() + "Are you sure you want to  stop being an " +
-                                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? Say yes in chat.");
-                    } else {
-                        ChatHandler.sendMessage(player, ChatColor.boldDarkGreen() +
-                                "[JOBS+] " + ChatColor.green() + "Are you sure you want to  stop being a " +
-                                ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? Say yes in chat.");
-                    }
-                } else {
-                    if (coins >= 5) {
-                        JobSetters.setVerification(player, CapType.STOP_VERIFICATION_PAID.get());
-                        JobSetters.setSelector(player, capType.get());
-                        if (job == Jobs.ALCHEMIST || job == Jobs.ENCHANTER) {
-                            ChatHandler.sendMessage(player, ChatColor.boldDarkGreen() +
-                                    "[JOBS+] " + ChatColor.green() + "Are you sure you want to  stop being an " +
-                                    ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? This will cost 5 job-coins. Say yes in chat.");
-                        } else {
-                            ChatHandler.sendMessage(player, ChatColor.boldDarkGreen() +
-                                    "[JOBS+] " + ChatColor.green() + "Are you sure you want to  stop being a " +
-                                    ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "? This will cost 5 job-coins. Say yes in chat.");
-                        }
-                    } else {
-                        ChatHandler.sendMessage(player, new TranslatableComponent("error.coins.need_5_to_stop_job", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-                    }
-                }
-            } else {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.operation.already_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-            }
-        } else {
-            ChatHandler.sendMessage(player, new TranslatableComponent("error.job.not_performing", ChatColor.boldDarkRed(), ChatColor.red()).getString());
-        }
     }
 }

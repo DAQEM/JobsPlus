@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.events.jobs;
 
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
@@ -61,7 +60,6 @@ public class EnchanterEvents {
                                 if (enchantedItem.isEnchanted() || enchantedItem.is(Items.ENCHANTED_BOOK)) {
                                     Map<Enchantment, Integer> newMap = new HashMap<>();
                                     for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(enchantedItem).entrySet()) {
-                                        JobsPlus.LOGGER.info(entry);
                                         if (entry.getKey() == Enchantments.SILK_TOUCH || entry.getKey() == Enchantments.AQUA_AFFINITY ||
                                                 entry.getKey() == Enchantments.MENDING || entry.getKey() == Enchantments.INFINITY_ARROWS ||
                                                 entry.getKey() == Enchantments.FLAMING_ARROWS || entry.getKey() == Enchantments.MULTISHOT ||
@@ -71,7 +69,6 @@ public class EnchanterEvents {
                                             newMap.put(entry.getKey(), entry.getValue() + 1);
                                         }
                                     }
-                                    JobsPlus.LOGGER.info(EnchantmentHelper.getEnchantments(enchantedItem) + " 1");
                                     EnchantmentHelper.setEnchantments(newMap, enchantedItem);
                                     containerMenu.getSlot(0).set(enchantedItem);
                                     containerMenu.getSlot(0).setChanged();

@@ -73,8 +73,20 @@ public class BossBarHandler {
 
     public static String getEXPPercentage(Player player, Jobs job) {
         int jobLevel = JobGetters.getJobLevel(player, job);
-        
+
         if (jobLevel == 100) return "100";
         return String.format("%.2f", (double) JobGetters.getJobEXP(player, job) / LevelHandler.calcExp(jobLevel) * 100);
+    }
+
+    public static void removeBossBar(Player player, Jobs job) {
+        if (player.getServer() == null) return;
+        CustomBossEvents customBossEvents = player.getServer().getCustomBossEvents();
+
+        final CustomBossEvent customBossEvent = customBossEvents.get(JobsPlus.getId(player.getUUID() + "-" + job.get()));
+        if (customBossEvent != null) {
+            customBossEvent.removeAllPlayers();
+            customBossEvents.remove(customBossEvent);
+        }
+
     }
 }

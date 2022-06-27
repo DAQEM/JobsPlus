@@ -69,6 +69,10 @@ public class JobSetters {
 
     public static void setLevel(Jobs job, Player player, int level) {
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
+
+//            if (level == 0) AdvancementHandler.revoke((ServerPlayer) player, "test");
+//            else AdvancementHandler.grand((ServerPlayer) player, "test");
+
             switch (job) {
                 case ALCHEMIST -> handler.setAlchemist(addLevelGenerator(handler.getAlchemist(), level));
                 case BUILDER -> handler.setBuilder(addLevelGenerator(handler.getBuilder(), level));
@@ -229,20 +233,14 @@ public class JobSetters {
     }
 
     public static void setEXPHotBarSetting(Player player, int value) {
-        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-            handler.setSettings(new int[]{value, handler.getSettings()[1], handler.getSettings()[2], handler.getSettings()[3], handler.getSettings()[4]});
-        });
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> handler.setSettings(new int[]{value, handler.getSettings()[1], handler.getSettings()[2], handler.getSettings()[3], handler.getSettings()[4]}));
     }
 
     public static void setLevelUpSoundSetting(Player player, int value) {
-        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-            handler.setSettings(new int[]{handler.getSettings()[0], value, handler.getSettings()[2], handler.getSettings()[3], handler.getSettings()[4]});
-        });
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> handler.setSettings(new int[]{handler.getSettings()[0], value, handler.getSettings()[2], handler.getSettings()[3], handler.getSettings()[4]}));
     }
 
     public static void setLevelUpChatSetting(Player player, int value) {
-        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-            handler.setSettings(new int[]{handler.getSettings()[0], handler.getSettings()[1], value, handler.getSettings()[3], handler.getSettings()[4]});
-        });
+        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> handler.setSettings(new int[]{handler.getSettings()[0], handler.getSettings()[1], value, handler.getSettings()[3], handler.getSettings()[4]}));
     }
 }

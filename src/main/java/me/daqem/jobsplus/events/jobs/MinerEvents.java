@@ -84,7 +84,7 @@ public class MinerEvents {
             timeoutList.remove(event.getPos());
         }
         if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()) && !veinMinerArray.contains(player.getUUID())) {
-            if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES)) {
+            if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES) || state.is(Blocks.ANCIENT_DEBRIS)) {
                 List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getWorld(), event.getPos(), null, player, player.getMainHandItem());
                 event.setCanceled(true);
                 event.getWorld().removeBlock(event.getPos(), false);
@@ -112,11 +112,18 @@ public class MinerEvents {
         ArrayList<BlockPos> ores = new ArrayList<>();
         ArrayList<BlockPos> candidates = new ArrayList<>();
 
+        if (!event.getState().requiresCorrectToolForDrops()) return;
         if (!itemInHand.isCorrectToolForDrops(event.getState())) return;
         if (!JobGetters.jobIsEnabled(player, Jobs.MINER)) return;
         if (!(JobGetters.getPowerup(player, Jobs.MINER, CapType.POWER_UP1.get()) == 1)) return;
         if (level.isClientSide()) return;
         if (!veinMinerArray.contains(player.getUUID())) return;
+
+        Block broken = event.getState().getBlock();
+        // Also edit the one below
+        boolean bool = broken instanceof OreBlock || broken instanceof RedStoneOreBlock || broken.getDescriptionId().endsWith("_ore") || broken == Blocks.ANCIENT_DEBRIS;
+
+        if (!bool) return;
 
         event.setCanceled(true);
         candidates.add(event.getPos());
@@ -131,6 +138,7 @@ public class MinerEvents {
             BlockPos candidate = candidates.get(i);
             Block block = level.getBlockState(candidate).getBlock();
 
+            // Also edit the one above
             if (block instanceof OreBlock || block instanceof RedStoneOreBlock || block.getDescriptionId().endsWith("_ore") || block == Blocks.ANCIENT_DEBRIS) {
                 if (block == event.getState().getBlock()) {
                     ores.add(candidate);
@@ -163,6 +171,8 @@ public class MinerEvents {
                 delay = ORE_BREAK_DELAY;
                 BlockPos ore = ores.get(i);
                 attemptBreak(level, ore, player);
+                player.getInventory().getSelected().hurtAndBreak(1, player, player1 -> {
+                });
 
                 if (!timeoutList.contains(ore)) ExpHandler.addEXPMid(player, Jobs.MINER);
 
@@ -190,7 +200,7 @@ public class MinerEvents {
         int bonusLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
         int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
         int exp = state.getExpDrop(level, pos, bonusLevel, silkLevel);
-        if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES)
+        if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES) || state.is(Blocks.ANCIENT_DEBRIS)
                 && JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()))
             exp = 1;
         dropItems(level, ItemHandler.smeltedRawMaterials(player, drops), pos, exp);
