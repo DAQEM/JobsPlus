@@ -17,8 +17,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -48,7 +46,7 @@ import java.util.UUID;
 
 public class BackpackItem extends Item {
 
-    private static final Component CONTAINER_TITLE = new TranslatableComponent("container.enderchest");
+    private static final Component CONTAINER_TITLE = Component.translatable("container.enderchest");
     final String name;
     final Backpack tier;
 
@@ -126,11 +124,11 @@ public class BackpackItem extends Item {
             if (item == ModItems.LARGE_BACKPACK.get()) level = Config.REQUIRED_LEVEL_LARGE_BACKPACK.get();
             if (item == ModItems.HUGE_BACKPACK.get()) level = Config.REQUIRED_LEVEL_HUGE_BACKPACK.get();
             if (item == ModItems.ENDER_BACKPACK.get()) level = Config.REQUIRED_LEVEL_ENDER_BACKPACK.get();
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Builder"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Builder"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
         } else {
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
+            tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }
     }
 

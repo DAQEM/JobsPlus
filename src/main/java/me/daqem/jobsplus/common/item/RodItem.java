@@ -12,7 +12,6 @@ import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -63,7 +62,7 @@ public class RodItem extends FishingRodItem {
                         itemstack.hurtAndBreak(i, player, (player1) -> player1.broadcastBreakEvent(hand));
                     }
                     level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_RETRIEVE, SoundSource.NEUTRAL, 1.0F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
-                    level.gameEvent(player, GameEvent.FISHING_ROD_REEL_IN, player);
+                    player.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
                 } else {
                     level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
                     if (!level.isClientSide) {
@@ -72,7 +71,7 @@ public class RodItem extends FishingRodItem {
                         level.addFreshEntity(new ModFishingHook(player, level, j, k));
                     }
                     player.awardStat(Stats.ITEM_USED.get(this));
-                    level.gameEvent(player, GameEvent.FISHING_ROD_CAST, player);
+                    player.gameEvent(GameEvent.ITEM_INTERACT_START);
                 }
             } else {
                 if (!level.isClientSide)
@@ -134,23 +133,23 @@ public class RodItem extends FishingRodItem {
                 dropList.add(four);
                 dropList.add(five);
             }
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Fisherman"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "About:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getRegistryName()).toString().replace("jobsplus:fishermans_rod_level_", "")));
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Drop chance:"));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Fisherman"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "About:"));
+            tooltip.add(Component.literal(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getDescriptionId()).replace("item.jobsplus.fishermans_rod_level_", "")));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Drop chance:"));
             for (String s : dropList) {
-                tooltip.add(new KeybindComponent(s));
+                tooltip.add(Component.literal(s));
             }
         } else {
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
+            tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }
         if (stack.isEnchanted()) {
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Enchantments:"));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Enchantments:"));
         }
     }
 

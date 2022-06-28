@@ -9,6 +9,7 @@ import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FishingRodItem;
@@ -60,7 +61,7 @@ public class FishermanEvents {
             int lure = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FISHING_SPEED, player.getMainHandItem());
             InteractionHand hand = player.getMainHandItem().getItem() instanceof FishingRodItem ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
             Item usedItem = player.getItemInHand(hand).getItem();
-            LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) player.level)).withParameter(LootContextParams.ORIGIN, player.getPosition(player.getOnPos().asLong())).withParameter(LootContextParams.TOOL, usedItem.getDefaultInstance()).withParameter(LootContextParams.THIS_ENTITY, new ModFishingHook(player, player.level, luck, lure)).withRandom(new Random()).withLuck((float) luck + player.getLuck());
+            LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) player.level)).withParameter(LootContextParams.ORIGIN, player.getPosition(player.getOnPos().asLong())).withParameter(LootContextParams.TOOL, usedItem.getDefaultInstance()).withParameter(LootContextParams.THIS_ENTITY, new ModFishingHook(player, player.level, luck, lure)).withRandom(RandomSource.create()).withLuck((float) luck + player.getLuck());
             lootcontext$builder.withParameter(LootContextParams.KILLER_ENTITY, player).withParameter(LootContextParams.THIS_ENTITY, new ModFishingHook(player, player.level, luck, lure));
 
             if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {

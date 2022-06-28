@@ -12,7 +12,6 @@ import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -95,7 +94,7 @@ public class EventServerChat {
             });
             if (Config.FORMAT_CHAT.get()) {
                 if (JobGetters.getDisplay(player) == 0) {
-                    event.setComponent(new KeybindComponent(ChatColor.gray() + player.getScoreboardName() +
+                    event.setComponent(Component.literal(ChatColor.gray() + player.getScoreboardName() +
                             ChatColor.darkGray() + " > " + ChatColor.white() + event.getMessage()));
                 } else {
                     for (Jobs job : Jobs.values()) {
@@ -107,16 +106,16 @@ public class EventServerChat {
                                     stringBuilder.append("\n").append(ChatHandler.ColorizedJobName(job1)).append(ChatColor.boldDarkGray()).append("> ").append(ChatColor.white()).append(JobGetters.getJobLevel(player, job1));
                                 }
                             }
-                            Component newComponent = new KeybindComponent("")
-                                    .append(new KeybindComponent(ChatHandler.ColorizedJobName(job))
+                            Component newComponent = Component.literal("")
+                                    .append(Component.literal(ChatHandler.ColorizedJobName(job))
                                             .withStyle(component.getStyle()
                                                     .withHoverEvent(
-                                                            new HoverEvent(HoverEvent.Action.SHOW_TEXT, new KeybindComponent(stringBuilder.toString())))))
+                                                            new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(stringBuilder.toString())))))
                                     .append(ChatColor.gray())
-                                    .append(new KeybindComponent(player.getScoreboardName())
+                                    .append(Component.literal(player.getScoreboardName())
                                             .withStyle(component.getStyle()
                                                     .withHoverEvent(
-                                                            new HoverEvent(HoverEvent.Action.SHOW_TEXT, new KeybindComponent(ChatColor.boldGreen() + player.getScoreboardName() + "\nCoins: " + ChatColor.white() + JobGetters.getCoins(player))))
+                                                            new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(ChatColor.boldGreen() + player.getScoreboardName() + "\nCoins: " + ChatColor.white() + JobGetters.getCoins(player))))
                                                     .withClickEvent(
                                                             new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tell " + player.getScoreboardName() + " "))))
                                     .append(ChatColor.darkGray() + " > " + ChatColor.white());

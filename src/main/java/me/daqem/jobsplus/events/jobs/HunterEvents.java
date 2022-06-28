@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
@@ -14,7 +15,7 @@ import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -240,7 +241,7 @@ public class HunterEvents {
 
         float power = BowItem.getPowerForTime(event.getCharge());
         boolean flag = player.getAbilities().instabuild;
-        float[] afloat = getShotPitches(player.getRandom());
+        float[] afloat = getShotPitches((Random) player.getRandom());
 
         shootProjectile(event.getWorld(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[1], flag, power * 3, -10.0F);
         shootProjectile(event.getWorld(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[2], flag, power * 3, 10.0F);
@@ -295,11 +296,9 @@ public class HunterEvents {
 
     @SuppressWarnings("deprecation")
     public String getEntityString(Entity entity) {
-        String entityString = "";
-        ResourceLocation rl = entity.getType().getRegistryName();
-        if (rl != null) {
-            entityString = rl.toString();
-            if (entityString.contains(":")) entityString = entityString.split(":")[1];
+        String entityString = entity.getType().getDescriptionId().replace("item.", "");
+        if (entityString != null) {
+            if (entityString.contains(".")) entityString = entityString.split("\\.")[1];
             entityString = WordUtils.capitalize(entityString.replace("_", " ")).replace(" ", "").replace("Entity", "");
         }
         return entityString;
@@ -313,8 +312,9 @@ public class HunterEvents {
         if (entity instanceof Creeper creeper) {
             if (creeper.isPowered()) mobName = "charged_creeper";
         } else if (entity instanceof Cat cat) {
-            int type = cat.getCatType();
-            if (type < catTypes.size()) mobName = catTypes.get(type) + "_cat";
+            mobName = cat.getCatVariant().toString();
+            mobName = mobName.split("\\/")[3];
+            mobName = mobName.replace(".png]", "") + "_cat";
         } else if (entity instanceof Horse horse) {
             int type = horse.getVariant().getId();
             mobName = horseTypes.get(type >= 1024 ? type - 1024 : type >= 768 ? type - 768 : type >= 512 ? type - 512 : type >= 256 ? type - 256 : horse.getVariant().getId()) + "_horse";
@@ -378,7 +378,7 @@ public class HunterEvents {
         properties.put("textures", textures);
         skullOwner.put("Properties", properties);
         texturedHead.addTagElement("SkullOwner", skullOwner);
-        texturedHead.setHoverName(new TextComponent(headName));
+        texturedHead.setHoverName(Component.literal(headName));
         return texturedHead;
     }
 }

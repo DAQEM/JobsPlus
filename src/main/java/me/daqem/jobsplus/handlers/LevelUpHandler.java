@@ -6,7 +6,7 @@ import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -17,7 +17,7 @@ public class LevelUpHandler {
         if (player.level.isClientSide) return;
 
         JobSetters.addCoins(player, Config.COINS_PER_LEVEL_UP.get());
-        final TranslatableComponent translatableComponent = new TranslatableComponent("jobsplus.level_up." + job.name().toLowerCase(), ChatColor.green(), ChatColor.boldDarkGreen(), player.getScoreboardName(), ChatColor.green(), ChatColor.boldDarkGreen(), level, ChatColor.green(), ChatHandler.ColorizedJobName(job));
+        final Component translatableComponent = Component.translatable("jobsplus.level_up." + job.name().toLowerCase(), ChatColor.green(), ChatColor.boldDarkGreen(), player.getScoreboardName(), ChatColor.green(), ChatColor.boldDarkGreen(), level, ChatColor.green(), ChatHandler.ColorizedJobName(job));
         if (JobGetters.getLevelUpChatSetting(player) == 0) {
             for (ServerPlayer serverPlayer : player.getServer().getPlayerList().getPlayers()) {
                 if (JobGetters.getLevelUpChatSetting(serverPlayer) != 2)

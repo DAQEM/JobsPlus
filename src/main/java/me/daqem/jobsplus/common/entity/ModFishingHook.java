@@ -20,6 +20,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -51,7 +52,7 @@ public class ModFishingHook extends FishingHook {
 
     public static final EntityDataAccessor<Integer> DATA_HOOKED_ENTITY = SynchedEntityData.defineId(ModFishingHook.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> DATA_BITING = SynchedEntityData.defineId(ModFishingHook.class, EntityDataSerializers.BOOLEAN);
-    public final Random syncronizedRandom = new Random();
+    private final RandomSource syncronizedRandom = RandomSource.create();
     public final int luck;
     public final int lureSpeed;
     public boolean openWater = true;

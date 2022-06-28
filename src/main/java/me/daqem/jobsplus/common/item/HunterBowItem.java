@@ -9,7 +9,6 @@ import me.daqem.jobsplus.utils.TranslatableString;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -139,19 +138,19 @@ public class HunterBowItem extends BowItem {
             if (item == ModItems.HUNTERS_BOW_LEVEL_2.get()) level = Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_2.get();
             if (item == ModItems.HUNTERS_BOW_LEVEL_3.get()) level = Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_3.get();
             if (item == ModItems.HUNTERS_BOW_LEVEL_4.get()) level = Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_4.get();
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Hunter"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "About:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getRegistryName()).toString().replace("jobsplus:hunters_bow_level_", "")));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Extra Base Damage: " + ChatColor.reset() + extraDamage(stack)));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Hunter"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "About:"));
+            tooltip.add(Component.literal(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getDescriptionId()).replace("item.jobsplus.hunters_bow_level_", "")));
+            tooltip.add(Component.literal(ChatColor.green() + "Extra Base Damage: " + ChatColor.reset() + extraDamage(stack)));
         } else {
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
+            tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }
         if (stack.isEnchanted()) {
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Enchantments:"));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Enchantments:"));
         }
     }
 

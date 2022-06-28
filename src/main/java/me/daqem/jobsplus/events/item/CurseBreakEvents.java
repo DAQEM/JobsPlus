@@ -6,7 +6,7 @@ import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.KeybindComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -37,14 +37,14 @@ public class CurseBreakEvents {
                     CompoundTag compoundTag = new CompoundTag();
                     ListTag tags = new ListTag();
                     for (Map.Entry<Enchantment, Integer> entry : map.entrySet()) {
-                        tags.add(EnchantmentHelper.storeEnchantment(entry.getKey().getRegistryName(), entry.getValue()));
+                        tags.add(EnchantmentHelper.storeEnchantment(EnchantmentHelper.getEnchantmentId(entry.getKey()), entry.getValue()));
                     }
                     compoundTag.put("StoredEnchantments", tags);
                     out.setTag(compoundTag);
                     if (!Objects.equals(event.getName(), "")) {
-                        event.setOutput(out.setHoverName(new KeybindComponent(Objects.requireNonNull(event.getName()))));
+                        event.setOutput(out.setHoverName(Component.literal(Objects.requireNonNull(event.getName()))));
                         if (tags.isEmpty())
-                            event.setOutput(Items.BOOK.getDefaultInstance().setHoverName(new KeybindComponent(event.getName())));
+                            event.setOutput(Items.BOOK.getDefaultInstance().setHoverName(Component.literal(event.getName())));
                     } else {
                         event.setOutput(out);
                         if (tags.isEmpty()) event.setOutput(Items.BOOK.getDefaultInstance());
@@ -53,7 +53,7 @@ public class CurseBreakEvents {
                 } else {
                     EnchantmentHelper.setEnchantments(map, out);
                     if (!Objects.equals(event.getName(), ""))
-                        event.setOutput(out.setHoverName(new KeybindComponent(Objects.requireNonNull(event.getName()))));
+                        event.setOutput(out.setHoverName(Component.literal(Objects.requireNonNull(event.getName()))));
                     else event.setOutput(out);
                 }
                 event.setCost(10);

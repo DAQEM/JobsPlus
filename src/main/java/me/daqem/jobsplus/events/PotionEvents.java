@@ -166,7 +166,7 @@ public class PotionEvents {
     public static void doJesus(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         if (player.hasEffect(ModEffects.JESUS.get())) {
-            if (Objects.equals(Objects.requireNonNull(player.level.getBlockState(new BlockPos(player.getX(), player.getBlockY(), player.getZ())).getBlock().getRegistryName()).toString(), "minecraft:water") &&
+            if (Objects.equals(Objects.requireNonNull(player.level.getBlockState(new BlockPos(player.getX(), player.getBlockY(), player.getZ())).getBlock().getDescriptionId()), "block.minecraft.water") &&
                     player.level.getBlockState(new BlockPos(player.getX(), player.getBlockY() + 1, player.getZ())).isAir()) {
                 Vec3 vec3 = player.getDeltaMovement();
                 player.setDeltaMovement(vec3.x, 0.05D, vec3.z);

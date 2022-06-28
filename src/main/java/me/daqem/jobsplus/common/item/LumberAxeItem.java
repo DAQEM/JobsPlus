@@ -15,7 +15,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
@@ -199,26 +198,26 @@ public class LumberAxeItem extends AxeItem {
                 level = Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_4.get();
                 logs = 256;
             }
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Lumberjack"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "About:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getRegistryName()).toString().replace("jobsplus:lumberjack_axe_level_", "")));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Modes: " + ChatColor.reset() + "Tree Feller and Single Block"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Max Logs: " + ChatColor.reset() + logs));
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Controls:"));
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Shift + right-click to change the mode."));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Lumberjack"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "About:"));
+            tooltip.add(Component.literal(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getDescriptionId()).replace("item.jobsplus.lumberjack_axe_level_", "")));
+            tooltip.add(Component.literal(ChatColor.green() + "Modes: " + ChatColor.reset() + "Tree Feller and Single Block"));
+            tooltip.add(Component.literal(ChatColor.green() + "Max Logs: " + ChatColor.reset() + logs));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Controls:"));
+            tooltip.add(Component.literal(ChatColor.gray() + "Shift + right-click to change the mode."));
         } else {
             if (stack.getOrCreateTag().contains("mode")) {
-                tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Mode: " + ChatColor.reset() + getModeString(stack)));
+                tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Mode: " + ChatColor.reset() + getModeString(stack)));
             }
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
+            tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }
         if (stack.isEnchanted()) {
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Enchantments:"));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Enchantments:"));
         }
     }
 

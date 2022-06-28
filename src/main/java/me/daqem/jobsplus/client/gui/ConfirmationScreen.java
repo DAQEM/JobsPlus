@@ -15,8 +15,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +23,7 @@ import java.util.Arrays;
 
 public class ConfirmationScreen extends Screen {
 
-    private static final Component TITLE = new KeybindComponent("Confirmation");
+    private static final Component TITLE = Component.literal("Confirmation");
     private static final ResourceLocation BACKGROUND = JobsPlus.getId("textures/gui/confirmation_screen.png");
     private static final String[] backButton = new String[]{"not_enough_coins_stop", "not_enough_coins_start", "not_enough_coins_powerup", "job_not_enabled", "must_be_level_100"};
     private final int imageWidth = 300;
@@ -89,11 +87,11 @@ public class ConfirmationScreen extends Screen {
         drawCenteredString(poseStack, font, confirmationText, width / 2, startY + 15, 16777215);
         if (!Arrays.stream(backButton).toList().contains(action)) {
             // YES AND CANCEL BUTTON TEXT
-            drawCenteredString(poseStack, font, new TranslatableComponent("confirm.yes"), startX + (imageWidth / 2) - (75 / 2) - 3, startY + 33, 16777215);
-            drawCenteredString(poseStack, font, new TranslatableComponent("confirm.cancel"), startX + (imageWidth / 2) + 3 + (75 / 2), startY + 33, 16777215);
+            drawCenteredString(poseStack, font, Component.translatable("confirm.yes"), startX + (imageWidth / 2) - (75 / 2) - 3, startY + 33, 16777215);
+            drawCenteredString(poseStack, font, Component.translatable("confirm.cancel"), startX + (imageWidth / 2) + 3 + (75 / 2), startY + 33, 16777215);
         } else {
             // BACK BUTTON TEXT
-            drawCenteredString(poseStack, font, new TranslatableComponent("confirm.back"), startX + (imageWidth / 2), startY + 33, 16777215);
+            drawCenteredString(poseStack, font, Component.translatable("confirm.back"), startX + (imageWidth / 2), startY + 33, 16777215);
         }
         super.render(poseStack, mouseX, mouseY, partialTicks);
     }

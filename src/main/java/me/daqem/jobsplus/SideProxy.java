@@ -61,7 +61,6 @@ public class SideProxy {
         modEventBus.register(new DoubleJumpEvents());
 
         ModItems.ITEMS.register(eventBus);
-        ModBlocks.BLOCKS.register(eventBus);
         ModPotions.POTIONS.register(eventBus);
         ModEffects.EFFECTS.register(eventBus);
         ModContainers.CONTAINERS.register(eventBus);

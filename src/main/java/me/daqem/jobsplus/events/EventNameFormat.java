@@ -4,7 +4,7 @@ import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
-import net.minecraft.network.chat.KeybindComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,7 +27,7 @@ public class EventNameFormat {
         Player player = event.getPlayer();
         if (!Config.DISPLAY_JOB_IN_CHAT_AND_TAB.get()) return;
         if (player.isSpectator()) return;
-        event.setDisplayName(new KeybindComponent(createTabName(player)));
+        event.setDisplayName(Component.literal(createTabName(player)));
     }
 
     @SubscribeEvent
@@ -35,6 +35,6 @@ public class EventNameFormat {
         Player player = event.getPlayer();
         if (!Config.DISPLAY_JOB_IN_CHAT_AND_TAB.get()) return;
         if (player.isSpectator()) return;
-        event.setDisplayname(new KeybindComponent(createTabName(player)));
+        event.setDisplayname(Component.literal(createTabName(player)));
     }
 }

@@ -11,7 +11,6 @@ import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -85,27 +84,27 @@ public class EXPJarItem extends Item {
         super.appendHoverText(stack, p_41422_, tooltip, flag);
 
         if (Screen.hasShiftDown()) {
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + Config.REQUIRED_LEVEL_EXP_JAR.get()));
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Controls:"));
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Right-click to insert EXP"));
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Shift + right-click to extract EXP."));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + Config.REQUIRED_LEVEL_EXP_JAR.get()));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Controls:"));
+            tooltip.add(Component.literal(ChatColor.gray() + "Right-click to insert EXP"));
+            tooltip.add(Component.literal(ChatColor.gray() + "Shift + right-click to extract EXP."));
         } else {
             if (stack.getOrCreateTag().contains("EXP")) {
                 final int exp = stack.getOrCreateTag().getInt("EXP");
                 if (exp == 0) {
-                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + "Empty"));
+                    tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + "Empty"));
                 } else if (ExperienceHandler.getLevelFromExperience(exp) == 0) {
-                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp));
+                    tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp));
                 } else if (ExperienceHandler.getLevelFromExperience(exp) == 1) {
-                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp + ", or " + ExperienceHandler.getLevelFromExperience(exp) + " level"));
+                    tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp + ", or " + ExperienceHandler.getLevelFromExperience(exp) + " level"));
                 } else {
-                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp + ", or " + ExperienceHandler.getLevelFromExperience(exp) + " levels"));
+                    tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp + ", or " + ExperienceHandler.getLevelFromExperience(exp) + " levels"));
                 }
             }
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
+            tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }
     }
 }

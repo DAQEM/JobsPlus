@@ -15,7 +15,6 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -43,7 +42,7 @@ public class ShapelessJobBasedRecipe extends ShapelessRecipe {
 
     private ItemStack assemble(Player player, CraftingContainer container) {
         if (JobGetters.getJobLevel(player, Jobs.HUNTER) >= Config.REQUIRED_LEVEL_HUNTER_WOOL.get()
-                && Objects.requireNonNull(getResultItem().getItem().getRegistryName()).toString().equals("minecraft:white_wool")) {
+                && Objects.requireNonNull(getResultItem().getItem().getDescriptionId()).equals("block.minecraft.white_wool")) {
             return super.assemble(container);
         }
         return ItemStack.EMPTY;
@@ -55,7 +54,7 @@ public class ShapelessJobBasedRecipe extends ShapelessRecipe {
         return ModRecipes.SHAPELESS_JOB_BASED_RECIPE.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapelessJobBasedRecipe> {
+    public static class Serializer implements RecipeSerializer<ShapelessJobBasedRecipe> {
         @Nullable
         @Override
         public ShapelessJobBasedRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {

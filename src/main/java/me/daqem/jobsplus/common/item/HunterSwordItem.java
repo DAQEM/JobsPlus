@@ -5,7 +5,6 @@ import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.ChatColor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -30,18 +29,18 @@ public class HunterSwordItem extends SwordItem {
             if (item == ModItems.HUNTERS_SWORD_LEVEL_2.get()) level = Config.REQUIRED_LEVEL_HUNTERS_SWORD_LEVEL_2.get();
             if (item == ModItems.HUNTERS_SWORD_LEVEL_3.get()) level = Config.REQUIRED_LEVEL_HUNTERS_SWORD_LEVEL_3.get();
             if (item == ModItems.HUNTERS_SWORD_LEVEL_4.get()) level = Config.REQUIRED_LEVEL_HUNTERS_SWORD_LEVEL_4.get();
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Hunter"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "About:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getRegistryName()).toString().replace("jobsplus:hunters_sword_level_", "")));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Hunter"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "About:"));
+            tooltip.add(Component.literal(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getDescriptionId()).replace("item.jobsplus.hunters_sword_level_", "")));
         } else {
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
+            tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }
         if (stack.isEnchanted()) {
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Enchantments:"));
+            tooltip.add(Component.literal(""));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Enchantments:"));
         }
     }
 

@@ -16,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -131,7 +130,7 @@ public class ShapedJobBasedRecipe extends ShapedRecipe {
         return ModRecipes.SHAPED_JOB_BASED_RECIPE.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapedJobBasedRecipe> {
+    public static class Serializer implements RecipeSerializer<ShapedJobBasedRecipe> {
         @Nullable
         @Override
         public ShapedJobBasedRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {

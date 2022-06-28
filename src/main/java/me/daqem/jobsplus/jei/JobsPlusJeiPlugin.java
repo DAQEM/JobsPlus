@@ -5,6 +5,7 @@ import me.daqem.jobsplus.init.ModPotions;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.ModIds;
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
@@ -114,7 +115,7 @@ public class JobsPlusJeiPlugin implements IModPlugin {
                 luck, longLuck, strongLuck, longStrongLuck, jesus, longJesus, flying, longFlying);
 
         for (IJeiBrewingRecipe brewingRecipe : brewingRecipes) {
-            registration.addRecipes(Collections.singletonList(brewingRecipe), new ResourceLocation(ModIds.MINECRAFT_ID, "brewing"));
+            registration.addRecipes(RecipeTypes.BREWING, Collections.singletonList(brewingRecipe));
         }
 
     }
@@ -189,7 +190,7 @@ public class JobsPlusJeiPlugin implements IModPlugin {
                 reinforced_netherite_helmet, reinforced_netherite_chestplate, reinforced_netherite_leggings, reinforced_netherite_boots);
 
         for (IJeiAnvilRecipe anvilRecipe : anvilRecipes) {
-            registration.addRecipes(Collections.singletonList(anvilRecipe), new ResourceLocation(ModIds.MINECRAFT_ID, "anvil"));
+            registration.addRecipes(RecipeTypes.ANVIL, Collections.singletonList(anvilRecipe));
         }
     }
 

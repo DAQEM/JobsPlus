@@ -15,8 +15,10 @@ import me.daqem.jobsplus.jei.JobsPlusJeiPlugin;
 import me.daqem.jobsplus.packet.*;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IRecipeManager;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.runtime.IRecipesGui;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -27,8 +29,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -37,6 +37,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -60,7 +61,7 @@ public class JobsScreen extends Screen {
     private int selectedButton;
 
     public JobsScreen(int[] array, int jobId, int activeLeftButton, int activeRightButton, int selectedButton, float scrollOffs, int startIndex) {
-        super(new KeybindComponent("Jobs"));
+        super(Component.literal("Jobs"));
         this.array = array;
         this.jobId = jobId;
         this.activeLeftButton = activeLeftButton;
@@ -128,8 +129,8 @@ public class JobsScreen extends Screen {
         this.renderItems(startX, startY);
         drawTexts(poseStack, i1, j1);
         poseStack.popPose();
-        font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.jobs").getString(), startX + 7, startY + 6, 16777215);
-        drawRightAlignedString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.coins.top", array[20]).getString(), startX + 140, startY + 6, 16777215);
+        font.draw(poseStack, ChatColor.darkGray() + Component.translatable("jobsplus.gui.jobs").getString(), startX + 7, startY + 6, 16777215);
+        drawRightAlignedString(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.coins.top", array[20]).getString(), startX + 140, startY + 6, 16777215);
         super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
@@ -151,19 +152,19 @@ public class JobsScreen extends Screen {
         mouseX = mouseX - startX;
         mouseY = mouseY - startY;
         if (isBetween(mouseX, mouseY, 6, -22, 32, 0)) {
-            super.renderTooltip(poseStack, new TranslatableComponent("jobsplus.gui.all_jobs"), mouseX + startX, mouseY + startY);
+            super.renderTooltip(poseStack, Component.translatable("jobsplus.gui.all_jobs"), mouseX + startX, mouseY + startY);
         } else if (isBetween(mouseX, mouseY, 6 + 28, -22, 32 + 28, 0)) {
-            super.renderTooltip(poseStack, new TranslatableComponent("jobsplus.gui.performing_jobs"), mouseX + startX, mouseY + startY);
+            super.renderTooltip(poseStack, Component.translatable("jobsplus.gui.performing_jobs"), mouseX + startX, mouseY + startY);
         } else if (isBetween(mouseX, mouseY, 6 + 28 + 28, -22, 32 + 28 + 28, 0)) {
-            super.renderTooltip(poseStack, new TranslatableComponent("jobsplus.gui.not_performing_jobs"), mouseX + startX, mouseY + startY);
+            super.renderTooltip(poseStack, Component.translatable("jobsplus.gui.not_performing_jobs"), mouseX + startX, mouseY + startY);
         } else if (isBetween(mouseX, mouseY, 6 + 150, -22, 32 + 150, 0)) {
-            super.renderTooltip(poseStack, new TranslatableComponent("jobsplus.gui.job_info"), mouseX + startX, mouseY + startY);
+            super.renderTooltip(poseStack, Component.translatable("jobsplus.gui.job_info"), mouseX + startX, mouseY + startY);
         } else if (isBetween(mouseX, mouseY, 6 + 28 + 150, -22, 32 + 28 + 150, 0)) {
-            super.renderTooltip(poseStack, new TranslatableComponent("jobsplus.gui.job_crafting_recipes"), mouseX + startX, mouseY + startY);
+            super.renderTooltip(poseStack, Component.translatable("jobsplus.gui.job_crafting_recipes"), mouseX + startX, mouseY + startY);
         } else if (isBetween(mouseX, mouseY, 6 + 28 + 28 + 150, -22, 32 + 28 + 28 + 150, 0)) {
-            super.renderTooltip(poseStack, new TranslatableComponent("jobsplus.gui.job_powerups"), mouseX + startX, mouseY + startY);
+            super.renderTooltip(poseStack, Component.translatable("jobsplus.gui.job_powerups"), mouseX + startX, mouseY + startY);
         } else if (isBetween(mouseX, mouseY, 6 + 28 + 28 + 28 + 150, -22, 32 + 28 + 28 + 28 + 150, 0)) {
-            super.renderTooltip(poseStack, new TranslatableComponent("jobsplus.gui.job_how_to_get_exp"), mouseX + startX, mouseY + startY);
+            super.renderTooltip(poseStack, Component.translatable("jobsplus.gui.job_how_to_get_exp"), mouseX + startX, mouseY + startY);
         } else if (isBetween(mouseX, mouseY, imageWidth, 6, imageWidth + 21, 31)) {
             if (jobId >= 0 && array[64] == 1) {
                 if (getSelectedJobLevel() != 0) {
@@ -171,11 +172,11 @@ public class JobsScreen extends Screen {
                     final int displayId = array[62];
 
                     if (displayId != 0 && Jobs.getJobFromInt(displayId - 1) != null) {
-                        list = List.of(new TranslatableComponent("jobsplus.gui.toggle_prefix"),
-                                new TranslatableComponent("jobsplus.gui.active", ChatHandler.ColorizedJobName(Objects.requireNonNull(Jobs.getJobFromInt(displayId - 1))).replace(" ", "")));
+                        list = List.of(Component.translatable("jobsplus.gui.toggle_prefix"),
+                                Component.translatable("jobsplus.gui.active", ChatHandler.ColorizedJobName(Objects.requireNonNull(Jobs.getJobFromInt(displayId - 1))).replace(" ", "")));
                     } else {
-                        list = List.of(new TranslatableComponent("jobsplus.gui.toggle_prefix"),
-                                new TranslatableComponent("jobsplus.gui.active", ChatColor.boldBlue() + new TranslatableComponent("job.none").getString()));
+                        list = List.of(Component.translatable("jobsplus.gui.toggle_prefix"),
+                                Component.translatable("jobsplus.gui.active", ChatColor.boldBlue() + Component.translatable("job.none").getString()));
                     }
                     super.renderTooltip(poseStack, list, Optional.empty(), mouseX + startX, mouseY + startY + 17);
                 }
@@ -187,11 +188,11 @@ public class JobsScreen extends Screen {
                     final int bossBarId = array[63];
 
                     if (bossBarId != -1 && Jobs.getJobFromInt(bossBarId) != null) {
-                        list = List.of(new TranslatableComponent("jobsplus.gui.toggle_boss_bar"),
-                                new TranslatableComponent("jobsplus.gui.active", ChatHandler.ColorizedJobName(Objects.requireNonNull(Jobs.getJobFromInt(bossBarId))).replace(" ", "")));
+                        list = List.of(Component.translatable("jobsplus.gui.toggle_boss_bar"),
+                                Component.translatable("jobsplus.gui.active", ChatHandler.ColorizedJobName(Objects.requireNonNull(Jobs.getJobFromInt(bossBarId))).replace(" ", "")));
                     } else {
-                        list = List.of(new TranslatableComponent("jobsplus.gui.toggle_boss_bar"),
-                                new TranslatableComponent("jobsplus.gui.active", ChatColor.boldBlue() + new TranslatableComponent("job.none").getString()));
+                        list = List.of(Component.translatable("jobsplus.gui.toggle_boss_bar"),
+                                Component.translatable("jobsplus.gui.active", ChatColor.boldBlue() + Component.translatable("job.none").getString()));
                     }
                     super.renderTooltip(poseStack, list, Optional.empty(), mouseX + startX, mouseY + startY + 17);
                 }
@@ -511,15 +512,15 @@ public class JobsScreen extends Screen {
                 if (level != 0) {
                     int maxExp = LevelHandler.calcExp(level);
                     font.draw(poseStack, ChatColor.boldGreen() + Jobs.getString(i), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                    font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.level", ChatColor.reset(), level).getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
-                    font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
+                    font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.level", ChatColor.reset(), level).getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
+                    font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                 } else {
                     font.draw(poseStack, ChatColor.boldRed() + Jobs.getString(i), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                    font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.want_this_job").getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
+                    font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.want_this_job").getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
                     if (array[21] < 2) {
-                        font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 0).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
+                        font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.cost", ChatColor.reset(), 0).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                     } else {
-                        font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 10).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
+                        font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.cost", ChatColor.reset(), 10).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                     }
                 }
             }
@@ -554,15 +555,15 @@ public class JobsScreen extends Screen {
                     if (level != 0) {
                         int maxExp = LevelHandler.calcExp(level);
                         font.draw(poseStack, ChatColor.boldGreen() + Jobs.getString(currentJobArray[2]), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                        font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.level", ChatColor.reset(), level).getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
-                        font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
+                        font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.level", ChatColor.reset(), level).getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
+                        font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                     } else {
                         font.draw(poseStack, ChatColor.boldRed() + Jobs.getString(currentJobArray[2]), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                        font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.want_this_job").getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
+                        font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.want_this_job").getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
                         if (array[21] < 2) {
-                            font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 0).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
+                            font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.cost", ChatColor.reset(), 0).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                         } else {
-                            font.draw(poseStack, ChatColor.aqua() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 10).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
+                            font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.cost", ChatColor.reset(), 10).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                         }
                     }
                 }
@@ -579,23 +580,23 @@ public class JobsScreen extends Screen {
                 drawnBigJobTitle(poseStack);
                 drawJobInfo(poseStack);
                 if (getSelectedJobLevel() == 0) {
-                    drawCenteredStringNew(poseStack, font, ChatColor.white() + new TranslatableComponent("jobsplus.gui.job.start").getString(), centerR, startY + 137, 16777215);
+                    drawCenteredStringNew(poseStack, font, ChatColor.white() + Component.translatable("jobsplus.gui.job.start").getString(), centerR, startY + 137, 16777215);
                 } else {
-                    drawCenteredStringNew(poseStack, font, ChatColor.white() + new TranslatableComponent("jobsplus.gui.job.stop").getString(), centerR, startY + 137, 16777215);
+                    drawCenteredStringNew(poseStack, font, ChatColor.white() + Component.translatable("jobsplus.gui.job.stop").getString(), centerR, startY + 137, 16777215);
                 }
             } else if (activeRightButton == 1) {
-                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.crafting").getString(), centerR, startY + 6, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.crafting").getString(), centerR, startY + 6, 16777215);
             } else if (activeRightButton == 2) {
-                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups.powerups").getString(), centerR, startY + 6, 16777215);
-                drawCenteredStringNew(poseStack, font, ChatColor.gray() + new TranslatableComponent("jobsplus.gui.powerups.cost").getString(), centerR, startY + 16, 16777215);
-                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups.superpowers").getString(), centerR, startY + 110, 16777215);
-                drawCenteredStringNew(poseStack, font, ChatColor.gray() + new TranslatableComponent("jobsplus.gui.powerups.superpowers.cost").getString(), centerR, startY + 120, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.powerups.powerups").getString(), centerR, startY + 6, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.gray() + Component.translatable("jobsplus.gui.powerups.cost").getString(), centerR, startY + 16, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.powerups.superpowers").getString(), centerR, startY + 110, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.gray() + Component.translatable("jobsplus.gui.powerups.superpowers.cost").getString(), centerR, startY + 120, 16777215);
                 poseStack.pushPose();
                 poseStack.scale(0.72F, 0.72F, 0.72F);
-                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".1").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 33) / 0.72F), 16777215);
-                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".2").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 58) / 0.72F), 16777215);
-                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".3").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 83) / 0.72F), 16777215);
-                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".superpower").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 137) / 0.72F), 16777215);
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".1").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 33) / 0.72F), 16777215);
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".2").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 58) / 0.72F), 16777215);
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".3").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 83) / 0.72F), 16777215);
+                drawCenteredPowerupsString(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.powerups." + Jobs.getEnglishString(jobId).toLowerCase() + ".superpower").getString(), (int) ((startX + (imageWidth + 152) / 2) / 0.72F), (int) ((startY + 137) / 0.72F), 16777215);
                 poseStack.popPose();
             } else if (activeRightButton == 3) {
                 drawnBigJobTitle(poseStack);
@@ -603,7 +604,7 @@ public class JobsScreen extends Screen {
                 IntStream.range(1, 10).forEach(n -> drawCenteredStringNew(poseStack, font, getTCText("exp", n), centerR, startY + 50 + (n * 10), getTCTextColor("exp", n)));
                 poseStack.pushPose();
                 poseStack.scale(1.2F, 1.2F, 1.2F);
-                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.exp.title").getString(), (int) ((centerR) / 1.2), (int) ((startY + 37) / 1.2), 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.exp.title").getString(), (int) ((centerR) / 1.2), (int) ((startY + 37) / 1.2), 16777215);
             }
         }
     }
@@ -788,21 +789,21 @@ public class JobsScreen extends Screen {
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     if (getSelectedJobLevel() == 0) {
                         if (array[21] < Config.AMOUNT_OF_FREE_JOBS.get()) {
-                            openConfirmScreen(new TranslatableComponent("confirm.start"), "start");
+                            openConfirmScreen(Component.translatable("confirm.start"), "start");
                         } else {
                             if (array[20] >= Config.JOB_START_COST.get())
-                                openConfirmScreen(new TranslatableComponent("confirm.start_paid", Config.JOB_START_COST.get()), "start_paid");
+                                openConfirmScreen(Component.translatable("confirm.start_paid", Config.JOB_START_COST.get()), "start_paid");
                             else
-                                openConfirmScreen(new TranslatableComponent("confirm.not_enough_coins_start"), "not_enough_coins_start");
+                                openConfirmScreen(Component.translatable("confirm.not_enough_coins_start"), "not_enough_coins_start");
 
                         }
                     } else if (getSelectedJobLevel() == Config.JOB_LEVEL_TO_STOP_JOB_FOR_FREE.get()) {
-                        openConfirmScreen(new TranslatableComponent("confirm.stop_free"), "stop_free");
+                        openConfirmScreen(Component.translatable("confirm.stop_free"), "stop_free");
                     } else {
                         if (array[20] >= Config.JOB_STOP_COST.get())
-                            openConfirmScreen(new TranslatableComponent("confirm.stop", Config.JOB_STOP_COST.get()), "stop");
+                            openConfirmScreen(Component.translatable("confirm.stop", Config.JOB_STOP_COST.get()), "stop");
                         else
-                            openConfirmScreen(new TranslatableComponent("confirm.not_enough_coins_stop"), "not_enough_coins_stop");
+                            openConfirmScreen(Component.translatable("confirm.not_enough_coins_stop"), "not_enough_coins_stop");
 
                     }
                 }
@@ -995,8 +996,7 @@ public class JobsScreen extends Screen {
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     ItemStack finalItemStack = itemStack;
                     JobsPlusJeiPlugin.getJeiRuntime().ifPresent(jeiRuntime -> {
-                        IRecipeManager recipeManager = jeiRuntime.getRecipeManager();
-                        IFocus<ItemStack> focus = recipeManager.createFocus(IFocus.Mode.OUTPUT, finalItemStack);
+                        IFocus<ItemStack> focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.OUTPUT, jeiRuntime.getIngredientManager().getIngredientType(finalItemStack), finalItemStack);
 
                         IRecipesGui recipesGui = jeiRuntime.getRecipesGui();
                         recipesGui.show(focus);
@@ -1018,12 +1018,12 @@ public class JobsScreen extends Screen {
                         if (array[20] >= Config.POWERUP_COST.get()) {
                             //Check is the player has the job.
                             if (getSelectedJobLevel() != 0)
-                                openConfirmScreen(new TranslatableComponent("confirm.powerup"), "powerup", clicked);
+                                openConfirmScreen(Component.translatable("confirm.powerup"), "powerup", clicked);
                             else {
-                                openConfirmScreen(new TranslatableComponent("confirm.job_not_enabled"), "job_not_enabled", clicked);
+                                openConfirmScreen(Component.translatable("confirm.job_not_enabled"), "job_not_enabled", clicked);
                             }
                         } else {
-                            openConfirmScreen(new TranslatableComponent("confirm.not_enough_coins_powerup"), "not_enough_coins_powerup", clicked);
+                            openConfirmScreen(Component.translatable("confirm.not_enough_coins_powerup"), "not_enough_coins_powerup", clicked);
                         }
                     }
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -1033,7 +1033,7 @@ public class JobsScreen extends Screen {
                         ModPacketHandler.INSTANCE.sendToServer(new PacketSwitchSuperpower(Jobs.getJobFromInt(jobId)));
                         ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
                     } else {
-                        openConfirmScreen(new TranslatableComponent("error.level.must_be_100"), "must_be_level_100", clicked);
+                        openConfirmScreen(Component.translatable("error.level.must_be_100"), "must_be_level_100", clicked);
                     }
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 }
@@ -1109,23 +1109,23 @@ public class JobsScreen extends Screen {
 
     private void drawNoJobSelected(PoseStack poseStack, String string) {
         for (int i = 1; i < 6; i++) {
-            drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.no_job_selected." + string + "." + i).getString(), startX + (imageWidth + 150) / 2, startY + 42 + (i * 9), 16777215);
+            drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.no_job_selected." + string + "." + i).getString(), startX + (imageWidth + 150) / 2, startY + 42 + (i * 9), 16777215);
         }
     }
 
     private void drawJobInfo(PoseStack poseStack) {
         for (int i = 1; i < 10; i++) {
-            drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.info." + Jobs.getEnglishString(jobId).toLowerCase() + "." + i, "" + ChatColor.boldWhite(), "" + ChatColor.darkGray(), "" + ChatColor.boldWhite(), "" + ChatColor.darkGray()).getString(), startX + (imageWidth + 150) / 2, startY + 35 + (i * 9), 16777215);
+            drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.info." + Jobs.getEnglishString(jobId).toLowerCase() + "." + i, "" + ChatColor.boldWhite(), "" + ChatColor.darkGray(), "" + ChatColor.boldWhite(), "" + ChatColor.darkGray()).getString(), startX + (imageWidth + 150) / 2, startY + 35 + (i * 9), 16777215);
         }
     }
 
     private String getTCText(String cat, int num) {
-        String[] split = (new TranslatableComponent("jobsplus.gui." + cat + "." + Jobs.getEnglishString(jobId).toLowerCase() + "." + num).getString()).split(">text:");
+        String[] split = (Component.translatable("jobsplus.gui." + cat + "." + Jobs.getEnglishString(jobId).toLowerCase() + "." + num).getString()).split(">text:");
         return split.length > 1 ? split[1] : "";
     }
 
     private int getTCTextColor(String cat, int num) {
-        String replace = (new TranslatableComponent("jobsplus.gui." + cat + "." + Jobs.getEnglishString(jobId).toLowerCase() + "." + num).getString()).split(">text:")[0].replace("color:<", "");
+        String replace = (Component.translatable("jobsplus.gui." + cat + "." + Jobs.getEnglishString(jobId).toLowerCase() + "." + num).getString()).split(">text:")[0].replace("color:<", "");
         return isNumeric(replace) ? Integer.parseInt(replace) : 16777215;
     }
 
@@ -1135,15 +1135,15 @@ public class JobsScreen extends Screen {
         font.draw(poseStack, getSelectedJobLevel() != 0 ? ChatColor.boldGreen() + Jobs.getString(jobId) : ChatColor.boldRed() + Jobs.getString(jobId), (startX + 156) / 2F, (startY + 5) / 2F, 16777215);
         poseStack.popPose();
         if (getSelectedJobLevel() != 0) {
-            font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.level", ChatColor.reset(), getSelectedJobLevel()).getString(), startX + 156, startY + 22, 16777215);
+            font.draw(poseStack, ChatColor.darkGray() + Component.translatable("jobsplus.gui.level", ChatColor.reset(), getSelectedJobLevel()).getString(), startX + 156, startY + 22, 16777215);
             if (getSelectedJobLevel() != 100)
-                font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.exp", ChatColor.reset(), "[" + getSelectedJobEXP() + "/" + getSelectedJobMaxEXP() + "]").getString(), startX + 216, startY + 22, 16777215);
+                font.draw(poseStack, ChatColor.darkGray() + Component.translatable("jobsplus.gui.exp", ChatColor.reset(), "[" + getSelectedJobEXP() + "/" + getSelectedJobMaxEXP() + "]").getString(), startX + 216, startY + 22, 16777215);
         } else {
-            font.draw(poseStack, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.want_this_job").getString(), startX + 156, startY + 22, 16777215);
+            font.draw(poseStack, ChatColor.darkGray() + Component.translatable("jobsplus.gui.want_this_job").getString(), startX + 156, startY + 22, 16777215);
             if (array[21] < 2) {
-                drawRightAlignedString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 0).getString(), startX + imageWidth - 10, startY + 22, 16777215);
+                drawRightAlignedString(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.cost", ChatColor.reset(), 0).getString(), startX + imageWidth - 10, startY + 22, 16777215);
             } else {
-                drawRightAlignedString(poseStack, font, ChatColor.darkGray() + new TranslatableComponent("jobsplus.gui.cost", ChatColor.reset(), 10).getString(), startX + imageWidth - 10, startY + 22, 16777215);
+                drawRightAlignedString(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.cost", ChatColor.reset(), 10).getString(), startX + imageWidth - 10, startY + 22, 16777215);
             }
         }
         font.draw(poseStack, ChatFormatting.STRIKETHROUGH + "                                        ", startX + 156, startY + 28, 16777215);

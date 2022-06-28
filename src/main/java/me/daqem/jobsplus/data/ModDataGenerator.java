@@ -8,7 +8,7 @@ public class ModDataGenerator {
     public static void gatherData(GatherDataEvent event) {
         DataGenerator dataGenerator = event.getGenerator();
 
-        dataGenerator.addProvider(new ModRecipeProvider(dataGenerator));
-        dataGenerator.addProvider(new ItemModels(dataGenerator, event.getExistingFileHelper()));
+        dataGenerator.addProvider(true, new ModRecipeProvider(dataGenerator));
+        dataGenerator.addProvider(true, new ItemModels(dataGenerator, event.getExistingFileHelper()));
     }
 }

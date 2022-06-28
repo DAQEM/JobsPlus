@@ -15,7 +15,7 @@ import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.server.command.EnumArgument;
 
@@ -193,16 +193,16 @@ public class JobCommand {
     private static int setEXP(CommandSourceStack source, Player target, Jobs job, int exp) {
         if (source.getEntity() instanceof Player player) {
             if (JobGetters.getJobLevel(target, job) == 0) {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.exp.level_is_0", ChatColor.boldDarkRed(), ChatColor.red()).getString());
+                ChatHandler.sendMessage(player, Component.translatable("error.exp.level_is_0", ChatColor.boldDarkRed(), ChatColor.red()).getString());
                 return 1;
             }
             int maxJobEXP = LevelHandler.calcExp(JobGetters.getJobLevel(target, job)) - 1;
             if (exp > maxJobEXP) {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.exp.cannot_be_higher_than_max", ChatColor.boldDarkRed(), ChatColor.red(), maxJobEXP).getString());
+                ChatHandler.sendMessage(player, Component.translatable("error.exp.cannot_be_higher_than_max", ChatColor.boldDarkRed(), ChatColor.red(), maxJobEXP).getString());
                 return 1;
             }
             if (exp < 0) {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.exp.cannot_be_negative", ChatColor.boldDarkRed(), ChatColor.red()).getString());
+                ChatHandler.sendMessage(player, Component.translatable("error.exp.cannot_be_negative", ChatColor.boldDarkRed(), ChatColor.red()).getString());
 
                 return 1;
             }
@@ -219,7 +219,7 @@ public class JobCommand {
     private static int setCoins(CommandSourceStack source, Player target, int coins) {
         if (source.getEntity() instanceof Player player) {
             if (coins < 0) {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.coins.cannot_be_negative", ChatColor.boldDarkRed(), ChatColor.red()).getString());
+                ChatHandler.sendMessage(player, Component.translatable("error.coins.cannot_be_negative", ChatColor.boldDarkRed(), ChatColor.red()).getString());
                 return 1;
             }
             target.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
@@ -242,7 +242,7 @@ public class JobCommand {
                 ChatHandler.sendMessage(player, ChatHandler.footer(11));
                 JobSetters.setDisplay(target, job.get());
             } else {
-                ChatHandler.sendMessage(player, new TranslatableComponent("error.job.target_not_performing", ChatColor.boldDarkRed(), ChatColor.red(), target.getScoreboardName()).getString());
+                ChatHandler.sendMessage(player, Component.translatable("error.job.target_not_performing", ChatColor.boldDarkRed(), ChatColor.red(), target.getScoreboardName()).getString());
             }
         }
         return 1;

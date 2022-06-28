@@ -5,7 +5,6 @@ import me.daqem.jobsplus.common.entity.ModThrownExperienceBottle;
 import me.daqem.jobsplus.utils.ChatColor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -81,8 +80,8 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
         int tier = stack.getOrCreateTag().getInt("tier");
         int exp = stack.getOrCreateTag().getInt("EXP");
         if (Screen.hasShiftDown()) {
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
+            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
+            tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
             String level;
             if (tier == 1) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_1.get();
             else if (tier == 2) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_2.get();
@@ -92,17 +91,17 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
             else if (tier == 6) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_6.get();
             else if (exp != 0) level = "" + Config.REQUIRED_LEVEL_EXP_JAR_TO_EXPERIENCE_BOTTLE.get();
             else level = "depends on use.";
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
+            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
         } else {
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
+            tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }
         if (exp != 0 || tier != 0) {
-            tooltip.add(new KeybindComponent(" "));
+            tooltip.add(Component.literal(" "));
             if (exp != 0)
-                tooltip.add(new KeybindComponent(ChatColor.green() + "EXP: " + ChatColor.reset() + exp));
+                tooltip.add(Component.literal(ChatColor.green() + "EXP: " + ChatColor.reset() + exp));
             if (tier != 0) {
-                tooltip.add(new KeybindComponent(ChatColor.green() + "Tier: " + ChatColor.reset() + tier));
-                tooltip.add(new KeybindComponent(ChatColor.green() + "EXP: " + ChatColor.reset() + tierToEXP(tier)));
+                tooltip.add(Component.literal(ChatColor.green() + "Tier: " + ChatColor.reset() + tier));
+                tooltip.add(Component.literal(ChatColor.green() + "EXP: " + ChatColor.reset() + tierToEXP(tier)));
             }
         }
     }

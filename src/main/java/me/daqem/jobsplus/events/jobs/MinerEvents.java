@@ -24,7 +24,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.OreBlock;
+import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.RedStoneOreBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
@@ -66,7 +66,7 @@ public class MinerEvents {
         if (!JobGetters.jobIsEnabled(player, job)) return;
 
         if (BlockPosUtil.testAllSides(timeoutList, event.getPos())) {
-            if (block instanceof OreBlock || block instanceof RedStoneOreBlock
+            if ((block instanceof DropExperienceBlock && block != Blocks.SCULK) || block instanceof RedStoneOreBlock
                     || block.getDescriptionId().endsWith("_ore")
                     || block == Blocks.ANCIENT_DEBRIS) {
                 ExpHandler.addEXPMid(player, job);
@@ -121,7 +121,7 @@ public class MinerEvents {
 
         Block broken = event.getState().getBlock();
         // Also edit the one below
-        boolean bool = broken instanceof OreBlock || broken instanceof RedStoneOreBlock || broken.getDescriptionId().endsWith("_ore") || broken == Blocks.ANCIENT_DEBRIS;
+        boolean bool = (broken instanceof DropExperienceBlock && broken != Blocks.SCULK) || broken instanceof RedStoneOreBlock || broken.getDescriptionId().endsWith("_ore") || broken == Blocks.ANCIENT_DEBRIS;
 
         if (!bool) return;
 
@@ -139,7 +139,7 @@ public class MinerEvents {
             Block block = level.getBlockState(candidate).getBlock();
 
             // Also edit the one above
-            if (block instanceof OreBlock || block instanceof RedStoneOreBlock || block.getDescriptionId().endsWith("_ore") || block == Blocks.ANCIENT_DEBRIS) {
+            if ((block instanceof DropExperienceBlock && block != Blocks.SCULK) || block instanceof RedStoneOreBlock || block.getDescriptionId().endsWith("_ore") || block == Blocks.ANCIENT_DEBRIS) {
                 if (block == event.getState().getBlock()) {
                     ores.add(candidate);
                     for (int x = -1; x <= 1; x++) {
@@ -187,7 +187,7 @@ public class MinerEvents {
         if (level.isClientSide) return;
         BlockState state = level.getBlockState(pos);
         Block block = state.getBlock();
-        boolean isEffective = block instanceof OreBlock || block instanceof RedStoneOreBlock || (!(block.getDescriptionId().startsWith("block.minecraft.")) && block.getDescriptionId().endsWith("_ore"));
+        boolean isEffective = (block instanceof DropExperienceBlock && block != Blocks.SCULK) || block instanceof RedStoneOreBlock || (!(block.getDescriptionId().startsWith("block.minecraft.")) && block.getDescriptionId().endsWith("_ore"));
         boolean witherImmune = state.is(BlockTags.WITHER_IMMUNE);
 
         if (!isEffective && witherImmune) return;
@@ -199,7 +199,7 @@ public class MinerEvents {
         List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
         int bonusLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
         int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
-        int exp = state.getExpDrop(level, pos, bonusLevel, silkLevel);
+        int exp = state.getExpDrop(level, level.random, pos, bonusLevel, silkLevel);
         if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES) || state.is(Blocks.ANCIENT_DEBRIS)
                 && JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()))
             exp = 1;

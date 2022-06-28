@@ -66,12 +66,12 @@ public class ItemModels extends ItemModelProvider {
     }
 
     private void handheld(Item item) {
-        String name = Objects.requireNonNull(item.getRegistryName()).getPath();
+        String name = item.getDescriptionId().replace("item.jobsplus.", "");
         singleTexture(name, mcLoc("item/handheld"), "layer0", modLoc("item/" + name));
     }
 
     private void generated(Item item) {
-        String name = Objects.requireNonNull(item.getRegistryName()).getPath();
+        String name = item.getDescriptionId().replace("item.jobsplus.", "");
         singleTexture(name, ResourceLocation.tryParse("item/generated"), "layer0", modLoc("item/" + name));
     }
 }

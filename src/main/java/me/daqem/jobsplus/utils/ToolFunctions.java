@@ -24,7 +24,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.OreBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -57,7 +58,7 @@ public class ToolFunctions {
                         if (!MinerEvents.timeoutList.contains(pos)) {
                             if (MinerEvents.lowestList.contains(blockString)) {
                                 minerExp += ExpHandler.getEXPLowest();
-                            } else if (block instanceof OreBlock) {
+                            } else if (block instanceof DropExperienceBlock && block != Blocks.SCULK) {
                                 minerExp += ExpHandler.getEXPMid();
                             } else if (MinerEvents.lowList.contains(blockString)
                                     || state.is(BlockTags.TERRACOTTA)
@@ -87,7 +88,7 @@ public class ToolFunctions {
                         int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
                         final List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
                         final List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops);
-                        final int exp = state.getExpDrop(level, pos, bonusLevel, silkLevel);
+                        final int exp = state.getExpDrop(level, level.random, pos, bonusLevel, silkLevel);
                         if (JobGetters.hasEnabledPowerup(player, digger, CapType.POWER_UP1.get()) && isExcavator) {
                             for (ItemStack itemStack : stacks) {
                                 ItemHandler.addItemsToInventoryOrDrop(itemStack, player, level, pos, exp);

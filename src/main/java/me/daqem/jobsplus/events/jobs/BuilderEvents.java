@@ -83,7 +83,7 @@ public class BuilderEvents {
             if (Math.random() * 100 < 5) {
                 Block block = state.getBlock();
                 if (state.is(BlockTags.LOGS) || state.is(BlockTags.PLANKS) || state.is(BlockTags.WOOL)
-                        || state.is(BlockTags.STONE_BRICKS) || state.is(BlockTags.BUTTONS) || state.is(BlockTags.CARPETS)
+                        || state.is(BlockTags.STONE_BRICKS) || state.is(BlockTags.BUTTONS) || state.is(BlockTags.WOOL_CARPETS)
                         || state.is(BlockTags.DOORS) || state.is(BlockTags.SAND) || state.is(BlockTags.STAIRS)
                         || state.is(BlockTags.SLABS) || state.is(BlockTags.WALLS) || state.is(BlockTags.RAILS)
                         || state.is(BlockTags.LEAVES) || state.is(BlockTags.TRAPDOORS) || state.is(BlockTags.FENCES)

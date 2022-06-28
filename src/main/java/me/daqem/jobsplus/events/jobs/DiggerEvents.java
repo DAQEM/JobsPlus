@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.events.jobs;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
 import me.daqem.jobsplus.handlers.MobEffectHandler;

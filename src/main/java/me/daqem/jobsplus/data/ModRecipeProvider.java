@@ -644,7 +644,7 @@ public class ModRecipeProvider extends RecipeProvider {
         @Override
         public @NotNull JsonObject serializeRecipe() {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("type", Objects.requireNonNull(Objects.requireNonNullElseGet(this.serializerOverride, this.inner::getType).getRegistryName()).toString());
+            jsonObject.addProperty("type", Objects.requireNonNullElseGet(this.serializerOverride, this.inner::getType).toString());
             serializeRecipeData(jsonObject);
             return jsonObject;
         }

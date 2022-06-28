@@ -13,8 +13,8 @@ public class BackpackUtils {
 
     public static boolean filterItem(ItemStack stack) {
         return !(stack.getItem() instanceof BackpackItem) &&
-                !Objects.requireNonNull(stack.getItem().getRegistryName()).toString().contains("backpack") &&
-                !stack.getItem().getRegistryName().toString().contains("shulker_box");
+                !Objects.requireNonNull(stack.getItem().getDescriptionId()).contains("backpack") &&
+                !stack.getItem().getDescriptionId().contains("shulker_box");
     }
 
     @Nonnull
