@@ -60,7 +60,7 @@ public class PotionEvents {
                     });
                 }
                 if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
-                    if (effect.getEffect().getCategory() == MobEffectCategory.HARMFUL) {
+                    if (effect.getEffect().getCategory() == MobEffectCategory.HARMFUL || effect.getEffect() == MobEffects.BAD_OMEN) {
                         MinecraftForge.EVENT_BUS.register(new Object() {
                             int delay = 1;
 

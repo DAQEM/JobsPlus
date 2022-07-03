@@ -34,8 +34,8 @@ public class UpgradeRecipe extends ShapedRecipe {
     public @NotNull ItemStack assemble(@NotNull CraftingContainer container) {
         if (container.menu instanceof CraftingMenu craftingMenu) {
             Player player = craftingMenu.player;
-            final ItemStack upgradedStack = super.assemble(container);
-            final int tier = upgradedStack.getOrCreateTag().getInt("tier");
+            ItemStack upgradedStack = super.assemble(container);
+            int tier = 0;
             boolean backpackPresent = false, hammerPresent = false, excavatorPresent = false,
                     lumberAxePresent = false, hoePresent = false, swordPresent = false,
                     bowPresent = false, rodPresent = false, expBottlePresent = false, expJarPresent = false;
@@ -94,6 +94,7 @@ public class UpgradeRecipe extends ShapedRecipe {
                         expBottlePresent = true;
                         if (slotStack.hasTag()) {
                             upgradedStack.setTag(copy);
+                            tier = upgradedStack.getOrCreateTag().getInt("tier");
                             if (tier < 6) upgradedStack.getOrCreateTag().putInt("tier", tier + 1);
                         }
                     }
@@ -200,15 +201,15 @@ public class UpgradeRecipe extends ShapedRecipe {
             if (expBottlePresent) {
                 final int level = JobGetters.getJobLevel(player, Jobs.ENCHANTER);
                 if (item == ModItems.EXPERIENCE_BOTTLE.get()) {
-                    if (tier == 2 && level >= Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_2.get())
+                    if (tier == 1 && level >= Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_2.get())
                         return upgradedStack;
-                    if (tier == 3 && level >= Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_3.get())
+                    if (tier == 2 && level >= Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_3.get())
                         return upgradedStack;
-                    if (tier == 4 && level >= Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_4.get())
+                    if (tier == 3 && level >= Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_4.get())
                         return upgradedStack;
-                    if (tier == 5 && level >= Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_5.get())
+                    if (tier == 4 && level >= Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_5.get())
                         return upgradedStack;
-                    if (tier == 6 && level >= Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_6.get())
+                    if (tier == 5 && level >= Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_6.get())
                         return upgradedStack;
                 }
             }
