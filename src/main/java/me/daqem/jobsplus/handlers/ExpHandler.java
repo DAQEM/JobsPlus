@@ -5,7 +5,6 @@ import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -107,7 +106,7 @@ public class ExpHandler {
         if (player instanceof ServerPlayer serverPlayer) {
             if (exp != 0 && JobGetters.getEXPHotBarSetting(player) == 0) {
                 serverPlayer.sendSystemMessage(Component.literal(ChatHandler.ColorizedJobName(job) + ChatColor.gray() +
-                        " +" + exp + " EXP"), ChatType.GAME_INFO);
+                        " +" + exp + " EXP"), true);
             }
         }
         BossBarHandler.updateBossBar(player);
