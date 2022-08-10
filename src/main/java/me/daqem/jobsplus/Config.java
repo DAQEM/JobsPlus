@@ -9,6 +9,7 @@ public class Config {
     public static final String CATEGORY_LEVEL_UP = "level_up";
     public static final String CATEGORY_MULTIPLIER = "multiplier";
     public static final String CATEGORY_CRAFTING = "crafting";
+    public static final String CATEGORY_ALCHEMIST = "alchemist";
     public static final String CATEGORY_CRAFTING_TOOLS = "tools";
     public static final String CATEGORY_CRAFTING_TOOLS_MINER = "miner";
     public static final String CATEGORY_CRAFTING_TOOLS_DIGGER = "digger";
@@ -110,6 +111,10 @@ public class Config {
     public static ForgeConfigSpec.IntValue REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_2;
     public static ForgeConfigSpec.IntValue REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_3;
     public static ForgeConfigSpec.IntValue REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_4;
+
+    //CATEGORY_ALCHEMIST
+
+    public static ForgeConfigSpec.BooleanValue ALLOW_ALL_EFFECTS;
 
     static {
         ForgeConfigSpec.Builder serverBuilder = new ForgeConfigSpec.Builder();
@@ -227,6 +232,9 @@ public class Config {
         REQUIRED_LEVEL_ENDER_BACKPACK = serverBuilder.defineInRange("required_level_ender_backpack", 10, 0, 100);
         serverBuilder.pop();
         serverBuilder.pop();
+        serverBuilder.pop();
+        serverBuilder.push(CATEGORY_ALCHEMIST);
+        ALLOW_ALL_EFFECTS = serverBuilder.comment("Don't remove effect when alchemist level isn't high enough if true.").define("allow_all_effects", false);
         serverBuilder.pop();
 
         SERVER_CONFIG = serverBuilder.build();

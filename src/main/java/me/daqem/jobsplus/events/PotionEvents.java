@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.events;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModEffects;
 import me.daqem.jobsplus.utils.ChatColor;
@@ -101,7 +102,7 @@ public class PotionEvents {
                     }
                 });
             }
-            if (!pass.get()) {
+            if (!pass.get() && !Config.ALLOW_ALL_EFFECTS.get()) {
                 if (player instanceof ServerPlayer serverPlayer) {
                     EventPlayerTick.removeEffect.put(serverPlayer, effect.getEffect());
                     HotbarMessageHandler.sendHotbarMessage(serverPlayer, ChatColor.red() + "You are not allowed to use this effect yet.");
