@@ -1,10 +1,8 @@
 package me.daqem.jobsplus.events.jobs;
 
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
 import me.daqem.jobsplus.handlers.MobEffectHandler;
-import me.daqem.jobsplus.utils.BlockPosUtil;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
@@ -15,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,10 +25,10 @@ import java.util.List;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DiggerEvents {
 
-    public static final ArrayList<BlockPos> timeoutList = new ArrayList<>();
-    public static final ArrayList<String> lowestList = new ArrayList<>(List.of("dirt", "sand"));
-    public static final ArrayList<String> lowList = new ArrayList<>(List.of("grass_block", "coarse_dirt", "podzol", "rooted_dirt", "clay",
-            "red_sand", "soul_sand", "soul_soil", "mycelium", "gravel"));
+    public static final ArrayList<Block> lowestList = new ArrayList<>(List.of(Blocks.DIRT, Blocks.SAND));
+    public static final ArrayList<Block> lowList = new ArrayList<>(List.of(Blocks.GRASS_BLOCK, Blocks.COARSE_DIRT,
+            Blocks.PODZOL, Blocks.ROOTED_DIRT, Blocks.CLAY, Blocks.RED_SAND, Blocks.SOUL_SAND, Blocks.SOUL_SOIL,
+            Blocks.MYCELIUM, Blocks.GRAVEL, Blocks.MUD));
 
     private final Jobs job = Jobs.DIGGER;
 
@@ -60,21 +59,17 @@ public class DiggerEvents {
                 Block block = event.getState().getBlock();
                 boolean didGetEXP = false;
                 final BlockPos pos = event.getPos();
-                if (BlockPosUtil.testAllSides(timeoutList, pos)) {
-                    if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
-                        ExpHandler.addEXPLow(player, job);
-                        didGetEXP = true;
-                    } else if (lowestList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
-                        ExpHandler.addEXPLowest(player, job);
-                        didGetEXP = true;
-                    }
-                    if (didGetEXP) {
-                        MobEffectHandler.addPlayerPowerUpEffects(player, job);
-                        handleBreak(player, event.getState(), pos);
-                        dropMinerals(player, player.getLevel(), pos);
-                    }
-                } else {
-                    timeoutList.remove(pos);
+                if (lowList.contains(block)) {
+                    ExpHandler.addEXPLow(player, job);
+                    didGetEXP = true;
+                } else if (lowestList.contains(block)) {
+                    ExpHandler.addEXPLowest(player, job);
+                    didGetEXP = true;
+                }
+                if (didGetEXP) {
+                    MobEffectHandler.addPlayerPowerUpEffects(player, job);
+                    handleBreak(player, event.getState(), pos);
+                    dropMinerals(player, player.getLevel(), pos);
                 }
             }
         }
@@ -85,18 +80,6 @@ public class DiggerEvents {
         player.getLevel().removeBlock(pos, false);
         for (ItemStack drop : state.getDrops(ItemHandler.drops(player.getLevel(), pos, player, player.getMainHandItem()))) {
             ItemHandler.addItemsToInventoryOrDrop(drop, player, player.getLevel(), pos, 0);
-        }
-    }
-
-    @SubscribeEvent
-    public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            if (JobGetters.jobIsEnabled(player, job)) {
-                if (!(timeoutList.size() < 10000)) {
-                    timeoutList.remove(0);
-                }
-                timeoutList.add(event.getPos());
-            }
         }
     }
 }

@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.utils;
 
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.item.ExcavatorItem;
 import me.daqem.jobsplus.common.item.HammerItem;
 import me.daqem.jobsplus.events.jobs.DiggerEvents;
@@ -56,33 +55,26 @@ public class ToolFunctions {
                 BlockState state = level.getBlockState(pos);
                 if (breakValidator.canBreak(state)) {
                     Block block = state.getBlock();
-                    String blockString = block.getDescriptionId().replace("block.minecraft.", "");
                     if (player.getMainHandItem().getItem() instanceof HammerItem) {
-                        if (!MinerEvents.timeoutList.contains(pos)) {
-                            if (MinerEvents.lowestList.contains(blockString)) {
-                                minerExp += ExpHandler.getEXPLowest();
-                            } else if (block instanceof DropExperienceBlock && block != Blocks.SCULK) {
-                                minerExp += ExpHandler.getEXPMid();
-                            } else if (MinerEvents.lowList.contains(blockString)
-                                    || state.is(BlockTags.TERRACOTTA)
-                                    || (player.getMainHandItem().getItem() instanceof PickaxeItem && player.getMainHandItem().isCorrectToolForDrops(state))) {
-                                minerExp += ExpHandler.getEXPLow();
-                            }
-                            player.awardStat(Stats.BLOCK_MINED.get(block));
+                        if (MinerEvents.lowestList.contains(block)) {
+                            minerExp += ExpHandler.getEXPLowest();
+                        } else if (block instanceof DropExperienceBlock && block != Blocks.SCULK) {
+                            minerExp += ExpHandler.getEXPMid();
+                        } else if (MinerEvents.lowList.contains(block)
+                                || state.is(BlockTags.TERRACOTTA)
+                                || (player.getMainHandItem().getItem() instanceof PickaxeItem && player.getMainHandItem().isCorrectToolForDrops(state))) {
+                            minerExp += ExpHandler.getEXPLow();
                         }
-                        MinerEvents.timeoutList.remove(pos);
+                        player.awardStat(Stats.BLOCK_MINED.get(block));
                     }
                     final boolean isExcavator = player.getMainHandItem().getItem() instanceof ExcavatorItem;
                     if (isExcavator) {
-                        if (!DiggerEvents.timeoutList.contains(pos)) {
-                            if (DiggerEvents.lowestList.contains(blockString)) {
-                                diggerExp += ExpHandler.getEXPLowest();
-                            } else if (DiggerEvents.lowList.contains(blockString)) {
-                                diggerExp += ExpHandler.getEXPLow();
-                            }
-                            player.awardStat(Stats.BLOCK_MINED.get(block));
+                        if (DiggerEvents.lowestList.contains(block)) {
+                            diggerExp += ExpHandler.getEXPLowest();
+                        } else if (DiggerEvents.lowList.contains(block)) {
+                            diggerExp += ExpHandler.getEXPLow();
                         }
-                        DiggerEvents.timeoutList.remove(pos);
+                        player.awardStat(Stats.BLOCK_MINED.get(block));
                     }
                     level.removeBlock(pos, false);
 

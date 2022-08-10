@@ -4,7 +4,6 @@ import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
 import me.daqem.jobsplus.handlers.MobEffectHandler;
-import me.daqem.jobsplus.utils.BlockPosUtil;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
@@ -40,9 +39,12 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MinerEvents {
 
-    public final static ArrayList<String> lowList = new ArrayList<>(List.of("andesite", "diorite", "granite", "calcite", "dripstone", "dripstone_block", "sandstone", "blackstone", "gilded_blackstone", "basalt", "budding_amethyst", "amethyst_block", "tuff", "obsidian"));
-    public final static ArrayList<String> lowestList = new ArrayList<>(List.of("stone", "deepslate", "netherrack", "end_stone", "cobblestone"));
-    public static final ArrayList<BlockPos> timeoutList = new ArrayList<>();
+    public final static ArrayList<Block> lowList = new ArrayList<>(List.of(Blocks.ANDESITE, Blocks.DIORITE,
+            Blocks.GRANITE, Blocks.CALCITE, Blocks.DRIPSTONE_BLOCK, Blocks.SANDSTONE, Blocks.BLACKSTONE,
+            Blocks.GILDED_BLACKSTONE, Blocks.BASALT, Blocks.BUDDING_AMETHYST, Blocks.AMETHYST_BLOCK,
+            Blocks.TUFF, Blocks.OBSIDIAN));
+    public final static ArrayList<Block> lowestList = new ArrayList<>(List.of(Blocks.STONE, Blocks.DEEPSLATE,
+            Blocks.NETHERRACK, Blocks.END_STONE, Blocks.COBBLESTONE));
     public static final ArrayList<UUID> veinMinerArray = new ArrayList<>();
     public static final int ORE_BREAK_DELAY = 1;
     private final Jobs job = Jobs.MINER;
@@ -65,24 +67,21 @@ public class MinerEvents {
         if (event.getLevel().isClientSide()) return;
         if (!JobGetters.jobIsEnabled(player, job)) return;
 
-        if (BlockPosUtil.testAllSides(timeoutList, event.getPos())) {
-            if ((block instanceof DropExperienceBlock && block != Blocks.SCULK) || block instanceof RedStoneOreBlock
-                    || block.getDescriptionId().endsWith("_ore")
-                    || block == Blocks.ANCIENT_DEBRIS) {
-                ExpHandler.addEXPMid(player, job);
-                MobEffectHandler.addPlayerPowerUpEffects(player, job);
-            } else if (lowestList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
-                ExpHandler.addEXPLowest(player, job);
-                MobEffectHandler.addPlayerPowerUpEffects(player, job);
-            } else if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))
-                    || state.is(BlockTags.TERRACOTTA)
-                    || (player.getMainHandItem().getItem() instanceof PickaxeItem && player.getMainHandItem().isCorrectToolForDrops(state))) {
-                ExpHandler.addEXPLow(player, job);
-                MobEffectHandler.addPlayerPowerUpEffects(player, job);
-            }
-        } else {
-            timeoutList.remove(event.getPos());
+        if ((block instanceof DropExperienceBlock && block != Blocks.SCULK) || block instanceof RedStoneOreBlock
+                || block.getDescriptionId().endsWith("_ore")
+                || block == Blocks.ANCIENT_DEBRIS) {
+            ExpHandler.addEXPMid(player, job);
+            MobEffectHandler.addPlayerPowerUpEffects(player, job);
+        } else if (lowestList.contains(block)) {
+            ExpHandler.addEXPLowest(player, job);
+            MobEffectHandler.addPlayerPowerUpEffects(player, job);
+        } else if (lowList.contains(block)
+                || state.is(BlockTags.TERRACOTTA)
+                || (player.getMainHandItem().getItem() instanceof PickaxeItem && player.getMainHandItem().isCorrectToolForDrops(state))) {
+            ExpHandler.addEXPLow(player, job);
+            MobEffectHandler.addPlayerPowerUpEffects(player, job);
         }
+
         if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()) && !veinMinerArray.contains(player.getUUID())) {
             if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES) || state.is(Blocks.ANCIENT_DEBRIS)) {
                 List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getLevel(), event.getPos(), null, player, player.getMainHandItem());
@@ -91,17 +90,6 @@ public class MinerEvents {
                 dropItems((Level) event.getLevel(), ItemHandler.smeltedRawMaterials(player, drops), event.getPos(), 1);
             }
         }
-    }
-
-    @SubscribeEvent
-    public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        if (!JobGetters.jobIsEnabled(player, job)) return;
-
-        if (!(timeoutList.size() < 10000)) {
-            timeoutList.remove(0);
-        }
-        timeoutList.add(event.getPos());
     }
 
     @SubscribeEvent
@@ -130,7 +118,7 @@ public class MinerEvents {
 
         for (int i = 0; i < candidates.size(); i++) {
             if (ores.size() > 16 * 16 * 16) {
-                if (!timeoutList.contains(event.getPos())) ExpHandler.addEXPMid(player, Jobs.MINER);
+                ExpHandler.addEXPMid(player, Jobs.MINER);
                 HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "This vein is too big to mine.");
                 return;
             }
@@ -174,7 +162,7 @@ public class MinerEvents {
                 player.getInventory().getSelected().hurtAndBreak(1, player, player1 -> {
                 });
 
-                if (!timeoutList.contains(ore)) ExpHandler.addEXPMid(player, Jobs.MINER);
+                ExpHandler.addEXPMid(player, Jobs.MINER);
 
                 i++;
             }

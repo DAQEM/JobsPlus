@@ -34,6 +34,8 @@ public class BuilderEvents {
                 if (player.isCreative()) return;
                 if (player.getMainHandItem().getDescriptionId().contains("structurize")
                         || player.getOffhandItem().getDescriptionId().contains("structurize")) return;
+                if (player.getMainHandItem().getDescriptionId().contains("constructionwand")
+                        || player.getOffhandItem().getDescriptionId().contains("constructionwand")) return;
                 if (JobGetters.jobIsEnabled(player, Jobs.BUILDER)) {
                     final BlockState state = event.getPlacedBlock();
                     Block block = state.getBlock();
