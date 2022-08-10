@@ -13,6 +13,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -90,6 +91,7 @@ public class LumberjackEvents {
         if (event.getPlayer() instanceof ServerPlayer serverPlayer) {
             if (!JobGetters.jobIsEnabled(serverPlayer, job)) return;
             if (event.getToolAction() != ToolActions.AXE_STRIP) return;
+            if (AxeItem.getAxeStrippingState(event.getState()) == null) return;
 
             ExpHandler.addEXPLow(serverPlayer, job);
         }
