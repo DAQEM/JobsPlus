@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.RedStoneOreBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -62,7 +62,7 @@ public class MinerEvents {
         BlockState state = event.getState();
         Block block = state.getBlock();
 
-        if (event.getWorld().isClientSide()) return;
+        if (event.getLevel().isClientSide()) return;
         if (!JobGetters.jobIsEnabled(player, job)) return;
 
         if (BlockPosUtil.testAllSides(timeoutList, event.getPos())) {
@@ -85,10 +85,10 @@ public class MinerEvents {
         }
         if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()) && !veinMinerArray.contains(player.getUUID())) {
             if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES) || state.is(Blocks.ANCIENT_DEBRIS)) {
-                List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getWorld(), event.getPos(), null, player, player.getMainHandItem());
+                List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getLevel(), event.getPos(), null, player, player.getMainHandItem());
                 event.setCanceled(true);
-                event.getWorld().removeBlock(event.getPos(), false);
-                dropItems((Level) event.getWorld(), ItemHandler.smeltedRawMaterials(player, drops), event.getPos(), 1);
+                event.getLevel().removeBlock(event.getPos(), false);
+                dropItems((Level) event.getLevel(), ItemHandler.smeltedRawMaterials(player, drops), event.getPos(), 1);
             }
         }
     }
@@ -107,7 +107,7 @@ public class MinerEvents {
     @SubscribeEvent
     public void onVeinMine(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
-        Level level = (Level) event.getWorld();
+        Level level = (Level) event.getLevel();
         Item itemInHand = player.getMainHandItem().getItem();
         ArrayList<BlockPos> ores = new ArrayList<>();
         ArrayList<BlockPos> candidates = new ArrayList<>();
@@ -161,7 +161,7 @@ public class MinerEvents {
             int delay = ORE_BREAK_DELAY, i = 0;
 
             @SubscribeEvent
-            public void onTick(TickEvent.WorldTickEvent event) {
+            public void onTick(TickEvent.LevelTickEvent event) {
                 if (delay-- > 0) return;
                 if (i == ores.size()) {
                     MinecraftForge.EVENT_BUS.unregister(this);

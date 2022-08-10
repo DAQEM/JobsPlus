@@ -77,7 +77,10 @@ public class ExpHandler {
     }
 
     public static void addJobEXP(Player player, Jobs job, int exp) {
-        if (player.isCreative()) return;
+        if (player.isCreative()) {
+            HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.boldRed() + "Gaining job-EXP is disabled in Creative.");
+            return;
+        }
         if (JobGetters.getJobLevel(player, job) >= 100) return;
 
         //Job-EXP Multipliers.
@@ -99,7 +102,7 @@ public class ExpHandler {
         if (newEXP >= maxEXP) {
             JobSetters.setLevel(job, player, -2);
             JobSetters.setEXP(job, player, newEXP - maxEXP);
-            LevelUpHandler.handler(player, job, JobGetters.getJobLevel(player, job));
+            LevelUpHandler.handle(player, job, JobGetters.getJobLevel(player, job));
         }
         if (player instanceof ServerPlayer serverPlayer) {
             if (exp != 0 && JobGetters.getEXPHotBarSetting(player) == 0) {

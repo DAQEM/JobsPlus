@@ -15,9 +15,7 @@ import me.daqem.jobsplus.jei.JobsPlusJeiPlugin;
 import me.daqem.jobsplus.packet.*;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
-import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.recipe.IFocus;
-import mezz.jei.api.recipe.IRecipeManager;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.runtime.IRecipesGui;
 import net.minecraft.ChatFormatting;
@@ -37,7 +35,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -513,7 +510,8 @@ public class JobsScreen extends Screen {
                     int maxExp = LevelHandler.calcExp(level);
                     font.draw(poseStack, ChatColor.boldGreen() + Jobs.getString(i), startX + 7 + 3 + 35, i1 + 3, 16777215);
                     font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.level", ChatColor.reset(), level).getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
-                    font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
+                    if (level != 100)
+                        font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
                 } else {
                     font.draw(poseStack, ChatColor.boldRed() + Jobs.getString(i), startX + 7 + 3 + 35, i1 + 3, 16777215);
                     font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.want_this_job").getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);

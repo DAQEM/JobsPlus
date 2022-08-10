@@ -20,7 +20,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -36,7 +36,7 @@ public class AlchemistEvents {
     //  ON POTION BREW
     @SubscribeEvent
     public void onPotionBrewedTake(PlayerBrewedPotionEvent event) {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         if (itemStackArrayList.contains(event.getStack())) {
             itemStackArrayList.remove(event.getStack());
             if (JobGetters.jobIsEnabled(player, job)) {

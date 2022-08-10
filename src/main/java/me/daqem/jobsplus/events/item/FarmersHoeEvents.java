@@ -38,8 +38,8 @@ public class FarmersHoeEvents {
 
     @SubscribeEvent
     public void onRightClickBlockWithFarmersHoe(PlayerInteractEvent.RightClickBlock event) {
-        Player player = event.getPlayer();
-        Level level = event.getWorld();
+        Player player = event.getEntity();
+        Level level = event.getLevel();
         ItemStack stack = player.getMainHandItem();
         if (!level.isClientSide && event.getHand() == InteractionHand.MAIN_HAND && stack.getItem() instanceof FarmersHoeItem && !player.isCrouching()) {
             int exp = 0;

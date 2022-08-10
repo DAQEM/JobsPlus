@@ -95,10 +95,10 @@ public class BackpackItem extends Item {
             }
             if (data.getTier().ordinal() < itemTier.ordinal()) data.upgrade(itemTier);
             if (!backpack.is(ModItems.ENDER_BACKPACK.get())) {
-                NetworkHooks.openGui(((ServerPlayer) player), new SimpleMenuProvider((windowId, playerInventory, playerEntity) -> new BackpackContainer(windowId, playerInventory, uuid, data.getTier(), data.getHandler()), backpack.getHoverName()), (buffer -> buffer.writeUUID(uuid).writeInt(data.getTier().ordinal())));
+                NetworkHooks.openScreen(((ServerPlayer) player), new SimpleMenuProvider((windowId, playerInventory, playerEntity) -> new BackpackContainer(windowId, playerInventory, uuid, data.getTier(), data.getHandler()), backpack.getHoverName()), (buffer -> buffer.writeUUID(uuid).writeInt(data.getTier().ordinal())));
             } else {
                 PlayerEnderChestContainer playerenderchestcontainer = player.getEnderChestInventory();
-                NetworkHooks.openGui(((ServerPlayer) player), new SimpleMenuProvider((p_53124_, p_53125_, p_53126_) ->
+                NetworkHooks.openScreen(((ServerPlayer) player), new SimpleMenuProvider((p_53124_, p_53125_, p_53126_) ->
                         ChestMenu.threeRows(p_53124_, p_53125_, playerenderchestcontainer), CONTAINER_TITLE));
             }
         }

@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.utils;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.item.ExcavatorItem;
 import me.daqem.jobsplus.common.item.HammerItem;
 import me.daqem.jobsplus.events.jobs.DiggerEvents;
@@ -17,7 +18,9 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -89,11 +92,15 @@ public class ToolFunctions {
                         final List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
                         final List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops);
                         final int exp = state.getExpDrop(level, level.random, pos, bonusLevel, silkLevel);
+
+                        //Add drops to inventory for Digger powerup
                         if (JobGetters.hasEnabledPowerup(player, digger, CapType.POWER_UP1.get()) && isExcavator) {
                             for (ItemStack itemStack : stacks) {
                                 ItemHandler.addItemsToInventoryOrDrop(itemStack, player, level, pos, exp);
                             }
-                        } else {
+                        }
+                        //Drop items on the ground.
+                        else {
                             dropItems(level, stacks, pos, exp);
                         }
                         if (isExcavator) {
@@ -166,9 +173,20 @@ public class ToolFunctions {
 
     private static void dropItems(Level level, List<ItemStack> stacks, BlockPos pos, int exp) {
         for (ItemStack stack : stacks) {
+            Item item = stack.getItem();
+            // Add EXP drops to autosmelt powerup for hammer.
+            if (item == Items.GOLD_INGOT || item == Items.COPPER_INGOT || item == Items.IRON_INGOT) {
+                exp = 1;
+            } else if (item == Items.NETHERITE_INGOT) {
+                exp = 2;
+            }
+
+            // Drop EXP
             if (exp > 0) {
                 level.addFreshEntity(new ExperienceOrb(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, exp));
             }
+
+            //Drop Item
             level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack));
         }
     }

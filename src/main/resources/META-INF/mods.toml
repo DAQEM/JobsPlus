@@ -19,7 +19,7 @@ modId="jobsplus" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 # ${file.jarVersion} will substitute the value of the Implementation-Version as read from the mod's JAR file metadata
 # see the associated build.gradle script for how to populate this completely automatically during a build
-version="1.19-0.4.0" #mandatory
+version="1.19-0.5.0" #mandatory
  # A display name for the mod
 displayName="Jobs+" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
@@ -43,7 +43,7 @@ Adds jobs to Forge Minecraft.
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[41,)" #mandatory
+    versionRange="[41.1.0,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -53,12 +53,12 @@ Adds jobs to Forge Minecraft.
     modId="minecraft"
     mandatory=true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
-    versionRange="[1.19,1.20)"
+    versionRange="[1.19,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.jobsplus]]
     modId="jei"
     mandatory=true
-    versionRange="[11.0.0.206,)"
+    versionRange="[11.1.1.239,)"
     ordering="NONE"
     side="BOTH"

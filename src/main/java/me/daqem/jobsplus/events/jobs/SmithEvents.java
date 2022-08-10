@@ -41,9 +41,9 @@ public class SmithEvents {
 
     @SubscribeEvent
     public void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
-        craftAndRepair(event.getPlayer(), event.getCrafting());
+        craftAndRepair(event.getEntity(), event.getCrafting());
 
-        if (JobGetters.hasSuperPowerEnabled(event.getPlayer(), job)) {
+        if (JobGetters.hasSuperPowerEnabled(event.getEntity(), job)) {
             if (event.getCrafting().getMaxDamage() > 0) {
                 event.getCrafting().getOrCreateTag().putBoolean("Unbreakable", true);
             }
@@ -52,7 +52,7 @@ public class SmithEvents {
 
     @SubscribeEvent
     public void onAnvilRepair(AnvilRepairEvent event) {
-        craftAndRepair(event.getPlayer(), event.getItemResult());
+        craftAndRepair(event.getEntity(), event.getOutput());
     }
 
     public void craftAndRepair(Player player, ItemStack item) {
@@ -167,7 +167,7 @@ public class SmithEvents {
 
     @SubscribeEvent
     public void onInventoryClose(PlayerContainerEvent.Close event) {
-        furnaceHashmap.remove(event.getPlayer());
+        furnaceHashmap.remove(event.getEntity());
     }
 
     @SubscribeEvent

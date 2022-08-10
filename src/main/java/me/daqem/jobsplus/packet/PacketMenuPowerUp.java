@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.packet;
 
+import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
@@ -43,7 +44,7 @@ public record PacketMenuPowerUp(boolean hasPowerUp, Jobs job, int powerUp) {
                 //Buy Power-up
                 else {
                     JobSetters.addPowerUp(job, player, powerUp);
-                    JobSetters.removeCoins(player, 10);
+                    JobSetters.removeCoins(player, Config.POWERUP_COST.get());
                 }
             }
         }

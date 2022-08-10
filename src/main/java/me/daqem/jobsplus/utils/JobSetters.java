@@ -69,10 +69,6 @@ public class JobSetters {
 
     public static void setLevel(Jobs job, Player player, int level) {
         player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> {
-
-//            if (level == 0) AdvancementHandler.revoke((ServerPlayer) player, "test");
-//            else AdvancementHandler.grand((ServerPlayer) player, "test");
-
             switch (job) {
                 case ALCHEMIST -> handler.setAlchemist(addLevelGenerator(handler.getAlchemist(), level));
                 case BUILDER -> handler.setBuilder(addLevelGenerator(handler.getBuilder(), level));

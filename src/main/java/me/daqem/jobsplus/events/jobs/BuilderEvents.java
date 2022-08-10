@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -29,7 +29,7 @@ public class BuilderEvents {
 
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-        if (!event.getWorld().isClientSide()) {
+        if (!event.getLevel().isClientSide()) {
             if (event.getEntity() instanceof Player player) {
                 if (player.isCreative()) return;
                 if (player.getMainHandItem().getDescriptionId().contains("structurize")
@@ -111,7 +111,7 @@ public class BuilderEvents {
             int delay = 1;
 
             @SubscribeEvent
-            public void onTick(TickEvent.WorldTickEvent event) {
+            public void onTick(TickEvent.LevelTickEvent event) {
                 if (delay-- > 0) return;
                 player.getInventory().add(new ItemStack(item, 1));
                 MinecraftForge.EVENT_BUS.unregister(this);

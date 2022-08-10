@@ -15,7 +15,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -99,6 +99,7 @@ public class SideProxy {
             IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
             MinecraftForge.EVENT_BUS.register(new EventKeyInput());
             eventBus.addListener(this::clientStuff);
+            eventBus.addListener(this::registerKeyMappings);
             eventBus.addListener(ModItemProperties::clientSetupHandler);
         }
 
@@ -107,9 +108,12 @@ public class SideProxy {
             EntityRenderers.register(ModEntities.FISHING_BOBBER.get(), ModFishingHookRenderer::new);
             EntityRenderers.register(ModEntities.EXPERIENCE_BOTTLE.get(), ThrownItemRenderer::new);
 
-            ClientRegistry.registerKeyBinding(OPEN_GUI_KEYBIND);
-            ClientRegistry.registerKeyBinding(VEIN_MINER_KEYBIND);
-            ClientRegistry.registerKeyBinding(DOUBLE_JUMP_KEYBIND);
+        }
+
+        private void registerKeyMappings(RegisterKeyMappingsEvent event) {
+            event.register(OPEN_GUI_KEYBIND);
+            event.register(VEIN_MINER_KEYBIND);
+            event.register(DOUBLE_JUMP_KEYBIND);
         }
     }
 }

@@ -16,7 +16,7 @@ public class EventKeyInput {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public void onKeyPress(InputEvent.KeyInputEvent event) {
+    public void onKeyPress(InputEvent.Key event) {
         final int key = event.getKey();
         final int action = event.getAction();
         final LocalPlayer player = Minecraft.getInstance().player;

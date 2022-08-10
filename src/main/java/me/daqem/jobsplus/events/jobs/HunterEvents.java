@@ -58,7 +58,7 @@ import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.lang3.text.WordUtils;
@@ -206,7 +206,7 @@ public class HunterEvents {
 
     @SubscribeEvent
     public void onInventoryClose(PlayerContainerEvent.Close event) {
-        furnaceHashmap.remove(event.getPlayer());
+        furnaceHashmap.remove(event.getEntity());
     }
 
     @SubscribeEvent
@@ -215,10 +215,13 @@ public class HunterEvents {
         if (event.getEntity() instanceof Player player) {
             if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
                 final Item item = event.getItem().getItem();
-                if (item == Items.COOKED_BEEF || item == Items.COOKED_CHICKEN || item == Items.COOKED_MUTTON || item == Items.COOKED_RABBIT || item == Items.COOKED_PORKCHOP) {
+                if (item == Items.COOKED_BEEF || item == Items.COOKED_CHICKEN || item == Items.COOKED_MUTTON
+                        || item == Items.COOKED_RABBIT || item == Items.COOKED_PORKCHOP
+                        || item.getDescriptionId().equalsIgnoreCase("item.artifacts.eternal_steak")) {
 
                     final FoodData foodData = player.getFoodData();
                     foodData.setFoodLevel(foodData.getFoodLevel() + 2);
+                    foodData.setSaturation(foodData.getSaturationLevel() + 2);
                 }
             }
         }
@@ -234,17 +237,17 @@ public class HunterEvents {
 
     @SubscribeEvent
     public void onArrowShoot(ArrowLooseEvent event) {
-        if (event.getWorld().isClientSide) return;
-        if (!(event.getEntity() instanceof Player player)) return;
+        if (event.getLevel().isClientSide) return;
+        Player player = event.getEntity();
         if (!JobGetters.hasSuperPowerEnabled(player, job)) return;
-        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, event.getBow()) != 0) return;
+        if (EnchantmentHelper.getTagEnchantmentLevel(Enchantments.MULTISHOT, event.getBow()) != 0) return;
 
         float power = BowItem.getPowerForTime(event.getCharge());
         boolean flag = player.getAbilities().instabuild;
         float[] afloat = getShotPitches((Random) player.getRandom());
 
-        shootProjectile(event.getWorld(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[1], flag, power * 3, -10.0F);
-        shootProjectile(event.getWorld(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[2], flag, power * 3, 10.0F);
+        shootProjectile(event.getLevel(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[1], flag, power * 3, -10.0F);
+        shootProjectile(event.getLevel(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[2], flag, power * 3, 10.0F);
     }
 
     private void shootProjectile(Level p_40895_, LivingEntity p_40896_, ItemStack p_40898_, ItemStack p_40899_,

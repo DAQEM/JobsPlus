@@ -2,6 +2,7 @@ package me.daqem.jobsplus.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
@@ -248,7 +249,7 @@ public class JobCommand {
         return 1;
     }
 
-    private static int debug(CommandSourceStack source, Player target) {
+    private static int debug(CommandSourceStack source, Player target) throws CommandSyntaxException {
         if (source.getEntity() instanceof Player player) {
             if (target == null) target = player;
             Player finalTarget = target;

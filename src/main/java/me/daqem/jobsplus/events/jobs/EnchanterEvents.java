@@ -16,6 +16,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -99,7 +100,7 @@ public class EnchanterEvents {
 
     @SubscribeEvent
     public void onPlayerEXPPickup(PlayerXpEvent.PickupXp event) {
-        if (JobGetters.hasEnabledPowerup(event.getPlayer(), Jobs.ENCHANTER, CapType.POWER_UP3.get())) {
+        if (JobGetters.hasEnabledPowerup(event.getEntity(), Jobs.ENCHANTER, CapType.POWER_UP3.get())) {
             event.getOrb().value = event.getOrb().value * 2;
         }
     }
@@ -147,5 +148,13 @@ public class EnchanterEvents {
         EnchantmentHelper.setEnchantments(leftEnchantments, out);
         event.setOutput(out);
         event.setCost(3);
+    }
+
+    @SubscribeEvent
+    public void onAddEnchantUsingAnvil(AnvilRepairEvent event) {
+        final Player player = event.getEntity();
+        if (player.level.isClientSide) return;
+        if (!JobGetters.jobIsEnabled(player, job)) return;
+        ExpHandler.addEXPMid(player, job);
     }
 }

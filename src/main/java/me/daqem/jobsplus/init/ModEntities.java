@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModEntities {
 
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, JobsPlus.MOD_ID);
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, JobsPlus.MOD_ID);
 
     public static final RegistryObject<EntityType<ModFishingHook>> FISHING_BOBBER = ENTITY_TYPES.register("fishing_bobber",
             () -> EntityType.Builder.<ModFishingHook>of(ModFishingHook::new, MobCategory.MISC)

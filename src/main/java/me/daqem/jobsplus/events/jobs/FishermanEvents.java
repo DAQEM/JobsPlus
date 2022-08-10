@@ -38,7 +38,7 @@ public class FishermanEvents {
 
     @SubscribeEvent
     public void onItemFished(ItemFishedEvent event) {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         Jobs job = Jobs.FISHERMAN;
         if (JobGetters.jobIsEnabled(player, job)) {
             int exp = 0;

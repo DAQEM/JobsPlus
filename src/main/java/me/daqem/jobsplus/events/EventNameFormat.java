@@ -24,7 +24,7 @@ public class EventNameFormat {
 
     @SubscribeEvent
     public void onTabNameChange(PlayerEvent.TabListNameFormat event) {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         if (!Config.DISPLAY_JOB_IN_CHAT_AND_TAB.get()) return;
         if (player.isSpectator()) return;
         event.setDisplayName(Component.literal(createTabName(player)));
@@ -32,7 +32,7 @@ public class EventNameFormat {
 
     @SubscribeEvent
     public void onNameChange(PlayerEvent.NameFormat event) {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         if (!Config.DISPLAY_JOB_IN_CHAT_AND_TAB.get()) return;
         if (player.isSpectator()) return;
         event.setDisplayname(Component.literal(createTabName(player)));

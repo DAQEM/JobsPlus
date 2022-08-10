@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.packet;
 
 import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.handlers.AdvancementHandler;
 import me.daqem.jobsplus.handlers.BossBarHandler;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
@@ -43,6 +44,7 @@ public record PacketJobStartStop(boolean isStart, Jobs job) {
                         JobSetters.removeCoins(player, Config.JOB_START_COST.get());
                     }
                     JobSetters.setLevel(job, player, 1);
+                    AdvancementHandler.grandJobAdvancement(player, job, "");
                 }
                 //Run when the player is stopping a job.
                 else {
@@ -57,6 +59,7 @@ public record PacketJobStartStop(boolean isStart, Jobs job) {
                     }
                     JobSetters.set(job, player, 0, 0, 0, 0, 0);
                     BossBarHandler.removeBossBar(player, job);
+                    AdvancementHandler.revokeAdvancement(player, job);
                 }
             }
         }

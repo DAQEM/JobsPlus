@@ -4,6 +4,7 @@ import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.utils.ChatColor;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -15,12 +16,13 @@ import java.util.HashMap;
 public class EventPlayerTick {
 
     public static HashMap<ServerPlayer, Integer> levelUpHashMap = new HashMap<>();
+    public static HashMap<ServerPlayer, MobEffect> removeEffect = new HashMap<>();
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side != LogicalSide.SERVER) return;
         if (event.phase != TickEvent.Phase.START) return;
-        if (levelUpHashMap.isEmpty()) return;
+        if (levelUpHashMap.isEmpty() && removeEffect.isEmpty()) return;
 
         if (event.player instanceof ServerPlayer serverPlayer) {
             if (levelUpHashMap.containsKey(serverPlayer)) {
@@ -42,6 +44,10 @@ public class EventPlayerTick {
                     SoundHandler.playEXPOrbPickupSound(serverPlayer, 1F, 1F);
                     levelUpHashMap.remove(serverPlayer);
                 }
+            }
+            if (removeEffect.containsKey(serverPlayer)) {
+                serverPlayer.removeEffect(removeEffect.get(serverPlayer));
+                removeEffect.remove(serverPlayer);
             }
         }
     }

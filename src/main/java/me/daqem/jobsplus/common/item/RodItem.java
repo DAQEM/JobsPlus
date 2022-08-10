@@ -84,7 +84,7 @@ public class RodItem extends FishingRodItem {
 
         if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) {
             if (fishing != null && fishing.tickCount != 0 && !level.isClientSide) {
-                if (lastUsedTime + 2000 < System.currentTimeMillis() || player.isCreative()) {
+                if (lastUsedTime + 2000 < System.currentTimeMillis() || player.isCreative() || player.isOnGround()) {
                     if (level.getBlockState(fishing.blockPosition()) == Blocks.AIR.defaultBlockState()) {
                         player.setDeltaMovement((fishing.position().x - player.position().x) / 2, 1.1, (fishing.position().z - player.position().z) / 2);
                         player.hurtMarked = true;
@@ -95,8 +95,8 @@ public class RodItem extends FishingRodItem {
                     HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "Cooldown: " + new DecimalFormat("0.00").format((double) ((lastUsedTime - System.currentTimeMillis()) + 2000) / 1000) + "s");
                 }
             }
-        }
 
+        }
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
 

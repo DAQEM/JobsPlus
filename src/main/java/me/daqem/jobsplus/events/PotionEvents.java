@@ -20,7 +20,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
-import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -35,9 +35,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class PotionEvents {
 
     @SubscribeEvent
-    public static void onPotionAdded(PotionEvent.PotionAddedEvent event) {
-        MobEffectInstance effect = event.getPotionEffect();
-        if (event.getEntityLiving() instanceof Player player) {
+    public static void onPotionAdded(MobEffectEvent.Added event) {
+        MobEffectInstance effect = event.getEffectInstance();
+        if (event.getEntity() instanceof Player player) {
             Jobs job = Jobs.ALCHEMIST;
             if (JobGetters.jobIsEnabled(player, job)) {
                 int duration;
@@ -46,35 +46,27 @@ public class PotionEvents {
                 } else {
                     duration = JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()) ? (int) (effect.getDuration() * 1.5) : 0;
                 }
+                //Bad Potion Effect Imunity
+                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
+                    if (effect.getEffect().getCategory() == MobEffectCategory.HARMFUL || effect.getEffect() == MobEffects.BAD_OMEN) {
+                        if (player instanceof ServerPlayer serverPlayer) {
+                            EventPlayerTick.removeEffect.put(serverPlayer, effect.getEffect());
+                            HotbarMessageHandler.sendHotbarMessage(serverPlayer, ChatColor.green() + "Removed bad effect.");
+                        }
+                    }
+                }
                 if (duration != 0) {
                     MinecraftForge.EVENT_BUS.register(new Object() {
                         int delay = 1;
 
                         @SubscribeEvent
-                        public void onTick(TickEvent.WorldTickEvent event) {
+                        public void onTick(TickEvent.LevelTickEvent event) {
                             if (delay-- > 0) return;
                             player.forceAddEffect(new MobEffectInstance(effect.getEffect(), duration,
                                     effect.getAmplifier(), effect.isAmbient(), effect.isVisible(), effect.showIcon()), null);
                             MinecraftForge.EVENT_BUS.unregister(this);
                         }
                     });
-                }
-                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
-                    if (effect.getEffect().getCategory() == MobEffectCategory.HARMFUL || effect.getEffect() == MobEffects.BAD_OMEN) {
-                        MinecraftForge.EVENT_BUS.register(new Object() {
-                            int delay = 1;
-
-                            @SubscribeEvent
-                            public void onTick(TickEvent.WorldTickEvent event) {
-                                if (delay-- > 0) return;
-                                player.removeEffect(effect.getEffect());
-                                MinecraftForge.EVENT_BUS.unregister(this);
-                            }
-                        });
-                        if (player instanceof ServerPlayer serverPlayer) {
-                            HotbarMessageHandler.sendHotbarMessage(serverPlayer, ChatColor.green() + "Removed bad effect.");
-                        }
-                    }
                 }
             }
             Map<MobEffect, List<List<Integer>>> map = new HashMap<>(Map.of(
@@ -111,17 +103,8 @@ public class PotionEvents {
             }
             if (!pass.get()) {
                 if (player instanceof ServerPlayer serverPlayer) {
+                    EventPlayerTick.removeEffect.put(serverPlayer, effect.getEffect());
                     HotbarMessageHandler.sendHotbarMessage(serverPlayer, ChatColor.red() + "You are not allowed to use this effect yet.");
-                    MinecraftForge.EVENT_BUS.register(new Object() {
-                        int delay = 1;
-
-                        @SubscribeEvent
-                        public void onTick(TickEvent.WorldTickEvent event) {
-                            if (delay-- > 0) return;
-                            player.removeEffect(effect.getEffect());
-                            MinecraftForge.EVENT_BUS.unregister(this);
-                        }
-                    });
                 }
             }
         }
@@ -129,7 +112,7 @@ public class PotionEvents {
 
     @SubscribeEvent
     public static void onHeal(LivingHealEvent event) {
-        if (event.getEntityLiving() instanceof Player player) {
+        if (event.getEntity() instanceof Player player) {
             Jobs job = Jobs.ALCHEMIST;
             if (JobGetters.jobIsEnabled(player, job)) {
                 if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) {
@@ -180,7 +163,7 @@ public class PotionEvents {
 
     @SubscribeEvent
     public static void addNBTData(PlayerEvent.PlayerLoggedInEvent event) {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         CompoundTag tag = player.getPersistentData();
         Tag mayfly = tag.get("mayfly");
         if (mayfly == null)
@@ -190,10 +173,10 @@ public class PotionEvents {
     @SubscribeEvent
     public static void removeHarmingEffect(LivingDamageEvent event) {
         Jobs job = Jobs.ALCHEMIST;
-        if (event.getEntityLiving() instanceof ServerPlayer player) {
+        if (event.getEntity() instanceof ServerPlayer player) {
             if (JobGetters.jobIsEnabled(player, job)) {
                 if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
-                    if (event.getSource().getLocalizedDeathMessage(event.getEntityLiving()).toString().contains("death.attack.indirectMagic")) {
+                    if (event.getSource().getLocalizedDeathMessage(event.getEntity()).toString().contains("death.attack.indirectMagic")) {
                         event.setCanceled(true);
                         HotbarMessageHandler.sendHotbarMessage(player, ChatColor.green() + "Removed bad effect.");
                     }
