@@ -34,22 +34,19 @@ public class BuilderEvents {
                 if (player.isCreative()) return;
                 if (player.getMainHandItem().getDescriptionId().contains("structurize")
                         || player.getOffhandItem().getDescriptionId().contains("structurize")) return;
+                if (player.getMainHandItem().getDescriptionId().contains("constructionwand")
+                        || player.getOffhandItem().getDescriptionId().contains("constructionwand")) return;
                 if (JobGetters.jobIsEnabled(player, Jobs.BUILDER)) {
-                    final BlockState state = event.getPlacedBlock();
+                    BlockState state = event.getPlacedBlock();
                     Block block = state.getBlock();
                     ArrayList<String> bannedBlocks = new ArrayList<>(List.of("farmland", "jukebox"));
                     if (!bannedBlocks.contains(block.getDescriptionId().replace("block.minecraft.", ""))
                             && state.getMaterial().isSolid()
                             && !block.getDescriptionId().endsWith(".twig")) {
                         float destroySpeed = state.getDestroySpeed(player.level, event.getPos());
-                        if (destroySpeed <= 2.5) {
-                            ExpHandler.addEXPLowest(player, Jobs.BUILDER);
-                        }
-                        if (destroySpeed <= 5) {
-                            ExpHandler.addEXPLow(player, Jobs.BUILDER);
-                        } else {
-                            ExpHandler.addEXPMid(player, Jobs.BUILDER);
-                        }
+                        if (destroySpeed <= 2.5) ExpHandler.addEXPLowest(player, Jobs.BUILDER);
+                        if (destroySpeed <= 5) ExpHandler.addEXPLow(player, Jobs.BUILDER);
+                        else ExpHandler.addEXPMid(player, Jobs.BUILDER);
                     }
                     if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWER_UP2.get())) {
                         for (ItemStack item : player.getInventory().items) {
