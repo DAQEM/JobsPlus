@@ -27,7 +27,7 @@
 <h3 align="center">JOBS+</h3>
 
   <p align="center">
-    An awesome Minecraft Forge plugin that adds 12 interesting jobs to your game!
+    An awesome Minecraft Forge plugin that adds 10 interesting jobs to your game!
     <br />
     <a href="https://docs.google.com/document/d/1xL4aUcM8tNvwqgOFbQXhK8FK6MEvvsRXdzgKuMNAEAg"><strong>Explore the docs »</strong></a>
     <br />
@@ -79,7 +79,7 @@ and Smith)
 Each mod will have 100 levels. To level up your job, you need to preform certain tasks that fits the job you chose.
 
 The first 2 jobs can be obtained for free. If you want more than 2 jobs, you can buy them with job coins. Job coins can
-be obtained by leveling up your job. for every level, you'll get 1 job coin. An extra job will cost you 25 job coins.
+be obtained by leveling up your job. for every level, you'll get 1 job coin. An extra job will cost you 10 job coins.
 
 Every job has their own crafting recipes, power ups and a special superpower.
 
