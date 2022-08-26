@@ -2,8 +2,8 @@ package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.JobsPlus;
-import me.daqem.jobsplus.common.container.backpack.BackpackContainer;
 import me.daqem.jobsplus.common.container.backpack.BackpackHandler;
+import me.daqem.jobsplus.common.container.backpack.BackpackMenu;
 import me.daqem.jobsplus.common.container.backpack.BackpackSavedData;
 import me.daqem.jobsplus.handlers.BackpackItemHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
@@ -86,7 +86,7 @@ public class BackpackItem extends Item {
                     || (backpack.getItem() == ModItems.HUGE_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_HUGE_BACKPACK.get())
                     || (backpack.getItem() == ModItems.ENDER_BACKPACK.get() && JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_ENDER_BACKPACK.get());
             if (!canOpenBackpack) {
-                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
                 return InteractionResultHolder.success(player.getItemInHand(hand));
             }
             if (backpack.getOrCreateTag().contains("Inventory")) {
@@ -95,7 +95,7 @@ public class BackpackItem extends Item {
             }
             if (data.getTier().ordinal() < itemTier.ordinal()) data.upgrade(itemTier);
             if (!backpack.is(ModItems.ENDER_BACKPACK.get())) {
-                NetworkHooks.openScreen(((ServerPlayer) player), new SimpleMenuProvider((windowId, playerInventory, playerEntity) -> new BackpackContainer(windowId, playerInventory, uuid, data.getTier(), data.getHandler()), backpack.getHoverName()), (buffer -> buffer.writeUUID(uuid).writeInt(data.getTier().ordinal())));
+                NetworkHooks.openScreen(((ServerPlayer) player), new SimpleMenuProvider((windowId, playerInventory, playerEntity) -> new BackpackMenu(windowId, playerInventory, uuid, data.getTier(), data.getHandler()), backpack.getHoverName()), (buffer -> buffer.writeUUID(uuid).writeInt(data.getTier().ordinal())));
             } else {
                 PlayerEnderChestContainer playerenderchestcontainer = player.getEnderChestInventory();
                 NetworkHooks.openScreen(((ServerPlayer) player), new SimpleMenuProvider((p_53124_, p_53125_, p_53126_) ->

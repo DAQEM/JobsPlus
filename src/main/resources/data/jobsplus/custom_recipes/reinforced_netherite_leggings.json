@@ -1,0 +1,22 @@
+{
+  "id": "jobsplus:reinforced_netherite_leggings",
+  "key": {
+    "B": {
+      "item": "minecraft:netherite_block"
+    },
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "pattern": [
+    "     ",
+    " DND ",
+    " B B ",
+    " B B ",
+    "     "
+  ],
+  "job": "SMITH"
+}

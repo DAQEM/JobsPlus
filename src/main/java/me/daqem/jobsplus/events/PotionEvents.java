@@ -47,12 +47,12 @@ public class PotionEvents {
                 } else {
                     duration = JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()) ? (int) (effect.getDuration() * 1.5) : 0;
                 }
-                //Bad Potion Effect Imunity
+                //Bad Potion Effect Immunity
                 if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
                     if (effect.getEffect().getCategory() == MobEffectCategory.HARMFUL || effect.getEffect() == MobEffects.BAD_OMEN) {
                         if (player instanceof ServerPlayer serverPlayer) {
                             EventPlayerTick.removeEffect.put(serverPlayer, effect.getEffect());
-                            HotbarMessageHandler.sendHotbarMessage(serverPlayer, ChatColor.green() + "Removed bad effect.");
+                            HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, ChatColor.green() + "Removed bad effect.");
                         }
                     }
                 }
@@ -81,9 +81,11 @@ public class PotionEvents {
 
             AtomicBoolean pass = new AtomicBoolean(true);
             if (map.containsKey(effect.getEffect())) {
-                map.forEach((key, value) -> {
-                    if (key == effect.getEffect()) {
-                        for (List<Integer> list : value) {
+                for (Map.Entry<MobEffect, List<List<Integer>>> entry : map.entrySet()) {
+                    MobEffect mobEffect = entry.getKey();
+                    List<List<Integer>> lists = entry.getValue();
+                    if (mobEffect == effect.getEffect()) {
+                        for (List<Integer> list : lists) {
                             if (list.get(0) == effect.getAmplifier()) {
                                 pass.set(false);
                                 if (JobGetters.getJobLevel(player, job) >= list.get(1)) {
@@ -100,12 +102,12 @@ public class PotionEvents {
                             }
                         }
                     }
-                });
+                }
             }
             if (!pass.get() && !Config.ALLOW_ALL_EFFECTS.get()) {
                 if (player instanceof ServerPlayer serverPlayer) {
                     EventPlayerTick.removeEffect.put(serverPlayer, effect.getEffect());
-                    HotbarMessageHandler.sendHotbarMessage(serverPlayer, ChatColor.red() + "You are not allowed to use this effect yet.");
+                    HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, ChatColor.red() + "You are not allowed to use this effect yet.");
                 }
             }
         }
@@ -179,7 +181,7 @@ public class PotionEvents {
                 if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
                     if (event.getSource().getLocalizedDeathMessage(event.getEntity()).toString().contains("death.attack.indirectMagic")) {
                         event.setCanceled(true);
-                        HotbarMessageHandler.sendHotbarMessage(player, ChatColor.green() + "Removed bad effect.");
+                        HotbarMessageHandler.sendHotbarMessageServer(player, ChatColor.green() + "Removed bad effect.");
                     }
                 }
             }

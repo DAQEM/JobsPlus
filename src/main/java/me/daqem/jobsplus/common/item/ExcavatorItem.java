@@ -69,11 +69,11 @@ public class ExcavatorItem extends ShovelItem {
                         }
                     }
                 } else {
-                    HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                    HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
                     return true;
                 }
             } else {
-                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
             }
         }
         return true;
@@ -111,7 +111,7 @@ public class ExcavatorItem extends ShovelItem {
                 } else {
                     tag.putInt("mode", 0);
                 }
-                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + getModeString(stack));
+                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + getModeString(stack));
                 SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
             }
         }

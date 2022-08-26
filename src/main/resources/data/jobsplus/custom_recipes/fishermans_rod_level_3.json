@@ -1,0 +1,25 @@
+{
+  "id": "jobsplus:fishermans_rod_level_3",
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "E": {
+      "item": "jobsplus:fishermans_rod_level_2"
+    },
+    "I": {
+      "item": "minecraft:diamond_block"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "     ",
+    "   I ",
+    "  ES ",
+    " D S ",
+    "     "
+  ],
+  "job": "FISHERMAN"
+}

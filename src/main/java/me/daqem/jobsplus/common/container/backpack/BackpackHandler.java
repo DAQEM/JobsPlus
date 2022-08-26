@@ -12,9 +12,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.util.thread.SidedThreadGroups;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -34,8 +35,9 @@ public class BackpackHandler extends SavedData {
 
     public static BackpackHandler load(CompoundTag nbt) {
         if (nbt.contains("Backpacks")) {
-            ListTag list = nbt.getList("Backpacks", Tag.TAG_COMPOUND);
-            list.forEach((backpackNBT) -> BackpackSavedData.fromNBT((CompoundTag) backpackNBT).ifPresent((backpack) -> data.put(backpack.getUuid(), backpack)));
+            for (Tag backpackNBT : nbt.getList("Backpacks", Tag.TAG_COMPOUND)) {
+                BackpackSavedData.fromNBT((CompoundTag) backpackNBT).ifPresent((backpack) -> data.put(backpack.getUuid(), backpack));
+            }
         }
         return new BackpackHandler();
     }
@@ -62,10 +64,11 @@ public class BackpackHandler extends SavedData {
     }
 
     @Override
-    @Nonnull
-    public CompoundTag save(CompoundTag compound) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag compound) {
         ListTag backpacks = new ListTag();
-        data.forEach(((uuid, BackpackSavedData) -> backpacks.add(BackpackSavedData.toNBT())));
+        for (Map.Entry<UUID, BackpackSavedData> entry : data.entrySet()) {
+            backpacks.add(entry.getValue().toNBT());
+        }
         compound.put("Backpacks", backpacks);
         return compound;
     }

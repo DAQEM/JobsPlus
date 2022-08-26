@@ -1,21 +1,21 @@
 {
   "type": "jobsplus:shaped_job_based_recipe",
-  "pattern": [
-    "DGD",
-    "GEG",
-    "DGD"
-  ],
   "key": {
-    "G": {
-      "item": "minecraft:glow_lichen"
-    },
     "D": {
       "tag": "forge:gems/emerald"
     },
     "E": {
       "item": "minecraft:cobweb"
+    },
+    "G": {
+      "item": "minecraft:glow_lichen"
     }
   },
+  "pattern": [
+    "DGD",
+    "GEG",
+    "DGD"
+  ],
   "result": {
     "item": "jobsplus:curse_breaker"
   }

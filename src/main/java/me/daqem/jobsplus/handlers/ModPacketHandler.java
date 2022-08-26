@@ -28,9 +28,12 @@ public class ModPacketHandler {
         INSTANCE.registerMessage(++id, PacketBossBarr.class, PacketBossBarr::encode, PacketBossBarr::decode, PacketBossBarr::handle);
         INSTANCE.registerMessage(++id, PacketSwitchSuperpower.class, PacketSwitchSuperpower::encode, PacketSwitchSuperpower::decode, PacketSwitchSuperpower::handle);
         INSTANCE.registerMessage(++id, PacketMenuPowerUp.class, PacketMenuPowerUp::encode, PacketMenuPowerUp::decode, PacketMenuPowerUp::handle);
+        INSTANCE.registerMessage(++id, PacketCraftItem.class, PacketCraftItem::encode, PacketCraftItem::decode, PacketCraftItem::handle);
+        INSTANCE.registerMessage(++id, PacketSendCraftingData.class, PacketSendCraftingData::encode, PacketSendCraftingData::decode, PacketSendCraftingData::handle);
+        INSTANCE.registerMessage(++id, PacketConstructionArrows.class, PacketConstructionArrows::encode, PacketConstructionArrows::decode, PacketConstructionArrows::handle);
     }
 
-    public static void sendPowerupPacket(String str, LocalPlayer player) {
+    public static void sendPowerUpPacket(String str, LocalPlayer player) {
         ModPacketHandler.INSTANCE.sendToServer(new PacketPowerUps(str, player.getUUID()));
     }
 }

@@ -8,8 +8,6 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-import java.util.Objects;
-
 public class ItemModels extends ItemModelProvider {
 
     public ItemModels(DataGenerator generator, ExistingFileHelper existingFileHelper) {
@@ -63,6 +61,8 @@ public class ItemModels extends ItemModelProvider {
         generated(ModItems.REINFORCED_NETHERITE_CHESTPLATE.get());
         generated(ModItems.REINFORCED_NETHERITE_LEGGINGS.get());
         generated(ModItems.REINFORCED_NETHERITE_BOOTS.get());
+
+        withExistingParent("construction_table", JobsPlus.getId("block/construction_table"));
     }
 
     private void handheld(Item item) {

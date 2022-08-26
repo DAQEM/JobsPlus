@@ -75,11 +75,11 @@ public class RodItem extends FishingRodItem {
                 }
             } else {
                 if (!level.isClientSide)
-                    HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                    HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
             }
         } else {
             if (!level.isClientSide)
-                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
         }
 
         if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) {
@@ -92,7 +92,7 @@ public class RodItem extends FishingRodItem {
                         player.addTag("cancelFallDamageForFisherman");
                     }
                 } else {
-                    HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "Cooldown: " + new DecimalFormat("0.00").format((double) ((lastUsedTime - System.currentTimeMillis()) + 2000) / 1000) + "s");
+                    HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.red() + "Cooldown: " + new DecimalFormat("0.00").format((double) ((lastUsedTime - System.currentTimeMillis()) + 2000) / 1000) + "s");
                 }
             }
 

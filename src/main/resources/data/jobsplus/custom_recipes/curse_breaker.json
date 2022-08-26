@@ -1,0 +1,22 @@
+{
+  "id": "jobsplus:curse_breaker",
+  "key": {
+    "A": {
+      "item": "minecraft:cobweb"
+    },
+    "B": {
+      "item": "minecraft:emerald"
+    },
+    "C": {
+      "item": "minecraft:glow_lichen"
+    }
+  },
+  "pattern": [
+    "     ",
+    " BCB ",
+    " CAC ",
+    " BCB ",
+    "     "
+  ],
+  "job": "ENCHANTER"
+}

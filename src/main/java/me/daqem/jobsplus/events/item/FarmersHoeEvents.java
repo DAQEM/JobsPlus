@@ -216,7 +216,7 @@ public class FarmersHoeEvents {
                                         }
                                     }
                                 } else {
-                                    HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic.tool"));
+                                    HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic.tool"));
                                 }
                             }
                         }

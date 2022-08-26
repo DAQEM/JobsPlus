@@ -114,9 +114,9 @@ public class EnchanterEvents {
                 final Slot slot = grindstoneMenu.getSlot(2);
                 final ItemStack item = slot.getItem();
                 Map<Enchantment, Integer> map = new HashMap<>();
-                EnchantmentHelper.deserializeEnchantments(item.getEnchantmentTags()).forEach((key, value) -> {
-                    if (!key.isCurse()) map.put(key, value);
-                });
+                for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.deserializeEnchantments(item.getEnchantmentTags()).entrySet()) {
+                    if (!entry.getKey().isCurse()) map.put(entry.getKey(), entry.getValue());
+                }
                 EnchantmentHelper.setEnchantments(map, item);
                 slot.set(item);
                 slot.setChanged();

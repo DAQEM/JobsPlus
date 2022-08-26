@@ -87,7 +87,7 @@ public class LumberAxeItem extends AxeItem {
                     if (isAllowedToUseAxe) {
                         attemptFellTree(level, pos, player);
                     } else {
-                        HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                        HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
                     }
                 } else {
                     ExpHandler.addEXPLow(player, Jobs.LUMBERJACK);
@@ -106,7 +106,7 @@ public class LumberAxeItem extends AxeItem {
             if (itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_3.get()) maxLogs = 128;
             if (itemInHand == ModItems.LUMBERJACK_AXE_LEVEL_4.get()) maxLogs = 256;
             if (maxLogs == 0) {
-                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
                 return;
             }
 
@@ -117,7 +117,7 @@ public class LumberAxeItem extends AxeItem {
             for (int i = 0; i < candidates.size(); i++) {
                 if (logs.size() > maxLogs) {
                     ExpHandler.addEXPLow(player, Jobs.LUMBERJACK);
-                    HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "This tree is too big to cut down with this axe.");
+                    HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.red() + "This tree is too big to cut down with this axe.");
                     return;
                 }
 
@@ -170,7 +170,7 @@ public class LumberAxeItem extends AxeItem {
             } else {
                 tag.putInt("mode", 0);
             }
-            HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + getModeString(stack));
+            HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + getModeString(stack));
             SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
         }
         return super.use(level, player, hand);

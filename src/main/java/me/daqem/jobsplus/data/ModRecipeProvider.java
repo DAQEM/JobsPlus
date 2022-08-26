@@ -2,6 +2,8 @@ package me.daqem.jobsplus.data;
 
 import com.google.gson.JsonObject;
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.common.crafting.ShapedJobBasedRecipe;
+import me.daqem.jobsplus.common.crafting.ShapelessJobBasedRecipe;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.init.ModRecipes;
 import net.minecraft.data.DataGenerator;
@@ -644,7 +646,12 @@ public class ModRecipeProvider extends RecipeProvider {
         @Override
         public @NotNull JsonObject serializeRecipe() {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("type", Objects.requireNonNullElseGet(this.serializerOverride, this.inner::getType).toString());
+            jsonObject.addProperty("type",
+                    Objects.requireNonNullElseGet(this.serializerOverride, this.inner::getType)
+                            instanceof ShapedJobBasedRecipe.Serializer ? "jobsplus:shaped_job_based_recipe" :
+                            Objects.requireNonNullElseGet(this.serializerOverride, this.inner::getType)
+                                    instanceof ShapelessJobBasedRecipe.Serializer ? "jobsplus:shapeless_job_based_recipe" :
+                                    "jobsplus:upgrade_recipe");
             serializeRecipeData(jsonObject);
             return jsonObject;
         }

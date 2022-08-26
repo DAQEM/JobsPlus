@@ -1,0 +1,22 @@
+{
+  "id": "jobsplus:farmers_hoe_level_1",
+  "key": {
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "     ",
+    " DII ",
+    " DS  ",
+    "  S  ",
+    "     "
+  ],
+  "job": "FARMER"
+}

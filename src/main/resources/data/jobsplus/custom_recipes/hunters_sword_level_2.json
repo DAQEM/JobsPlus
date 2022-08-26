@@ -1,0 +1,25 @@
+{
+  "id": "jobsplus:hunters_sword_level_2",
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "E": {
+      "item": "jobsplus:hunters_sword_level_1"
+    },
+    "I": {
+      "item": "minecraft:gold_block"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "     ",
+    "  D  ",
+    " IEI ",
+    "  S  ",
+    "     "
+  ],
+  "job": "HUNTER"
+}

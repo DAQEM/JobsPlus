@@ -1,0 +1,22 @@
+{
+  "id": "jobsplus:reinforced_iron_helmet",
+  "key": {
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "pattern": [
+    "     ",
+    "     ",
+    " DND ",
+    " B B ",
+    "     "
+  ],
+  "job": "SMITH"
+}

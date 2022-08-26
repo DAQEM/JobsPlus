@@ -118,7 +118,7 @@ public class MinerEvents {
         for (int i = 0; i < candidates.size(); i++) {
             if (ores.size() > 16 * 16 * 16) {
                 ExpHandler.addEXPMid(player, Jobs.MINER);
-                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.red() + "This vein is too big to mine.");
+                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.red() + "This vein is too big to mine.");
                 return;
             }
 

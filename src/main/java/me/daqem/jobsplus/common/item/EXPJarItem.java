@@ -51,7 +51,7 @@ public class EXPJarItem extends Item {
                         if (stack.getOrCreateTag().contains("EXP")) {
                             player.giveExperiencePoints(nbt.getInt("EXP"));
                             if (nbt.getInt("EXP") != 0) {
-                                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("success.exp.extract", nbt.getInt("EXP")));
+                                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("success.exp.extract", nbt.getInt("EXP")));
                                 SoundHandler.playLevelUpSound(player, 0.7F, 1F);
                             }
                             nbt.putInt("EXP", 0);
@@ -64,7 +64,7 @@ public class EXPJarItem extends Item {
                             nbt.putInt("EXP", totalExperience);
                         }
                         if (totalExperience != 0) {
-                            HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("success.exp.insert", totalExperience));
+                            HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("success.exp.insert", totalExperience));
                             SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
                         }
                         player.giveExperiencePoints(-totalExperience);
@@ -73,7 +73,7 @@ public class EXPJarItem extends Item {
                     return InteractionResultHolder.success(stack);
                 }
             } else {
-                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
             }
         }
         return super.use(level, player, hand);

@@ -1,0 +1,85 @@
+package me.daqem.jobsplus.utils.enums;
+
+import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.init.ModItems;
+import me.daqem.jobsplus.utils.JobGetters;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+
+public enum RequiredLevels {
+    SMALL_BACKPACK(Config.REQUIRED_LEVEL_SMALL_BACKPACK.get(), ModItems.SMALL_BACKPACK.get().getDefaultInstance()),
+    MEDIUM_BACKPACK(Config.REQUIRED_LEVEL_MEDIUM_BACKPACK.get(), ModItems.MEDIUM_BACKPACK.get().getDefaultInstance()),
+    LARGE_BACKPACK(Config.REQUIRED_LEVEL_LARGE_BACKPACK.get(), ModItems.LARGE_BACKPACK.get().getDefaultInstance()),
+    HUGE_BACKPACK(Config.REQUIRED_LEVEL_HUGE_BACKPACK.get(), ModItems.HUGE_BACKPACK.get().getDefaultInstance()),
+    ENDER_BACKPACK(Config.REQUIRED_LEVEL_ENDER_BACKPACK.get(), ModItems.ENDER_BACKPACK.get().getDefaultInstance()),
+    EXP_JAR(Config.REQUIRED_LEVEL_EXP_JAR.get(), ModItems.EXP_JAR.get().getDefaultInstance()),
+    EXP_JAR_TO_EXPERIENCE_BOTTLE(Config.REQUIRED_LEVEL_EXP_JAR_TO_EXPERIENCE_BOTTLE.get(), ModItems.EXPERIENCE_BOTTLE.get().getDefaultInstance()),
+    EXPERIENCE_BOTTLE_TIER_1(Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_1.get(), JobGetters.getExperienceBottleItemStack(1)),
+    EXPERIENCE_BOTTLE_TIER_2(Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_2.get(), JobGetters.getExperienceBottleItemStack(2)),
+    EXPERIENCE_BOTTLE_TIER_3(Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_3.get(), JobGetters.getExperienceBottleItemStack(3)),
+    EXPERIENCE_BOTTLE_TIER_4(Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_4.get(), JobGetters.getExperienceBottleItemStack(4)),
+    EXPERIENCE_BOTTLE_TIER_5(Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_5.get(), JobGetters.getExperienceBottleItemStack(5)),
+    EXPERIENCE_BOTTLE_TIER_6(Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_6.get(), JobGetters.getExperienceBottleItemStack(6)),
+    CURSE_BREAKER(Config.REQUIRED_LEVEL_CURSE_BREAKER.get(), ModItems.CURSE_BREAKER.get().getDefaultInstance()),
+    HUNTER_WOOL(Config.REQUIRED_LEVEL_HUNTER_WOOL.get(), Items.WHITE_WOOL.getDefaultInstance()),
+    HUNTERS_SWORD_LEVEL_1(Config.REQUIRED_LEVEL_HUNTERS_SWORD_LEVEL_1.get(), ModItems.HUNTERS_SWORD_LEVEL_1.get().getDefaultInstance()),
+    HUNTERS_SWORD_LEVEL_2(Config.REQUIRED_LEVEL_HUNTERS_SWORD_LEVEL_2.get(), ModItems.HUNTERS_SWORD_LEVEL_2.get().getDefaultInstance()),
+    HUNTERS_SWORD_LEVEL_3(Config.REQUIRED_LEVEL_HUNTERS_SWORD_LEVEL_3.get(), ModItems.HUNTERS_SWORD_LEVEL_3.get().getDefaultInstance()),
+    HUNTERS_SWORD_LEVEL_4(Config.REQUIRED_LEVEL_HUNTERS_SWORD_LEVEL_4.get(), ModItems.HUNTERS_SWORD_LEVEL_4.get().getDefaultInstance()),
+    HUNTERS_BOW_LEVEL_1(Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_1.get(), ModItems.HUNTERS_BOW_LEVEL_1.get().getDefaultInstance()),
+    HUNTERS_BOW_LEVEL_2(Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_2.get(), ModItems.HUNTERS_BOW_LEVEL_2.get().getDefaultInstance()),
+    HUNTERS_BOW_LEVEL_3(Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_3.get(), ModItems.HUNTERS_BOW_LEVEL_3.get().getDefaultInstance()),
+    HUNTERS_BOW_LEVEL_4(Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_4.get(), ModItems.HUNTERS_BOW_LEVEL_4.get().getDefaultInstance()),
+    LUMBERJACK_AXE_LEVEL_1(Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_1.get(), ModItems.LUMBERJACK_AXE_LEVEL_1.get().getDefaultInstance()),
+    LUMBERJACK_AXE_LEVEL_2(Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_2.get(), ModItems.LUMBERJACK_AXE_LEVEL_2.get().getDefaultInstance()),
+    LUMBERJACK_AXE_LEVEL_3(Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_3.get(), ModItems.LUMBERJACK_AXE_LEVEL_3.get().getDefaultInstance()),
+    LUMBERJACK_AXE_LEVEL_4(Config.REQUIRED_LEVEL_LUMBERJACK_AXE_LEVEL_4.get(), ModItems.LUMBERJACK_AXE_LEVEL_4.get().getDefaultInstance()),
+    MINERS_HAMMER_LEVEL_1(Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_1.get(), ModItems.MINERS_HAMMER_LEVEL_1.get().getDefaultInstance()),
+    MINERS_HAMMER_LEVEL_2(Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_2.get(), ModItems.MINERS_HAMMER_LEVEL_2.get().getDefaultInstance()),
+    MINERS_HAMMER_LEVEL_3(Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_3.get(), ModItems.MINERS_HAMMER_LEVEL_3.get().getDefaultInstance()),
+    MINERS_HAMMER_LEVEL_4(Config.REQUIRED_LEVEL_MINERS_HAMMER_LEVEL_4.get(), ModItems.MINERS_HAMMER_LEVEL_4.get().getDefaultInstance()),
+    FISHERMANS_ROD_LEVEL_1(Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_1.get(), ModItems.FISHERMANS_ROD_LEVEL_1.get().getDefaultInstance()),
+    FISHERMANS_ROD_LEVEL_2(Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_2.get(), ModItems.FISHERMANS_ROD_LEVEL_2.get().getDefaultInstance()),
+    FISHERMANS_ROD_LEVEL_3(Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_3.get(), ModItems.FISHERMANS_ROD_LEVEL_3.get().getDefaultInstance()),
+    FISHERMANS_ROD_LEVEL_4(Config.REQUIRED_LEVEL_FISHERMANS_ROD_LEVEL_4.get(), ModItems.FISHERMANS_ROD_LEVEL_4.get().getDefaultInstance()),
+    FARMERS_HOE_LEVEL_1(Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_1.get(), ModItems.FARMERS_HOE_LEVEL_1.get().getDefaultInstance()),
+    FARMERS_HOE_LEVEL_2(Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_2.get(), ModItems.FARMERS_HOE_LEVEL_2.get().getDefaultInstance()),
+    FARMERS_HOE_LEVEL_3(Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_3.get(), ModItems.FARMERS_HOE_LEVEL_3.get().getDefaultInstance()),
+    FARMERS_HOE_LEVEL_4(Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_4.get(), ModItems.FARMERS_HOE_LEVEL_4.get().getDefaultInstance()),
+    DIGGERS_EXCAVATOR_LEVEL_1(Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_1.get(), ModItems.DIGGERS_EXCAVATOR_LEVEL_1.get().getDefaultInstance()),
+    DIGGERS_EXCAVATOR_LEVEL_2(Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_2.get(), ModItems.DIGGERS_EXCAVATOR_LEVEL_2.get().getDefaultInstance()),
+    DIGGERS_EXCAVATOR_LEVEL_3(Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_3.get(), ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get().getDefaultInstance()),
+    DIGGERS_EXCAVATOR_LEVEL_4(Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_4.get(), ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get().getDefaultInstance()),
+    REINFORCED_IRON_HELMET(Config.REQUIRED_LEVEL_REINFORCED_IRON_HELMET.get(), ModItems.REINFORCED_IRON_HELMET.get().getDefaultInstance()),
+    REINFORCED_IRON_CHESTPLATE(Config.REQUIRED_LEVEL_REINFORCED_IRON_CHESTPLATE.get(), ModItems.REINFORCED_IRON_CHESTPLATE.get().getDefaultInstance()),
+    REINFORCED_IRON_LEGGINGS(Config.REQUIRED_LEVEL_REINFORCED_IRON_LEGGINGS.get(), ModItems.REINFORCED_IRON_LEGGINGS.get().getDefaultInstance()),
+    REINFORCED_IRON_BOOTS(Config.REQUIRED_LEVEL_REINFORCED_IRON_BOOTS.get(), ModItems.REINFORCED_IRON_BOOTS.get().getDefaultInstance()),
+    OBSIDIAN_HELMET(Config.REQUIRED_LEVEL_OBSIDIAN_HELMET.get(), ModItems.OBSIDIAN_HELMET.get().getDefaultInstance()),
+    OBSIDIAN_CHESTPLATE(Config.REQUIRED_LEVEL_OBSIDIAN_CHESTPLATE.get(), ModItems.OBSIDIAN_CHESTPLATE.get().getDefaultInstance()),
+    OBSIDIAN_LEGGINGS(Config.REQUIRED_LEVEL_OBSIDIAN_LEGGINGS.get(), ModItems.OBSIDIAN_LEGGINGS.get().getDefaultInstance()),
+    OBSIDIAN_BOOTS(Config.REQUIRED_LEVEL_OBSIDIAN_BOOTS.get(), ModItems.OBSIDIAN_BOOTS.get().getDefaultInstance()),
+    REINFORCED_DIAMOND_HELMET(Config.REQUIRED_LEVEL_REINFORCED_DIAMOND_HELMET.get(), ModItems.REINFORCED_DIAMOND_HELMET.get().getDefaultInstance()),
+    REINFORCED_DIAMOND_CHESTPLATE(Config.REQUIRED_LEVEL_REINFORCED_DIAMOND_CHESTPLATE.get(), ModItems.REINFORCED_DIAMOND_CHESTPLATE.get().getDefaultInstance()),
+    REINFORCED_DIAMOND_LEGGINGS(Config.REQUIRED_LEVEL_REINFORCED_DIAMOND_LEGGINGS.get(), ModItems.REINFORCED_DIAMOND_LEGGINGS.get().getDefaultInstance()),
+    REINFORCED_DIAMOND_BOOTS(Config.REQUIRED_LEVEL_REINFORCED_DIAMOND_BOOTS.get(), ModItems.REINFORCED_DIAMOND_BOOTS.get().getDefaultInstance()),
+    REINFORCED_NETHERITE_HELMET(Config.REQUIRED_LEVEL_REINFORCED_NETHERITE_HELMET.get(), ModItems.REINFORCED_NETHERITE_HELMET.get().getDefaultInstance()),
+    REINFORCED_NETHERITE_CHESTPLATE(Config.REQUIRED_LEVEL_REINFORCED_NETHERITE_CHESTPLATE.get(), ModItems.REINFORCED_NETHERITE_CHESTPLATE.get().getDefaultInstance()),
+    REINFORCED_NETHERITE_LEGGINGS(Config.REQUIRED_LEVEL_REINFORCED_NETHERITE_LEGGINGS.get(), ModItems.REINFORCED_NETHERITE_LEGGINGS.get().getDefaultInstance()),
+    REINFORCED_NETHERITE_BOOTS(Config.REQUIRED_LEVEL_REINFORCED_NETHERITE_BOOTS.get(), ModItems.REINFORCED_NETHERITE_BOOTS.get().getDefaultInstance());
+
+    final int level;
+    final ItemStack stack;
+
+    RequiredLevels(int level, ItemStack stack) {
+        this.level = level;
+        this.stack = stack;
+    }
+
+    public int get() {
+        return level;
+    }
+
+    public ItemStack getStack() {
+        return stack;
+    }
+}

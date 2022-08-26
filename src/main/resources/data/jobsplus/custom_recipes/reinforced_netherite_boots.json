@@ -1,0 +1,19 @@
+{
+  "id": "jobsplus:reinforced_netherite_boots",
+  "key": {
+    "B": {
+      "item": "minecraft:netherite_block"
+    },
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "pattern": [
+    "     ",
+    "     ",
+    " D D ",
+    " B B ",
+    "     "
+  ],
+  "job": "SMITH"
+}

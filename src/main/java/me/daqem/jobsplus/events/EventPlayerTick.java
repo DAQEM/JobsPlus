@@ -29,7 +29,7 @@ public class EventPlayerTick {
                 int tick = levelUpHashMap.get(serverPlayer);
                 levelUpHashMap.put(serverPlayer, tick + 1);
                 if (tick == 0) {
-                    HotbarMessageHandler.sendHotbarMessage(serverPlayer, ChatColor.boldGreen() + "LEVEL UP!");
+                    HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, ChatColor.boldGreen() + "LEVEL UP!");
                 }
                 if (tick == 5) {
                     SoundHandler.playLevelUpSound(serverPlayer, 0.5F, 2F);

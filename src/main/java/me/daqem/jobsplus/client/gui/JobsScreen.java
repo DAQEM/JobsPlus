@@ -38,7 +38,6 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class JobsScreen extends Screen {
 
@@ -599,7 +598,9 @@ public class JobsScreen extends Screen {
             } else if (activeRightButton == 3) {
                 drawnBigJobTitle(poseStack);
                 drawCenteredStringNew(poseStack, font, ChatFormatting.STRIKETHROUGH + "             ", centerR, startY + 47, 16777215);
-                IntStream.range(1, 10).forEach(n -> drawCenteredStringNew(poseStack, font, getTCText("exp", n), centerR, startY + 50 + (n * 10), getTCTextColor("exp", n)));
+                for (int i = 1; i < 10; ++i) {
+                    drawCenteredStringNew(poseStack, font, getTCText("exp", i), centerR, startY + 50 + (i * 10), getTCTextColor("exp", i));
+                }
                 poseStack.pushPose();
                 poseStack.scale(1.2F, 1.2F, 1.2F);
                 drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.exp.title").getString(), (int) ((centerR) / 1.2), (int) ((startY + 37) / 1.2), 16777215);

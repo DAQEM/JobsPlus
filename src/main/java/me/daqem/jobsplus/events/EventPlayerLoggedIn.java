@@ -2,13 +2,18 @@ package me.daqem.jobsplus.events;
 
 import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.handlers.AdvancementHandler;
+import me.daqem.jobsplus.handlers.ModPacketHandler;
+import me.daqem.jobsplus.packet.PacketSendCraftingData;
 import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.JobItemEntryHelper;
 import me.daqem.jobsplus.utils.JobSetters;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Objects;
 
@@ -37,6 +42,13 @@ public class EventPlayerLoggedIn {
                 serverPlayer.refreshTabListName();
             }
         } catch (Exception ignored) {
+        }
+    }
+
+    @SubscribeEvent
+    public void onClientJoinLevel(EntityJoinLevelEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketSendCraftingData(JobItemEntryHelper.toTag()));
         }
     }
 }

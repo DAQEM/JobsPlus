@@ -7,12 +7,7 @@ import net.minecraft.world.level.block.Block;
 
 public class BlockItemBase extends BlockItem {
 
-
     public BlockItemBase(Block block) {
         super(block, new Item.Properties().tab(JobsPlus.TAB));
-    }
-
-    public BlockItemBase(Block block, Item.Properties properties) {
-        super(block, properties);
     }
 }

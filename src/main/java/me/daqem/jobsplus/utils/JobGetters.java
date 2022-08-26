@@ -3,9 +3,12 @@ package me.daqem.jobsplus.utils;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
+import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import me.daqem.jobsplus.utils.enums.RequiredLevels;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -97,20 +100,6 @@ public class JobGetters {
             }
         }
         return count;
-    }
-
-    public static int getVerification(Player player, CapType capType) {
-        AtomicInteger atomicInteger = new AtomicInteger(0);
-        player.getCapability(ModCapabilityImpl.MOD_CAPABILITY).ifPresent(handler -> atomicInteger.set(handler.getVerification()[capType.get()]));
-        return atomicInteger.get();
-    }
-
-    public static boolean noVerificationEnabled(Player player) {
-        if (getVerification(player, CapType.START_VERIFICATION_FREE) == 1) return false;
-        if (getVerification(player, CapType.START_VERIFICATION_PAID) == 1) return false;
-        if (getVerification(player, CapType.STOP_VERIFICATION_FREE) == 1) return false;
-        if (getVerification(player, CapType.STOP_VERIFICATION_PAID) == 1) return false;
-        return getVerification(player, CapType.POWER_UP_VERIFICATION) != 1;
     }
 
     public static int getDisplay(Player player) {
@@ -236,5 +225,21 @@ public class JobGetters {
 
     public static int getLevelUpChatSetting(Player player) {
         return getAllSettings(player)[2];
+    }
+
+
+    public static int getRequiredLevelForStack(ItemStack stack) {
+        for (RequiredLevels value : RequiredLevels.values()) {
+            if (value.getStack().equals(stack, true)) {
+                return value.get();
+            }
+        }
+        return 100;
+    }
+
+    public static ItemStack getExperienceBottleItemStack(int tier) {
+        ItemStack stack = ModItems.EXPERIENCE_BOTTLE.get().getDefaultInstance();
+        stack.getOrCreateTag().putInt("tier", tier);
+        return stack;
     }
 }

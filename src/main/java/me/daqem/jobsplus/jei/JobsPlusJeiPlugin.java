@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.jei;
 
+import me.daqem.jobsplus.common.container.construction.ConstructionScreen;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.init.ModPotions;
 import mezz.jei.api.IModPlugin;
@@ -9,6 +10,7 @@ import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.resources.ResourceLocation;
@@ -210,5 +212,10 @@ public class JobsPlusJeiPlugin implements IModPlugin {
     @Override
     public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
         JobsPlusJeiPlugin.jeiRuntime = jeiRuntime;
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGuiContainerHandler(ConstructionScreen.class, new ScreenJEIHandler());
     }
 }

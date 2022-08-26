@@ -50,15 +50,17 @@ public class BuilderEvents {
                     }
                     if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWER_UP2.get())) {
                         for (ItemStack item : player.getInventory().items) {
-                            if (!Objects.equals(item.getItem(), Items.AIR)) {
+                            if (item.getItem() != Items.AIR) {
                                 if (item.getItem() instanceof BackpackItem) {
                                     BackpackSavedData data = BackpackItem.getData(item);
                                     for (int i = 0; i < Objects.requireNonNull(data).getHandler().getSlots(); ++i) {
                                         ItemStack itemInBackpack = data.getHandler().getStackInSlot(i);
 
-                                        if (itemInBackpack.getItem() == player.getInventory().getSelected().getItem()) {
+                                        Item item1 = player.getInventory().getSelected().getItem();
+                                        if (item1 == Items.AIR) item1 = player.getOffhandItem().getItem();
+                                        if (itemInBackpack.getItem() == item1) {
                                             if (!giveBlockBack(player, state)) {
-                                                itemInBackpack.setCount(itemInBackpack.getCount() - 1);
+                                                data.getHandler().extractItem(i, 1, false);
                                             }
                                             giveItemBack(player, block);
                                             return;

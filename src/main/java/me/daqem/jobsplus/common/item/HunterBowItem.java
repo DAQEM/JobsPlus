@@ -76,7 +76,7 @@ public class HunterBowItem extends BowItem {
                 if (!isAllowedToUseBow) f = 0.1F;
                 if (!isAllowedToUseBow)
                     if (!level.isClientSide)
-                        HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+                        HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
                 if (!((double) f < 0.1D)) {
                     boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem) itemstack.getItem()).isInfinite(itemstack, stack, player));
                     if (!level.isClientSide) {

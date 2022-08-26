@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.init;
 
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.common.block.BlockItemBase;
 import me.daqem.jobsplus.common.item.*;
 import me.daqem.jobsplus.utils.enums.Backpack;
 import me.daqem.jobsplus.utils.enums.ItemTiers;
@@ -15,6 +16,8 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModItems {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, JobsPlus.MOD_ID);
+
+    public static final RegistryObject<Item> CONSTRUCTION_TABLE = ITEMS.register("construction_table", () -> new BlockItemBase(ModBlocks.CONSTRUCTION_TABLE.get()));
 
     public static final RegistryObject<Item> SMALL_BACKPACK = ITEMS.register("small_backpack", () -> new BackpackItem("small_backpack", Backpack.SMALL));
     public static final RegistryObject<Item> MEDIUM_BACKPACK = ITEMS.register("medium_backpack", () -> new BackpackItem("medium_backpack", Backpack.MEDIUM));
@@ -54,7 +57,7 @@ public class ModItems {
     public static final RegistryObject<Item> DIGGERS_EXCAVATOR_LEVEL_2 = ITEMS.register("diggers_excavator_level_2", () -> new ExcavatorItem(ItemTiers.LEVEL_2, 2, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> DIGGERS_EXCAVATOR_LEVEL_3 = ITEMS.register("diggers_excavator_level_3", () -> new ExcavatorItem(ItemTiers.LEVEL_3, 3, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.RARE)));
     public static final RegistryObject<Item> DIGGERS_EXCAVATOR_LEVEL_4 = ITEMS.register("diggers_excavator_level_4", () -> new ExcavatorItem(ItemTiers.LEVEL_4, 3, -3F, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
-    //
+
     public static final RegistryObject<Item> REINFORCED_IRON_HELMET = ITEMS.register("reinforced_iron_helmet", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_IRON, EquipmentSlot.HEAD, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
     public static final RegistryObject<Item> REINFORCED_IRON_CHESTPLATE = ITEMS.register("reinforced_iron_chestplate", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_IRON, EquipmentSlot.CHEST, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
     public static final RegistryObject<Item> REINFORCED_IRON_LEGGINGS = ITEMS.register("reinforced_iron_leggings", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_IRON, EquipmentSlot.LEGS, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.COMMON)));
@@ -72,7 +75,4 @@ public class ModItems {
     public static final RegistryObject<Item> REINFORCED_NETHERITE_LEGGINGS = ITEMS.register("reinforced_netherite_leggings", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_NETHERITE, EquipmentSlot.LEGS, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
     public static final RegistryObject<Item> REINFORCED_NETHERITE_BOOTS = ITEMS.register("reinforced_netherite_boots", () -> new ModArmorItem(ModArmorMaterials.REINFORCED_NETHERITE, EquipmentSlot.FEET, new Item.Properties().tab(JobsPlus.TAB).rarity(Rarity.EPIC)));
 
-//    public static final RegistryObject<Item> LEVEL_25_TROPHY = ITEMS.register("level_25_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_25_TROPHY.get(), new Item.Properties().rarity(Rarity.UNCOMMON)));
-//    public static final RegistryObject<Item> LEVEL_50_TROPHY = ITEMS.register("level_50_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_50_TROPHY.get(), new Item.Properties().rarity(Rarity.RARE)));
-//    public static final RegistryObject<Item> LEVEL_100_TROPHY = ITEMS.register("level_100_trophy", () -> new BlockItemBase(ModBlocks.LEVEL_100_TROPHY.get(), new Item.Properties().rarity(Rarity.EPIC)));
 }

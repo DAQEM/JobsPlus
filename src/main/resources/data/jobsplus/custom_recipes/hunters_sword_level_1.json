@@ -1,0 +1,22 @@
+{
+  "id": "jobsplus:hunters_sword_level_1",
+  "key": {
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "     ",
+    "  D  ",
+    " IDI ",
+    "  S  ",
+    "     "
+  ],
+  "job": "HUNTER"
+}

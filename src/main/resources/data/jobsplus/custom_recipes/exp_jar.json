@@ -1,0 +1,22 @@
+{
+  "id": "jobsplus:exp_jar",
+  "key": {
+    "A": {
+      "item": "minecraft:glass"
+    },
+    "B": {
+      "item": "minecraft:emerald"
+    },
+    "C": {
+      "item": "minecraft:oak_planks"
+    }
+  },
+  "pattern": [
+    "     ",
+    " CCC ",
+    " ABA ",
+    " AAA ",
+    "     "
+  ],
+  "job": "ENCHANTER"
+}

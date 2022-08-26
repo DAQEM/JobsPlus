@@ -1,0 +1,25 @@
+{
+  "id": "jobsplus:miners_hammer_level_3",
+  "key": {
+    "B": {
+      "item": "minecraft:diamond_block"
+    },
+    "H": {
+      "item": "jobsplus:miners_hammer_level_2"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "     ",
+    " NHN ",
+    " BSB ",
+    "  S  ",
+    "     "
+  ],
+  "job": "MINER"
+}

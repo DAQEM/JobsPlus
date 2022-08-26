@@ -54,7 +54,7 @@ public class FarmersHoeItem extends HoeItem {
             } else {
                 orCreateTag.putInt("mode", 0);
             }
-            HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + getModeString(stack));
+            HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + getModeString(stack));
             SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
         }
         return super.use(level, player, hand);

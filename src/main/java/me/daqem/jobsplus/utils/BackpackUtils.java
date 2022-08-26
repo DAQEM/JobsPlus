@@ -1,13 +1,12 @@
 package me.daqem.jobsplus.utils;
 
-import com.mojang.brigadier.context.CommandContext;
-import me.daqem.jobsplus.common.container.backpack.BackpackHandler;
 import me.daqem.jobsplus.common.item.BackpackItem;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 public class BackpackUtils {
 
@@ -23,14 +22,5 @@ public class BackpackUtils {
             return Optional.of(stack.getTag().getUUID("UUID"));
         else
             return Optional.empty();
-    }
-
-    public static Set<String> getUUIDSuggestions(CommandContext<CommandSourceStack> commandSource) {
-        BackpackHandler backpacks = BackpackHandler.get();
-        Set<String> list = new HashSet<>();
-
-        backpacks.getMap().forEach((uuid, backpackData) -> list.add(uuid.toString()));
-
-        return list;
     }
 }

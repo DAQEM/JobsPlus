@@ -1,0 +1,25 @@
+{
+  "id": "jobsplus:hunters_bow_level_4",
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_block"
+    },
+    "E": {
+      "item": "jobsplus:hunters_bow_level_3"
+    },
+    "I": {
+      "item": "minecraft:emerald_block"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "     ",
+    "  IS ",
+    " DES ",
+    "  IS ",
+    "     "
+  ],
+  "job": "HUNTER"
+}

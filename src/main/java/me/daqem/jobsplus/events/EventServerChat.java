@@ -1,20 +1,7 @@
 package me.daqem.jobsplus.events;
 
-import me.daqem.jobsplus.Config;
-import me.daqem.jobsplus.JobsPlus;
-import me.daqem.jobsplus.capability.ModCapabilityImpl;
-import me.daqem.jobsplus.handlers.BossBarHandler;
-import me.daqem.jobsplus.handlers.ChatHandler;
-import me.daqem.jobsplus.utils.ChatColor;
-import me.daqem.jobsplus.utils.JobGetters;
-import me.daqem.jobsplus.utils.JobSetters;
-import me.daqem.jobsplus.utils.enums.CapType;
-import me.daqem.jobsplus.utils.enums.Jobs;
-import net.minecraft.network.chat.*;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -22,7 +9,7 @@ public class EventServerChat {
 
     @SubscribeEvent
     public void onPlayerChat(ServerChatEvent event) {
-        if (ModList.get().isLoaded("ftbranks")) return;
+//        if (ModList.get().isLoaded("ftbranks")) return;
 
         //Isn't working becuase of the new 1.19 Message Signatures.
 
@@ -30,9 +17,7 @@ public class EventServerChat {
 //        if (event.getPlayer() != null) {
 //            Player player = event.getPlayer();
 //            if (Config.FORMAT_CHAT.get()) {
-//                JobsPlus.LOGGER.error("format");
 //                if (JobGetters.getDisplay(player) == 0) {
-//                    JobsPlus.LOGGER.error("format1");
 //                    event.setComponent(Component.keybind(ChatColor.gray() + player.getScoreboardName() +
 //                            ChatColor.darkGray() + " > " + ChatColor.white() + event.getMessage()));
 //                } else {

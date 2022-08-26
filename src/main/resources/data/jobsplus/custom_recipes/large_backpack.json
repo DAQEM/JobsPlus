@@ -1,0 +1,22 @@
+{
+  "id": "jobsplus:large_backpack",
+  "key": {
+    "B": {
+      "item": "jobsplus:medium_backpack"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "pattern": [
+    "     ",
+    " DLD ",
+    " LBL ",
+    " DLD ",
+    "     "
+  ],
+  "job": "BUILDER"
+}
