@@ -19,6 +19,7 @@ import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.runtime.IRecipesGui;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
@@ -37,6 +38,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class JobsScreen extends Screen {
@@ -211,15 +214,21 @@ public class JobsScreen extends Screen {
 //.BBBBBBBBBB..........UUUUUUU............TTTT............TTTT............OOOOOO..........NNNN...NNNN........SSSSSSSS....
 
     public void renderButtons(PoseStack poseStack, int mouseX, int mouseY, int p_99345_, int something, int occurrences) {
-        if (isBetween(mouseX, mouseY, 3, height - 20, 18, height - 4)) {
-            poseStack.pushPose();
+        //SETTINGS
+        if (isBetween(mouseX, mouseY, 3, height - 20, 18, height - 4))
             RenderSystem.setShaderColor(0.8F, 0.8F, 0.8F, 1);
-            blit(poseStack, 3, height - 20, 276, 166, 16, 16, 362, 362);
-            RenderSystem.setShaderColor(1F, 1F, 1F, 1);
-            poseStack.popPose();
-        } else {
-            blit(poseStack, 3, height - 20, 276, 166, 16, 16, 362, 362);
-        }
+        blit(poseStack, 3, height - 20, 276, 166, 16, 16, 362, 362);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+
+        //DISCORD
+        if (isBetween(mouseX, mouseY, width - 19, height - 20, width - 4, height - 5))
+            RenderSystem.setShaderColor(0.8F, 0.8F, 0.8F, 1);
+        poseStack.pushPose();
+        poseStack.scale(0.5F, 0.5F, 0.5F);
+        blit(poseStack, width * 2 - 38, height * 2 - 40, 276 + 16, 166, 32, 32, 362, 362);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+        poseStack.popPose();
+
         // JOB BUTTONS
         if (activeLeftButton == 0) {
             for (int i = this.startIndex; i < occurrences && i < Jobs.values().length; ++i) {
@@ -672,6 +681,15 @@ public class JobsScreen extends Screen {
         //SETTINGS
         if (isBetween(mouseX, mouseY, 3, height - 20, 19, height - 4)) {
             ModPacketHandler.INSTANCE.sendToServer(new PacketUserSettingsServer("MAIN"));
+        }
+
+        //DISCORD
+        if (isBetween(mouseX, mouseY, width - 19, height - 20, width - 4, height - 5)) {
+            try {
+                Util.getPlatform().openUri(new URI("https://daqem.com/discord"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         this.scrolling = false;

@@ -38,6 +38,7 @@ public class JobItemEntryHelper {
 
     public static ArrayList<ItemStack> getStacksForJob(Jobs job, ArrayList<JobItemEntry> list) {
         ArrayList<ItemStack> list1 = new ArrayList<>();
+        list.sort(Comparator.comparing(JobItemEntry::getRecipeID));
         list.sort(Comparator.comparing(JobItemEntry::getRequiredLevel));
         for (JobItemEntry entry : list) {
             if (entry.getJob() == job) list1.add(entry.getStack());

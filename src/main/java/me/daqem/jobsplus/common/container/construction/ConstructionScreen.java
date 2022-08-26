@@ -6,6 +6,7 @@ import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.SideProxy;
 import me.daqem.jobsplus.client.gui.JobsScreen;
 import me.daqem.jobsplus.client.renderer.RenderColor;
+import me.daqem.jobsplus.handlers.ItemHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.handlers.ModPacketHandler;
 import me.daqem.jobsplus.init.ModItems;
@@ -576,10 +577,9 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
                 final ItemStack inMenu = this.getShowRecipe().get(i - 36);
                 final ItemStack fromPlayer = this.menu.getSlot(i).getItem();
                 if (inMenu.getItem() == fromPlayer.getItem()) {
-                    if (fromPlayer.getItem().getDefaultInstance().equals(inMenu, true)
+                    if (ItemHandler.equalsIgnoreCount(fromPlayer.getItem().getDefaultInstance(), inMenu, false)
                             || (inMenu.getTag() == null && fromPlayer.getTag() == null)
-                            || fromPlayer.equals(inMenu, true)) {
-
+                            || ItemHandler.equalsIgnoreCount(fromPlayer, inMenu, false)) {
                         correct++;
                     }
                 }
@@ -591,4 +591,6 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     @Override
     protected void renderBg(@NotNull PoseStack poseStack, float partialTicks, int x, int y) {
     }
+
+
 }

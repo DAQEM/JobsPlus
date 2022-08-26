@@ -1,5 +1,7 @@
 package me.daqem.jobsplus.packet;
 
+import me.daqem.jobsplus.handlers.ItemHandler;
+import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobItemEntryHelper;
 import me.daqem.jobsplus.utils.enums.Jobs;
@@ -63,9 +65,7 @@ public record PacketCraftItem(ItemStack stack, boolean bulk, String job) {
                     int correct = 0;
                     for (int i = 36; i < 36 + 25; i++) {
                         final ItemStack item = containerMenu.getSlot(i).getItem();
-                        if (recipe.get(i - 36).equals(item.getItem().getDefaultInstance(), true)
-                                || (recipe.get(i - 36).getTag() == null && item.getTag() == null)
-                                || recipe.get(i - 36).equals(item, true)) {
+                        if (isCraftable(recipe, i, item)) {
                             ++correct;
                         }
                     }
@@ -75,9 +75,7 @@ public record PacketCraftItem(ItemStack stack, boolean bulk, String job) {
                             for (int i = 36; i < 36 + 25; i++) {
                                 final ItemStack item = containerMenu.getSlot(i).getItem();
                                 if (item.getItem() != Items.AIR) {
-                                    if (recipe.get(i - 36).equals(item.getItem().getDefaultInstance(), true)
-                                            || (recipe.get(i - 36).getTag() == null && item.getTag() == null)
-                                            || recipe.get(i - 36).equals(item, true)) {
+                                    if (isCraftable(recipe, i, item)) {
                                         if ((stack.getItem().getClass() == item.getItem().getClass())
                                                 && recipe.get(i - 36).equals(item.getItem().getDefaultInstance(), true)) {
                                             stack.setTag(item.getTag());
@@ -87,6 +85,9 @@ public record PacketCraftItem(ItemStack stack, boolean bulk, String job) {
                                         } else {
                                             item.setCount(item.getCount() - 1);
                                             containerMenu.setItem(i, containerMenu.getStateId(), item);
+                                        }
+                                        if (item.is(ModItems.EXP_JAR.get())) {
+                                            stack.setTag(item.getTag());
                                         }
                                     }
                                 }
@@ -101,5 +102,11 @@ public record PacketCraftItem(ItemStack stack, boolean bulk, String job) {
         }
         //TODO Check if items are correct
         context.get().setPacketHandled(true);
+    }
+
+    private static boolean isCraftable(ArrayList<ItemStack> recipe, int i, ItemStack item) {
+        return ItemHandler.equalsIgnoreCount(recipe.get(i - 36), item.getItem().getDefaultInstance(), false)
+                || (recipe.get(i - 36).getTag() == null && item.getTag() == null)
+                || ItemHandler.equalsIgnoreCount(recipe.get(i - 36), item, false);
     }
 }

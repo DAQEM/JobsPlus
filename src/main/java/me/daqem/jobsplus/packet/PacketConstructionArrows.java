@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.packet;
 
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.utils.JobItemEntry;
 import me.daqem.jobsplus.utils.JobItemEntryHelper;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,6 +15,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.function.Supplier;
 
 public record PacketConstructionArrows(boolean left, String job, int selectedButtonRight, boolean bulk) {
@@ -38,7 +40,10 @@ public record PacketConstructionArrows(boolean left, String job, int selectedBut
             ServerPlayer player = context.get().getSender();
             if (player != null && player.getServer() != null) {
                 if (left) {
-                    ArrayList<ItemStack> recipe = JobItemEntryHelper.getRecipe(JobItemEntryHelper.getStacksForJob(job, JobItemEntryHelper.getItemEntriesAsArrayList()).get(selectedButtonRight), JobItemEntryHelper.getItemEntriesAsArrayList());
+                    ArrayList<JobItemEntry> itemEntriesAsArrayList = JobItemEntryHelper.getItemEntriesAsArrayList();
+                    itemEntriesAsArrayList.sort(Comparator.comparing(JobItemEntry::getRequiredLevel));
+                    ArrayList<ItemStack> recipe = JobItemEntryHelper.getRecipe(JobItemEntryHelper.getStacksForJob(job, itemEntriesAsArrayList).get(selectedButtonRight), itemEntriesAsArrayList);
+                    JobsPlus.LOGGER.error(JobItemEntryHelper.getStacksForJob(job, itemEntriesAsArrayList).get(selectedButtonRight));
                     for (int l = 0; l < (bulk ? 64 : 1); ++l) {
                         ArrayList<Item> list = new ArrayList<>();
                         for (ItemStack invItem : player.getInventory().items) {
@@ -46,7 +51,7 @@ public record PacketConstructionArrows(boolean left, String job, int selectedBut
                                 for (int i = 0; i < recipe.size(); ++i) {
                                     ItemStack recipeItem = recipe.get(i);
                                     if (!invItem.is(Items.AIR)) {
-                                        if (invItem.is(recipeItem.getItem())) {
+                                        if (invItem.is(recipeItem.getItem()) && (invItem.getTag() == null && recipeItem.getTag() == null)) {
                                             ItemStack containerItem = player.containerMenu.getSlot(i + 36).getItem();
                                             if (!containerItem.is(recipeItem.getItem())) {
                                                 player.containerMenu.quickMoveStack(player, player.containerMenu.getSlot(i + 36).getContainerSlot() + 36);

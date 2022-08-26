@@ -73,4 +73,12 @@ public class ItemHandler {
     public static void addFreshItemEntity(Level level, BlockPos pos, Item item) {
         level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, item.getDefaultInstance()));
     }
+
+    public static boolean equalsIgnoreCount(ItemStack self, ItemStack other, boolean limitTags) {
+        if (self.isEmpty())
+            return other.isEmpty();
+        else
+            return !other.isEmpty() && self.getItem() == other.getItem() &&
+                    (limitTags ? self.areShareTagsEqual(other) : ItemStack.tagMatches(self, other));
+    }
 }
