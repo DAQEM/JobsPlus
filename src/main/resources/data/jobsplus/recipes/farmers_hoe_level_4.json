@@ -1,0 +1,29 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:farmers_hoe_level_4"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_block"
+    },
+    "E": {
+      "item": "jobsplus:farmers_hoe_level_3"
+    },
+    "I": {
+      "item": "minecraft:emerald_block"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "     ",
+    " DII ",
+    " DE  ",
+    "  S  ",
+    "     "
+  ],
+  "job": "FARMER",
+  "requiredLevel": 75
+}

@@ -1,0 +1,26 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:miners_hammer_level_1"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "     ",
+    " DBD ",
+    " BSB ",
+    "  S  ",
+    "     "
+  ],
+  "job": "MINER",
+  "requiredLevel": 5
+}

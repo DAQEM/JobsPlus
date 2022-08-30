@@ -1,0 +1,26 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:hunters_bow_level_1"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "     ",
+    "  IS ",
+    " D S ",
+    "  IS ",
+    "     "
+  ],
+  "job": "HUNTER",
+  "requiredLevel": 5
+}

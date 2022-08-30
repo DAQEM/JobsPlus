@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.handlers;
 
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.common.packet.*;
 import me.daqem.jobsplus.packet.*;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.network.NetworkRegistry;
@@ -28,9 +29,6 @@ public class ModPacketHandler {
         INSTANCE.registerMessage(++id, PacketBossBarr.class, PacketBossBarr::encode, PacketBossBarr::decode, PacketBossBarr::handle);
         INSTANCE.registerMessage(++id, PacketSwitchSuperpower.class, PacketSwitchSuperpower::encode, PacketSwitchSuperpower::decode, PacketSwitchSuperpower::handle);
         INSTANCE.registerMessage(++id, PacketMenuPowerUp.class, PacketMenuPowerUp::encode, PacketMenuPowerUp::decode, PacketMenuPowerUp::handle);
-        INSTANCE.registerMessage(++id, PacketCraftItem.class, PacketCraftItem::encode, PacketCraftItem::decode, PacketCraftItem::handle);
-        INSTANCE.registerMessage(++id, PacketSendCraftingData.class, PacketSendCraftingData::encode, PacketSendCraftingData::decode, PacketSendCraftingData::handle);
-        INSTANCE.registerMessage(++id, PacketConstructionArrows.class, PacketConstructionArrows::encode, PacketConstructionArrows::decode, PacketConstructionArrows::handle);
     }
 
     public static void sendPowerUpPacket(String str, LocalPlayer player) {

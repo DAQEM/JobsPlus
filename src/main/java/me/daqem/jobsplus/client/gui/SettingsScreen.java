@@ -2,8 +2,8 @@ package me.daqem.jobsplus.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.daqem.jobsplus.handlers.ModPacketHandler;
-import me.daqem.jobsplus.packet.PacketOpenMenu;
-import me.daqem.jobsplus.packet.PacketUserSettingsServer;
+import me.daqem.jobsplus.common.packet.PacketOpenMenu;
+import me.daqem.jobsplus.common.packet.PacketUserSettingsServer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;

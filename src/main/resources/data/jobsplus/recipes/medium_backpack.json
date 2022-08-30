@@ -1,0 +1,26 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:medium_backpack"
+  },
+  "key": {
+    "B": {
+      "item": "jobsplus:small_backpack"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "pattern": [
+    "     ",
+    " GLG ",
+    " LBL ",
+    " GLG ",
+    "     "
+  ],
+  "job": "BUILDER",
+  "requiredLevel": 15
+}

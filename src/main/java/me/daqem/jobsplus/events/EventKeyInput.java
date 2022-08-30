@@ -3,7 +3,7 @@ package me.daqem.jobsplus.events;
 import me.daqem.jobsplus.SideProxy.Client;
 import me.daqem.jobsplus.client.gui.JobsScreen;
 import me.daqem.jobsplus.handlers.ModPacketHandler;
-import me.daqem.jobsplus.packet.PacketOpenMenu;
+import me.daqem.jobsplus.common.packet.PacketOpenMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;

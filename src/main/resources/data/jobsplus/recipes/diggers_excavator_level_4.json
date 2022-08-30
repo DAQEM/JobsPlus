@@ -1,0 +1,29 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:diggers_excavator_level_4"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_block"
+    },
+    "E": {
+      "item": "jobsplus:diggers_excavator_level_3"
+    },
+    "I": {
+      "item": "minecraft:emerald_block"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "     ",
+    "  DI ",
+    "  ED ",
+    " S   ",
+    "     "
+  ],
+  "job": "DIGGER",
+  "requiredLevel": 75
+}

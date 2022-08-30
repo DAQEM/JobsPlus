@@ -1,0 +1,26 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:reinforced_netherite_chestplate"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:netherite_block"
+    },
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "pattern": [
+    "     ",
+    " N N ",
+    " BDB ",
+    " BBB ",
+    "     "
+  ],
+  "job": "SMITH",
+  "requiredLevel": 100
+}

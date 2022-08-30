@@ -1,7 +1,7 @@
 package me.daqem.jobsplus.utils;
 
-import me.daqem.jobsplus.capability.ModCapabilityImpl;
-import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
+import me.daqem.jobsplus.common.capability.ModCapabilityImpl;
+import me.daqem.jobsplus.common.capability.SuperPowerCapabilityImpl;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.server.level.ServerPlayer;

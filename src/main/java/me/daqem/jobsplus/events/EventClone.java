@@ -1,7 +1,7 @@
 package me.daqem.jobsplus.events;
 
-import me.daqem.jobsplus.capability.ModCapabilityImpl;
-import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
+import me.daqem.jobsplus.common.capability.ModCapabilityImpl;
+import me.daqem.jobsplus.common.capability.SuperPowerCapabilityImpl;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 public class EventClone {

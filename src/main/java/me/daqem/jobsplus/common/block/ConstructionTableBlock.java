@@ -1,6 +1,6 @@
 package me.daqem.jobsplus.common.block;
 
-import me.daqem.jobsplus.common.container.construction.ConstructionMenu;
+import me.daqem.jobsplus.common.inventory.ConstructionMenu;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.Jobs;

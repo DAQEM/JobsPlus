@@ -1,9 +1,9 @@
 package me.daqem.jobsplus.events;
 
-import me.daqem.jobsplus.capability.ModCapabilityImpl;
-import me.daqem.jobsplus.capability.ModCapabilityProvider;
-import me.daqem.jobsplus.capability.SuperPowerCapabilityImpl;
-import me.daqem.jobsplus.capability.SuperPowerCapabilityProvider;
+import me.daqem.jobsplus.common.capability.ModCapabilityImpl;
+import me.daqem.jobsplus.common.capability.ModCapabilityProvider;
+import me.daqem.jobsplus.common.capability.SuperPowerCapabilityImpl;
+import me.daqem.jobsplus.common.capability.SuperPowerCapabilityProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.AttachCapabilitiesEvent;

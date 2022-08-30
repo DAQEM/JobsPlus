@@ -1,0 +1,26 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:obsidian_chestplate"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:obsidian"
+    },
+    "D": {
+      "item": "minecraft:diamond_block"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "pattern": [
+    "     ",
+    " N N ",
+    " BDB ",
+    " BBB ",
+    "     "
+  ],
+  "job": "SMITH",
+  "requiredLevel": 20
+}

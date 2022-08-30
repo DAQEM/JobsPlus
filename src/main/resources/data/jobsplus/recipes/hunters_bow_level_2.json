@@ -1,0 +1,29 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:hunters_bow_level_2"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "E": {
+      "item": "jobsplus:hunters_bow_level_1"
+    },
+    "I": {
+      "item": "minecraft:gold_block"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "     ",
+    "  IS ",
+    " DES ",
+    "  IS ",
+    "     "
+  ],
+  "job": "HUNTER",
+  "requiredLevel": 25
+}

@@ -1,6 +1,6 @@
 package me.daqem.jobsplus.jei;
 
-import me.daqem.jobsplus.common.container.construction.ConstructionScreen;
+import me.daqem.jobsplus.client.gui.ConstructionScreen;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import net.minecraft.client.renderer.Rect2i;
 import org.jetbrains.annotations.NotNull;

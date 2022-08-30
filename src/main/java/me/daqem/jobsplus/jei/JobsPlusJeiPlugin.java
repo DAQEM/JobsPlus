@@ -1,18 +1,22 @@
 package me.daqem.jobsplus.jei;
 
-import me.daqem.jobsplus.common.container.construction.ConstructionScreen;
+import me.daqem.jobsplus.client.gui.ConstructionScreen;
+import me.daqem.jobsplus.common.crafting.ConstructionRecipe;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.init.ModPotions;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.ModIds;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -22,11 +26,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @JeiPlugin
 public class JobsPlusJeiPlugin implements IModPlugin {
 
+    public static RecipeType<ConstructionRecipe> CONSTRUCTION_TYPE = new RecipeType<>(ConstructionCategory.UID, ConstructionRecipe.class);
     private static IJeiRuntime jeiRuntime;
 
     public static Optional<IJeiRuntime> getJeiRuntime() {
@@ -197,11 +203,19 @@ public class JobsPlusJeiPlugin implements IModPlugin {
     }
 
     @Override
+    public void registerCategories(IRecipeCategoryRegistration registration) {
+        registration.addRecipeCategories(new ConstructionCategory(registration.getJeiHelpers().getGuiHelper()));
+    }
+
+    @Override
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
         IVanillaRecipeFactory factory = registration.getVanillaRecipeFactory();
 
         addPotionRecipes(registration, factory);
         addAnvilRecipes(registration, factory);
+
+        List<ConstructionRecipe> recipesTutorialTableCrafting = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager().getAllRecipesFor(ConstructionRecipe.Type.INSTANCE);
+        registration.addRecipes(CONSTRUCTION_TYPE, recipesTutorialTableCrafting);
     }
 
     @Override
@@ -218,4 +232,5 @@ public class JobsPlusJeiPlugin implements IModPlugin {
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addGuiContainerHandler(ConstructionScreen.class, new ScreenJEIHandler());
     }
+
 }

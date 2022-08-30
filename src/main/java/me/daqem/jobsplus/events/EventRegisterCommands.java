@@ -1,6 +1,6 @@
 package me.daqem.jobsplus.events;
 
-import me.daqem.jobsplus.command.JobCommand;
+import me.daqem.jobsplus.common.command.JobCommand;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

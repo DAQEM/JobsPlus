@@ -5,6 +5,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.client.renderer.RenderColor;
+import me.daqem.jobsplus.common.packet.*;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.handlers.ModPacketHandler;
@@ -12,7 +14,6 @@ import me.daqem.jobsplus.init.ModEffects;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.init.ModPotions;
 import me.daqem.jobsplus.jei.JobsPlusJeiPlugin;
-import me.daqem.jobsplus.packet.*;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import mezz.jei.api.recipe.IFocus;
@@ -197,6 +198,11 @@ public class JobsScreen extends Screen {
                 }
             }
         }
+        if (activeRightButton == 1) {
+            if (getItemStack(mouseX, mouseY) != ItemStack.EMPTY) {
+                super.renderTooltip(poseStack, getItemStack(mouseX, mouseY).copy(), mouseX + startX, mouseY + startY);
+            }
+        }
     }
 
 //.BBBBBBBBBB........UUUU...UUUU.......TTTTTTTTTTT.....TTTTTTTTTTT.......OOOOOOO..........NNNN...NNNN........SSSSSSS.....
@@ -218,7 +224,7 @@ public class JobsScreen extends Screen {
         if (isBetween(mouseX, mouseY, 3, height - 20, 18, height - 4))
             RenderSystem.setShaderColor(0.8F, 0.8F, 0.8F, 1);
         blit(poseStack, 3, height - 20, 276, 166, 16, 16, 362, 362);
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+        RenderColor.normal();
 
         //DISCORD
         if (isBetween(mouseX, mouseY, width - 19, height - 20, width - 4, height - 5))
@@ -226,7 +232,7 @@ public class JobsScreen extends Screen {
         poseStack.pushPose();
         poseStack.scale(0.5F, 0.5F, 0.5F);
         blit(poseStack, width * 2 - 38, height * 2 - 40, 276 + 16, 166, 32, 32, 362, 362);
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+        RenderColor.normal();
         poseStack.popPose();
 
         // JOB BUTTONS
@@ -277,7 +283,7 @@ public class JobsScreen extends Screen {
                 poseStack.pushPose();
                 RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
                 blitThis(poseStack, posX, -22, 142, activeLeftButton == i ? imageHeight + 22 : imageHeight, 26, 22);
-                RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+                RenderColor.normal();
                 poseStack.popPose();
             } else {
                 blitThis(poseStack, posX, -22, 142, activeLeftButton == i ? imageHeight + 22 : imageHeight, 26, 22);
@@ -291,7 +297,7 @@ public class JobsScreen extends Screen {
                 poseStack.pushPose();
                 RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
                 blitThis(poseStack, posX, -22, 142, activeRightButton == i ? imageHeight + 22 : imageHeight, 26, 22);
-                RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+                RenderColor.normal();
                 poseStack.popPose();
             } else {
                 blitThis(poseStack, posX, -22, 142, activeRightButton == i ? imageHeight + 22 : imageHeight, 26, 22);
@@ -353,49 +359,33 @@ public class JobsScreen extends Screen {
         }
         // JOB START AND STOP BUTTONS
         if (activeRightButton == 0) {
-            if (getSelectedJobLevel() == 0) {
+            if (getSelectedJobLevel() == 0 || jobId != -1) {
                 if (isBetween(mouseX - startX, mouseY - startY, 169, 132, 169 + 138, 132 + 17)) {
-                    poseStack.pushPose();
                     RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
-                    blitThis(poseStack, 150 + 19, 132, 26, imageHeight + 105, 139, 18);
-                    RenderSystem.setShaderColor(1F, 1F, 1F, 1);
-                    poseStack.popPose();
                 } else {
                     RenderSystem.setShaderColor(0.9F, 0.9F, 0.9F, 1);
-                    blitThis(poseStack, 150 + 19, 132, 26, imageHeight + 105, 139, 18);
-                    RenderSystem.setShaderColor(1F, 1F, 1F, 1);
                 }
-            } else if (jobId != -1) {
-                if (isBetween(mouseX - startX, mouseY - startY, 169, 132, 169 + 138, 132 + 17)) {
-                    poseStack.pushPose();
-                    RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
-                    blitThis(poseStack, 150 + 19, 132, 26, imageHeight + 105, 139, 18);
-                    RenderSystem.setShaderColor(1F, 1F, 1F, 1);
-                    poseStack.popPose();
-                } else {
-                    RenderSystem.setShaderColor(0.9F, 0.9F, 0.9F, 1);
-                    blitThis(poseStack, 150 + 19, 132, 26, imageHeight + 105, 139, 18);
-                    RenderSystem.setShaderColor(1F, 1F, 1F, 1);
-                }
+                blitThis(poseStack, 150 + 19, 132, 26, imageHeight + 105, 139, 18);
+                RenderColor.normal();
+
             }
             // CRAFTING RECIPE BUTTONS
         } else if (activeRightButton == 1) {
             if (jobId != -1) {
-                ArrayList<Integer> jobItemAmounts = new ArrayList<>(Arrays.asList(23, 5, 4, 3, 4, 4, 9, 4, 4, 16));
-                int itemsAmount = jobItemAmounts.get(jobId);
-                for (int i = 0; i < itemsAmount; ++i) {
+                for (int i = 0; i < Arrays.asList(23, 5, 4, 3, 4, 4, 9, 4, 4, 16).get(jobId); ++i) {
                     int xOffset = 172 + i % 5 * 27;
-                    int l = i / 5;
-                    int yOffset = 16 + l * 27 + 2;
+                    int yOffset = 18 + (i / 5) * 27;
                     if (isBetween(mouseX - startX, mouseY - startY, xOffset, yOffset, xOffset + 23, yOffset + 23)) {
-                        poseStack.pushPose();
                         RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
-                        blitThis(poseStack, xOffset, yOffset, 142, 210, 24, 24);
-                        RenderSystem.setShaderColor(1F, 1F, 1F, 1);
-                        poseStack.popPose();
-                    } else {
-                        blitThis(poseStack, xOffset, yOffset, 142, 210, 24, 24);
                     }
+                    blitThis(poseStack, xOffset, yOffset, 142, 210, 24, 24);
+                    RenderColor.normal();
+                }
+                //CONSTRUCTION TABLE
+                if (jobId != 0) {
+                    blitThis(poseStack, 158, imageHeight, 150, 136, 100, 30);
+                    blitThis(poseStack, 218, imageHeight, 226, 136, 100, 30);
+                    blitThis(poseStack, 162, 167, 142, 210, 24, 24);
                 }
             }
         } else if (activeRightButton == 2) {
@@ -417,7 +407,7 @@ public class JobsScreen extends Screen {
                     }
                 }
                 blitThis(poseStack, 150 + 19, 27, 26, imageHeight + 105, 139, 18);
-                RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+                RenderColor.normal();
                 //POWER-UP 2
                 if (array[21 + (jobId * 3) + 2] == 1) {
                     RenderSystem.setShaderColor(0.5F, 1F, 0.5F, 1);
@@ -435,7 +425,7 @@ public class JobsScreen extends Screen {
                     }
                 }
                 blitThis(poseStack, 150 + 19, 52, 26, imageHeight + 105, 139, 18);
-                RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+                RenderColor.normal();
                 //POWER-UP 3
                 if (array[21 + (jobId * 3) + 3] == 1) {
                     RenderSystem.setShaderColor(0.5F, 1F, 0.5F, 1);
@@ -453,7 +443,7 @@ public class JobsScreen extends Screen {
                     }
                 }
                 blitThis(poseStack, 150 + 19, 77, 26, imageHeight + 105, 139, 18);
-                RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+                RenderColor.normal();
                 //SUPERPOWER
                 if (array[(jobId * 2)] == 100) {
                     if (array[52 + jobId] == 0) {
@@ -473,7 +463,7 @@ public class JobsScreen extends Screen {
                     }
                 }
                 blitThis(poseStack, 150 + 19, 130, 26, imageHeight + 105, 139, 18);
-                RenderSystem.setShaderColor(1F, 1F, 1F, 1);
+                RenderColor.normal();
             }
         }
         if (jobId != -1) {
@@ -592,6 +582,8 @@ public class JobsScreen extends Screen {
                 }
             } else if (activeRightButton == 1) {
                 drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.crafting").getString(), centerR, startY + 6, 16777215);
+                font.draw(poseStack, ChatColor.darkGray() + "Craft the items using", startX + 189, startY + 171, 16777215);
+                font.draw(poseStack, ChatColor.darkGray() + "the Construction Table.", startX + 189, startY + 181, 16777215);
             } else if (activeRightButton == 2) {
                 drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.powerups.powerups").getString(), centerR, startY + 6, 16777215);
                 drawCenteredStringNew(poseStack, font, ChatColor.gray() + Component.translatable("jobsplus.gui.powerups.cost").getString(), centerR, startY + 16, 16777215);
@@ -608,7 +600,7 @@ public class JobsScreen extends Screen {
                 drawnBigJobTitle(poseStack);
                 drawCenteredStringNew(poseStack, font, ChatFormatting.STRIKETHROUGH + "             ", centerR, startY + 47, 16777215);
                 for (int i = 1; i < 10; ++i) {
-                    drawCenteredStringNew(poseStack, font, getTCText("exp", i), centerR, startY + 50 + (i * 10), getTCTextColor("exp", i));
+                    drawCenteredStringNew(poseStack, font, getTCText(i), centerR, startY + 50 + (i * 10), getTCTextColor(i));
                 }
                 poseStack.pushPose();
                 poseStack.scale(1.2F, 1.2F, 1.2F);
@@ -671,6 +663,10 @@ public class JobsScreen extends Screen {
                 else
                     itemRenderer.renderAndDecorateItem(Items.NAME_TAG.getDefaultInstance(), startX + 327, startY + 11);
             }
+            //CONSTRUCTION TABLE
+            if (jobId != 0 && activeRightButton == 1) {
+                itemRenderer.renderAndDecorateItem(ModItems.CONSTRUCTION_TABLE.get().getDefaultInstance(), startX + 166, startY + 171);
+            }
         }
     }
 
@@ -689,6 +685,17 @@ public class JobsScreen extends Screen {
                 Util.getPlatform().openUri(new URI("https://daqem.com/discord"));
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
+            }
+        }
+
+        //CONSTRUCTION TABLE
+        if (jobId != 0 && activeRightButton == 1) {
+            if (isBetween(mouseX, mouseY, startX + 162, startY + 168, startX + 162 + 24, startY + 168 + 23)) {
+                JobsPlusJeiPlugin.getJeiRuntime().ifPresent(jeiRuntime ->
+                        jeiRuntime.getRecipesGui().show(jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(
+                                RecipeIngredientRole.OUTPUT,
+                                jeiRuntime.getIngredientManager().getIngredientType(ModItems.CONSTRUCTION_TABLE.get().getDefaultInstance()),
+                                ModItems.CONSTRUCTION_TABLE.get().getDefaultInstance())));
             }
         }
 
@@ -827,193 +834,11 @@ public class JobsScreen extends Screen {
             }
             // CRAFTING RECIPES
             if (activeRightButton == 1) {
-                ItemStack itemStack = ItemStack.EMPTY;
-                mouseX = mouseX - 150D;
-                int COL_1_XT = 22, COL_1_XB = 46, ROW_1_YT = 18, ROW_1_YB = 42,
-                        COL_2_XT = 49, COL_2_XB = 73, ROW_2_YT = 45, ROW_2_YB = 69,
-                        COL_3_XT = 76, COL_3_XB = 100, ROW_3_YT = 72, ROW_3_YB = 96,
-                        COL_4_XT = 103, COL_4_XB = 127, ROW_4_YT = 99, ROW_4_YB = 123,
-                        COL_5_XT = 130, COL_5_XB = 154, ROW_5_YT = 126, ROW_5_YB = 150;
-
-                if (jobId == 0) {
-                    final ItemStack potion = Items.POTION.getDefaultInstance();
-                    if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.EXTRA_STRONG_SWIFTNESS.get());
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_EXTRA_STRONG_SWIFTNESS.get());
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.SUPER_STRONG_SWIFTNESS.get());
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_SUPER_STRONG_SWIFTNESS.get());
-                    } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_1_YT, COL_5_XB, ROW_1_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.HASTE.get());
-                    } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_2_YT, COL_1_XB, ROW_2_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_HASTE.get());
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_2_YT, COL_2_XB, ROW_2_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.STRONG_HASTE.get());
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_2_YT, COL_3_XB, ROW_2_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_STRONG_HASTE.get());
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_2_YT, COL_4_XB, ROW_2_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.EXTRA_STRONG_STRENGTH.get());
-                    } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_2_YT, COL_5_XB, ROW_2_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_EXTRA_STRONG_STRENGTH.get());
-                    } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_3_YT, COL_1_XB, ROW_3_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.SUPER_STRONG_STRENGTH.get());
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_3_YT, COL_2_XB, ROW_3_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_SUPER_STRONG_STRENGTH.get());
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_3_YT, COL_3_XB, ROW_3_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_STRONG_REGENERATION.get());
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_3_YT, COL_4_XB, ROW_3_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.EXTRA_LONG_STRONG_REGENERATION.get());
-                    } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_3_YT, COL_5_XB, ROW_3_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.EXTRA_STRONG_REGENERATION.get());
-                    } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_4_YT, COL_1_XB, ROW_4_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LUCK.get());
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_4_YT, COL_2_XB, ROW_4_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_LUCK.get());
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_4_YT, COL_3_XB, ROW_4_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.STRONG_LUCK.get());
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_4_YT, COL_4_XB, ROW_4_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_STRONG_LUCK.get());
-                    } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_4_YT, COL_5_XB, ROW_4_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.JESUS.get());
-                    } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_5_YT, COL_1_XB, ROW_5_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_JESUS.get());
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_5_YT, COL_2_XB, ROW_5_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.FLYING.get());
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_5_YT, COL_3_XB, ROW_5_YB)) {
-                        itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_FLYING.get());
-                    }
-                } else if (jobId == 1) {
-                    if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
-                        itemStack = ModItems.SMALL_BACKPACK.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
-                        itemStack = ModItems.MEDIUM_BACKPACK.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
-                        itemStack = ModItems.LARGE_BACKPACK.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
-                        itemStack = ModItems.HUGE_BACKPACK.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_1_YT, COL_5_XB, ROW_1_YB)) {
-                        itemStack = ModItems.ENDER_BACKPACK.get().getDefaultInstance();
-                    }
-                } else if (jobId == 2) {
-                    if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
-                        itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_1.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
-                        itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_2.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
-                        itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
-                        itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get().getDefaultInstance();
-                    }
-                } else if (jobId == 3) {
-                    if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
-                        itemStack = ModItems.EXP_JAR.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
-                        itemStack = ModItems.EXPERIENCE_BOTTLE.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
-                        itemStack = ModItems.CURSE_BREAKER.get().getDefaultInstance();
-                    }
-                } else if (jobId == 4) {
-                    if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
-                        itemStack = ModItems.FARMERS_HOE_LEVEL_1.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
-                        itemStack = ModItems.FARMERS_HOE_LEVEL_2.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
-                        itemStack = ModItems.FARMERS_HOE_LEVEL_3.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
-                        itemStack = ModItems.FARMERS_HOE_LEVEL_4.get().getDefaultInstance();
-                    }
-                } else if (jobId == 5) {
-                    if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
-                        itemStack = ModItems.FISHERMANS_ROD_LEVEL_1.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
-                        itemStack = ModItems.FISHERMANS_ROD_LEVEL_2.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
-                        itemStack = ModItems.FISHERMANS_ROD_LEVEL_3.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
-                        itemStack = ModItems.FISHERMANS_ROD_LEVEL_4.get().getDefaultInstance();
-                    }
-                } else if (jobId == 6) {
-                    if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
-                        itemStack = Items.WHITE_WOOL.getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
-                        itemStack = ModItems.HUNTERS_SWORD_LEVEL_1.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
-                        itemStack = ModItems.HUNTERS_SWORD_LEVEL_2.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
-                        itemStack = ModItems.HUNTERS_SWORD_LEVEL_3.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_1_YT, COL_5_XB, ROW_1_YB)) {
-                        itemStack = ModItems.HUNTERS_SWORD_LEVEL_4.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_2_YT, COL_1_XB, ROW_2_YB)) {
-                        itemStack = ModItems.HUNTERS_BOW_LEVEL_1.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_2_YT, COL_2_XB, ROW_2_YB)) {
-                        itemStack = ModItems.HUNTERS_BOW_LEVEL_2.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_2_YT, COL_3_XB, ROW_2_YB)) {
-                        itemStack = ModItems.HUNTERS_BOW_LEVEL_3.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_2_YT, COL_4_XB, ROW_2_YB)) {
-                        itemStack = ModItems.HUNTERS_BOW_LEVEL_4.get().getDefaultInstance();
-                    }
-                } else if (jobId == 7) {
-                    if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
-                        itemStack = ModItems.LUMBERJACK_AXE_LEVEL_1.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
-                        itemStack = ModItems.LUMBERJACK_AXE_LEVEL_2.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
-                        itemStack = ModItems.LUMBERJACK_AXE_LEVEL_3.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
-                        itemStack = ModItems.LUMBERJACK_AXE_LEVEL_4.get().getDefaultInstance();
-                    }
-                } else if (jobId == 8) {
-                    if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
-                        itemStack = ModItems.MINERS_HAMMER_LEVEL_1.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
-                        itemStack = ModItems.MINERS_HAMMER_LEVEL_2.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
-                        itemStack = ModItems.MINERS_HAMMER_LEVEL_3.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
-                        itemStack = ModItems.MINERS_HAMMER_LEVEL_4.get().getDefaultInstance();
-                    }
-                } else if (jobId == 9) {
-                    if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
-                        itemStack = ModItems.REINFORCED_IRON_HELMET.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
-                        itemStack = ModItems.REINFORCED_IRON_CHESTPLATE.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
-                        itemStack = ModItems.REINFORCED_IRON_LEGGINGS.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
-                        itemStack = ModItems.REINFORCED_IRON_BOOTS.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_1_YT, COL_5_XB, ROW_1_YB)) {
-                        itemStack = ModItems.OBSIDIAN_HELMET.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_2_YT, COL_1_XB, ROW_2_YB)) {
-                        itemStack = ModItems.OBSIDIAN_CHESTPLATE.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_2_YT, COL_2_XB, ROW_2_YB)) {
-                        itemStack = ModItems.OBSIDIAN_LEGGINGS.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_2_YT, COL_3_XB, ROW_2_YB)) {
-                        itemStack = ModItems.OBSIDIAN_BOOTS.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_2_YT, COL_4_XB, ROW_2_YB)) {
-                        itemStack = ModItems.REINFORCED_DIAMOND_HELMET.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_2_YT, COL_5_XB, ROW_2_YB)) {
-                        itemStack = ModItems.REINFORCED_DIAMOND_CHESTPLATE.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_3_YT, COL_1_XB, ROW_3_YB)) {
-                        itemStack = ModItems.REINFORCED_DIAMOND_LEGGINGS.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_3_YT, COL_2_XB, ROW_3_YB)) {
-                        itemStack = ModItems.REINFORCED_DIAMOND_BOOTS.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_3_YT, COL_3_XB, ROW_3_YB)) {
-                        itemStack = ModItems.REINFORCED_NETHERITE_HELMET.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_3_YT, COL_4_XB, ROW_3_YB)) {
-                        itemStack = ModItems.REINFORCED_NETHERITE_CHESTPLATE.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_3_YT, COL_5_XB, ROW_3_YB)) {
-                        itemStack = ModItems.REINFORCED_NETHERITE_LEGGINGS.get().getDefaultInstance();
-                    } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_4_YT, COL_1_XB, ROW_4_YB)) {
-                        itemStack = ModItems.REINFORCED_NETHERITE_BOOTS.get().getDefaultInstance();
-                    }
-                }
+                ItemStack itemStack = getItemStack(mouseX, mouseY);
                 if (itemStack != ItemStack.EMPTY) {
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                    ItemStack finalItemStack = itemStack;
                     JobsPlusJeiPlugin.getJeiRuntime().ifPresent(jeiRuntime -> {
-                        IFocus<ItemStack> focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.OUTPUT, jeiRuntime.getIngredientManager().getIngredientType(finalItemStack), finalItemStack);
+                        IFocus<ItemStack> focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.OUTPUT, jeiRuntime.getIngredientManager().getIngredientType(itemStack), itemStack);
 
                         IRecipesGui recipesGui = jeiRuntime.getRecipesGui();
                         recipesGui.show(focus);
@@ -1057,6 +882,192 @@ public class JobsScreen extends Screen {
             }
         }
         return super.mouseClicked(mouseX, mouseY, clickType);
+    }
+
+    private ItemStack getItemStack(double mouseX, double mouseY) {
+        ItemStack itemStack = ItemStack.EMPTY;
+        mouseX = mouseX - 150D;
+        int COL_1_XT = 22, COL_1_XB = 46, ROW_1_YT = 18, ROW_1_YB = 42,
+                COL_2_XT = 49, COL_2_XB = 73, ROW_2_YT = 45, ROW_2_YB = 69,
+                COL_3_XT = 76, COL_3_XB = 100, ROW_3_YT = 72, ROW_3_YB = 96,
+                COL_4_XT = 103, COL_4_XB = 127, ROW_4_YT = 99, ROW_4_YB = 123,
+                COL_5_XT = 130, COL_5_XB = 154, ROW_5_YT = 126, ROW_5_YB = 150;
+
+        if (jobId == 0) {
+            final ItemStack potion = Items.POTION.getDefaultInstance();
+            if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.EXTRA_STRONG_SWIFTNESS.get());
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_EXTRA_STRONG_SWIFTNESS.get());
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.SUPER_STRONG_SWIFTNESS.get());
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_SUPER_STRONG_SWIFTNESS.get());
+            } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_1_YT, COL_5_XB, ROW_1_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.HASTE.get());
+            } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_2_YT, COL_1_XB, ROW_2_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_HASTE.get());
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_2_YT, COL_2_XB, ROW_2_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.STRONG_HASTE.get());
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_2_YT, COL_3_XB, ROW_2_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_STRONG_HASTE.get());
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_2_YT, COL_4_XB, ROW_2_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.EXTRA_STRONG_STRENGTH.get());
+            } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_2_YT, COL_5_XB, ROW_2_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_EXTRA_STRONG_STRENGTH.get());
+            } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_3_YT, COL_1_XB, ROW_3_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.SUPER_STRONG_STRENGTH.get());
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_3_YT, COL_2_XB, ROW_3_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_SUPER_STRONG_STRENGTH.get());
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_3_YT, COL_3_XB, ROW_3_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_STRONG_REGENERATION.get());
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_3_YT, COL_4_XB, ROW_3_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.EXTRA_LONG_STRONG_REGENERATION.get());
+            } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_3_YT, COL_5_XB, ROW_3_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.EXTRA_STRONG_REGENERATION.get());
+            } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_4_YT, COL_1_XB, ROW_4_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LUCK.get());
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_4_YT, COL_2_XB, ROW_4_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_LUCK.get());
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_4_YT, COL_3_XB, ROW_4_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.STRONG_LUCK.get());
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_4_YT, COL_4_XB, ROW_4_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_STRONG_LUCK.get());
+            } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_4_YT, COL_5_XB, ROW_4_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.JESUS.get());
+            } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_5_YT, COL_1_XB, ROW_5_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_JESUS.get());
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_5_YT, COL_2_XB, ROW_5_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.FLYING.get());
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_5_YT, COL_3_XB, ROW_5_YB)) {
+                itemStack = PotionUtils.setPotion(potion, ModPotions.LONG_FLYING.get());
+            }
+        } else if (jobId == 1) {
+            if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
+                itemStack = ModItems.SMALL_BACKPACK.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
+                itemStack = ModItems.MEDIUM_BACKPACK.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
+                itemStack = ModItems.LARGE_BACKPACK.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
+                itemStack = ModItems.HUGE_BACKPACK.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_1_YT, COL_5_XB, ROW_1_YB)) {
+                itemStack = ModItems.ENDER_BACKPACK.get().getDefaultInstance();
+            }
+        } else if (jobId == 2) {
+            if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
+                itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_1.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
+                itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_2.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
+                itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
+                itemStack = ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get().getDefaultInstance();
+            }
+        } else if (jobId == 3) {
+            if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
+                itemStack = ModItems.EXP_JAR.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
+                itemStack = ModItems.EXPERIENCE_BOTTLE.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
+                itemStack = ModItems.CURSE_BREAKER.get().getDefaultInstance();
+            }
+        } else if (jobId == 4) {
+            if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
+                itemStack = ModItems.FARMERS_HOE_LEVEL_1.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
+                itemStack = ModItems.FARMERS_HOE_LEVEL_2.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
+                itemStack = ModItems.FARMERS_HOE_LEVEL_3.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
+                itemStack = ModItems.FARMERS_HOE_LEVEL_4.get().getDefaultInstance();
+            }
+        } else if (jobId == 5) {
+            if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
+                itemStack = ModItems.FISHERMANS_ROD_LEVEL_1.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
+                itemStack = ModItems.FISHERMANS_ROD_LEVEL_2.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
+                itemStack = ModItems.FISHERMANS_ROD_LEVEL_3.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
+                itemStack = ModItems.FISHERMANS_ROD_LEVEL_4.get().getDefaultInstance();
+            }
+        } else if (jobId == 6) {
+            if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
+                itemStack = Items.WHITE_WOOL.getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
+                itemStack = ModItems.HUNTERS_SWORD_LEVEL_1.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
+                itemStack = ModItems.HUNTERS_SWORD_LEVEL_2.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
+                itemStack = ModItems.HUNTERS_SWORD_LEVEL_3.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_1_YT, COL_5_XB, ROW_1_YB)) {
+                itemStack = ModItems.HUNTERS_SWORD_LEVEL_4.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_2_YT, COL_1_XB, ROW_2_YB)) {
+                itemStack = ModItems.HUNTERS_BOW_LEVEL_1.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_2_YT, COL_2_XB, ROW_2_YB)) {
+                itemStack = ModItems.HUNTERS_BOW_LEVEL_2.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_2_YT, COL_3_XB, ROW_2_YB)) {
+                itemStack = ModItems.HUNTERS_BOW_LEVEL_3.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_2_YT, COL_4_XB, ROW_2_YB)) {
+                itemStack = ModItems.HUNTERS_BOW_LEVEL_4.get().getDefaultInstance();
+            }
+        } else if (jobId == 7) {
+            if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
+                itemStack = ModItems.LUMBERJACK_AXE_LEVEL_1.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
+                itemStack = ModItems.LUMBERJACK_AXE_LEVEL_2.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
+                itemStack = ModItems.LUMBERJACK_AXE_LEVEL_3.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
+                itemStack = ModItems.LUMBERJACK_AXE_LEVEL_4.get().getDefaultInstance();
+            }
+        } else if (jobId == 8) {
+            if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
+                itemStack = ModItems.MINERS_HAMMER_LEVEL_1.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
+                itemStack = ModItems.MINERS_HAMMER_LEVEL_2.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
+                itemStack = ModItems.MINERS_HAMMER_LEVEL_3.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
+                itemStack = ModItems.MINERS_HAMMER_LEVEL_4.get().getDefaultInstance();
+            }
+        } else if (jobId == 9) {
+            if (isBetween(mouseX, mouseY, COL_1_XT, ROW_1_YT, COL_1_XB, ROW_1_YB)) {
+                itemStack = ModItems.REINFORCED_IRON_HELMET.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_1_YT, COL_2_XB, ROW_1_YB)) {
+                itemStack = ModItems.REINFORCED_IRON_CHESTPLATE.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_1_YT, COL_3_XB, ROW_1_YB)) {
+                itemStack = ModItems.REINFORCED_IRON_LEGGINGS.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_1_YT, COL_4_XB, ROW_1_YB)) {
+                itemStack = ModItems.REINFORCED_IRON_BOOTS.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_1_YT, COL_5_XB, ROW_1_YB)) {
+                itemStack = ModItems.OBSIDIAN_HELMET.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_2_YT, COL_1_XB, ROW_2_YB)) {
+                itemStack = ModItems.OBSIDIAN_CHESTPLATE.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_2_YT, COL_2_XB, ROW_2_YB)) {
+                itemStack = ModItems.OBSIDIAN_LEGGINGS.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_2_YT, COL_3_XB, ROW_2_YB)) {
+                itemStack = ModItems.OBSIDIAN_BOOTS.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_2_YT, COL_4_XB, ROW_2_YB)) {
+                itemStack = ModItems.REINFORCED_DIAMOND_HELMET.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_2_YT, COL_5_XB, ROW_2_YB)) {
+                itemStack = ModItems.REINFORCED_DIAMOND_CHESTPLATE.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_3_YT, COL_1_XB, ROW_3_YB)) {
+                itemStack = ModItems.REINFORCED_DIAMOND_LEGGINGS.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_2_XT, ROW_3_YT, COL_2_XB, ROW_3_YB)) {
+                itemStack = ModItems.REINFORCED_DIAMOND_BOOTS.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_3_XT, ROW_3_YT, COL_3_XB, ROW_3_YB)) {
+                itemStack = ModItems.REINFORCED_NETHERITE_HELMET.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_4_XT, ROW_3_YT, COL_4_XB, ROW_3_YB)) {
+                itemStack = ModItems.REINFORCED_NETHERITE_CHESTPLATE.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_5_XT, ROW_3_YT, COL_5_XB, ROW_3_YB)) {
+                itemStack = ModItems.REINFORCED_NETHERITE_LEGGINGS.get().getDefaultInstance();
+            } else if (isBetween(mouseX, mouseY, COL_1_XT, ROW_4_YT, COL_1_XB, ROW_4_YB)) {
+                itemStack = ModItems.REINFORCED_NETHERITE_BOOTS.get().getDefaultInstance();
+            }
+        }
+        return itemStack;
     }
 
     public boolean mouseDragged(double mouseX, double mouseY, int clickType, double speedX, double speedY) {
@@ -1136,13 +1147,13 @@ public class JobsScreen extends Screen {
         }
     }
 
-    private String getTCText(String cat, int num) {
-        String[] split = (Component.translatable("jobsplus.gui." + cat + "." + Jobs.getEnglishString(jobId).toLowerCase() + "." + num).getString()).split(">text:");
+    private String getTCText(int num) {
+        String[] split = (Component.translatable("jobsplus.gui.exp." + Jobs.getEnglishString(jobId).toLowerCase() + "." + num).getString()).split(">text:");
         return split.length > 1 ? split[1] : "";
     }
 
-    private int getTCTextColor(String cat, int num) {
-        String replace = (Component.translatable("jobsplus.gui." + cat + "." + Jobs.getEnglishString(jobId).toLowerCase() + "." + num).getString()).split(">text:")[0].replace("color:<", "");
+    private int getTCTextColor(int num) {
+        String replace = (Component.translatable("jobsplus.gui.exp." + Jobs.getEnglishString(jobId).toLowerCase() + "." + num).getString()).split(">text:")[0].replace("color:<", "");
         return isNumeric(replace) ? Integer.parseInt(replace) : 16777215;
     }
 
