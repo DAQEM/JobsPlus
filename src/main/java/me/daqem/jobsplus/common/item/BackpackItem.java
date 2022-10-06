@@ -2,9 +2,9 @@ package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.JobsPlus;
-import me.daqem.jobsplus.handlers.BackpackHandler;
-import me.daqem.jobsplus.common.inventory.BackpackMenu;
 import me.daqem.jobsplus.common.data.BackpackSavedData;
+import me.daqem.jobsplus.common.inventory.BackpackMenu;
+import me.daqem.jobsplus.handlers.BackpackHandler;
 import me.daqem.jobsplus.handlers.BackpackItemHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
@@ -32,9 +32,9 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.NetworkHooks;
 
@@ -149,7 +149,7 @@ public class BackpackItem extends Item {
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            if (cap == ForgeCapabilities.ITEM_HANDLER) {
                 if (!this.optional.isPresent())
                     this.optional = BackpackHandler.get().getCapability(this.stack);
                 return this.optional.cast();

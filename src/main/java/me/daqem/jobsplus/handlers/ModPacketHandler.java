@@ -2,7 +2,6 @@ package me.daqem.jobsplus.handlers;
 
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.packet.*;
-import me.daqem.jobsplus.packet.*;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;

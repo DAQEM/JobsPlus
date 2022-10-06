@@ -4,14 +4,15 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.client.renderer.RenderColor;
-import me.daqem.jobsplus.common.inventory.ConstructionMenu;
 import me.daqem.jobsplus.common.crafting.ConstructionRecipe;
+import me.daqem.jobsplus.common.crafting.ModGhostRecipe;
+import me.daqem.jobsplus.common.crafting.ModPlaceRecipe;
+import me.daqem.jobsplus.common.inventory.ConstructionMenu;
 import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.jei.JobsPlusJeiPlugin;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -20,16 +21,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
-public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu> {
+public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu> implements ModPlaceRecipe {
 
     private static final ResourceLocation TEXTURE = JobsPlus.getId("textures/gui/container/construction_gui.png");
     private static final ResourceLocation NONE = JobsPlus.getId("none");
@@ -37,7 +37,9 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     private static final int menuHeight = 222;
     private final TreeMap<Jobs, int[]> enabledJobsData;
     private final ArrayList<ConstructionRecipe> recipes;
+    private final ModGhostRecipe ghostRecipe = new ModGhostRecipe();
     private ResourceLocation selectedItemStackID;
+    private Recipe<?> selectedRecipe;
     private Jobs selectedJob;
     private boolean scrollingLeft;
     private boolean scrollingRight;
@@ -54,16 +56,10 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     public ConstructionScreen(ConstructionMenu menu, Inventory inventory, Component ignoredTitle) {
         super(menu, inventory, Component.literal("Construction Table"));
 
-        TreeMap<Jobs, int[]> enabledJobsData = new TreeMap<>();
-        for (Jobs job : Jobs.values()) {
-            int[] intArray = menu.getDataTag().getIntArray(job.name());
-            if (intArray.length != 0) enabledJobsData.put(job, intArray);
-        }
-
         ArrayList<ConstructionRecipe> recipes = new ArrayList<>();
         JobsPlusJeiPlugin.getJeiRuntime().ifPresent(iJeiRuntime -> iJeiRuntime.getRecipeManager().createRecipeLookup(JobsPlusJeiPlugin.CONSTRUCTION_TYPE).get().forEach(recipes::add));
         this.recipes = recipes;
-        this.enabledJobsData = enabledJobsData;
+        this.enabledJobsData = generateJobsDataArray(menu);
         this.scrollingLeft = false;
         this.scrollingRight = false;
         this.scrollOffsetLeft = 0;
@@ -73,8 +69,19 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
         this.startIndexLeft = 0;
         this.startIndexRight = 0;
         this.selectedItemStackID = NONE;
+        this.selectedRecipe = null;
         this.selectedJob = Jobs.getJobFromInt(new ArrayList<>(this.enabledJobsData.entrySet()).get(this.selectedButtonLeft).getKey().get());
         this.selectedJobLevel = this.enabledJobsData.get(selectedJob)[0];
+    }
+
+    @NotNull
+    private static TreeMap<Jobs, int[]> generateJobsDataArray(ConstructionMenu menu) {
+        TreeMap<Jobs, int[]> enabledJobsData = new TreeMap<>();
+        for (Jobs job : Jobs.values()) {
+            int[] intArray = menu.getDataTag().getIntArray(job.name());
+            if (intArray.length != 0) enabledJobsData.put(job, intArray);
+        }
+        return enabledJobsData;
     }
 
     private static void sendClickSound() {
@@ -98,9 +105,40 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
         textRenderJobButtons(poseStack, occurrencesLeft);
         textRenderCraftableItems(poseStack, occurrencesRight);
 
+        if (ghostRecipe.getRecipe() != null) ghostRecipe.clear();
+
+        if (selectedRecipe != null) {
+            this.setupGhostRecipe(selectedRecipe, menu.slots);
+            this.renderGhostRecipe(poseStack, this.leftPos, this.topPos, partialTicks);
+        }
+
         super.render(poseStack, x, y, partialTicks);
-        this.renderItems(poseStack);
         this.renderTooltip(poseStack, x, y);
+    }
+
+    private Recipe<?> getRecipe() {
+        Recipe<?> recipe = recipes.get(0);
+        if (!selectedItemStackID.equals(JobsPlus.getId("none"))) {
+            for (ConstructionRecipe constructionRecipe : recipes) {
+                if (constructionRecipe.getId() == selectedItemStackID) {
+                    recipe = constructionRecipe;
+                    break;
+                }
+            }
+        }
+        return recipe;
+    }
+
+    private void setupGhostRecipe(Recipe<?> recipe, List<Slot> slots) {
+        ItemStack itemstack = recipe.getResultItem();
+        this.ghostRecipe.setRecipe(recipe);
+        this.ghostRecipe.addIngredient(Ingredient.of(itemstack), (slots.get(0)).x, (slots.get(0)).y);
+        this.placeRecipe(recipe, this.menu.getGridWidth(), this.menu.getGridHeight(), this.menu.getResultSlotIndex(), recipe.getIngredients());
+    }
+
+    private void renderGhostRecipe(PoseStack poseStack, int leftPos, int topPos, float partialTicks) {
+        if (this.minecraft != null)
+            this.ghostRecipe.render(poseStack, this.minecraft, leftPos, topPos, partialTicks);
     }
 
     @Override
@@ -149,6 +187,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
                     return true;
                 }
                 selectedItemStackID = clickedStack;
+                selectedRecipe = getRecipe();
                 sendClickSound();
                 return true;
             }
@@ -170,6 +209,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
                     this.scrollOffsetRight = 0;
                     this.startIndexRight = 0;
                     this.selectedItemStackID = NONE;
+                    this.selectedRecipe = null;
                     this.selectedButtonRight = -1;
                     this.selectedJobLevel = this.enabledJobsData.get(selectedJob)[0];
                     return true;
@@ -295,29 +335,6 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
         RenderColor.normal();
     }
 
-    private void renderItems(PoseStack poseStack) {
-        int count = 0;
-        if (getRecipe(selectedItemStackID) == null) return;
-        if (selectedJobLevel < getRequiredLevelForID(selectedItemStackID))
-            GuiComponent.fill(poseStack, startX + 135, startY + 13, startX + 18 * 5 + 133, startY + 18 * 5 + 11, 0x30FF0000);
-        for (ItemStack itemStack : getShownRecipeIngredients()) {
-            if (itemStack != ItemStack.EMPTY) {
-                int x1 = startX + (18 * 5) + 45 + count * 18 + (count < 5 ? 0 : count < 10 ? -18 * 5 : count < 15 ? -18 * 10 : count < 20 ? -18 * 15 : -18 * 20);
-                int y1 = startY + 13 + (count < 5 ? 0 : count < 10 ? 18 : count < 15 ? 18 * 2 : count < 20 ? 18 * 3 : 18 * 4);
-                if (!itemStack.equals(menu.getSlot(count + 36).getItem(), true)) {
-                    if (menu.getConstructingSlots().getItem(count) == ItemStack.EMPTY) {
-                        itemRenderer.renderAndDecorateFakeItem(itemStack, x1, y1);
-                        RenderSystem.depthFunc(516);
-                        GuiComponent.fill(poseStack, x1, y1, x1 + 16, y1 + 16, 822083583);
-                        RenderSystem.depthFunc(515);
-                    }
-                }
-            }
-            ++count;
-        }
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-    }
-
     @Override
     protected void renderTooltip(@NotNull PoseStack poseStack, int x, int y) {
         //JOB ITEM LIST
@@ -328,6 +345,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
         for (int o = this.startIndexRight; o < n; ++o) {
             int i1 = o - this.startIndexRight;
             double d0 = l + i1 % 2 * 50;
+            //noinspection IntegerDivisionInFloatingPointContext
             double d1 = m + i1 / 2 * 21;
             if (isBetween(x, y, (int) d0, (int) d1, (int) d0 + 49, (int) d1 + 20)) {
                 ItemStack clickedStack;
@@ -428,18 +446,6 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
         blitThis(poseStack, x + 25, y + 10, 75, 240 + 24, 25, 11);
     }
 
-    private ArrayList<ItemStack> getShownRecipeIngredients() {
-        ArrayList<ItemStack> list = new ArrayList<>();
-        for (ConstructionRecipe recipe : recipes) {
-            if (recipe.getId().equals(this.selectedItemStackID)) {
-                for (Ingredient ingredient : recipe.getIngredients()) {
-                    list.add(ingredient.getItems()[0]);
-                }
-            }
-        }
-        return list;
-    }
-
     private int getRequiredLevelForID(ResourceLocation id) {
         for (ConstructionRecipe recipe : this.recipes) {
             if (recipe.getId().equals(id)) return recipe.getRequiredLevel();
@@ -457,14 +463,16 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
         return list;
     }
 
-    private ConstructionRecipe getRecipe(ResourceLocation id) {
-        for (ConstructionRecipe recipe : recipes) {
-            if (recipe.getId().equals(id)) return recipe;
-        }
-        return null;
+    @Override
+    protected void renderBg(@NotNull PoseStack poseStack, float partialTicks, int x, int y) {
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack poseStack, float partialTicks, int x, int y) {
+    public void addItemToSlot(Iterator<Ingredient> p_135415_, int p_135416_) {
+        Ingredient ingredient = p_135415_.next();
+        if (!ingredient.isEmpty()) {
+            Slot slot = this.menu.slots.get(p_135416_);
+            this.ghostRecipe.addIngredient(ingredient, slot.x, slot.y);
+        }
     }
 }

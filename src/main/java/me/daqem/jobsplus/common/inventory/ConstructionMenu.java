@@ -2,6 +2,7 @@ package me.daqem.jobsplus.common.inventory;
 
 import me.daqem.jobsplus.SideProxy;
 import me.daqem.jobsplus.common.crafting.ConstructionRecipe;
+import me.daqem.jobsplus.common.item.*;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModBlocks;
 import me.daqem.jobsplus.init.ModMenuTypes;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
@@ -26,7 +28,7 @@ import java.util.Optional;
 
 public class ConstructionMenu extends RecipeBookMenu<CraftingContainer> {
 
-    private final CraftingContainer constructingSlots = new CraftingContainer(this, 5, 5);
+    private final CraftingContainer craftSlots = new CraftingContainer(this, 5, 5);
     private final ResultContainer resultSlots = new ResultContainer();
     private final ContainerLevelAccess access;
     private CompoundTag enabledJobsTag;
@@ -46,23 +48,25 @@ public class ConstructionMenu extends RecipeBookMenu<CraftingContainer> {
         super(ModMenuTypes.CONSTRUCTION.get(), containerId);
         this.access = access;
         this.player = inventory.player;
-        this.addSlot(new ResultSlot(inventory.player, this.constructingSlots, this.resultSlots, 0, -40, 130));
-
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(inventory, j + i * 9 + 9, 8 + j * 18, 112 + i * 18));
-            }
-        }
-
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(inventory, i, 8 + i * 18, 170));
-        }
+        this.addSlot(new ResultSlot(inventory.player, this.craftSlots, this.resultSlots, 0, -40, 130));
 
         for (int i = 0; i < 5; ++i) {
             for (int j = 0; j < 5; ++j) {
-                this.addSlot(new Slot(constructingSlots, j + i * 5, 44 + j * 18, 5 + i * 18));
+                this.addSlot(new Slot(craftSlots, j + i * 5, 44 + j * 18, 5 + i * 18));
             }
         }
+
+        for (int k = 0; k < 3; ++k) {
+            for (int i1 = 0; i1 < 9; ++i1) {
+                this.addSlot(new Slot(inventory, i1 + k * 9 + 9, 8 + i1 * 18, 112 + k * 18));
+            }
+        }
+
+        for (int l = 0; l < 9; ++l) {
+            this.addSlot(new Slot(inventory, l, 8 + l * 18, 170));
+        }
+
+
     }
 
     protected static void slotChangedCraftingGrid(AbstractContainerMenu menu, Level level, Player player, CraftingContainer craftingContainer, ResultContainer resultContainer) {
@@ -74,7 +78,9 @@ public class ConstructionMenu extends RecipeBookMenu<CraftingContainer> {
                 ConstructionRecipe constructionRecipe = optional.get();
                 if (resultContainer.setRecipeUsed(level, serverplayer, constructionRecipe)) {
                     if (JobGetters.getJobLevel(player, constructionRecipe.getJob()) >= constructionRecipe.getRequiredLevel()) {
-                        itemstack = constructionRecipe.assemble(craftingContainer);
+                        int i = countItems(craftingContainer);
+                        if (i <= 1) itemstack = constructionRecipe.assemble(craftingContainer);
+                        if (i == 1) itemstack.setTag(getItemTag(craftingContainer));
                     }
                 }
             }
@@ -85,11 +91,35 @@ public class ConstructionMenu extends RecipeBookMenu<CraftingContainer> {
         }
     }
 
+    public static int countItems(CraftingContainer craftingContainer) {
+        int i = 0;
+
+        for (int j = 0; j < craftingContainer.getContainerSize(); ++j) {
+            Item item = craftingContainer.getItem(j).getItem();
+            if (item instanceof BackpackItem || item instanceof ExcavatorItem || item instanceof FarmersHoeItem ||
+                    item instanceof RodItem || item instanceof HunterSwordItem || item instanceof HunterBowItem ||
+                    item instanceof LumberAxeItem || item instanceof HammerItem) {
+                ++i;
+            }
+        }
+        return i;
+    }
+
+    public static CompoundTag getItemTag(CraftingContainer craftingContainer) {
+        for (int j = 0; j < craftingContainer.getContainerSize(); ++j) {
+            Item item = craftingContainer.getItem(j).getItem();
+            if (item instanceof BackpackItem || item instanceof ExcavatorItem || item instanceof FarmersHoeItem ||
+                    item instanceof RodItem || item instanceof HunterSwordItem || item instanceof HunterBowItem ||
+                    item instanceof LumberAxeItem || item instanceof HammerItem) {
+                return craftingContainer.getItem(j).getTag();
+            }
+        }
+        return new CompoundTag();
+    }
+
     @Override
     public void slotsChanged(@NotNull Container container) {
-        this.access.execute((p_39386_, p_39387_) -> {
-            slotChangedCraftingGrid(this, p_39386_, this.player, this.constructingSlots, this.resultSlots);
-        });
+        this.access.execute((p_39386_, p_39387_) -> slotChangedCraftingGrid(this, p_39386_, this.player, this.craftSlots, this.resultSlots));
     }
 
     @Override
@@ -136,31 +166,27 @@ public class ConstructionMenu extends RecipeBookMenu<CraftingContainer> {
     @Override
     public void removed(@NotNull Player player) {
         super.removed(player);
-        this.access.execute((p_39575_, p_39576_) -> this.clearContainer(player, this.constructingSlots));
+        this.access.execute((p_39575_, p_39576_) -> this.clearContainer(player, this.craftSlots));
     }
 
     public CompoundTag getDataTag() {
         return enabledJobsTag;
     }
 
-    public CraftingContainer getConstructingSlots() {
-        return constructingSlots;
-    }
-
     @Override
     public void fillCraftSlotsStackedContents(@NotNull StackedContents stackedContents) {
-        this.constructingSlots.fillStackedContents(stackedContents);
+        this.craftSlots.fillStackedContents(stackedContents);
     }
 
     @Override
     public void clearCraftingContent() {
-        this.constructingSlots.clearContent();
+        this.craftSlots.clearContent();
         this.resultSlots.clearContent();
     }
 
     @Override
     public boolean recipeMatches(@NotNull Recipe<? super CraftingContainer> recipe) {
-        return recipe.matches(this.constructingSlots, this.player.level);
+        return recipe.matches(this.craftSlots, this.player.level);
     }
 
     @Override
@@ -170,12 +196,12 @@ public class ConstructionMenu extends RecipeBookMenu<CraftingContainer> {
 
     @Override
     public int getGridWidth() {
-        return this.constructingSlots.getWidth();
+        return this.craftSlots.getWidth();
     }
 
     @Override
     public int getGridHeight() {
-        return this.constructingSlots.getHeight();
+        return this.craftSlots.getHeight();
     }
 
     @Override

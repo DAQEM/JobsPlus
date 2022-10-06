@@ -26,7 +26,6 @@ public class ConstructionCategory implements IRecipeCategory<ConstructionRecipe>
     public final IDrawable background;
     public final IDrawable icon;
 
-
     public ConstructionCategory(IGuiHelper guiHelper) {
         this.guiHelper = guiHelper;
         this.background = guiHelper.createDrawable(BACKGROUND, 0, 9, 162, 106);

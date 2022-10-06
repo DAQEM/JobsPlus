@@ -46,15 +46,14 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 public class ModFishingHook extends FishingHook {
 
     public static final EntityDataAccessor<Integer> DATA_HOOKED_ENTITY = SynchedEntityData.defineId(ModFishingHook.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> DATA_BITING = SynchedEntityData.defineId(ModFishingHook.class, EntityDataSerializers.BOOLEAN);
-    private final RandomSource syncronizedRandom = RandomSource.create();
     public final int luck;
     public final int lureSpeed;
+    private final RandomSource syncronizedRandom = RandomSource.create();
     public boolean openWater = true;
     public ModFishingHook.FishHookState currentState = ModFishingHook.FishHookState.FLYING;
     public boolean biting;
