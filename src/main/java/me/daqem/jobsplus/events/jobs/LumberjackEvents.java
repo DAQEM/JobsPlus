@@ -39,7 +39,7 @@ public class LumberjackEvents {
         Block block = state.getBlock();
 
         //POWERUP 3 (Get better apples from leaves)
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) {
+        if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP3.get(), true)) {
             if (block == Blocks.OAK_LEAVES || block == Blocks.DARK_OAK_LEAVES) {
                 if (Block.getDrops(state, (ServerLevel) player.getLevel(), event.getPos(), null, player, player.getMainHandItem()).isEmpty()) {
                     double random = Math.random() * 100;
@@ -57,14 +57,14 @@ public class LumberjackEvents {
         Item itemInHand = player.getMainHandItem().getItem();
 
         //POWERUP 2 (Haste II on harvesting logs)
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
+        if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
             player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 50, 1));
         }
 
         if (itemInHand instanceof LumberAxeItem lumberAxeItem) {
 
             //SUPERPOWER (Logs go into your inventory)
-            if (JobGetters.hasSuperPowerEnabled(player, job)) {
+            if (JobGetters.hasSuperPowerEnabled(player, job, true)) {
                 event.setCanceled(true);
                 lumberAxeItem.mineBlock(player.getMainHandItem(), player.getLevel(), state, pos, player);
                 player.getLevel().removeBlock(pos, false);
@@ -76,9 +76,9 @@ public class LumberjackEvents {
             ExpHandler.addEXPLow(player, job);
 
             //POWERUP 1 (A chance to get a double log drop)
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get()) && Math.random() * 100 < 5) {
+            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true) && Math.random() * 100 < 5) {
                 //SUPERPOWER (Logs go into your inventory)
-                if (JobGetters.hasSuperPowerEnabled(player, job))
+                if (JobGetters.hasSuperPowerEnabled(player, job, true))
                     ItemHandler.addItemsToInventoryOrDrop(new ItemStack(block.asItem()), player, player.getLevel(), pos, 0);
                     //NO SUPERPOWER (Logs DON'T go into your inventory)
                 else ItemHandler.addFreshItemEntity(player.getLevel(), pos, block.asItem());

@@ -40,7 +40,7 @@ public record PacketPowerUps(String str, UUID uuid) {
                         MinerEvents.veinMinerArray.remove(uuid);
                         break;
                     case "doublejump":
-                        DoubleJumpEvents.attemptPlayerJump(player, new int[]{JobGetters.hasSuperPowerEnabled(player, Jobs.BUILDER) ? 1 : 0, JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWER_UP3.get()) ? 1 : 0});
+                        DoubleJumpEvents.attemptPlayerJump(player, new int[]{JobGetters.hasSuperPowerEnabled(player, Jobs.BUILDER, true) ? 1 : 0, JobGetters.hasPowerupEnabled(player, Jobs.BUILDER, CapType.POWER_UP3.get(), true) ? 1 : 0});
                         break;
                 }
             }

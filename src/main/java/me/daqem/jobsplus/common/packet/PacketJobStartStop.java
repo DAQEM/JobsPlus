@@ -57,7 +57,7 @@ public record PacketJobStartStop(boolean isStart, Jobs job) {
                     if (JobGetters.getJobLevel(player, job) > Config.JOB_LEVEL_TO_STOP_JOB_FOR_FREE.get()) {
                         JobSetters.removeCoins(player, Config.JOB_STOP_COST.get());
                     }
-                    JobSetters.set(job, player, 0, 0, 0, 0, 0);
+                    JobSetters.resetJob(player, job);
                     BossBarHandler.removeBossBar(player, job);
                     AdvancementHandler.revokeAdvancement(player, job);
                 }

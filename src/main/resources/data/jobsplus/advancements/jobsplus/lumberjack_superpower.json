@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:spruce_log"
+    },
+    "title": "Lumberjack Superpower",
+    "description": "Use the Lumberjack Superpower",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "jobsplus:jobsplus/lumberjack",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 5000
+  }
+}

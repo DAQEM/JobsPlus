@@ -73,9 +73,9 @@ public class DoubleJumpEvents {
     public void onFall(LivingFallEvent event) {
         if (event.getEntity() instanceof Player player) {
             if (player.getLevel().isClientSide) return;
-            if (JobGetters.hasSuperPowerEnabled(player, Jobs.BUILDER)) {
+            if (JobGetters.hasSuperPowerEnabled(player, Jobs.BUILDER, true)) {
                 event.setCanceled(true);
-            } else if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWER_UP3.get())) {
+            } else if (JobGetters.hasPowerupEnabled(player, Jobs.BUILDER, CapType.POWER_UP3.get(), true)) {
                 event.setDistance(event.getDistance() - 3F);
             }
         }

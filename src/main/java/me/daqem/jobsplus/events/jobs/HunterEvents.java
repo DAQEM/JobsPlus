@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
@@ -16,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -93,7 +91,7 @@ public class HunterEvents {
             if (event.getSource().isProjectile()) ExpHandler.addEXPHigh(player, job);
             else ExpHandler.addEXPMid(player, job);
 
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get()) && Math.random() * 100 < 5) {
+            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP3.get(), true) && Math.random() * 100 < 5) {
                 if (entity instanceof Zombie && !(entity instanceof Drowned) && !(entity instanceof ZombieVillager) && !(entity instanceof ZombifiedPiglin))
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.ZOMBIE_HEAD);
                 if (entity instanceof Creeper)
@@ -116,7 +114,7 @@ public class HunterEvents {
                     }
                 }
             }
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
+            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 60, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 60));
             }
@@ -162,9 +160,9 @@ public class HunterEvents {
     @SubscribeEvent
     public void onPlayerTickFurnace(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        if (JobGetters.jobIsEnabled(player, job)) {
-            AbstractContainerMenu containerMenu = player.containerMenu;
-            if (containerMenu instanceof FurnaceMenu || containerMenu instanceof SmokerMenu) {
+        AbstractContainerMenu containerMenu = player.containerMenu;
+        if (containerMenu instanceof FurnaceMenu || containerMenu instanceof SmokerMenu) {
+            if (JobGetters.jobIsEnabled(player, job)) {
                 for (Slot slot : containerMenu.slots) {
                     if (!(slot.container instanceof Inventory)) {
                         ItemStack item = slot.getItem();
@@ -213,7 +211,7 @@ public class HunterEvents {
     public void onEat(LivingEntityUseItemEvent.Finish event) {
         if (!event.getItem().isEdible()) return;
         if (event.getEntity() instanceof Player player) {
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
+            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) {
                 final Item item = event.getItem().getItem();
                 if (item == Items.COOKED_BEEF || item == Items.COOKED_CHICKEN || item == Items.COOKED_MUTTON
                         || item == Items.COOKED_RABBIT || item == Items.COOKED_PORKCHOP
@@ -230,7 +228,7 @@ public class HunterEvents {
     @SubscribeEvent
     public void onDamage(LivingHurtEvent event) {
         if (!(event.getSource().getEntity() instanceof Player player)) return;
-        if (!JobGetters.hasSuperPowerEnabled(player, job)) return;
+        if (!JobGetters.hasSuperPowerEnabled(player, job, true)) return;
 
         event.setAmount((float) (event.getAmount() * 1.25));
     }
@@ -239,7 +237,7 @@ public class HunterEvents {
     public void onArrowShoot(ArrowLooseEvent event) {
         if (event.getLevel().isClientSide) return;
         Player player = event.getEntity();
-        if (!JobGetters.hasSuperPowerEnabled(player, job)) return;
+        if (!JobGetters.hasSuperPowerEnabled(player, job, true)) return;
         if (EnchantmentHelper.getTagEnchantmentLevel(Enchantments.MULTISHOT, event.getBow()) != 0) return;
 
         float power = BowItem.getPowerForTime(event.getCharge());

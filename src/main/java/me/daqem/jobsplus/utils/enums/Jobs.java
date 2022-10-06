@@ -39,19 +39,19 @@ public enum Jobs {
     }
 
     public static int getJobInt(Jobs job) {
-        int value = job.get();
-        for (Jobs jobs : Jobs.values()) {
-            if (value == jobs.get()) {
-                return value;
+        int jobId = job.get();
+        for (Jobs forJob : Jobs.values()) {
+            if (jobId == forJob.get()) {
+                return jobId;
             }
         }
-        return value;
+        return jobId;
     }
 
-    public static Jobs getJobFromInt(int job) {
-        for (Jobs jobs : Jobs.values()) {
-            if (job == jobs.get()) {
-                return jobs;
+    public static Jobs getJobFromInt(int jobId) {
+        for (Jobs job : Jobs.values()) {
+            if (jobId == job.get()) {
+                return job;
             }
         }
         return null;

@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "jobsplus:obsidian_chestplate"
+    },
+    "title": "Smith Powerup 3",
+    "description": "Use the third Smith Powerup",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "jobsplus:jobsplus/smith",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 2500
+  }
+}

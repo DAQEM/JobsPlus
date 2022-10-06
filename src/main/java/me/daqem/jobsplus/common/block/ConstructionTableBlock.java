@@ -59,7 +59,7 @@ public class ConstructionTableBlock extends CraftingTableBlock {
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter blockGetter, @NotNull List<Component> components, @NotNull TooltipFlag flag) {
-        components.add(Component.literal(ChatColor.red() + "Currently in development."));
+        components.add(Component.literal(ChatColor.green() + "Used to craft Jobs+ items."));
         super.appendHoverText(stack, blockGetter, components, flag);
     }
 

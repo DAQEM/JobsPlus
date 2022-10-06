@@ -53,28 +53,10 @@ public class AdvancementHandler {
     }
 
     public static void grandJobAdvancement(ServerPlayer player, Jobs job, String str) {
-        if (job == Jobs.ALCHEMIST) AdvancementHandler.grand(player, "alchemist" + str);
-        else if (job == Jobs.BUILDER) AdvancementHandler.grand(player, "builder" + str);
-        else if (job == Jobs.DIGGER) AdvancementHandler.grand(player, "digger" + str);
-        else if (job == Jobs.ENCHANTER) AdvancementHandler.grand(player, "enchanter" + str);
-        else if (job == Jobs.FARMER) AdvancementHandler.grand(player, "farmer" + str);
-        else if (job == Jobs.FISHERMAN) AdvancementHandler.grand(player, "fisherman" + str);
-        else if (job == Jobs.HUNTER) AdvancementHandler.grand(player, "hunter" + str);
-        else if (job == Jobs.LUMBERJACK) AdvancementHandler.grand(player, "lumberjack" + str);
-        else if (job == Jobs.MINER) AdvancementHandler.grand(player, "miner" + str);
-        else if (job == Jobs.SMITH) AdvancementHandler.grand(player, "smith" + str);
+        AdvancementHandler.grand(player, job.name().toLowerCase() + str);
     }
 
     public static void revokeAdvancement(ServerPlayer player, Jobs job) {
-        if (job == Jobs.ALCHEMIST) AdvancementHandler.revoke(player, "alchemist");
-        else if (job == Jobs.BUILDER) AdvancementHandler.revoke(player, "builder");
-        else if (job == Jobs.DIGGER) AdvancementHandler.revoke(player, "digger");
-        else if (job == Jobs.ENCHANTER) AdvancementHandler.revoke(player, "enchanter");
-        else if (job == Jobs.FARMER) AdvancementHandler.revoke(player, "farmer");
-        else if (job == Jobs.FISHERMAN) AdvancementHandler.revoke(player, "fisherman");
-        else if (job == Jobs.HUNTER) AdvancementHandler.revoke(player, "hunter");
-        else if (job == Jobs.LUMBERJACK) AdvancementHandler.revoke(player, "lumberjack");
-        else if (job == Jobs.MINER) AdvancementHandler.revoke(player, "miner");
-        else if (job == Jobs.SMITH) AdvancementHandler.revoke(player, "smith");
+        AdvancementHandler.revoke(player, job.name().toLowerCase());
     }
 }

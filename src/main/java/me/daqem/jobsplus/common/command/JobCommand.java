@@ -180,7 +180,7 @@ public class JobCommand {
 
     private static int setLevel(CommandSourceStack source, Player target, Jobs job, int level) {
         if (source.getEntity() instanceof Player player) {
-            if (level == 0) JobSetters.set(job, target, 0, 0, 0, 0, 0);
+            if (level == 0) JobSetters.resetJob(player, job);
             ChatHandler.sendMessage(player, ChatHandler.header("SET LEVEL"));
             ChatHandler.sendMessage(player, ChatColor.green() + "Set " + target.getScoreboardName() + "s " +
                     ChatHandler.capitalizeWord(job.toString().toLowerCase()) + "-level to " + level);

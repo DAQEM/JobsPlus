@@ -36,9 +36,9 @@ public class EnchanterEvents {
     @SubscribeEvent
     public void onEnchant(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        if (JobGetters.jobIsEnabled(player, job)) {
-            AbstractContainerMenu containerMenu = player.containerMenu;
-            if (containerMenu instanceof EnchantmentMenu) {
+        AbstractContainerMenu containerMenu = player.containerMenu;
+        if (containerMenu instanceof EnchantmentMenu) {
+            if (JobGetters.jobIsEnabled(player, job)) {
                 int lapisCount = containerMenu.getSlot(1).getItem().getCount();
                 if (multiMap.containsKey(player)) {
                     if (containerMenu.getSlot(0).getItem().isEnchanted() || containerMenu.getSlot(0).getItem().getOrCreateTag().contains("StoredEnchantments")) {
@@ -57,7 +57,7 @@ public class EnchanterEvents {
                             }
                             multiMap.remove(player);
                             final ItemStack enchantedItem = containerMenu.getSlot(0).getItem();
-                            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
+                            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
                                 if (enchantedItem.isEnchanted() || enchantedItem.is(Items.ENCHANTED_BOOK)) {
                                     Map<Enchantment, Integer> newMap = new HashMap<>();
                                     for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(enchantedItem).entrySet()) {
@@ -100,7 +100,7 @@ public class EnchanterEvents {
 
     @SubscribeEvent
     public void onPlayerEXPPickup(PlayerXpEvent.PickupXp event) {
-        if (JobGetters.hasEnabledPowerup(event.getEntity(), Jobs.ENCHANTER, CapType.POWER_UP3.get())) {
+        if (JobGetters.hasPowerupEnabled(event.getEntity(), Jobs.ENCHANTER, CapType.POWER_UP3.get(), true)) {
             event.getOrb().value = event.getOrb().value * 2;
         }
     }
@@ -108,9 +108,9 @@ public class EnchanterEvents {
     @SubscribeEvent
     public void onPlayerTickGrindstone(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
-            AbstractContainerMenu containerMenu = player.containerMenu;
-            if (containerMenu instanceof GrindstoneMenu grindstoneMenu) {
+        AbstractContainerMenu containerMenu = player.containerMenu;
+        if (containerMenu instanceof GrindstoneMenu grindstoneMenu) {
+            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) {
                 final Slot slot = grindstoneMenu.getSlot(2);
                 final ItemStack item = slot.getItem();
                 Map<Enchantment, Integer> map = new HashMap<>();
@@ -132,7 +132,7 @@ public class EnchanterEvents {
         if (!(left.getDescriptionId().contains("item.minecraft.") || right.getDescriptionId().contains("item.minecraft.")
                 || left.getDescriptionId().contains("item.jobsplus.") || right.getDescriptionId().contains("item.jobsplus.")))
             return;
-        if (!JobGetters.hasSuperPowerEnabled(event.getPlayer(), job) || left.isEmpty() || right.isEmpty()) return;
+        if (!JobGetters.hasSuperPowerEnabled(event.getPlayer(), job, true) || left.isEmpty() || right.isEmpty()) return;
         if (left.getItem() != right.getItem()) return;
 
         final Map<Enchantment, Integer> leftEnchantments = EnchantmentHelper.getEnchantments(left);

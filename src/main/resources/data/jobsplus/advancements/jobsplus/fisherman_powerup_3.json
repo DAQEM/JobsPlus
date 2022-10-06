@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "jobsplus:fishermans_rod_level_2"
+    },
+    "title": "Fisherman Powerup 3",
+    "description": "Use the third Fisherman Powerup",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "jobsplus:jobsplus/fisherman",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 2500
+  }
+}

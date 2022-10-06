@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:golden_carrot"
+    },
+    "title": "Farmer Powerup 2",
+    "description": "Use the second Farmer Powerup",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "jobsplus:jobsplus/farmer",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 2500
+  }
+}

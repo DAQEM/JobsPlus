@@ -66,7 +66,7 @@ public class FarmersHoeEvents {
                             Block block = state.getBlock();
                             if (block instanceof CropBlock cropBlock) {
                                 if (cropBlock.isMaxAge(state)) {
-                                    if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
+                                    if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
                                         if (Math.random() * 100 < 10) {
                                             if (block == Blocks.WHEAT) {
                                                 dropBetterItem(player, level, blockPos, Items.HAY_BLOCK, itemUsed);
@@ -94,7 +94,7 @@ public class FarmersHoeEvents {
                                 }
                             }
                             if (block == Blocks.MELON || block == Blocks.PUMPKIN) {
-                                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
+                                if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
                                     if (block == Blocks.MELON) {
                                         if (Math.random() * 100 < 10) {
                                             dropBetterItem(player, level, blockPos, Items.GLISTERING_MELON_SLICE, itemUsed);
@@ -229,8 +229,8 @@ public class FarmersHoeEvents {
 
     public void dropHandler(ItemStack drop, Player player, Level level, BlockPos blockPos) {
         dropItems(drop, player, level, blockPos);
-        if (JobGetters.hasSuperPowerEnabled(player, Jobs.FARMER)) dropItems(drop, player, level, blockPos);
-        if (Math.random() * 100 < 20 && JobGetters.hasEnabledPowerup(player, Jobs.FARMER, CapType.POWER_UP1.get())) {
+        if (JobGetters.hasSuperPowerEnabled(player, Jobs.FARMER, true)) dropItems(drop, player, level, blockPos);
+        if (Math.random() * 100 < 20 && JobGetters.hasPowerupEnabled(player, Jobs.FARMER, CapType.POWER_UP1.get(), true)) {
             dropItems(drop, player, level, blockPos);
         }
     }

@@ -54,14 +54,14 @@ public class LumberAxeItem extends AxeItem {
                 final Jobs job = Jobs.LUMBERJACK;
 
                 // Drop Extra Block
-                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get()) && Math.random() * 100 < 5) {
-                    if (JobGetters.hasSuperPowerEnabled(player, job))
+                if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true) && Math.random() * 100 < 5) {
+                    if (JobGetters.hasSuperPowerEnabled(player, job, true))
                         ItemHandler.addItemsToInventoryOrDrop(new ItemStack(state.getBlock().asItem()), player, player.getLevel(), pos, 0);
                     else ItemHandler.addFreshItemEntity(player.getLevel(), pos, state.getBlock().asItem());
                 }
 
                 //Drop Normal Drop
-                if (JobGetters.hasSuperPowerEnabled(player, job))
+                if (JobGetters.hasSuperPowerEnabled(player, job, true))
                     ItemHandler.addItemsToInventoryOrDrop(new ItemStack(state.getBlock().asItem()), player, player.getLevel(), pos, 0);
                 else Block.dropResources(state, level, pos, null, player, player.getMainHandItem());
             }

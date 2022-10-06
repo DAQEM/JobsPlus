@@ -82,7 +82,7 @@ public class RodItem extends FishingRodItem {
                 HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
         }
 
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) {
+        if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP3.get(), true)) {
             if (fishing != null && fishing.tickCount != 0 && !level.isClientSide) {
                 if (lastUsedTime + 2000 < System.currentTimeMillis() || player.isCreative() || player.isOnGround()) {
                     if (level.getBlockState(fishing.blockPosition()) == Blocks.AIR.defaultBlockState()) {

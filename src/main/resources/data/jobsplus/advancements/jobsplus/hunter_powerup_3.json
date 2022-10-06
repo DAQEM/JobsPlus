@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:zombie_head"
+    },
+    "title": "Hunter Powerup 3",
+    "description": "Use the third Hunter Powerup",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "jobsplus:jobsplus/hunter",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 2500
+  }
+}

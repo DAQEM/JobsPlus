@@ -81,7 +81,7 @@ public class MinerEvents {
             ExpHandler.addEXPLow(player, job);
             MobEffectHandler.addPlayerPowerUpEffects(player, job);
         }
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()) && !veinMinerArray.contains(player.getUUID())) {
+        if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true) && !veinMinerArray.contains(player.getUUID())) {
             if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES) || state.is(Blocks.ANCIENT_DEBRIS)) {
                 List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getLevel(), event.getPos(), null, player, player.getMainHandItem());
                 event.setCanceled(true);
@@ -188,7 +188,7 @@ public class MinerEvents {
         int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
         int exp = state.getExpDrop(level, level.random, pos, bonusLevel, silkLevel);
         if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES) || state.is(Blocks.ANCIENT_DEBRIS)
-                && JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()))
+                && JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true))
             exp = 1;
         dropItems(level, ItemHandler.smeltedRawMaterials(player, drops), pos, exp);
     }

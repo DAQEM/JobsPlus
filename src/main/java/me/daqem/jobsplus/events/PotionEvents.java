@@ -42,13 +42,13 @@ public class PotionEvents {
             Jobs job = Jobs.ALCHEMIST;
             if (JobGetters.jobIsEnabled(player, job)) {
                 int duration;
-                if (JobGetters.hasSuperPowerEnabled(player, job)) {
-                    duration = JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()) ? effect.getDuration() * 3 : effect.getDuration() * 2;
+                if (JobGetters.hasSuperPowerEnabled(player, job, true)) {
+                    duration = JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true) ? effect.getDuration() * 3 : effect.getDuration() * 2;
                 } else {
-                    duration = JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get()) ? (int) (effect.getDuration() * 1.5) : 0;
+                    duration = JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true) ? (int) (effect.getDuration() * 1.5) : 0;
                 }
                 //Bad Potion Effect Immunity
-                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
+                if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) {
                     if (effect.getEffect().getCategory() == MobEffectCategory.HARMFUL || effect.getEffect() == MobEffects.BAD_OMEN) {
                         if (player instanceof ServerPlayer serverPlayer) {
                             EventPlayerTick.removeEffect.put(serverPlayer, effect.getEffect());
@@ -118,7 +118,7 @@ public class PotionEvents {
         if (event.getEntity() instanceof Player player) {
             Jobs job = Jobs.ALCHEMIST;
             if (JobGetters.jobIsEnabled(player, job)) {
-                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) {
+                if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP3.get(), true)) {
                     if (event.getAmount() > 1) {
                         event.setAmount(event.getAmount() * 2);
                     }
@@ -178,7 +178,7 @@ public class PotionEvents {
         Jobs job = Jobs.ALCHEMIST;
         if (event.getEntity() instanceof ServerPlayer player) {
             if (JobGetters.jobIsEnabled(player, job)) {
-                if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
+                if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) {
                     if (event.getSource().getLocalizedDeathMessage(event.getEntity()).toString().contains("death.attack.indirectMagic")) {
                         event.setCanceled(true);
                         HotbarMessageHandler.sendHotbarMessageServer(player, ChatColor.green() + "Removed bad effect.");

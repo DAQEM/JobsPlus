@@ -582,8 +582,10 @@ public class JobsScreen extends Screen {
                 }
             } else if (activeRightButton == 1) {
                 drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.crafting").getString(), centerR, startY + 6, 16777215);
-                font.draw(poseStack, ChatColor.darkGray() + "Craft the items using", startX + 189, startY + 171, 16777215);
-                font.draw(poseStack, ChatColor.darkGray() + "the Construction Table.", startX + 189, startY + 181, 16777215);
+                if (jobId != 0) {
+                    font.draw(poseStack, ChatColor.darkGray() + "Craft the items using", startX + 189, startY + 171, 16777215);
+                    font.draw(poseStack, ChatColor.darkGray() + "the Construction Table.", startX + 189, startY + 181, 16777215);
+                }
             } else if (activeRightButton == 2) {
                 drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + Component.translatable("jobsplus.gui.powerups.powerups").getString(), centerR, startY + 6, 16777215);
                 drawCenteredStringNew(poseStack, font, ChatColor.gray() + Component.translatable("jobsplus.gui.powerups.cost").getString(), centerR, startY + 16, 16777215);

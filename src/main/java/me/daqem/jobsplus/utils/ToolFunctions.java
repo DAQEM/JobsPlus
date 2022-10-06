@@ -86,7 +86,7 @@ public class ToolFunctions {
                         final int exp = state.getExpDrop(level, level.random, pos, bonusLevel, silkLevel);
 
                         //Add drops to inventory for Digger powerup
-                        if (JobGetters.hasEnabledPowerup(player, digger, CapType.POWER_UP1.get()) && isExcavator) {
+                        if (JobGetters.hasPowerupEnabled(player, digger, CapType.POWER_UP1.get(), true) && isExcavator) {
                             for (ItemStack itemStack : stacks) {
                                 ItemHandler.addItemsToInventoryOrDrop(itemStack, player, level, pos, exp);
                             }

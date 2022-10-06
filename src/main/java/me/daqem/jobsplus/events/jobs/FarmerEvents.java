@@ -1,7 +1,6 @@
 package me.daqem.jobsplus.events.jobs;
 
 import com.google.common.collect.Maps;
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.item.FarmersHoeItem;
 import me.daqem.jobsplus.handlers.CropHandler;
 import me.daqem.jobsplus.handlers.ExpHandler;
@@ -87,10 +86,10 @@ public class FarmerEvents {
 
         if (block instanceof CropBlock cropBlock) {
             if (cropBlock.isMaxAge(event.getState())) ExpHandler.addEXPLow(player, job);
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
+            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
                 if (Math.random() * 100 < 10) doubleCropDrop(state, level, pos, player);
             }
-            if (JobGetters.hasSuperPowerEnabled(player, job)) doubleCropDrop(state, level, pos, player);
+            if (JobGetters.hasSuperPowerEnabled(player, job, true)) doubleCropDrop(state, level, pos, player);
         } else {
             if (block == Blocks.CACTUS || block == Blocks.SUGAR_CANE) {
                 if (!blockPosArrayList.contains(pos)) {
@@ -112,7 +111,7 @@ public class FarmerEvents {
             } else if (block == Blocks.MELON || block == Blocks.PUMPKIN) {
                 if (!blockPosArrayList.contains(pos)) {
                     ExpHandler.addEXPLow(player, job);
-                    if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
+                    if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
                         if (block == Blocks.MELON) {
                             if (Math.random() * 100 < 10) {
                                 ItemHandler.addFreshItemEntity(level, pos, Items.GLISTERING_MELON_SLICE);
@@ -154,11 +153,11 @@ public class FarmerEvents {
         ExpHandler.addEXPLow(player, job);
         Random random = new Random();
 
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) {
+        if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP3.get(), true)) {
             dropWool(sheep, random, DyeColor.byId(new Random().nextInt(16)));
         }
 
-        if (JobGetters.hasSuperPowerEnabled(player, job)) {
+        if (JobGetters.hasSuperPowerEnabled(player, job, true)) {
             int i = 1 + random.nextInt(3);
             for (int j = 0; j < i; ++j) {
                 dropWool(sheep, random, sheep.getColor());

@@ -18,52 +18,51 @@ public class ExpHandler {
     }
 
     public static void addEXPLow(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 1, 3);
+        addRandomJobEXP(player, job, 2, 4);
     }
 
     public static void addEXPMid(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 2, 6);
+        addRandomJobEXP(player, job, 4, 6);
     }
 
     public static void addEXPHigh(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 3, 9);
+        addRandomJobEXP(player, job, 6, 10);
     }
 
     public static void addEXPBrewing(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 12, 24);
+        addRandomJobEXP(player, job, 30, 50);
     }
 
     public static void addEXPOneLapis(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 12, 24);
+        addRandomJobEXP(player, job, 30, 50);
     }
 
     public static void addEXPTwoLapis(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 18, 30);
+        addRandomJobEXP(player, job, 50, 70);
     }
 
     public static void addEXPTheeLapis(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 30, 36);
+        addRandomJobEXP(player, job, 70, 100);
     }
-
 
     public static int getEXPLowest() {
         return getRandomJobEXP(0, 2);
     }
 
     public static int getEXPLow() {
-        return getRandomJobEXP(1, 3);
+        return getRandomJobEXP(2, 4);
     }
 
     public static int getEXPMid() {
-        return getRandomJobEXP(2, 6);
+        return getRandomJobEXP(4, 6);
     }
 
     public static int getEXPHigh() {
-        return getRandomJobEXP(3, 9);
+        return getRandomJobEXP(6, 10);
     }
 
     public static int getEXPFishing() {
-        return getRandomJobEXP(10, 16);
+        return getRandomJobEXP(15, 20);
     }
 
     public static void addRandomJobEXP(Player player, Jobs job, int lowerBound, int upperBound) {

@@ -84,7 +84,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
         return enabledJobsData;
     }
 
-    private static void sendClickSound() {
+    private static void playClickSound() {
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
@@ -105,15 +105,21 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
         textRenderJobButtons(poseStack, occurrencesLeft);
         textRenderCraftableItems(poseStack, occurrencesRight);
 
+        setupGhostRecipe(poseStack, partialTicks);
+
+        super.render(poseStack, x, y, partialTicks);
+        this.renderTooltip(poseStack, x, y);
+    }
+
+    private void setupGhostRecipe(@NotNull PoseStack poseStack, float partialTicks) {
         if (ghostRecipe.getRecipe() != null) ghostRecipe.clear();
 
         if (selectedRecipe != null) {
             this.setupGhostRecipe(selectedRecipe, menu.slots);
-            this.renderGhostRecipe(poseStack, this.leftPos, this.topPos, partialTicks);
+            if (this.minecraft != null) {
+                this.ghostRecipe.render(poseStack, this.minecraft, leftPos, topPos, partialTicks);
+            }
         }
-
-        super.render(poseStack, x, y, partialTicks);
-        this.renderTooltip(poseStack, x, y);
     }
 
     private Recipe<?> getRecipe() {
@@ -134,11 +140,6 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
         this.ghostRecipe.setRecipe(recipe);
         this.ghostRecipe.addIngredient(Ingredient.of(itemstack), (slots.get(0)).x, (slots.get(0)).y);
         this.placeRecipe(recipe, this.menu.getGridWidth(), this.menu.getGridHeight(), this.menu.getResultSlotIndex(), recipe.getIngredients());
-    }
-
-    private void renderGhostRecipe(PoseStack poseStack, int leftPos, int topPos, float partialTicks) {
-        if (this.minecraft != null)
-            this.ghostRecipe.render(poseStack, this.minecraft, leftPos, topPos, partialTicks);
     }
 
     @Override
@@ -188,7 +189,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
                 }
                 selectedItemStackID = clickedStack;
                 selectedRecipe = getRecipe();
-                sendClickSound();
+                playClickSound();
                 return true;
             }
         }
@@ -204,7 +205,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
             for (int l = this.startIndexLeft; l < k; ++l) {
                 try {
                     this.selectedButtonLeft = (int) (y - j - startY) / 35 + l;
-                    sendClickSound();
+                    playClickSound();
                     this.selectedJob = Jobs.getJobFromInt(new ArrayList<>(this.enabledJobsData.entrySet()).get(this.selectedButtonLeft).getKey().get());
                     this.scrollOffsetRight = 0;
                     this.startIndexRight = 0;

@@ -48,7 +48,7 @@ public class ConstructionMenu extends RecipeBookMenu<CraftingContainer> {
         super(ModMenuTypes.CONSTRUCTION.get(), containerId);
         this.access = access;
         this.player = inventory.player;
-        this.addSlot(new ResultSlot(inventory.player, this.craftSlots, this.resultSlots, 0, -40, 130));
+        this.addSlot(new ResultSlot(inventory.player, this.craftSlots, this.resultSlots, 0, -31, 116));
 
         for (int i = 0; i < 5; ++i) {
             for (int j = 0; j < 5; ++j) {
