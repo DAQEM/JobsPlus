@@ -31,14 +31,60 @@ public class LumberjackEvents {
     private final Jobs job = Jobs.LUMBERJACK;
 
     @SubscribeEvent
-    public void onBreakingBlock(BlockEvent.BreakEvent event) {
-        Player player = event.getPlayer();
+    public void onBlockBreak(BlockEvent.BreakEvent event) {
+        final Player player = event.getPlayer();
+        final BlockState state = event.getState();
         if (player.getLevel().isClientSide) return;
+        if (!state.is(Blocks.OAK_LEAVES) && !state.is(Blocks.DARK_OAK_LEAVES)
+                && !state.is(BlockTags.LOGS) && !state.is(BlockTags.PLANKS)) return;
         if (!JobGetters.jobIsEnabled(player, job)) return;
-        BlockState state = event.getState();
-        Block block = state.getBlock();
 
-        //POWERUP 3 (Get better apples from leaves)
+        final Block block = state.getBlock();
+
+        powerUpBetterApples(event, player, state, block);
+
+        if (state.is(BlockTags.LOGS) || state.is(BlockTags.PLANKS)) {
+            final BlockPos pos = event.getPos();
+            final Item itemInHand = player.getMainHandItem().getItem();
+
+            ExpHandler.addEXPLow(player, job);
+
+            powerUpHaste(player);
+            if (!superpowerAddToInventory(event, player, block, pos, itemInHand)) {
+                if (itemInHand instanceof LumberAxeItem lumberAxe) lumberAxe.attemptFellTree(player.level, pos, player);
+            }
+            powerupDoubleLogs(player, block, pos);
+        }
+    }
+
+    private void powerupDoubleLogs(Player player, Block block, BlockPos pos) {
+        if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true) && Math.random() * 100 < 5) {
+            //SUPERPOWER (Logs go into your inventory)
+            if (JobGetters.hasSuperPowerEnabled(player, job, true))
+                ItemHandler.addItemsToInventoryOrDrop(new ItemStack(block.asItem()), player, player.getLevel(), pos, 0);
+                //NO SUPERPOWER (Logs DON'T go into your inventory)
+            else ItemHandler.addFreshItemEntity(player.getLevel(), pos, block.asItem());
+        }
+    }
+
+    private boolean superpowerAddToInventory(BlockEvent.BreakEvent event, Player player, Block block, BlockPos pos, Item itemInHand) {
+        if (JobGetters.hasSuperPowerEnabled(player, job, true)) {
+            event.setCanceled(true);
+            if (itemInHand instanceof LumberAxeItem lumberAxe) lumberAxe.attemptFellTree(player.level, pos, player);
+            player.getLevel().removeBlock(pos, false);
+            ItemHandler.addItemsToInventoryOrDrop(new ItemStack(block.asItem()), player, player.getLevel(), pos, 0);
+            return true;
+        }
+        return false;
+    }
+
+    private void powerUpHaste(Player player) {
+        if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
+            player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 50, 1));
+        }
+    }
+
+    private void powerUpBetterApples(BlockEvent.BreakEvent event, Player player, BlockState state, Block block) {
         if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP3.get(), true)) {
             if (block == Blocks.OAK_LEAVES || block == Blocks.DARK_OAK_LEAVES) {
                 if (Block.getDrops(state, (ServerLevel) player.getLevel(), event.getPos(), null, player, player.getMainHandItem()).isEmpty()) {
@@ -48,40 +94,6 @@ public class LumberjackEvents {
                     else if (random <= 3.5)
                         ItemHandler.addFreshItemEntity(player.getLevel(), event.getPos(), Items.GOLDEN_APPLE.getDefaultInstance());
                 }
-            }
-        }
-
-        if (!state.is(BlockTags.LOGS) && !state.is(BlockTags.PLANKS)) return;
-
-        final BlockPos pos = event.getPos();
-        Item itemInHand = player.getMainHandItem().getItem();
-
-        //POWERUP 2 (Haste II on harvesting logs)
-        if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
-            player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 50, 1));
-        }
-
-        if (itemInHand instanceof LumberAxeItem lumberAxeItem) {
-
-            //SUPERPOWER (Logs go into your inventory)
-            if (JobGetters.hasSuperPowerEnabled(player, job, true)) {
-                event.setCanceled(true);
-                lumberAxeItem.mineBlock(player.getMainHandItem(), player.getLevel(), state, pos, player);
-                player.getLevel().removeBlock(pos, false);
-                ExpHandler.addEXPLow(player, job);
-                ItemHandler.addItemsToInventoryOrDrop(new ItemStack(block.asItem()), player, player.getLevel(), pos, 0);
-            }
-        } else {
-
-            ExpHandler.addEXPLow(player, job);
-
-            //POWERUP 1 (A chance to get a double log drop)
-            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true) && Math.random() * 100 < 5) {
-                //SUPERPOWER (Logs go into your inventory)
-                if (JobGetters.hasSuperPowerEnabled(player, job, true))
-                    ItemHandler.addItemsToInventoryOrDrop(new ItemStack(block.asItem()), player, player.getLevel(), pos, 0);
-                    //NO SUPERPOWER (Logs DON'T go into your inventory)
-                else ItemHandler.addFreshItemEntity(player.getLevel(), pos, block.asItem());
             }
         }
     }

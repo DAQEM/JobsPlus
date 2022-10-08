@@ -10,6 +10,10 @@ public class HotbarMessageHandler {
         serverPlayer.sendSystemMessage(Component.literal(message), true);
     }
 
+    public static void sendHotbarMessageServer(ServerPlayer serverPlayer, Component message) {
+        serverPlayer.sendSystemMessage(message, true);
+    }
+
     public static void sendHotBarMessageClient(String message) {
         if (Minecraft.getInstance().player != null) {
             Minecraft.getInstance().player.displayClientMessage(Component.literal(message), true);

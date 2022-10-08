@@ -815,21 +815,21 @@ public class JobsScreen extends Screen {
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     if (getSelectedJobLevel() == 0) {
                         if (array[21] < Config.AMOUNT_OF_FREE_JOBS.get()) {
-                            openConfirmScreen(Component.translatable("confirm.start"), "start");
+                            openConfirmScreen(Component.translatable("confirm.start"), "start", 0);
                         } else {
                             if (array[20] >= Config.JOB_START_COST.get())
-                                openConfirmScreen(Component.translatable("confirm.start_paid", Config.JOB_START_COST.get()), "start_paid");
+                                openConfirmScreen(Component.translatable("confirm.start_paid", Config.JOB_START_COST.get()), "start_paid", 0);
                             else
-                                openConfirmScreen(Component.translatable("confirm.not_enough_coins_start"), "not_enough_coins_start");
+                                openConfirmScreen(Component.translatable("confirm.not_enough_coins_start"), "not_enough_coins_start", 0);
 
                         }
                     } else if (getSelectedJobLevel() == Config.JOB_LEVEL_TO_STOP_JOB_FOR_FREE.get()) {
-                        openConfirmScreen(Component.translatable("confirm.stop_free"), "stop_free");
+                        openConfirmScreen(Component.translatable("confirm.stop_free"), "stop_free", 0);
                     } else {
                         if (array[20] >= Config.JOB_STOP_COST.get())
-                            openConfirmScreen(Component.translatable("confirm.stop", Config.JOB_STOP_COST.get()), "stop");
+                            openConfirmScreen(Component.translatable("confirm.stop", Config.JOB_STOP_COST.get()), "stop", 0);
                         else
-                            openConfirmScreen(Component.translatable("confirm.not_enough_coins_stop"), "not_enough_coins_stop");
+                            openConfirmScreen(Component.translatable("confirm.not_enough_coins_stop"), "not_enough_coins_stop", 0);
 
                     }
                 }
@@ -1127,13 +1127,8 @@ public class JobsScreen extends Screen {
         return LevelHandler.calcExp(getSelectedJobLevel());
     }
 
-    public void openConfirmScreen(Component component, String string) {
-        Minecraft.getInstance().setScreen(new ConfirmationScreen(component, string, Jobs.getJobFromInt(jobId), activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
-
-    }
-
-    public void openConfirmScreen(Component component, String string, int index) {
-        Minecraft.getInstance().setScreen(new ConfirmationScreen(component, string, Jobs.getJobFromInt(jobId), index, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+    public void openConfirmScreen(Component component, String string, int powerUp) {
+        Minecraft.getInstance().setScreen(new ConfirmationScreen(component, string, Jobs.getJobFromInt(jobId), powerUp, this));
 
     }
 
@@ -1184,6 +1179,26 @@ public class JobsScreen extends Screen {
         startX = (this.width - imageWidth) / 2;
         startY = (this.height - imageHeight) / 2;
         super.init();
+    }
+
+    public int getActiveLeftButton() {
+        return activeLeftButton;
+    }
+
+    public int getActiveRightButton() {
+        return activeRightButton;
+    }
+
+    public int getSelectedButton() {
+        return selectedButton;
+    }
+
+    public float getScrollOffs() {
+        return scrollOffs;
+    }
+
+    public int getStartIndex() {
+        return startIndex;
     }
 
     @Override

@@ -393,5 +393,7 @@
   "jobsplus.gui.settings.level_up.chat.self": "- ME: Only send a message that you have leveled up to yourself.",
   "jobsplus.gui.settings.level_up.chat.off": "- OFF: Do not send or receive messages that you or anyone else has leveled up.",
   "jobsplus.gui.settings.level_up.everyone": "EVERYONE",
-  "jobsplus.gui.settings.level_up.self": "ME"
+  "jobsplus.gui.settings.level_up.self": "ME",
+  "jobsplus.success.exp.extract": " EXP extracted",
+  "jobsplus.success.exp.insert": " EXP inserted"
 }

@@ -1,10 +1,8 @@
 package me.daqem.jobsplus.common.item;
 
-import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.utils.ChatColor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -13,8 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class CurseBreakItem extends Item {
-
+public class CurseBreakItem extends JobsPlusItem {
     public CurseBreakItem(Properties properties) {
         super(properties);
     }
@@ -29,7 +26,7 @@ public class CurseBreakItem extends Item {
         if (Screen.hasShiftDown()) {
             tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
-            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + Config.REQUIRED_LEVEL_CURSE_BREAKER.get()));
+            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + getRequiredLevel()));
             tooltip.add(Component.literal(" "));
             tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "About:"));
             tooltip.add(Component.literal(ChatColor.gray() + "Combine this item with an item containing a curse in an anvil to remove the curses."));

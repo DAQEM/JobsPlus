@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.common.item;
 
-import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.ChatColor;
@@ -16,7 +15,10 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -26,27 +28,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class HunterBowItem extends BowItem {
+public class HunterBowItem extends JobsPlusItem.Bow {
 
     public HunterBowItem(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    public int getUseDuration(ItemStack stack) {
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get()) {
-            return 72000;
-        }
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get()) {
-            return 69000;
-        }
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get()) {
-            return 66000;
-        }
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get()) {
-            return 63000;
-        }
-        return 72000;
     }
 
     @Override
@@ -63,20 +48,14 @@ public class HunterBowItem extends BowItem {
                 if (itemstack.isEmpty()) {
                     itemstack = new ItemStack(Items.ARROW);
                 }
-
                 float f = getPowerForTime(i);
                 Jobs job = Jobs.HUNTER;
-                boolean isAllowedToUseBow = JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_1.get() && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get();
-                if (JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_2.get() && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get())
-                    isAllowedToUseBow = true;
-                if (JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_3.get() && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get())
-                    isAllowedToUseBow = true;
-                if (JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_4.get() && stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get())
-                    isAllowedToUseBow = true;
-                if (!isAllowedToUseBow) f = 0.1F;
-                if (!isAllowedToUseBow)
-                    if (!level.isClientSide)
+                if (!(JobGetters.getJobLevel(player, job) >= getRequiredLevel())) {
+                    f = 0.1F;
+                    if (!level.isClientSide) {
                         HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
+                    }
+                }
                 if (!((double) f < 0.1D)) {
                     boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem) itemstack.getItem()).isInfinite(itemstack, stack, player));
                     if (!level.isClientSide) {
@@ -132,15 +111,9 @@ public class HunterBowItem extends BowItem {
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (Screen.hasShiftDown()) {
-            int level = 0;
-            Item item = stack.getItem();
-            if (item == ModItems.HUNTERS_BOW_LEVEL_1.get()) level = Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_1.get();
-            if (item == ModItems.HUNTERS_BOW_LEVEL_2.get()) level = Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_2.get();
-            if (item == ModItems.HUNTERS_BOW_LEVEL_3.get()) level = Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_3.get();
-            if (item == ModItems.HUNTERS_BOW_LEVEL_4.get()) level = Config.REQUIRED_LEVEL_HUNTERS_BOW_LEVEL_4.get();
             tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Hunter"));
-            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
+            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + getRequiredLevel()));
             tooltip.add(Component.literal(""));
             tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "About:"));
             tooltip.add(Component.literal(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getDescriptionId()).replace("item.jobsplus.hunters_bow_level_", "")));
@@ -155,19 +128,20 @@ public class HunterBowItem extends BowItem {
     }
 
     private double extraDamage(ItemStack stack) {
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get()) {
-            return 1D;
-        }
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get()) {
-            return 2.5D;
-        }
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get()) {
-            return 4D;
-        }
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get()) {
-            return 6D;
-        }
+        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get()) return 1D;
+        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get()) return 2.5D;
+        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get()) return 4D;
+        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get()) return 6D;
         return 0D;
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack) {
+        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get()) return 72000;
+        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get()) return 69000;
+        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get()) return 66000;
+        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get()) return 63000;
+        return 72000;
     }
 
     @Override

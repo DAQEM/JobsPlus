@@ -36,4 +36,9 @@ public class RenderColor {
     public static void grayedOutSelected() {
         RenderSystem.setShaderColor(0.6F, 0.6F, 0.6F, 1.0F);
     }
+
+
+    public static void buttonHover() {
+        RenderSystem.setShaderColor(0.6F, 0.6F, 1F, 1);
+    }
 }

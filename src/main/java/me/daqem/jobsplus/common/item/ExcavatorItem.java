@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.common.item;
 
-import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.init.ModItems;
@@ -17,7 +16,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class ExcavatorItem extends ShovelItem {
+public class ExcavatorItem extends JobsPlusItem.Shovel {
 
     public ExcavatorItem(Tier tier, int attackDamage, float attackSpeed, Properties properties) {
         super(tier, attackDamage, attackSpeed, properties);
@@ -40,18 +42,7 @@ public class ExcavatorItem extends ShovelItem {
                 if (player.isCrouching()) {
                     return true;
                 }
-                boolean allowedToUseExcavator = false;
-                Item item = player.getMainHandItem().getItem();
-                int jobLevel = JobGetters.getJobLevel(player, Jobs.DIGGER);
-                if (jobLevel >= Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_1.get() && item == ModItems.DIGGERS_EXCAVATOR_LEVEL_1.get())
-                    allowedToUseExcavator = true;
-                if (jobLevel >= Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_2.get() && item == ModItems.DIGGERS_EXCAVATOR_LEVEL_2.get())
-                    allowedToUseExcavator = true;
-                if (jobLevel >= Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_3.get() && item == ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get())
-                    allowedToUseExcavator = true;
-                if (jobLevel >= Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_4.get() && item == ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get())
-                    allowedToUseExcavator = true;
-                if (allowedToUseExcavator) {
+                if (JobGetters.getJobLevel(player, Jobs.DIGGER) >= getRequiredLevel()) {
                     if (player.getMainHandItem().getItem() instanceof ExcavatorItem) {
                         float originHardness = level.getBlockState(pos).getDestroySpeed(null, null);
                         if (player.getMainHandItem().getItem().isCorrectToolForDrops(level.getBlockState(pos))) {
@@ -112,7 +103,7 @@ public class ExcavatorItem extends ShovelItem {
                     tag.putInt("mode", 0);
                 }
                 HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + getModeString(stack));
-                SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
+                SoundHandler.playChangeToolModeSound(player);
             }
         }
         return super.use(level, player, hand);
@@ -122,28 +113,23 @@ public class ExcavatorItem extends ShovelItem {
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (Screen.hasShiftDown()) {
-            int level = 0;
             String modes = "";
             Item item = stack.getItem();
             if (item == ModItems.DIGGERS_EXCAVATOR_LEVEL_1.get()) {
-                level = Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_1.get();
                 modes = "3x3";
             }
             if (item == ModItems.DIGGERS_EXCAVATOR_LEVEL_2.get()) {
-                level = Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_2.get();
                 modes = "3x3, 3x3x3";
             }
             if (item == ModItems.DIGGERS_EXCAVATOR_LEVEL_3.get()) {
-                level = Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_3.get();
                 modes = "3x3, 3x3x3, 5x5";
             }
             if (item == ModItems.DIGGERS_EXCAVATOR_LEVEL_4.get()) {
-                level = Config.REQUIRED_LEVEL_DIGGERS_EXCAVATOR_LEVEL_4.get();
                 modes = "3x3, 3x3x3, 5x5, 5x5x5";
             }
             tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "DIGGER"));
-            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
+            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + getRequiredLevel()));
             tooltip.add(Component.literal(""));
             tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "About:"));
             tooltip.add(Component.literal(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getDescriptionId()).replace("item.jobsplus.diggers_excavator_level_", "")));

@@ -9,7 +9,6 @@ import me.daqem.jobsplus.common.crafting.ModGhostRecipe;
 import me.daqem.jobsplus.common.crafting.ModPlaceRecipe;
 import me.daqem.jobsplus.common.inventory.ConstructionMenu;
 import me.daqem.jobsplus.handlers.LevelHandler;
-import me.daqem.jobsplus.jei.JobsPlusJeiPlugin;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.Minecraft;
@@ -31,7 +30,7 @@ import java.util.*;
 
 public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu> implements ModPlaceRecipe {
 
-    private static final ResourceLocation TEXTURE = JobsPlus.getId("textures/gui/container/construction_gui.png");
+    private static final ResourceLocation BACKGROUND = JobsPlus.getId("textures/gui/container/construction_gui.png");
     private static final ResourceLocation NONE = JobsPlus.getId("none");
     private static final int menuWidth = 358;
     private static final int menuHeight = 222;
@@ -55,10 +54,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
 
     public ConstructionScreen(ConstructionMenu menu, Inventory inventory, Component ignoredTitle) {
         super(menu, inventory, Component.literal("Construction Table"));
-
-        ArrayList<ConstructionRecipe> recipes = new ArrayList<>();
-        JobsPlusJeiPlugin.getJeiRuntime().ifPresent(iJeiRuntime -> iJeiRuntime.getRecipeManager().createRecipeLookup(JobsPlusJeiPlugin.CONSTRUCTION_TYPE).get().forEach(recipes::add));
-        this.recipes = recipes;
+        this.recipes = JobsPlus.recipes;
         this.enabledJobsData = generateJobsDataArray(menu);
         this.scrollingLeft = false;
         this.scrollingRight = false;
@@ -225,7 +221,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
         this.renderBackground(poseStack);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderColor.normal();
-        RenderSystem.setShaderTexture(0, TEXTURE);
+        RenderSystem.setShaderTexture(0, BACKGROUND);
         blitThis(poseStack, 0, 0, 0, 0, 358, 222);
     }
 

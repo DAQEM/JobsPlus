@@ -1,8 +1,8 @@
 package me.daqem.jobsplus.common.item;
 
-import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.common.entity.ModThrownExperienceBottle;
 import me.daqem.jobsplus.utils.ChatColor;
+import me.daqem.jobsplus.utils.JobGetters;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -11,7 +11,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ExperienceBottleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -20,32 +19,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ModExperienceBottleItem extends ExperienceBottleItem {
+public class ModExperienceBottleItem extends JobsPlusItem.ExperienceBottle {
 
     public ModExperienceBottleItem(Properties properties) {
         super(properties);
-    }
-
-    public static int tierToEXP(int tier) {
-        if (tier == 1) {
-            return 10;
-        }
-        if (tier == 2) {
-            return 25;
-        }
-        if (tier == 3) {
-            return 50;
-        }
-        if (tier == 4) {
-            return 100;
-        }
-        if (tier == 5) {
-            return 200;
-        }
-        if (tier == 6) {
-            return 500;
-        }
-        return 0;
     }
 
     @Override
@@ -57,7 +34,7 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
             if (exp == 0) {
                 int tier = itemstack.getOrCreateTag().getInt("tier");
                 if (tier != 0) {
-                    exp = ModExperienceBottleItem.tierToEXP(tier);
+                    exp = tierToEXP(tier);
                 }
             }
             ModThrownExperienceBottle thrownExperienceBottle = new ModThrownExperienceBottle(level, player, exp);
@@ -77,20 +54,13 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        setRequiredLevel(JobGetters.getRequiredJobLevelForItem(stack));
         int tier = stack.getOrCreateTag().getInt("tier");
         int exp = stack.getOrCreateTag().getInt("EXP");
         if (Screen.hasShiftDown()) {
             tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
-            String level;
-            if (tier == 1) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_1.get();
-            else if (tier == 2) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_2.get();
-            else if (tier == 3) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_3.get();
-            else if (tier == 4) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_4.get();
-            else if (tier == 5) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_5.get();
-            else if (tier == 6) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_6.get();
-            else if (exp != 0) level = "" + Config.REQUIRED_LEVEL_EXP_JAR_TO_EXPERIENCE_BOTTLE.get();
-            else level = "depends on use.";
+            String level = getRequiredLevel() == 101 ? "depends on use." : String.valueOf(getRequiredLevel());
             tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
         } else {
             tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
@@ -104,5 +74,27 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
                 tooltip.add(Component.literal(ChatColor.green() + "EXP: " + ChatColor.reset() + tierToEXP(tier)));
             }
         }
+    }
+
+    public int tierToEXP(int tier) {
+        if (tier == 1) {
+            return 10;
+        }
+        if (tier == 2) {
+            return 25;
+        }
+        if (tier == 3) {
+            return 50;
+        }
+        if (tier == 4) {
+            return 100;
+        }
+        if (tier == 5) {
+            return 200;
+        }
+        if (tier == 6) {
+            return 500;
+        }
+        return 0;
     }
 }

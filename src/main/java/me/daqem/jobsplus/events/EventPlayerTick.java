@@ -33,15 +33,15 @@ public class EventPlayerTick {
                 }
                 if (tick == 5) {
                     SoundHandler.playLevelUpSound(serverPlayer, 0.5F, 2F);
-                    SoundHandler.playEXPOrbPickupSound(serverPlayer, 1F, 1F);
+                    SoundHandler.playEXPOrbPickupSound(serverPlayer);
                 }
                 if (tick == 9) {
                     SoundHandler.playLevelUpSound(serverPlayer, 1F, 2F);
-                    SoundHandler.playEXPOrbPickupSound(serverPlayer, 1F, 1F);
+                    SoundHandler.playEXPOrbPickupSound(serverPlayer);
                 }
                 if (tick >= 11) {
                     SoundHandler.playLevelUpSound(serverPlayer, 0.5F, 1.5F);
-                    SoundHandler.playEXPOrbPickupSound(serverPlayer, 1F, 1F);
+                    SoundHandler.playEXPOrbPickupSound(serverPlayer);
                     levelUpHashMap.remove(serverPlayer);
                 }
             }

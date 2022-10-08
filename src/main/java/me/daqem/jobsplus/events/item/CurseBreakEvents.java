@@ -1,6 +1,6 @@
 package me.daqem.jobsplus.events.item;
 
-import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.common.item.CurseBreakItem;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
@@ -25,7 +25,7 @@ public class CurseBreakEvents {
         ItemStack left = event.getLeft();
         ItemStack right = event.getRight();
         ItemStack out;
-        if (JobGetters.getJobLevel(event.getPlayer(), Jobs.ENCHANTER) >= Config.REQUIRED_LEVEL_CURSE_BREAKER.get()) {
+        if (JobGetters.getJobLevel(event.getPlayer(), Jobs.ENCHANTER) >= ((CurseBreakItem) ModItems.CURSE_BREAKER.get()).getRequiredLevel()) {
             if (!left.isEmpty() && !right.isEmpty() && right.getItem() == ModItems.CURSE_BREAKER.get()) {
                 out = left.copy();
                 Map<Enchantment, Integer> map = new HashMap<>();

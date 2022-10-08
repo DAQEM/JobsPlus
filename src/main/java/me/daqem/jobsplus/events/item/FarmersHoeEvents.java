@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.events.item;
 
-import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.common.item.FarmersHoeItem;
 import me.daqem.jobsplus.events.jobs.FarmerEvents;
 import me.daqem.jobsplus.handlers.CropHandler;
@@ -51,10 +50,7 @@ public class FarmersHoeEvents {
                     || clicked == Blocks.BAMBOO || clicked == Blocks.KELP_PLANT
                     || clicked.getDescriptionId().equals("block.farmersdelight.tomatoes"))
                     &&
-                    (JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_1.get() && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_1.get())
-                    || (JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_2.get() && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_2.get())
-                    || (JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_3.get() && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_3.get())
-                    || (JobGetters.getJobLevel(player, job) >= Config.REQUIRED_LEVEL_FARMERS_HOE_LEVEL_4.get() && stack.getItem() == ModItems.FARMERS_HOE_LEVEL_4.get())) {
+                    (JobGetters.getJobLevel(player, job) >= ((FarmersHoeItem) stack.getItem()).getRequiredLevel())) {
                 if (!stack.getOrCreateTag().contains("mode")) stack.getOrCreateTag().putInt("mode", 0);
                 int mode = stack.getOrCreateTag().getInt("mode");
                 if (mode == 0 || mode == 1 || mode == 2) {

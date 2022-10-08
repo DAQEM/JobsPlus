@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.init.ModRecipes;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.NonNullList;
@@ -310,7 +311,9 @@ public class ConstructionRecipe implements Recipe<CraftingContainer> {
             ItemStack itemstack = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(serializedRecipe, "result"), true, true);
             Jobs job = Jobs.valueOf(serializedRecipe.get("job").getAsString());
             int requiredLevel = serializedRecipe.get("requiredLevel").getAsInt();
-            return new ConstructionRecipe(recipeId, s, i, j, nonNullList, itemstack, job, requiredLevel);
+            ConstructionRecipe constructionRecipe = new ConstructionRecipe(recipeId, s, i, j, nonNullList, itemstack, job, requiredLevel);
+            JobsPlus.recipes.add(constructionRecipe);
+            return constructionRecipe;
         }
     }
 }

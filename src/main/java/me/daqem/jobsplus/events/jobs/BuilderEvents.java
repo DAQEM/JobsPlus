@@ -2,6 +2,7 @@ package me.daqem.jobsplus.events.jobs;
 
 import me.daqem.jobsplus.common.data.BackpackSavedData;
 import me.daqem.jobsplus.common.item.BackpackItem;
+import me.daqem.jobsplus.events.EventWaitTicks;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
@@ -14,17 +15,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BuilderEvents {
 
     @SubscribeEvent
@@ -62,7 +59,7 @@ public class BuilderEvents {
                                             if (!giveBlockBack(player, state)) {
                                                 data.getHandler().extractItem(i, 1, false);
                                             }
-                                            giveItemBack(player, block);
+                                            EventWaitTicks.waitTicks(player, EventWaitTicks.Type.GIVE_BLOCK_BACK, block, null);
                                             return;
                                         }
                                     }
@@ -96,26 +93,12 @@ public class BuilderEvents {
                         || block == Blocks.CALCITE || block == Blocks.TUFF || block == Blocks.DRIPSTONE_BLOCK || block == Blocks.POLISHED_BASALT
                         || block == Blocks.BASALT || block == Blocks.BLACKSTONE || block == Blocks.POLISHED_BLACKSTONE || block == Blocks.GILDED_BLACKSTONE
                         || block == Blocks.CHISELED_POLISHED_BLACKSTONE || block == Blocks.POLISHED_BLACKSTONE_BRICKS) {
-                    giveItemBack(player, block);
+                    EventWaitTicks.waitTicks(player, EventWaitTicks.Type.GIVE_BLOCK_BACK, block, null);
                     return true;
                 }
             }
         }
         return false;
-    }
-
-    public void giveItemBack(Player player, Block block) {
-        MinecraftForge.EVENT_BUS.register(new Object() {
-            final Item item = block.asItem();
-            int delay = 1;
-
-            @SubscribeEvent
-            public void onTick(TickEvent.LevelTickEvent event) {
-                if (delay-- > 0) return;
-                player.getInventory().add(new ItemStack(item, 1));
-                MinecraftForge.EVENT_BUS.unregister(this);
-            }
-        });
     }
 }
 

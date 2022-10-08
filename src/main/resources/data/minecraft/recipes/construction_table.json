@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "pattern": [
+    "III",
+    "IPI",
+    "PPP"
+  ],
+  "result": {
+    "item": "jobsplus:construction_table",
+    "count": 1
+  }
+}

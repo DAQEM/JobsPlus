@@ -3,11 +3,13 @@ package me.daqem.jobsplus.utils;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.common.capability.SuperPowerCapabilityImpl;
+import me.daqem.jobsplus.common.crafting.ConstructionRecipe;
 import me.daqem.jobsplus.handlers.AdvancementHandler;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -144,5 +146,12 @@ public class JobGetters {
         }
 
         return array;
+    }
+
+    public static int getRequiredJobLevelForItem(ItemStack itemStack) {
+        for (ConstructionRecipe recipe : JobsPlus.recipes) {
+            if (recipe.getResultItem().equals(itemStack, true)) return recipe.getRequiredLevel();
+        }
+        return 101;
     }
 }
