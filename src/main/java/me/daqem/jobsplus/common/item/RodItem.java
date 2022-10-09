@@ -1,16 +1,17 @@
 package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
 import me.daqem.jobsplus.common.entity.ModFishingHook;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
-import me.daqem.jobsplus.utils.TranslatableString;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -32,22 +33,20 @@ import org.jetbrains.annotations.Nullable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class RodItem extends JobsPlusItem.Rod {
 
-    private static final Jobs JOB = Jobs.FISHERMAN;
     private long lastUsedTime = 0;
 
     public RodItem(Properties properties) {
-        super(properties.tab(JobsPlus.TAB));
+        super(properties.tab(JobsPlus.TAB), Jobs.FISHERMAN);
     }
 
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         final FishingHook fishing = player.fishing;
-        if (JobGetters.jobIsEnabled(player, JOB)) {
-            if (JobGetters.getJobLevel(player, JOB) >= getRequiredLevel()) {
+        if (JobGetters.jobIsEnabled(player, getJob())) {
+            if (JobGetters.getJobLevel(player, getJob()) >= getRequiredLevel()) {
                 if (fishing != null) {
                     if (!level.isClientSide) {
                         int i = fishing.retrieve(itemstack);
@@ -66,7 +65,7 @@ public class RodItem extends JobsPlusItem.Rod {
                     player.gameEvent(GameEvent.ITEM_INTERACT_START);
                 }
 
-                if (JobGetters.hasPowerupEnabled(player, JOB, CapType.POWER_UP3.get(), true)) {
+                if (JobGetters.hasPowerupEnabled(player, getJob(), CapType.POWER_UP3.get(), true)) {
                     if (fishing != null && fishing.tickCount != 0 && !level.isClientSide) {
                         if (lastUsedTime + 2000 < System.currentTimeMillis() || player.isCreative() || player.isOnGround()) {
                             if (level.getBlockState(fishing.blockPosition()) == Blocks.AIR.defaultBlockState()) {
@@ -82,11 +81,11 @@ public class RodItem extends JobsPlusItem.Rod {
                 }
             } else {
                 if (!level.isClientSide)
-                    HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
+                    HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));
             }
         } else {
             if (!level.isClientSide)
-                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
+                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));
         }
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
@@ -94,25 +93,13 @@ public class RodItem extends JobsPlusItem.Rod {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (Screen.hasShiftDown()) {
-            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Fisherman"));
-            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + getRequiredLevel()));
-            tooltip.add(Component.literal(""));
-            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "About:"));
-            tooltip.add(Component.literal(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getDescriptionId()).replace("item.jobsplus.fishermans_rod_level_", "")));
-            tooltip.add(Component.literal(""));
-            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Drop chance:"));
-            for (String s : getDrops()) {
-                tooltip.add(Component.literal(s));
-            }
-        } else {
-            tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
-        }
-        if (stack.isEnchanted()) {
-            tooltip.add(Component.literal(""));
-            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Enchantments:"));
-        }
+        tooltip.addAll(new TooltipBuilder()
+                .withRequirement(getJob(), getRequiredLevel())
+                .withComponent(TooltipBuilder.WHITE_SPACE, TooltipBuilder.ShiftType.SHIFT)
+                .withComponent(JobsPlus.translatable("tooltip.about.rod.drop_chance").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withBold(true)), TooltipBuilder.ShiftType.SHIFT)
+                .withComponents(getDrops(), TooltipBuilder.ShiftType.SHIFT)
+                .withHoldShift().withEnchantments(stack, false)
+                .build());
     }
 
     @Override
@@ -123,16 +110,20 @@ public class RodItem extends JobsPlusItem.Rod {
                 || leftItem.getItem() == ModItems.FISHERMANS_ROD_LEVEL_4.get() && rightItem.getItem() == Items.EMERALD_BLOCK;
     }
 
-    private ArrayList<String> getDrops() {
-        ArrayList<String> dropList = new ArrayList<>();
-        String two = ChatColor.green() + "20% " + ChatColor.reset() + "2 drops";
-        String three = ChatColor.green() + "15% " + ChatColor.reset() + "3 drops";
-        String four = ChatColor.green() + "10% " + ChatColor.reset() + "4 drops";
-        String five = ChatColor.green() + "5% " + ChatColor.reset() + "5 drops";
+    private ArrayList<Component> getDrops() {
+        ArrayList<Component> dropList = new ArrayList<>();
+        Component two = getDropsComponent(20, 2);
+        Component three = getDropsComponent(15, 3);
+        Component four = getDropsComponent(10, 4);
+        Component five = getDropsComponent(5, 5);
         if (this == ModItems.FISHERMANS_ROD_LEVEL_1.get()) dropList.add(two);
         if (this == ModItems.FISHERMANS_ROD_LEVEL_2.get()) dropList.addAll(List.of(two, three));
         if (this == ModItems.FISHERMANS_ROD_LEVEL_3.get()) dropList.addAll(List.of(two, three, four));
         if (this == ModItems.FISHERMANS_ROD_LEVEL_4.get()) dropList.addAll(List.of(two, three, four, five));
         return dropList;
+    }
+
+    private Component getDropsComponent(int percentage, int drops) {
+        return Component.literal(ChatColor.green() + percentage + "% " + ChatColor.reset() + JobsPlus.translatable("tooltip.about.rod.drops", drops).getString());
     }
 }

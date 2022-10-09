@@ -3,6 +3,7 @@ package me.daqem.jobsplus.common.item;
 import me.daqem.jobsplus.common.entity.ModThrownExperienceBottle;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -22,7 +23,7 @@ import java.util.List;
 public class ModExperienceBottleItem extends JobsPlusItem.ExperienceBottle {
 
     public ModExperienceBottleItem(Properties properties) {
-        super(properties);
+        super(properties, Jobs.ENCHANTER);
     }
 
     @Override

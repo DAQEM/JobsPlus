@@ -2,6 +2,7 @@ package me.daqem.jobsplus;
 
 import me.daqem.jobsplus.common.crafting.ConstructionRecipe;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -37,11 +38,11 @@ public class JobsPlus {
         return new ResourceLocation(MOD_ID, path);
     }
 
-    public static Component translatable(String str) {
+    public static MutableComponent translatable(String str) {
         return Component.translatable("jobsplus." + str);
     }
 
-    public static Component translatable(String str, Object... objects) {
+    public static MutableComponent translatable(String str, Object... objects) {
         return Component.translatable("jobsplus." + str, objects);
     }
 }

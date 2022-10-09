@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.events.item;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.item.FarmersHoeItem;
 import me.daqem.jobsplus.events.jobs.FarmerEvents;
 import me.daqem.jobsplus.handlers.CropHandler;
@@ -9,9 +10,9 @@ import me.daqem.jobsplus.handlers.ItemHandler;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.ModItemUtils;
-import me.daqem.jobsplus.utils.TranslatableString;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -212,7 +213,7 @@ public class FarmersHoeEvents {
                                         }
                                     }
                                 } else {
-                                    HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic.tool"));
+                                    HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, JobsPlus.translatable("error.magic.tool").withStyle(ChatFormatting.RED));
                                 }
                             }
                         }

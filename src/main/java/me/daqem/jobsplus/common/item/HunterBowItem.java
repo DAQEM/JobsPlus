@@ -1,12 +1,12 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
-import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
-import me.daqem.jobsplus.utils.TranslatableString;
 import me.daqem.jobsplus.utils.enums.Jobs;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -26,12 +26,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public class HunterBowItem extends JobsPlusItem.Bow {
 
     public HunterBowItem(Properties properties) {
-        super(properties);
+        super(properties, Jobs.HUNTER);
     }
 
     @Override
@@ -49,11 +48,10 @@ public class HunterBowItem extends JobsPlusItem.Bow {
                     itemstack = new ItemStack(Items.ARROW);
                 }
                 float f = getPowerForTime(i);
-                Jobs job = Jobs.HUNTER;
-                if (!(JobGetters.getJobLevel(player, job) >= getRequiredLevel())) {
+                if (!(JobGetters.getJobLevel(player, getJob()) >= getRequiredLevel())) {
                     f = 0.1F;
                     if (!level.isClientSide) {
-                        HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, TranslatableString.get("error.magic"));
+                        HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));
                     }
                 }
                 if (!((double) f < 0.1D)) {
@@ -110,45 +108,36 @@ public class HunterBowItem extends JobsPlusItem.Bow {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (Screen.hasShiftDown()) {
-            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Hunter"));
-            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + getRequiredLevel()));
-            tooltip.add(Component.literal(""));
-            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "About:"));
-            tooltip.add(Component.literal(ChatColor.green() + "Item Level: " + ChatColor.reset() + Objects.requireNonNull(stack.getItem().getDescriptionId()).replace("item.jobsplus.hunters_bow_level_", "")));
-            tooltip.add(Component.literal(ChatColor.green() + "Extra Base Damage: " + ChatColor.reset() + extraDamage(stack)));
-        } else {
-            tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
-        }
-        if (stack.isEnchanted()) {
-            tooltip.add(Component.literal(""));
-            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Enchantments:"));
-        }
+        tooltip.addAll(new TooltipBuilder()
+                .withRequirement(getJob(), getRequiredLevel())
+                .withAbout(String.valueOf(extraDamage(stack)), TooltipBuilder.AboutType.BOW)
+                .withHoldShift()
+                .withEnchantments(stack, false)
+                .build());
     }
 
     private double extraDamage(ItemStack stack) {
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get()) return 1D;
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get()) return 2.5D;
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get()) return 4D;
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get()) return 6D;
+        if (stack.is(ModItems.HUNTERS_BOW_LEVEL_1.get())) return 1D;
+        if (stack.is(ModItems.HUNTERS_BOW_LEVEL_2.get())) return 2.5D;
+        if (stack.is(ModItems.HUNTERS_BOW_LEVEL_3.get())) return 4D;
+        if (stack.is(ModItems.HUNTERS_BOW_LEVEL_4.get())) return 6D;
         return 0D;
     }
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get()) return 72000;
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get()) return 69000;
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get()) return 66000;
-        if (stack.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get()) return 63000;
+        if (stack.is(ModItems.HUNTERS_BOW_LEVEL_1.get())) return 72000;
+        if (stack.is(ModItems.HUNTERS_BOW_LEVEL_2.get())) return 69000;
+        if (stack.is(ModItems.HUNTERS_BOW_LEVEL_3.get())) return 66000;
+        if (stack.is(ModItems.HUNTERS_BOW_LEVEL_4.get())) return 63000;
         return 72000;
     }
 
     @Override
     public boolean isValidRepairItem(ItemStack leftItem, @NotNull ItemStack rightItem) {
-        return leftItem.getItem() == ModItems.HUNTERS_BOW_LEVEL_1.get() && rightItem.getItem() == Items.IRON_BLOCK
-                || leftItem.getItem() == ModItems.HUNTERS_BOW_LEVEL_2.get() && rightItem.getItem() == Items.GOLD_BLOCK
-                || leftItem.getItem() == ModItems.HUNTERS_BOW_LEVEL_3.get() && rightItem.getItem() == Items.DIAMOND_BLOCK
-                || leftItem.getItem() == ModItems.HUNTERS_BOW_LEVEL_4.get() && rightItem.getItem() == Items.EMERALD_BLOCK;
+        return leftItem.is(ModItems.HUNTERS_BOW_LEVEL_1.get()) && rightItem.is(Items.IRON_BLOCK)
+                || leftItem.is(ModItems.HUNTERS_BOW_LEVEL_2.get()) && rightItem.is(Items.GOLD_BLOCK)
+                || leftItem.is(ModItems.HUNTERS_BOW_LEVEL_3.get()) && rightItem.is(Items.DIAMOND_BLOCK)
+                || leftItem.is(ModItems.HUNTERS_BOW_LEVEL_4.get()) && rightItem.is(Items.EMERALD_BLOCK);
     }
 }

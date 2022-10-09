@@ -1,17 +1,22 @@
 package me.daqem.jobsplus.utils;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.item.ExcavatorItem;
 import me.daqem.jobsplus.common.item.HammerItem;
 import me.daqem.jobsplus.events.jobs.DiggerEvents;
 import me.daqem.jobsplus.events.jobs.MinerEvents;
 import me.daqem.jobsplus.handlers.ExpHandler;
+import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
 import me.daqem.jobsplus.handlers.MobEffectHandler;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -28,9 +33,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DropExperienceBlock;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +45,10 @@ import java.util.List;
 public class ToolFunctions {
 
     private ToolFunctions() {
+    }
+
+    public static void breakInRadius(@NotNull Level level, @NotNull Player player, float originHardness, int mode) {
+
     }
 
     public static void breakInRadius(Level level, Player player, int mode, IBreakValidator breakValidator, boolean damageTool) {
@@ -181,5 +192,24 @@ public class ToolFunctions {
             //Drop Item
             level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack));
         }
+    }
+
+    public static boolean breakInRadius(BlockState state, Level level, BlockPos pos, Player player, Jobs job, int requiredLevel) {
+        if (player.isCrouching() || level.isClientSide || state.getBlock() instanceof ShulkerBoxBlock) return true;
+        if (JobGetters.jobIsEnabled(player, job) && JobGetters.getJobLevel(player, job) >= requiredLevel) {
+            CompoundTag tag = player.getMainHandItem().getOrCreateTag();
+            if (!MinerEvents.veinMinerArray.contains(player.getUUID())) {
+                float destroySpeed = level.getBlockState(pos).getDestroySpeed(null, null);
+                ToolFunctions.breakInRadius(level, player, tag.contains("mode") ? tag.getInt("mode") : 0, (breakState) -> {
+                    double hardness = breakState.getDestroySpeed(null, null);
+                    boolean isEffective = player.getMainHandItem().isCorrectToolForDrops(breakState);
+                    boolean verifyHardness = hardness < destroySpeed * 5 && hardness > 0;
+                    return isEffective && verifyHardness;
+                }, true);
+            }
+        } else {
+            HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));
+        }
+        return true;
     }
 }

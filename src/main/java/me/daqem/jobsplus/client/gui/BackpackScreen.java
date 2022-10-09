@@ -25,11 +25,6 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
     }
 
     @Override
-    protected void init() {
-        super.init();
-    }
-
-    @Override
     protected void renderBg(@Nonnull PoseStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, this.GUI);
