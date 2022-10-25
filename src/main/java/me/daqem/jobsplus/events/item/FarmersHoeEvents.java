@@ -63,49 +63,18 @@ public class FarmersHoeEvents {
                             Block block = state.getBlock();
                             if (block instanceof CropBlock cropBlock) {
                                 if (cropBlock.isMaxAge(state)) {
-                                    if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
-                                        if (Math.random() * 100 < 10) {
-                                            if (block == Blocks.WHEAT) {
-                                                dropBetterItem(player, level, blockPos, Items.HAY_BLOCK, itemUsed);
-                                            } else if (block == Blocks.CARROTS) {
-                                                dropBetterItem(player, level, blockPos, Items.GOLDEN_CARROT, itemUsed);
-                                            } else if (block == Blocks.POTATOES) {
-                                                dropBetterItem(player, level, blockPos, Items.BAKED_POTATO, itemUsed);
-                                            } else if (block == Blocks.BEETROOTS) {
-                                                dropBetterItem(player, level, blockPos, Items.BEETROOT_SOUP, itemUsed);
-                                            }
-                                        }
+                                    if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true) && Math.random() * 100 < 10) {
+                                        dropBetterItem(player, level, blockPos, block == Blocks.WHEAT ? Items.HAY_BLOCK : block == Blocks.CARROTS ? Items.GOLDEN_CARROT : block == Blocks.POTATOES ? Items.BAKED_POTATO : block == Blocks.BEETROOTS ? Items.BEETROOT_SOUP : Items.AIR, itemUsed);
                                     }
-                                    exp += 1;
-                                    ModItemUtils.damageItem(1, stack, player);
-                                    List<ItemStack> drops = state.getDrops(ItemHandler.drops(level, blockPos, player, stack));
-                                    for (ItemStack drop : drops) {
-                                        if (drop.getCount() > 1) {
-                                            drop.setCount(drop.getCount() - 1);
-                                        }
-                                        dropHandler(drop, player, level, blockPos);
-                                    }
-                                    player.level.setBlockAndUpdate(blockPos, block.defaultBlockState());
-                                    event.setCancellationResult(InteractionResult.SUCCESS);
-                                    event.setCanceled(true);
+                                    exp += removeOneDropAndReplant(event, player, level, stack, blockPos, state, block, ExpHandler.getEXPLowest());
                                 }
                             }
                             if (block == Blocks.MELON || block == Blocks.PUMPKIN) {
-                                if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
-                                    if (block == Blocks.MELON) {
-                                        if (Math.random() * 100 < 10) {
-                                            dropBetterItem(player, level, blockPos, Items.GLISTERING_MELON_SLICE, itemUsed);
-                                        }
-                                    } else {
-                                        if (Math.random() * 100 < 5) {
-                                            dropBetterItem(player, level, blockPos, Items.PUMPKIN_PIE, itemUsed);
-                                        } else if (Math.random() * 100 < 10) {
-                                            dropBetterItem(player, level, blockPos, Items.CARVED_PUMPKIN, itemUsed);
-                                        }
-                                    }
+                                if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true) && Math.random() * 100 < 10) {
+                                    dropBetterItem(player, level, blockPos, block == Blocks.MELON ? Items.GLISTERING_MELON_SLICE : Items.PUMPKIN_PIE, itemUsed);
                                 }
                                 if (!FarmerEvents.blockPosArrayList.contains(blockPos)) {
-                                    exp += 2;
+                                    exp += ExpHandler.getEXPLow();
                                 }
                                 ModItemUtils.damageItem(2, stack, player);
                                 List<ItemStack> drops = state.getDrops(ItemHandler.drops(level, blockPos, player, stack));
@@ -120,27 +89,16 @@ public class FarmersHoeEvents {
                             }
                             if (block == Blocks.NETHER_WART) {
                                 if (CropHandler.stateToAge(state) == 3) {
-                                    exp += 2;
-                                    ModItemUtils.damageItem(2, stack, player);
-                                    List<ItemStack> drops = state.getDrops(ItemHandler.drops(level, blockPos, player, stack));
-                                    for (ItemStack drop : drops) {
-                                        if (drop.getCount() > 1) {
-                                            drop.setCount(drop.getCount() - 1);
-                                        }
-                                        dropHandler(drop, player, level, blockPos);
-                                    }
-                                    player.level.setBlockAndUpdate(blockPos, block.defaultBlockState());
-                                    event.setCancellationResult(InteractionResult.SUCCESS);
-                                    event.setCanceled(true);
+                                    exp += removeOneDropAndReplant(event, player, level, stack, blockPos, state, block, ExpHandler.getEXPLow());
                                 }
                             }
                             if (block instanceof SweetBerryBushBlock) {
                                 if (CropHandler.stateToAge(state) >= 2) {
                                     if (CropHandler.stateToAge(state) == 2) {
-                                        exp += 1;
+                                        exp += ExpHandler.getEXPLowest();
                                         ModItemUtils.damageItem(1, stack, player);
                                     } else {
-                                        exp += 2;
+                                        exp += ExpHandler.getEXPLow();
                                         ModItemUtils.damageItem(2, stack, player);
                                     }
                                     event.setCanceled(true);
@@ -153,7 +111,7 @@ public class FarmersHoeEvents {
                             }
                             if (block.getDescriptionId().equals("block.farmersdelight.tomatoes")) {
                                 if (CropHandler.stateToAge(state) == 7) {
-                                    exp += 2;
+                                    exp += ExpHandler.getEXPLowest();
                                     ModItemUtils.damageItem(1, stack, player);
                                     event.setCanceled(true);
                                     List<ItemStack> drops = state.getDrops(ItemHandler.drops(level, blockPos, player, stack));
@@ -164,8 +122,8 @@ public class FarmersHoeEvents {
                                 }
                             }
                             if (block == Blocks.SUGAR_CANE || block == Blocks.CACTUS || block == Blocks.BAMBOO || block == Blocks.KELP_PLANT) {
-                                ArrayList<BlockPos> array = new ArrayList<>();
                                 if (stack.getItem() != ModItems.FARMERS_HOE_LEVEL_1.get()) {
+                                    ArrayList<BlockPos> array = new ArrayList<>();
                                     ModItemUtils.damageItem(2, stack, player);
                                     if (block == Blocks.KELP) {
                                         array.add(blockPos);
@@ -224,6 +182,21 @@ public class FarmersHoeEvents {
         }
     }
 
+    private int removeOneDropAndReplant(PlayerInteractEvent.RightClickBlock event, Player player, Level level, ItemStack stack, BlockPos blockPos, BlockState state, Block block, int exp) {
+        ModItemUtils.damageItem(1, stack, player);
+        List<ItemStack> drops = state.getDrops(ItemHandler.drops(level, blockPos, player, stack));
+        for (ItemStack drop : drops) {
+            if (drop.getCount() > 1) {
+                drop.setCount(drop.getCount() - 1);
+            }
+            dropHandler(drop, player, level, blockPos);
+        }
+        player.level.setBlockAndUpdate(blockPos, block.defaultBlockState());
+        event.setCancellationResult(InteractionResult.SUCCESS);
+        event.setCanceled(true);
+        return exp;
+    }
+
     public void dropHandler(ItemStack drop, Player player, Level level, BlockPos blockPos) {
         dropItems(drop, player, level, blockPos);
         if (JobGetters.hasSuperPowerEnabled(player, Jobs.FARMER, true)) dropItems(drop, player, level, blockPos);
@@ -240,6 +213,7 @@ public class FarmersHoeEvents {
     }
 
     public void dropBetterItem(Player player, Level level, BlockPos blockPos, Item item, Item itemUsed) {
+        if (item == Items.AIR) return;
         if (itemUsed == ModItems.FARMERS_HOE_LEVEL_4.get()) {
             ItemHandler.addItemsToInventoryOrDrop(item.getDefaultInstance(), player, level, blockPos, 0);
         } else {

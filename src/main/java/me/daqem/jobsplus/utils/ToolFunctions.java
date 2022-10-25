@@ -26,7 +26,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -66,19 +65,20 @@ public class ToolFunctions {
                 BlockState state = level.getBlockState(pos);
                 if (breakValidator.canBreak(state)) {
                     Block block = state.getBlock();
-                    if (player.getMainHandItem().getItem() instanceof HammerItem) {
+                    ItemStack stack = player.getMainHandItem();
+                    if (stack.getItem() instanceof HammerItem) {
                         if (MinerEvents.lowestList.contains(block)) {
                             minerExp += ExpHandler.getEXPLowest();
                         } else if (block instanceof DropExperienceBlock && block != Blocks.SCULK) {
                             minerExp += ExpHandler.getEXPMid();
                         } else if (MinerEvents.lowList.contains(block)
                                 || state.is(BlockTags.TERRACOTTA)
-                                || (player.getMainHandItem().getItem() instanceof PickaxeItem && player.getMainHandItem().isCorrectToolForDrops(state))) {
+                                || (stack.getItem() instanceof PickaxeItem && stack.isCorrectToolForDrops(state))) {
                             minerExp += ExpHandler.getEXPLow();
                         }
                         player.awardStat(Stats.BLOCK_MINED.get(block));
                     }
-                    final boolean isExcavator = player.getMainHandItem().getItem() instanceof ExcavatorItem;
+                    final boolean isExcavator = stack.getItem() instanceof ExcavatorItem;
                     if (isExcavator) {
                         if (DiggerEvents.lowestList.contains(block)) {
                             diggerExp += ExpHandler.getEXPLowest();
@@ -90,9 +90,9 @@ public class ToolFunctions {
                     level.removeBlock(pos, false);
 
                     if (!player.isCreative()) {
-                        int bonusLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
-                        int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
-                        final List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
+                        int bonusLevel = stack.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
+                        int silkLevel = stack.getEnchantmentLevel(Enchantments.SILK_TOUCH);
+                        final List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, stack);
                         final List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops);
                         final int exp = state.getExpDrop(level, level.random, pos, bonusLevel, silkLevel);
 
@@ -125,8 +125,7 @@ public class ToolFunctions {
                 MobEffectHandler.addPlayerPowerUpEffects(player, digger);
             }
             if (toolDamage > 0) {
-                player.getInventory().getSelected().hurtAndBreak(toolDamage, player, player1 -> {
-                });
+                ModItemUtils.damageItem(toolDamage, player.getInventory().getSelected(), player);
             }
         }
     }

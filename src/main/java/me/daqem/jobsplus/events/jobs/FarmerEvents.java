@@ -189,7 +189,7 @@ public class FarmerEvents {
 
         Block block = event.getPlacedBlock().getBlock();
 
-        if (block == Blocks.SUGAR_CANE || block == Blocks.CACTUS || block == Blocks.PUMPKIN || block == Blocks.MELON) {
+        if (block == Blocks.SUGAR_CANE || block == Blocks.CACTUS || block == Blocks.PUMPKIN || block == Blocks.MELON || block == Blocks.BAMBOO || block == Blocks.KELP_PLANT) {
             blockPosArrayList.add(event.getPos());
         }
 

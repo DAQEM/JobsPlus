@@ -43,12 +43,10 @@ public class ModExperienceBottleItem extends JobsPlusItem.ExperienceBottle {
             thrownExperienceBottle.shootFromRotation(player, player.getXRot(), player.getYRot(), -20.0F, 0.7F, 1.0F);
             level.addFreshEntity(thrownExperienceBottle);
         }
-
         player.awardStat(Stats.ITEM_USED.get(this));
         if (!player.getAbilities().instabuild) {
             itemstack.shrink(1);
         }
-
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
 
@@ -78,24 +76,6 @@ public class ModExperienceBottleItem extends JobsPlusItem.ExperienceBottle {
     }
 
     public int tierToEXP(int tier) {
-        if (tier == 1) {
-            return 10;
-        }
-        if (tier == 2) {
-            return 25;
-        }
-        if (tier == 3) {
-            return 50;
-        }
-        if (tier == 4) {
-            return 100;
-        }
-        if (tier == 5) {
-            return 200;
-        }
-        if (tier == 6) {
-            return 500;
-        }
-        return 0;
+        return tier == 1 ? 10 : tier == 2 ? 25 : tier == 3 ? 50 : tier == 4 ? 100 : tier == 5 ? 200 : tier == 6 ? 500 : 0;
     }
 }

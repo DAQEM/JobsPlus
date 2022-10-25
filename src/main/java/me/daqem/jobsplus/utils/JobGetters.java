@@ -23,7 +23,8 @@ public class JobGetters {
     }
 
     public static int getJobLevel(Player player, Jobs job) {
-        return getJobArray(player, job)[CapType.LEVEL.get()];
+        int[] array = getJobArray(player, job);
+        return array.length == 0 ? 0 : array[CapType.LEVEL.get()];
     }
 
     public static int getJobEXP(Player player, Jobs job) {

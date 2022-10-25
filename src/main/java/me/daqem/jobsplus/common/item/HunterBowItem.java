@@ -5,6 +5,7 @@ import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.ModItemUtils;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -19,7 +20,6 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +36,7 @@ public class HunterBowItem extends JobsPlusItem.Bow {
     @Override
     public void releaseUsing(@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity livingEntity, int timeLeft) {
         if (livingEntity instanceof Player player) {
-            boolean flag = player.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, stack) > 0;
+            boolean flag = player.getAbilities().instabuild || stack.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0;
             ItemStack itemstack = player.getProjectile(stack);
 
             int i = this.getUseDuration(stack) - timeLeft;
@@ -64,33 +64,25 @@ public class HunterBowItem extends JobsPlusItem.Bow {
                         if (f == 1.0F) {
                             abstractarrow.setCritArrow(true);
                         }
-
-                        int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
-
+                        int j = stack.getEnchantmentLevel(Enchantments.POWER_ARROWS);
                         if (j > 0) {
                             abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() + (double) j * 0.5D + 0.5D + extraDamage(stack));
                         } else {
-
                             abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() + 0.5D + extraDamage(stack));
                         }
-
-                        int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
+                        int k = stack.getEnchantmentLevel(Enchantments.PUNCH_ARROWS);
                         if (k > 0) {
                             abstractarrow.setKnockback(k);
                         }
-
-                        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, stack) > 0) {
+                        if (stack.getEnchantmentLevel(Enchantments.FLAMING_ARROWS) > 0) {
                             abstractarrow.setSecondsOnFire(100);
                         }
-
-                        stack.hurtAndBreak(1, player, (p_40665_) -> p_40665_.broadcastBreakEvent(player.getUsedItemHand()));
+                        ModItemUtils.damageItem(1, stack, player);
                         if (flag1 || player.getAbilities().instabuild && (itemstack.is(Items.SPECTRAL_ARROW) || itemstack.is(Items.TIPPED_ARROW))) {
                             abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
-
                         level.addFreshEntity(abstractarrow);
                     }
-
                     level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.4F + 1.2F) + f * 0.5F);
                     if (!flag1 && !player.getAbilities().instabuild) {
                         itemstack.shrink(1);
@@ -98,7 +90,6 @@ public class HunterBowItem extends JobsPlusItem.Bow {
                             player.getInventory().removeItem(itemstack);
                         }
                     }
-
                     player.awardStat(Stats.ITEM_USED.get(this));
                 }
             }

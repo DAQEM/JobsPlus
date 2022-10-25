@@ -34,11 +34,11 @@ public class CurseBreakEvents {
                 }
                 if (EnchantmentHelper.getEnchantments(out).size() == map.size()) return;
                 if (out.getItem() == Items.ENCHANTED_BOOK) {
-                    CompoundTag compoundTag = new CompoundTag();
                     ListTag tags = new ListTag();
                     for (Map.Entry<Enchantment, Integer> entry : map.entrySet()) {
                         tags.add(EnchantmentHelper.storeEnchantment(EnchantmentHelper.getEnchantmentId(entry.getKey()), entry.getValue()));
                     }
+                    CompoundTag compoundTag = new CompoundTag();
                     compoundTag.put("StoredEnchantments", tags);
                     out.setTag(compoundTag);
                     if (!Objects.equals(event.getName(), "")) {

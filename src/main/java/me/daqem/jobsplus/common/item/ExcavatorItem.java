@@ -32,10 +32,8 @@ public class ExcavatorItem extends JobsPlusItem.Shovel {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        InteractionResultHolder<ItemStack> use = super.use(level, player, hand);
-        if (!player.isShiftKeyDown() || level.isClientSide) return use;
-        ItemHandler.switchMode(player, hand);
-        return use;
+        if (player.isShiftKeyDown() && !level.isClientSide) ItemHandler.switchMode(player, hand);
+        return super.use(level, player, hand);
     }
 
     @Override

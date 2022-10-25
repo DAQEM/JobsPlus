@@ -1,9 +1,9 @@
 package me.daqem.jobsplus;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import me.daqem.jobsplus.client.renderer.entity.ModFishingHookRenderer;
 import me.daqem.jobsplus.client.gui.BackpackScreen;
 import me.daqem.jobsplus.client.gui.ConstructionScreen;
+import me.daqem.jobsplus.client.renderer.entity.ModFishingHookRenderer;
 import me.daqem.jobsplus.common.data.generation.ModDataGenerator;
 import me.daqem.jobsplus.events.*;
 import me.daqem.jobsplus.events.item.CurseBreakEvents;
@@ -39,7 +39,6 @@ public class SideProxy {
         modEventBus.register(new EventRegisterCapabilities());
         modEventBus.register(new EventAttachCapabilities());
         modEventBus.register(new EventRegisterCommands());
-        modEventBus.register(new EventServerChat());
         modEventBus.register(new EventNameFormat());
         modEventBus.register(new EventPlayerTick());
         modEventBus.register(new EventPlayerLoggedIn());

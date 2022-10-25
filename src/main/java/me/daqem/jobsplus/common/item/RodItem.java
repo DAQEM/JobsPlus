@@ -7,6 +7,7 @@ import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.ModItemUtils;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.ChatFormatting;
@@ -50,7 +51,7 @@ public class RodItem extends JobsPlusItem.Rod {
                 if (fishing != null) {
                     if (!level.isClientSide) {
                         int i = fishing.retrieve(itemstack);
-                        itemstack.hurtAndBreak(i, player, (player1) -> player1.broadcastBreakEvent(hand));
+                        ModItemUtils.damageItem(i, itemstack, player);
                     }
                     level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_RETRIEVE, SoundSource.NEUTRAL, 1.0F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
                     player.gameEvent(GameEvent.ITEM_INTERACT_FINISH);

@@ -9,6 +9,7 @@ import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
 import me.daqem.jobsplus.utils.HeadData;
 import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.ModItemUtils;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
@@ -17,7 +18,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -49,7 +49,6 @@ import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.WallSkullBlock;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -241,34 +240,30 @@ public class HunterEvents {
         if (EnchantmentHelper.getTagEnchantmentLevel(Enchantments.MULTISHOT, event.getBow()) != 0) return;
 
         float power = BowItem.getPowerForTime(event.getCharge());
-        boolean flag = player.getAbilities().instabuild;
         float[] afloat = getShotPitches((Random) player.getRandom());
 
-        shootProjectile(event.getLevel(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[1], flag, power * 3, -10.0F);
-        shootProjectile(event.getLevel(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[2], flag, power * 3, 10.0F);
+        shootProjectile(event.getLevel(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[1], power * 3, -10.0F);
+        shootProjectile(event.getLevel(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[2], power * 3, 10.0F);
     }
 
-    private void shootProjectile(Level p_40895_, LivingEntity p_40896_, ItemStack p_40898_, ItemStack p_40899_,
-                                 float p_40900_, boolean p_40901_, float p_40902_, float p_40904_) {
-        AbstractArrow projectile = getArrow(p_40895_, p_40896_, p_40898_, p_40899_);
-        if (p_40901_ || p_40904_ != 0.0F) {
-            projectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+    private void shootProjectile(Level level, LivingEntity livingEntity, ItemStack bow, ItemStack arrow,
+                                 float shotPitch, float power, float pitch) {
+        if (livingEntity instanceof Player player) {
+            AbstractArrow projectile = getArrow(level, player, bow, arrow);
+            if (player.getAbilities().instabuild || pitch != 0.0F) {
+                projectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+            }
+            Vector3f vector3f = new Vector3f(player.getViewVector(1.0F));
+            vector3f.transform(new Quaternion(new Vector3f(player.getUpVector(1.0F)), pitch, true));
+            projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), power, (float) 1.0);
+
+            ModItemUtils.damageItem(1, bow, player);
+            level.addFreshEntity(projectile);
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, shotPitch);
         }
-        Vec3 vec31 = p_40896_.getUpVector(1.0F);
-        Quaternion quaternion = new Quaternion(new Vector3f(vec31), p_40904_, true);
-        Vec3 vec3 = p_40896_.getViewVector(1.0F);
-        Vector3f vector3f = new Vector3f(vec3);
-        vector3f.transform(quaternion);
-        projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), p_40902_, (float) 1.0);
-
-
-        p_40898_.hurtAndBreak(1, p_40896_, (p_40858_) -> p_40858_.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-        p_40895_.addFreshEntity(projectile);
-        p_40895_.playSound(null, p_40896_.getX(), p_40896_.getY(), p_40896_.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, p_40900_);
-
     }
 
-    private AbstractArrow getArrow(Level p_40915_, LivingEntity p_40916_, ItemStack p_40917_, ItemStack p_40918_) {
+    private AbstractArrow getArrow(Level p_40915_, LivingEntity p_40916_, ItemStack stack, ItemStack p_40918_) {
         ArrowItem arrowitem = (ArrowItem) (p_40918_.getItem() instanceof ArrowItem ? p_40918_.getItem() : Items.ARROW);
         AbstractArrow abstractarrow = arrowitem.createArrow(p_40915_, p_40918_, p_40916_);
         if (p_40916_ instanceof Player) {
@@ -277,7 +272,7 @@ public class HunterEvents {
 
         abstractarrow.setSoundEvent(SoundEvents.CROSSBOW_HIT);
         abstractarrow.setShotFromCrossbow(true);
-        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, p_40917_);
+        int i = stack.getEnchantmentLevel(Enchantments.PIERCING);
         if (i > 0) {
             abstractarrow.setPierceLevel((byte) i);
         }
@@ -298,11 +293,8 @@ public class HunterEvents {
     @SuppressWarnings("deprecation")
     public String getEntityString(Entity entity) {
         String entityString = entity.getType().getDescriptionId().replace("item.", "");
-        if (entityString != null) {
-            if (entityString.contains(".")) entityString = entityString.split("\\.")[1];
-            entityString = WordUtils.capitalize(entityString.replace("_", " ")).replace(" ", "").replace("Entity", "");
-        }
-        return entityString;
+        if (entityString.contains(".")) entityString = entityString.split("\\.")[1];
+        return WordUtils.capitalize(entityString.replace("_", " ")).replace(" ", "").replace("Entity", "");
     }
 
     public String getName(Entity entity) {

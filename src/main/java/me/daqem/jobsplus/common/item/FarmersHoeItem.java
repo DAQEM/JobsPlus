@@ -3,7 +3,6 @@ package me.daqem.jobsplus.common.item;
 import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
-import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.nbt.CompoundTag;
@@ -23,42 +22,28 @@ import java.util.List;
 
 public class FarmersHoeItem extends JobsPlusItem.Hoe {
 
+    public static final String MODE = "mode";
+
     public FarmersHoeItem(Tier tier, int attackDamage, float attackSpeed, Properties properties) {
         super(tier, attackDamage, attackSpeed, properties, Jobs.FARMER);
     }
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        if (!level.isClientSide && player.isCrouching()) {
-            ItemStack stack = player.getMainHandItem();
-            CompoundTag orCreateTag = stack.getOrCreateTag();
-            int mode = orCreateTag.getInt("mode");
-            if (orCreateTag.contains("mode")) {
-                if (stack.getItem() == ModItems.FARMERS_HOE_LEVEL_1.get()) {
-                    orCreateTag.putInt("mode", 0);
-                } else {
-                    if (stack.getItem() == ModItems.FARMERS_HOE_LEVEL_2.get()) {
-                        if (mode == 0) {
-                            orCreateTag.putInt("mode", 1);
-                        } else {
-                            orCreateTag.putInt("mode", 0);
-                        }
-                    } else if (stack.getItem() == ModItems.FARMERS_HOE_LEVEL_3.get()
-                            || stack.getItem() == ModItems.FARMERS_HOE_LEVEL_4.get()) {
-                        if (mode != 2) {
-                            orCreateTag.putInt("mode", mode + 1);
-                        } else {
-                            orCreateTag.putInt("mode", 0);
-                        }
-                    }
-                }
-            } else {
-                orCreateTag.putInt("mode", 0);
-            }
-            HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + getModeString(stack));
-            SoundHandler.playChangeToolModeSound(player);
+        InteractionResultHolder<ItemStack> use = super.use(level, player, hand);
+        if (level.isClientSide || !player.isCrouching()) return use;
+        ItemStack stack = player.getItemInHand(hand);
+        CompoundTag tag = stack.getOrCreateTag();
+        if (!tag.contains(MODE)) tag.putInt(MODE, 0);
+        int tagInt = tag.getInt(MODE);
+        if ((stack.getDescriptionId().contains("_level_2") && tagInt != 1) || ((stack.getDescriptionId().contains("_level_3") || stack.getDescriptionId().contains("_level_4")) && tagInt != 2)) {
+            tag.putInt(MODE, ++tagInt);
+        } else {
+            tag.putInt(MODE, 0);
         }
-        return super.use(level, player, hand);
+        HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + getModeString(stack));
+        SoundHandler.playChangeToolModeSound(player);
+        return use;
     }
 
     @Override
@@ -75,7 +60,7 @@ public class FarmersHoeItem extends JobsPlusItem.Hoe {
     }
 
     public String getModeString(ItemStack stack) {
-        int mode = stack.getOrCreateTag().getInt("mode");
+        int mode = stack.getOrCreateTag().getInt(MODE);
         return mode == 0 ? "Single Block" : mode == 1 ? "3x3" : "5x5";
     }
 

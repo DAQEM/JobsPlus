@@ -53,30 +53,6 @@ public class MinerEvents {
         }
     }
 
-//    public static void attemptBreak(Level level, BlockPos pos, Player player) {
-//        if (level.isClientSide) return;
-//        BlockState state = level.getBlockState(pos);
-//        Block block = state.getBlock();
-//        boolean isEffective = (block instanceof DropExperienceBlock && block != Blocks.SCULK) || block instanceof RedStoneOreBlock || (!(block.getDescriptionId().startsWith("block.minecraft.")) && block.getDescriptionId().endsWith("_ore"));
-//        boolean witherImmune = state.is(BlockTags.WITHER_IMMUNE);
-//
-//        if (!isEffective && witherImmune) return;
-//
-//        ((ServerPlayer) player).gameMode.destroyBlock(pos);
-//        level.destroyBlock(pos, false);
-//
-//        if (player.isCreative()) return;
-//
-//        List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, player.getMainHandItem());
-//        int bonusLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
-//        int silkLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
-//        int exp = state.getExpDrop(level, level.random, pos, bonusLevel, silkLevel);
-//        if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES) || state.is(Blocks.ANCIENT_DEBRIS)
-//                && JobGetters.hasPowerupEnabled(player, Jobs.MINER, CapType.POWER_UP2.get(), true))
-//            exp = 1;
-//        dropItems(level, ItemHandler.smeltedRawMaterials(player, drops), pos, exp);
-//    }
-
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
@@ -140,7 +116,7 @@ public class MinerEvents {
             Block block = level.getBlockState(candidate).getBlock();
 
             if (isOre(block)) {
-                if (block == event.getState().getBlock()) {
+                if (event.getState().is(block)) {
                     ores.add(candidate);
                     for (int x = -1; x <= 1; x++) {
                         for (int y = -1; y <= 1; y++) {
