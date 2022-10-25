@@ -129,8 +129,7 @@ public class HunterEvents {
         if (!(block instanceof SkullBlock || block instanceof WallSkullBlock)) return;
         BlockPos pos = event.getPos();
         SkullBlockEntity sbe = (SkullBlockEntity) level.getBlockEntity(pos);
-        if (event.getPlayer().isCreative() && sbe == null) return;
-        @SuppressWarnings("ConstantConditions")
+        if (event.getPlayer().isCreative() || sbe == null) return;
         GameProfile profile = sbe.getOwnerProfile();
         if (profile == null) return;
         UUID uuid = profile.getId();
