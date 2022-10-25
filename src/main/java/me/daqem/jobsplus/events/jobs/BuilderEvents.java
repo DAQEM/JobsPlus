@@ -24,14 +24,16 @@ import java.util.Objects;
 
 public class BuilderEvents {
 
+    private static final String[] bannedTools = new String[]{"structurize", "constructionwand", "wrench"};
+
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
         if (event.getLevel().isClientSide()) return;
         if (event.getEntity() instanceof Player player) {
-            if (player.getMainHandItem().getDescriptionId().contains("structurize")
-                    || player.getOffhandItem().getDescriptionId().contains("structurize")) return;
-            if (player.getMainHandItem().getDescriptionId().contains("constructionwand")
-                    || player.getOffhandItem().getDescriptionId().contains("constructionwand")) return;
+            for (String bannedTool : bannedTools) {
+                if (player.getMainHandItem().getDescriptionId().contains(bannedTool)
+                        || player.getOffhandItem().getDescriptionId().contains(bannedTool)) return;
+            }
             if (!JobGetters.jobIsEnabled(player, Jobs.BUILDER)) return;
             BlockState state = event.getPlacedBlock();
             Block block = state.getBlock();
