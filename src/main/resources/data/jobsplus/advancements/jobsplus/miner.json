@@ -4,7 +4,7 @@
       "item": "minecraft:diamond_pickaxe"
     },
     "title": "Miner",
-    "description": "Become an Miner",
+    "description": "Become a Miner",
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": false

@@ -42,6 +42,7 @@ public class Config {
 
     //CATEGORY_ALCHEMIST
     public static ForgeConfigSpec.BooleanValue ALLOW_ALL_EFFECTS;
+    public static ForgeConfigSpec.BooleanValue ENABLE_POTION_OF_FLIGHT;
 
     //CATEGORY_MINER
     public static ForgeConfigSpec.IntValue MAX_VEIN_MINER_BLOCKS;
@@ -82,6 +83,7 @@ public class Config {
         serverBuilder.pop();
         serverBuilder.push(CATEGORY_ALCHEMIST);
         ALLOW_ALL_EFFECTS = serverBuilder.comment("Don't remove effect when alchemist level isn't high enough if true.").define("allow_all_effects", false);
+        ENABLE_POTION_OF_FLIGHT = serverBuilder.define("enable_potion_of_flight", true);
         serverBuilder.pop();
         serverBuilder.push(CATEGORY_MINER);
         MAX_VEIN_MINER_BLOCKS = serverBuilder.defineInRange("max_vein_miner_blocks", 511, 0, 4095);

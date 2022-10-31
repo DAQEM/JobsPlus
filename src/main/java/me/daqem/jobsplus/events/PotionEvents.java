@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.events;
 
 import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModEffects;
 import me.daqem.jobsplus.utils.ChatColor;
@@ -52,7 +53,7 @@ public class PotionEvents {
                     if (effect.getEffect().getCategory() == MobEffectCategory.HARMFUL || effect.getEffect() == MobEffects.BAD_OMEN) {
                         if (player instanceof ServerPlayer serverPlayer) {
                             EventPlayerTick.removeEffect.put(serverPlayer, effect.getEffect());
-                            HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, ChatColor.green() + "Removed bad effect.");
+                            HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, ChatColor.green() + JobsPlus.translatable("potion.removed.bad"));
                         }
                     }
                 }
@@ -134,10 +135,17 @@ public class PotionEvents {
         boolean mayfly = tag.getBoolean("mayfly");
         if (!player.isCreative() && !player.isSpectator()) {
             if (player.hasEffect(ModEffects.FLYING.get()) && !player.hasEffect(MobEffects.LEVITATION)) {
-                if (!(player.getAbilities()).mayfly) {
-                    (player.getAbilities()).mayfly = true;
-                    tag.putBoolean("mayfly", true);
-                    player.onUpdateAbilities();
+                if (Config.ENABLE_POTION_OF_FLIGHT.get()) {
+                    if (!(player.getAbilities()).mayfly) {
+                        (player.getAbilities()).mayfly = true;
+                        tag.putBoolean("mayfly", true);
+                        player.onUpdateAbilities();
+                    }
+                } else {
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, ChatColor.red() + JobsPlus.translatable("potion.disabled"));
+                        player.removeEffect(ModEffects.FLYING.get());
+                    }
                 }
             } else if ((mayfly && !player.hasEffect((ModEffects.FLYING.get())) || player.hasEffect(MobEffects.LEVITATION))) {
                 (player.getAbilities()).mayfly = false;
@@ -181,7 +189,7 @@ public class PotionEvents {
                 if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) {
                     if (event.getSource().getLocalizedDeathMessage(event.getEntity()).toString().contains("death.attack.indirectMagic")) {
                         event.setCanceled(true);
-                        HotbarMessageHandler.sendHotbarMessageServer(player, ChatColor.green() + "Removed bad effect.");
+                        HotbarMessageHandler.sendHotbarMessageServer(player, ChatColor.green() + JobsPlus.translatable("potion.removed.bad"));
                     }
                 }
             }

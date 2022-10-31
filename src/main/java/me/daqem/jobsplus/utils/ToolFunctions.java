@@ -36,7 +36,6 @@ import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +43,6 @@ import java.util.List;
 public class ToolFunctions {
 
     private ToolFunctions() {
-    }
-
-    public static void breakInRadius(@NotNull Level level, @NotNull Player player, float originHardness, int mode) {
-
     }
 
     public static void breakInRadius(Level level, Player player, int mode, IBreakValidator breakValidator, boolean damageTool) {
@@ -63,7 +58,7 @@ public class ToolFunctions {
             int toolDamage = -1;
             for (BlockPos pos : brokenBlocks) {
                 BlockState state = level.getBlockState(pos);
-                if (breakValidator.canBreak(state)) {
+                if (breakValidator.canBreak(state) && !(state.getBlock() instanceof ShulkerBoxBlock)) {
                     Block block = state.getBlock();
                     ItemStack stack = player.getMainHandItem();
                     if (stack.getItem() instanceof HammerItem) {

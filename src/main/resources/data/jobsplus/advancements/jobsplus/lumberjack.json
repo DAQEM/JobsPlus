@@ -4,7 +4,7 @@
       "item": "minecraft:golden_axe"
     },
     "title": "Lumberjack",
-    "description": "Become an Lumberjack",
+    "description": "Become a Lumberjack",
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": false

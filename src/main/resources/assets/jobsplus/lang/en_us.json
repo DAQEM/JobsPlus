@@ -420,5 +420,7 @@
   "jobsplus.tooltip.exp_jar.exp": "EXP: ",
   "jobsplus.tooltip.exp_jar.empty": "Empty",
   "jobsplus.tooltip.exp_jar.level": ", or %s level",
-  "jobsplus.tooltip.exp_jar.levels": ", or %s levels"
+  "jobsplus.tooltip.exp_jar.levels": ", or %s levels",
+  "jobsplus.potion.disabled": "This potion is disable in the config.",
+  "jobsplus.potion.removed.bad": "Removed bad effect."
 }
