@@ -9,8 +9,11 @@ import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -139,6 +142,7 @@ public class MinerEvents {
     private boolean isOre(Block block) {
         return ((block instanceof DropExperienceBlock && block != Blocks.SCULK)
                 || block instanceof RedStoneOreBlock
+                || block.builtInRegistryHolder().containsTag(new TagKey<>(Registry.BLOCK_REGISTRY, new ResourceLocation("forge", "ores")))
                 || block.getDescriptionId().endsWith("_ore")
                 || block == Blocks.ANCIENT_DEBRIS);
     }
