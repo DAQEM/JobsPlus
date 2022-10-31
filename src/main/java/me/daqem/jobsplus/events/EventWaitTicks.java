@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.events;
 
+import me.daqem.jobsplus.JobsPlus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -16,14 +17,15 @@ public class EventWaitTicks {
 
     public static void waitTicks(Player player, Type type, Block block, ArrayList<BlockPos> blockPosArray) {
         MinecraftForge.EVENT_BUS.register(new Object() {
-            int delay = 40;
+            int delay = type.waitTicks;
             int i = 0;
 
             @SubscribeEvent
             public void onTick(TickEvent.LevelTickEvent event) {
+                JobsPlus.LOGGER.error(delay);
                 if (delay-- > 0) return;
-                delay = 40;
-                if (type == Type.TREE_FELLER || type == Type.VEIN_MINER) {
+                delay = type.waitTicks;
+                if (type.isMultiBlockBreak) {
                     if (i < blockPosArray.size()) {
                         BlockPos blockPos = blockPosArray.get(i);
                         BlockState blockState = player.level.getBlockState(blockPos);
@@ -38,8 +40,7 @@ public class EventWaitTicks {
                     } else {
                         MinecraftForge.EVENT_BUS.unregister(this);
                     }
-                }
-                if (type == Type.GIVE_BLOCK_BACK) {
+                } else if (type == Type.GIVE_BLOCK_BACK) {
                     player.getInventory().add(new ItemStack(block.asItem(), 1));
                     MinecraftForge.EVENT_BUS.unregister(this);
                 }
@@ -48,8 +49,16 @@ public class EventWaitTicks {
     }
 
     public enum Type {
-        TREE_FELLER,
-        VEIN_MINER,
-        GIVE_BLOCK_BACK
+        TREE_FELLER(5, true),
+        VEIN_MINER(5, true),
+        GIVE_BLOCK_BACK(1, false);
+
+        final int waitTicks;
+        final boolean isMultiBlockBreak;
+
+        Type(int waitTicks, boolean isMultiBlockBreak) {
+            this.waitTicks = waitTicks;
+            this.isMultiBlockBreak = isMultiBlockBreak;
+        }
     }
 }

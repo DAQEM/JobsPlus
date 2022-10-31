@@ -4,7 +4,7 @@
       "item": "minecraft:fishing_rod"
     },
     "title": "Fisherman",
-    "description": "Become an Fisherman",
+    "description": "Become a Fisherman",
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": false

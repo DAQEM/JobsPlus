@@ -4,7 +4,7 @@
       "item": "minecraft:scaffolding"
     },
     "title": "Builder",
-    "description": "Become an Builder",
+    "description": "Become a Builder",
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": false

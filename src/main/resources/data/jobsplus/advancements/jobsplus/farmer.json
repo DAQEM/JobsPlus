@@ -4,7 +4,7 @@
       "item": "minecraft:stone_hoe"
     },
     "title": "Farmer",
-    "description": "Become an Farmer",
+    "description": "Become a Farmer",
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": false

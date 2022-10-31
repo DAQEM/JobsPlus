@@ -4,7 +4,7 @@
       "item": "minecraft:anvil"
     },
     "title": "Smith",
-    "description": "Become an Smith",
+    "description": "Become a Smith",
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": false

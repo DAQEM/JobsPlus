@@ -4,7 +4,7 @@
       "item": "minecraft:wooden_shovel"
     },
     "title": "Digger",
-    "description": "Become an Digger",
+    "description": "Become a Digger",
     "show_toast": true,
     "announce_to_chat": false,
     "hidden": false
