@@ -7,6 +7,9 @@
     "B": {
       "item": "minecraft:diamond_block"
     },
+    "I": {
+      "item": "minecraft:diamond"
+    },
     "H": {
       "item": "jobsplus:miners_hammer_level_2"
     },
@@ -18,11 +21,11 @@
     }
   },
   "pattern": [
-    "     ",
-    " NHN ",
-    " BSB ",
-    "  S  ",
-    "     "
+    " NI  ",
+    "NBII ",
+    " IHII",
+    " SIBN",
+    "S  N "
   ],
   "job": "MINER",
   "requiredLevel": 50

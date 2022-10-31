@@ -10,19 +10,22 @@
     "E": {
       "item": "jobsplus:hunters_sword_level_1"
     },
-    "I": {
+    "B": {
       "item": "minecraft:gold_block"
+    },
+    "I": {
+      "item": "minecraft:gold_ingot"
     },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "     ",
-    "  D  ",
-    " IEI ",
-    "  S  ",
-    "     "
+    "   ID",
+    "I III",
+    " III ",
+    "BEI  ",
+    "SB I "
   ],
   "job": "HUNTER",
   "requiredLevel": 25

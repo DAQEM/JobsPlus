@@ -10,19 +10,25 @@
     "E": {
       "item": "jobsplus:fishermans_rod_level_3"
     },
-    "I": {
+    "B": {
       "item": "minecraft:emerald_block"
+    },
+    "I": {
+      "item": "minecraft:emerald"
     },
     "S": {
       "item": "minecraft:string"
+    },
+    "T": {
+      "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "     ",
-    "   I ",
-    "  ES ",
-    " D S ",
-    "     "
+    "    B",
+    "   DS",
+    "  E S",
+    " I  S",
+    "T  D "
   ],
   "job": "FISHERMAN",
   "requiredLevel": 75

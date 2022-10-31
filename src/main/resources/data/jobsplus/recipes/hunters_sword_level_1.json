@@ -7,19 +7,22 @@
     "D": {
       "item": "minecraft:diamond"
     },
-    "I": {
+    "B": {
       "item": "minecraft:iron_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
     },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "     ",
-    "  D  ",
-    " IDI ",
-    "  S  ",
-    "     "
+    "   II",
+    "I III",
+    " III ",
+    "BDI  ",
+    "SB I "
   ],
   "job": "HUNTER",
   "requiredLevel": 5

@@ -10,19 +10,25 @@
     "E": {
       "item": "jobsplus:hunters_bow_level_2"
     },
-    "I": {
+    "B": {
       "item": "minecraft:diamond_block"
+    },
+    "I": {
+      "item": "minecraft:diamond"
     },
     "S": {
       "item": "minecraft:string"
+    },
+    "T": {
+      "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "     ",
-    "  IS ",
-    " DES ",
-    "  IS ",
-    "     "
+    "  BIT",
+    " D  S",
+    "B ES ",
+    "I S  ",
+    "TS   "
   ],
   "job": "HUNTER",
   "requiredLevel": 50

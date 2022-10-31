@@ -8,6 +8,9 @@
       "item": "minecraft:diamond"
     },
     "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "B": {
       "item": "minecraft:iron_block"
     },
     "S": {
@@ -15,11 +18,11 @@
     }
   },
   "pattern": [
-    "     ",
-    " DII ",
-    " DS  ",
-    "  S  ",
-    "     "
+    "II   ",
+    "III  ",
+    " BDI ",
+    " SBI ",
+    "S    "
   ],
   "job": "FARMER",
   "requiredLevel": 5

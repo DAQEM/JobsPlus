@@ -98,7 +98,7 @@ public class ConstructionMenu extends RecipeBookMenu<CraftingContainer> {
             Item item = craftingContainer.getItem(j).getItem();
             if (item instanceof BackpackItem || item instanceof ExcavatorItem || item instanceof FarmersHoeItem ||
                     item instanceof RodItem || item instanceof HunterSwordItem || item instanceof HunterBowItem ||
-                    item instanceof LumberAxeItem || item instanceof HammerItem) {
+                    item instanceof LumberAxeItem || item instanceof HammerItem || item instanceof ModArmorItem) {
                 ++i;
             }
         }
@@ -110,7 +110,7 @@ public class ConstructionMenu extends RecipeBookMenu<CraftingContainer> {
             Item item = craftingContainer.getItem(j).getItem();
             if (item instanceof BackpackItem || item instanceof ExcavatorItem || item instanceof FarmersHoeItem ||
                     item instanceof RodItem || item instanceof HunterSwordItem || item instanceof HunterBowItem ||
-                    item instanceof LumberAxeItem || item instanceof HammerItem) {
+                    item instanceof LumberAxeItem || item instanceof HammerItem || item instanceof ModArmorItem) {
                 return craftingContainer.getItem(j).getTag();
             }
         }

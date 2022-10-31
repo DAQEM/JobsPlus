@@ -7,15 +7,18 @@
     "B": {
       "item": "minecraft:iron_block"
     },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
     "D": {
       "item": "minecraft:diamond"
     }
   },
   "pattern": [
     "     ",
-    "     ",
-    " D D ",
-    " B B ",
+    " I I ",
+    " I I ",
+    "DB BD",
     "     "
   ],
   "job": "SMITH",

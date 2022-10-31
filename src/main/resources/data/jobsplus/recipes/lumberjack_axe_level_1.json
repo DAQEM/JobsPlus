@@ -7,19 +7,22 @@
     "D": {
       "item": "minecraft:diamond"
     },
-    "I": {
+    "B": {
       "item": "minecraft:iron_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
     },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "     ",
-    " DII ",
-    "  SI ",
-    "  SD ",
-    "     "
+    " II  ",
+    "III  ",
+    "IBDI ",
+    " SBI ",
+    "S    "
   ],
   "job": "LUMBERJACK",
   "requiredLevel": 5

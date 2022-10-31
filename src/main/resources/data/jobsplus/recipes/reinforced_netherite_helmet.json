@@ -4,21 +4,18 @@
     "item": "jobsplus:reinforced_netherite_helmet"
   },
   "key": {
-    "B": {
-      "item": "minecraft:netherite_block"
-    },
     "D": {
       "item": "minecraft:netherite_ingot"
     },
     "N": {
-      "item": "minecraft:nether_star"
+      "item": "jobsplus:reinforced_diamond_helmet"
     }
   },
   "pattern": [
     "     ",
-    "     ",
-    " DND ",
-    " B B ",
+    "DDNDD",
+    "D   D",
+    "D   D",
     "     "
   ],
   "job": "SMITH",

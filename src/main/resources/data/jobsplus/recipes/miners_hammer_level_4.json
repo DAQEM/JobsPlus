@@ -7,6 +7,9 @@
     "B": {
       "item": "minecraft:emerald_block"
     },
+    "I": {
+      "item": "minecraft:emerald"
+    },
     "H": {
       "item": "jobsplus:miners_hammer_level_3"
     },
@@ -18,11 +21,11 @@
     }
   },
   "pattern": [
-    "     ",
-    " NHN ",
-    " BSB ",
-    "  S  ",
-    "     "
+    " NI  ",
+    "NBII ",
+    " IHII",
+    " SIBN",
+    "S  N "
   ],
   "job": "MINER",
   "requiredLevel": 75

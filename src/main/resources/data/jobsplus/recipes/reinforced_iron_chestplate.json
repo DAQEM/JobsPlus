@@ -7,6 +7,9 @@
     "B": {
       "item": "minecraft:iron_block"
     },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
     "D": {
       "item": "minecraft:diamond"
     },
@@ -15,11 +18,11 @@
     }
   },
   "pattern": [
-    "     ",
-    " N N ",
-    " BDB ",
-    " BBB ",
-    "     "
+    "I   I",
+    "IIBII",
+    "DBNBD",
+    "IIBII",
+    "IIIII"
   ],
   "job": "SMITH",
   "requiredLevel": 10

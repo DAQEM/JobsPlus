@@ -7,19 +7,22 @@
     "D": {
       "item": "minecraft:diamond"
     },
-    "I": {
+    "B": {
       "item": "minecraft:iron_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
     },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "     ",
-    "  DI ",
-    "  SD ",
-    " S   ",
-    "     "
+    "  I  ",
+    " III ",
+    " BDII",
+    " SBI ",
+    "S    "
   ],
   "job": "DIGGER",
   "requiredLevel": 5

@@ -7,18 +7,18 @@
     "B": {
       "item": "minecraft:diamond_block"
     },
-    "D": {
-      "item": "minecraft:netherite_ingot"
+    "I": {
+      "item": "minecraft:diamond"
     },
     "N": {
-      "item": "minecraft:nether_star"
+      "item": "jobsplus:obsidian_helmet"
     }
   },
   "pattern": [
     "     ",
-    "     ",
-    " DND ",
-    " B B ",
+    "IBNBI",
+    "I   I",
+    "I   I",
     "     "
   ],
   "job": "SMITH",

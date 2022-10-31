@@ -11,15 +11,15 @@
       "item": "minecraft:diamond_block"
     },
     "N": {
-      "item": "minecraft:netherite_ingot"
+      "item": "jobsplus:reinforced_iron_chestplate"
     }
   },
   "pattern": [
-    "     ",
-    " N N ",
-    " BDB ",
-    " BBB ",
-    "     "
+    "B   B",
+    "BBDBB",
+    "BDNDB",
+    "BBDBB",
+    "BBBBB"
   ],
   "job": "SMITH",
   "requiredLevel": 20

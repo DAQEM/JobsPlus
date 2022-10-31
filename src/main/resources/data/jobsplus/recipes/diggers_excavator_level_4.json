@@ -10,19 +10,22 @@
     "E": {
       "item": "jobsplus:diggers_excavator_level_3"
     },
-    "I": {
+    "B": {
       "item": "minecraft:emerald_block"
+    },
+    "I": {
+      "item": "minecraft:emerald"
     },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "     ",
-    "  DI ",
-    "  ED ",
-    " S   ",
-    "     "
+    "  D  ",
+    " IID ",
+    " BEID",
+    " SBI ",
+    "S    "
   ],
   "job": "DIGGER",
   "requiredLevel": 75

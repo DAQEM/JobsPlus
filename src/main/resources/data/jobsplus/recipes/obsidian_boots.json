@@ -9,13 +9,16 @@
     },
     "D": {
       "item": "minecraft:diamond_block"
+    },
+    "N": {
+      "item": "jobsplus:reinforced_iron_boots"
     }
   },
   "pattern": [
     "     ",
-    "     ",
-    " D D ",
     " B B ",
+    " BNB ",
+    "DB BD",
     "     "
   ],
   "job": "SMITH",

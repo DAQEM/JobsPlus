@@ -7,19 +7,22 @@
     "B": {
       "item": "minecraft:diamond_block"
     },
+    "I": {
+      "item": "minecraft:diamond"
+    },
     "D": {
       "item": "minecraft:netherite_ingot"
     },
     "N": {
-      "item": "minecraft:nether_star"
+      "item": "jobsplus:obsidian_leggings"
     }
   },
   "pattern": [
-    "     ",
-    " DND ",
-    " B B ",
-    " B B ",
-    "     "
+    "BDNDB",
+    "B   B",
+    "I   I",
+    "I   I",
+    "I   I"
   ],
   "job": "SMITH",
   "requiredLevel": 35

@@ -10,19 +10,22 @@
     "E": {
       "item": "jobsplus:lumberjack_axe_level_2"
     },
-    "I": {
+    "B": {
       "item": "minecraft:diamond_block"
+    },
+    "I": {
+      "item": "minecraft:diamond"
     },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "     ",
-    " DII ",
-    "  EI ",
-    "  SD ",
-    "     "
+    " DI  ",
+    "DDI  ",
+    "IBEI ",
+    " SBI ",
+    "S    "
   ],
   "job": "LUMBERJACK",
   "requiredLevel": 50

@@ -11,14 +11,14 @@
       "item": "minecraft:diamond_block"
     },
     "N": {
-      "item": "minecraft:netherite_ingot"
+      "item": "jobsplus:reinforced_iron_helmet"
     }
   },
   "pattern": [
     "     ",
-    "     ",
-    " DND ",
-    " B B ",
+    "BDNDB",
+    "B   B",
+    "B   B",
     "     "
   ],
   "job": "SMITH",

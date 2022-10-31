@@ -4,22 +4,19 @@
     "item": "jobsplus:reinforced_netherite_leggings"
   },
   "key": {
-    "B": {
-      "item": "minecraft:netherite_block"
-    },
     "D": {
       "item": "minecraft:netherite_ingot"
     },
     "N": {
-      "item": "minecraft:nether_star"
+      "item": "jobsplus:reinforced_diamond_leggings"
     }
   },
   "pattern": [
-    "     ",
-    " DND ",
-    " B B ",
-    " B B ",
-    "     "
+    "DDNDD",
+    "D   D",
+    "D   D",
+    "D   D",
+    "D   D"
   ],
   "job": "SMITH",
   "requiredLevel": 75

@@ -10,16 +10,19 @@
     "D": {
       "item": "minecraft:diamond"
     },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "     ",
-    " DBD ",
-    " BSB ",
-    "  S  ",
-    "     "
+    " II  ",
+    "IBII ",
+    " IDII",
+    " SIBI",
+    "S  I "
   ],
   "job": "MINER",
   "requiredLevel": 5

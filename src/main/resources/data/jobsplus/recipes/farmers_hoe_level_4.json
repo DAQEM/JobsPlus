@@ -10,19 +10,22 @@
     "E": {
       "item": "jobsplus:farmers_hoe_level_3"
     },
-    "I": {
+    "B": {
       "item": "minecraft:emerald_block"
+    },
+    "I": {
+      "item": "minecraft:emerald"
     },
     "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "     ",
-    " DII ",
-    " DE  ",
-    "  S  ",
-    "     "
+    "DD   ",
+    "DII  ",
+    " BEI ",
+    " SBI ",
+    "S    "
   ],
   "job": "FARMER",
   "requiredLevel": 75
