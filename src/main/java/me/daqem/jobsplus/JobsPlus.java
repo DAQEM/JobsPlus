@@ -1,6 +1,5 @@
 package me.daqem.jobsplus;
 
-import me.daqem.jobsplus.common.crafting.ConstructionRecipe;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -13,14 +12,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-
 @Mod(JobsPlus.MOD_ID)
 public class JobsPlus {
 
     public static final String MOD_ID = "jobsplus";
     public static final Logger LOGGER = LogManager.getLogger();
-    public static final ArrayList<ConstructionRecipe> recipes = new ArrayList<>();
     public static final CreativeModeTab TAB = new CreativeModeTab("jobsplustab") {
         public @NotNull ItemStack makeIcon() {
             return new ItemStack(Items.IRON_HOE);

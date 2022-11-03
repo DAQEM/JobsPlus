@@ -5,13 +5,13 @@ import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.ChatColor;
-import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
@@ -21,10 +21,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LumberAxeItem extends JobsPlusItem.Axe {
+public class LumberAxeItem extends AxeItem {
 
     public LumberAxeItem(Tier tier, int attackDamage, float attackSpeed, Properties properties) {
-        super(tier, attackDamage, attackSpeed, properties, Jobs.LUMBERJACK);
+        super(tier, attackDamage, attackSpeed, properties);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class LumberAxeItem extends JobsPlusItem.Axe {
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.addAll(new TooltipBuilder()
-                .withRequirement(getJob(), getRequiredLevel())
+                .withRequirement(stack)
                 .withAbout(String.valueOf(getMaxLogs()), TooltipBuilder.AboutType.AXE)
                 .withControls(TooltipBuilder.ControlType.RIGHT_CLICK)
                 .withMode(getModeString(stack))

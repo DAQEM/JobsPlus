@@ -2,7 +2,7 @@ package me.daqem.jobsplus.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import me.daqem.jobsplus.common.inventory.BackpackMenu;
+import me.daqem.jobsplus.common.inventory.backpack.BackpackMenu;
 import me.daqem.jobsplus.utils.enums.Backpack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;

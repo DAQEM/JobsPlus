@@ -1,4 +1,4 @@
-package me.daqem.jobsplus.common.inventory.slot;
+package me.daqem.jobsplus.common.inventory.backpack.slot;
 
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

@@ -60,4 +60,8 @@ public enum Jobs {
     public int get() {
         return value;
     }
+
+    public boolean is(Jobs job) {
+        return this.equals(job);
+    }
 }

@@ -2,12 +2,12 @@ package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
+import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.handlers.ExperienceHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
-import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -25,19 +26,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class EXPJarItem extends JobsPlusItem {
+public class EXPJarItem extends Item {
 
     private static final String EXP = "EXP";
 
     public EXPJarItem(Properties properties) {
-        super(properties, Jobs.ENCHANTER);
+        super(properties);
     }
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         InteractionResultHolder<ItemStack> resultHolder = super.use(level, player, hand);
         if (player instanceof ServerPlayer serverPlayer) {
-            if (!(JobGetters.getJobLevel(serverPlayer, Jobs.ENCHANTER) >= getRequiredLevel())) {
+            if (!(JobGetters.getJobLevel(player, ModRecipeManager.getJob(player.getItemInHand(hand))) >= ModRecipeManager.getRequiredJobLevel(player.getItemInHand(hand)))) {
                 HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));
                 return resultHolder;
             }
@@ -82,7 +83,7 @@ public class EXPJarItem extends JobsPlusItem {
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level p_41422_, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, p_41422_, tooltip, flag);
         tooltip.addAll(new TooltipBuilder()
-                .withRequirement(getJob(), getRequiredLevel())
+                .withRequirement(stack)
                 .withControls(TooltipBuilder.ControlType.INSERT_EXTRACT)
                 .withComponent(getEXPComponent(stack), TooltipBuilder.ShiftType.NO_SHIFT)
                 .withHoldShift()

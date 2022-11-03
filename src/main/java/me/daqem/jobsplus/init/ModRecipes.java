@@ -1,7 +1,9 @@
 package me.daqem.jobsplus.init;
 
 import me.daqem.jobsplus.JobsPlus;
-import me.daqem.jobsplus.common.crafting.ConstructionRecipe;
+import me.daqem.jobsplus.common.crafting.construction.ConstructionCraftingRecipe;
+import me.daqem.jobsplus.common.crafting.construction.ConstructionRecipe;
+import me.daqem.jobsplus.common.crafting.construction.ConstructionRecipeType;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -16,5 +18,5 @@ public class ModRecipes {
 
     public static final DeferredRegister<RecipeType<?>> RECIPES_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, JobsPlus.MOD_ID);
 
-    public static final RegistryObject<RecipeType<ConstructionRecipe>> CONSTRUCTION_TYPE = RECIPES_TYPES.register("construction", () -> ConstructionRecipe.Type.INSTANCE);
+    public static final RegistryObject<RecipeType<ConstructionCraftingRecipe>> CONSTRUCTION_TYPE = RECIPES_TYPES.register("construction", () -> ConstructionRecipeType.INSTANCE);
 }

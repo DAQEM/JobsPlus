@@ -1,7 +1,8 @@
 package me.daqem.jobsplus.jei;
 
 import me.daqem.jobsplus.client.gui.ConstructionScreen;
-import me.daqem.jobsplus.common.crafting.ConstructionRecipe;
+import me.daqem.jobsplus.common.crafting.construction.ConstructionCraftingRecipe;
+import me.daqem.jobsplus.common.crafting.construction.ConstructionRecipeType;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.init.ModPotions;
 import mezz.jei.api.IModPlugin;
@@ -32,7 +33,7 @@ import java.util.Optional;
 @JeiPlugin
 public class JobsPlusJeiPlugin implements IModPlugin {
 
-    public static RecipeType<ConstructionRecipe> CONSTRUCTION_TYPE = new RecipeType<>(ConstructionCategory.UID, ConstructionRecipe.class);
+    public static RecipeType<ConstructionCraftingRecipe> CONSTRUCTION_TYPE = new RecipeType<>(ConstructionCategory.UID, ConstructionCraftingRecipe.class);
     private static IJeiRuntime jeiRuntime;
 
     public static Optional<IJeiRuntime> getJeiRuntime() {
@@ -214,7 +215,7 @@ public class JobsPlusJeiPlugin implements IModPlugin {
         addPotionRecipes(registration, factory);
         addAnvilRecipes(registration, factory);
 
-        List<ConstructionRecipe> recipesTutorialTableCrafting = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager().getAllRecipesFor(ConstructionRecipe.Type.INSTANCE);
+        List<ConstructionCraftingRecipe> recipesTutorialTableCrafting = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager().getAllRecipesFor(ConstructionRecipeType.INSTANCE);
         registration.addRecipes(CONSTRUCTION_TYPE, recipesTutorialTableCrafting);
     }
 

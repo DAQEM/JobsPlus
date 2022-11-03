@@ -2,7 +2,7 @@ package me.daqem.jobsplus.jei;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.daqem.jobsplus.JobsPlus;
-import me.daqem.jobsplus.common.crafting.ConstructionRecipe;
+import me.daqem.jobsplus.common.crafting.construction.ConstructionCraftingRecipe;
 import me.daqem.jobsplus.init.ModItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -18,7 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class ConstructionCategory implements IRecipeCategory<ConstructionRecipe> {
+public class ConstructionCategory implements IRecipeCategory<ConstructionCraftingRecipe> {
 
     public static final ResourceLocation BACKGROUND = JobsPlus.getId("textures/gui/jei/grid.png");
     public static final ResourceLocation UID = JobsPlus.getId("construction");
@@ -33,7 +33,7 @@ public class ConstructionCategory implements IRecipeCategory<ConstructionRecipe>
     }
 
     @Override
-    public @NotNull RecipeType<ConstructionRecipe> getRecipeType() {
+    public @NotNull RecipeType<ConstructionCraftingRecipe> getRecipeType() {
         return JobsPlusJeiPlugin.CONSTRUCTION_TYPE;
     }
 
@@ -53,7 +53,7 @@ public class ConstructionCategory implements IRecipeCategory<ConstructionRecipe>
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull ConstructionRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull ConstructionCraftingRecipe recipe, @NotNull IFocusGroup focuses) {
         int width = recipe.getWidth();
         int height = recipe.getHeight();
         int count = 0;
@@ -70,7 +70,7 @@ public class ConstructionCategory implements IRecipeCategory<ConstructionRecipe>
     }
 
     @Override
-    public void draw(@NotNull ConstructionRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(@NotNull ConstructionCraftingRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
         guiHelper.createDrawable(BACKGROUND, 0, 0, 18, 18).draw(stack, 106, 36);
     }
 }

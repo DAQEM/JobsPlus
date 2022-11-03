@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.events.jobs;
 
+import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.common.item.LumberAxeItem;
 import me.daqem.jobsplus.events.EventWaitTicks;
 import me.daqem.jobsplus.handlers.ExpHandler;
@@ -116,7 +117,8 @@ public class LumberjackEvents {
     public void attemptFellTree(Level level, BlockPos pos, Player player) {
         if (level.isClientSide) return;
         if (player.getMainHandItem().getItem() instanceof LumberAxeItem lumberAxeItem) {
-            if (JobGetters.getJobLevel(player, lumberAxeItem.getJob()) < lumberAxeItem.getRequiredLevel()) return;
+            if (JobGetters.getJobLevel(player, job) < ModRecipeManager.getRequiredJobLevel(player.getMainHandItem()))
+                return;
             int maxLogs = lumberAxeItem.getMaxLogs();
 
             ArrayList<BlockPos> logs = new ArrayList<>();
@@ -125,7 +127,7 @@ public class LumberjackEvents {
 
             for (int i = 0; i < candidates.size(); i++) {
                 if (logs.size() > maxLogs) {
-                    ExpHandler.addEXPLow(player, lumberAxeItem.getJob());
+                    ExpHandler.addEXPLow(player, job);
                     HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.red() + "This tree is too big to cut down with this axe.");
                     return;
                 }

@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.events.item;
 
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.common.item.FarmersHoeItem;
 import me.daqem.jobsplus.events.jobs.FarmerEvents;
 import me.daqem.jobsplus.handlers.CropHandler;
@@ -51,7 +52,7 @@ public class FarmersHoeEvents {
                     || clicked == Blocks.BAMBOO || clicked == Blocks.KELP_PLANT
                     || clicked.getDescriptionId().equals("block.farmersdelight.tomatoes"))
                     &&
-                    (JobGetters.getJobLevel(player, job) >= ((FarmersHoeItem) stack.getItem()).getRequiredLevel())) {
+                    (JobGetters.getJobLevel(player, job) >= ModRecipeManager.getRequiredJobLevel(stack))) {
                 if (!stack.getOrCreateTag().contains("mode")) stack.getOrCreateTag().putInt("mode", 0);
                 int mode = stack.getOrCreateTag().getInt("mode");
                 if (mode == 0 || mode == 1 || mode == 2) {

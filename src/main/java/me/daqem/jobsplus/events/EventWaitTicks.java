@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.events;
 
-import me.daqem.jobsplus.JobsPlus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +21,6 @@ public class EventWaitTicks {
 
             @SubscribeEvent
             public void onTick(TickEvent.LevelTickEvent event) {
-                JobsPlus.LOGGER.error(delay);
                 if (delay-- > 0) return;
                 delay = type.waitTicks;
                 if (type.isMultiBlockBreak) {

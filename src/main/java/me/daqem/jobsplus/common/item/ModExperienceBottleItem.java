@@ -1,9 +1,8 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.common.entity.ModThrownExperienceBottle;
 import me.daqem.jobsplus.utils.ChatColor;
-import me.daqem.jobsplus.utils.JobGetters;
-import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -12,6 +11,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ExperienceBottleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -20,10 +20,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ModExperienceBottleItem extends JobsPlusItem.ExperienceBottle {
+public class ModExperienceBottleItem extends ExperienceBottleItem {
 
     public ModExperienceBottleItem(Properties properties) {
-        super(properties, Jobs.ENCHANTER);
+        super(properties);
     }
 
     @Override
@@ -53,13 +53,13 @@ public class ModExperienceBottleItem extends JobsPlusItem.ExperienceBottle {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        setRequiredLevel(JobGetters.getRequiredJobLevelForItem(stack));
         int tier = stack.getOrCreateTag().getInt("tier");
         int exp = stack.getOrCreateTag().getInt("EXP");
         if (Screen.hasShiftDown()) {
             tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
-            String level = getRequiredLevel() == 101 ? "depends on use." : String.valueOf(getRequiredLevel());
+            int requiredJobLevel = ModRecipeManager.getRequiredJobLevel(stack);
+            String level = requiredJobLevel == 101 ? "depends on use." : String.valueOf(requiredJobLevel);
             tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
         } else {
             tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));

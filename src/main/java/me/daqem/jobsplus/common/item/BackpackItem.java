@@ -2,15 +2,15 @@ package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
+import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.common.data.BackpackSavedData;
-import me.daqem.jobsplus.common.inventory.BackpackMenu;
+import me.daqem.jobsplus.common.inventory.backpack.BackpackMenu;
 import me.daqem.jobsplus.handlers.BackpackHandler;
 import me.daqem.jobsplus.handlers.BackpackItemHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.Backpack;
-import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class BackpackItem extends JobsPlusItem {
+public class BackpackItem extends Item {
 
     private static final Component CONTAINER_TITLE = Component.translatable("container.enderchest");
     private static final String UUID_NBT = "UUID";
@@ -50,7 +50,7 @@ public class BackpackItem extends JobsPlusItem {
 
 
     public BackpackItem(String name, Backpack tier) {
-        super(new Item.Properties().stacksTo(1).tab(JobsPlus.TAB).fireResistant(), Jobs.BUILDER);
+        super(new Item.Properties().stacksTo(1).tab(JobsPlus.TAB).fireResistant());
         this.name = name;
         this.tier = tier;
     }
@@ -73,7 +73,7 @@ public class BackpackItem extends JobsPlusItem {
         Backpack itemTier = ((BackpackItem) backpack.getItem()).tier;
         UUID uuid = Objects.requireNonNull(data).getUuid();
 
-        if (!(JobGetters.getJobLevel(player, getJob()) >= getRequiredLevel())) {
+        if (!(JobGetters.getJobLevel(player, ModRecipeManager.getJob(backpack)) >= ModRecipeManager.getRequiredJobLevel(backpack))) {
             HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));
             return InteractionResultHolder.success(player.getItemInHand(hand));
         }
@@ -100,7 +100,7 @@ public class BackpackItem extends JobsPlusItem {
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.addAll(new TooltipBuilder()
-                .withRequirement(getJob(), getRequiredLevel())
+                .withRequirement(stack)
                 .withHoldShift()
                 .build());
     }

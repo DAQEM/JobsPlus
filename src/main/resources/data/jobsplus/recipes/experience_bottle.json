@@ -1,7 +1,8 @@
 {
   "type": "jobsplus:construction",
   "result": {
-    "item": "jobsplus:experience_bottle"
+    "item": "jobsplus:experience_bottle",
+    "nbt": "{}"
   },
   "key": {
     "E": {

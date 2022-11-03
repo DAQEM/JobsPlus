@@ -69,6 +69,7 @@ public class SideProxy {
         ModMenuTypes.MENU_TYPES.register(eventBus);
 
         modEventBus.addListener(EventClone::onDeath);
+        modEventBus.addListener(EventServerAboutToStart::onServerStarted);
         eventBus.addListener(ModDataGenerator::gatherData);
 
         ModPacketHandler.init();
@@ -105,6 +106,7 @@ public class SideProxy {
 
         private void clientStuff(final FMLClientSetupEvent event) {
             MenuScreens.register(ModMenuTypes.BACKPACK.get(), BackpackScreen::new);
+//            MenuScreens.register(ModMenuTypes.CONSTRUCTION.get(), ConstructionScreen::new);
             MenuScreens.register(ModMenuTypes.CONSTRUCTION.get(), ConstructionScreen::new);
 
             EntityRenderers.register(ModEntities.FISHING_BOBBER.get(), ModFishingHookRenderer::new);

@@ -4,15 +4,18 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.client.renderer.RenderColor;
-import me.daqem.jobsplus.common.crafting.ConstructionRecipe;
 import me.daqem.jobsplus.common.crafting.ModGhostRecipe;
 import me.daqem.jobsplus.common.crafting.ModPlaceRecipe;
-import me.daqem.jobsplus.common.inventory.ConstructionMenu;
+import me.daqem.jobsplus.common.crafting.construction.ConstructionCraftingRecipe;
+import me.daqem.jobsplus.common.crafting.construction.ConstructionRecipeType;
+import me.daqem.jobsplus.common.inventory.construction.ConstructionMenu;
 import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -28,14 +31,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu> implements ModPlaceRecipe {
+public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu> implements RecipeUpdateListener, ModPlaceRecipe {
 
     private static final ResourceLocation BACKGROUND = JobsPlus.getId("textures/gui/container/construction_gui.png");
     private static final ResourceLocation NONE = JobsPlus.getId("none");
     private static final int menuWidth = 358;
     private static final int menuHeight = 222;
     private final TreeMap<Jobs, int[]> enabledJobsData;
-    private final ArrayList<ConstructionRecipe> recipes;
+    private final List<ConstructionCraftingRecipe> recipes;
     private final ModGhostRecipe ghostRecipe = new ModGhostRecipe();
     private ResourceLocation selectedItemStackID;
     private Recipe<?> selectedRecipe;
@@ -54,7 +57,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
 
     public ConstructionScreen(ConstructionMenu menu, Inventory inventory, Component ignoredTitle) {
         super(menu, inventory, Component.literal("Construction Table"));
-        this.recipes = JobsPlus.recipes;
+        this.recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ConstructionRecipeType.INSTANCE);
         this.enabledJobsData = generateJobsDataArray(menu);
         this.scrollingLeft = false;
         this.scrollingRight = false;
@@ -121,7 +124,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     private Recipe<?> getRecipe() {
         Recipe<?> recipe = recipes.get(0);
         if (!selectedItemStackID.equals(JobsPlus.getId("none"))) {
-            for (ConstructionRecipe constructionRecipe : recipes) {
+            for (ConstructionCraftingRecipe constructionRecipe : recipes) {
                 if (constructionRecipe.getId() == selectedItemStackID) {
                     recipe = constructionRecipe;
                     break;
@@ -444,19 +447,19 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     }
 
     private int getRequiredLevelForID(ResourceLocation id) {
-        for (ConstructionRecipe recipe : this.recipes) {
+        for (ConstructionCraftingRecipe recipe : this.recipes) {
             if (recipe.getId().equals(id)) return recipe.getRequiredLevel();
         }
         return 100;
     }
 
-    private ArrayList<ConstructionRecipe> getRecipesForJob(Jobs job) {
-        ArrayList<ConstructionRecipe> list = new ArrayList<>();
-        for (ConstructionRecipe recipe : recipes) {
+    private ArrayList<ConstructionCraftingRecipe> getRecipesForJob(Jobs job) {
+        ArrayList<ConstructionCraftingRecipe> list = new ArrayList<>();
+        for (ConstructionCraftingRecipe recipe : recipes) {
             if (recipe.getJob().equals(job)) list.add(recipe);
         }
-        list.sort(Comparator.comparing(ConstructionRecipe::getId));
-        list.sort(Comparator.comparing(ConstructionRecipe::getRequiredLevel));
+        list.sort(Comparator.comparing(ConstructionCraftingRecipe::getId));
+        list.sort(Comparator.comparing(ConstructionCraftingRecipe::getRequiredLevel));
         return list;
     }
 
@@ -471,5 +474,15 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
             Slot slot = this.menu.slots.get(p_135416_);
             this.ghostRecipe.addIngredient(ingredient, slot.x, slot.y);
         }
+    }
+
+    @Override
+    public void recipesUpdated() {
+        new RecipeBookComponent().recipesUpdated();
+    }
+
+    @Override
+    public RecipeBookComponent getRecipeBookComponent() {
+        return new RecipeBookComponent();
     }
 }

@@ -1,9 +1,9 @@
 package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
-import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -12,10 +12,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class CurseBreakItem extends JobsPlusItem {
+public class CurseBreakItem extends Item {
 
     public CurseBreakItem(Properties properties) {
-        super(properties, Jobs.ENCHANTER);
+        super(properties);
     }
 
     public boolean isFoil(@NotNull ItemStack stack) {
@@ -26,7 +26,7 @@ public class CurseBreakItem extends JobsPlusItem {
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.addAll(new TooltipBuilder()
-                .withRequirement(getJob(), getRequiredLevel())
+                .withRequirement(stack)
                 .withAbout(this)
                 .withHoldShift()
                 .withEnchantments(stack, true)

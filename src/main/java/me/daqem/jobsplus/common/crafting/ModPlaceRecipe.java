@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.crafting;
 
+import me.daqem.jobsplus.common.crafting.construction.ConstructionRecipe;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;

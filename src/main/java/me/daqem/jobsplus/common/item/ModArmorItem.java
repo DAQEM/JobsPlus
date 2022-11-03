@@ -2,30 +2,26 @@ package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
 import me.daqem.jobsplus.init.ModItems;
-import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ModArmorItem extends JobsPlusItem.Armor {
+public class ModArmorItem extends ArmorItem {
 
     public ModArmorItem(ArmorMaterial material, EquipmentSlot slot, Properties properties) {
-        super(material, slot, properties, Jobs.SMITH);
+        super(material, slot, properties);
     }
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.addAll(new TooltipBuilder()
-                .withRequirement(getJob(), getRequiredLevel())
+                .withRequirement(stack)
                 .withHoldShift()
                 .build());
     }

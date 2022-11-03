@@ -37,7 +37,7 @@ public class ModThrownExperienceBottle extends ThrowableItemProjectile {
         super.onHit(hitResult);
         if (this.level instanceof ServerLevel) {
             this.level.levelEvent(2002, this.blockPosition(), PotionUtils.getColor(Potions.WATER));
-            ExperienceOrb.award((ServerLevel) this.level, this.position(), this.exp);
+            ExperienceOrb.award((ServerLevel) this.level, this.position(), this.exp / 2);
             this.discard();
         }
 

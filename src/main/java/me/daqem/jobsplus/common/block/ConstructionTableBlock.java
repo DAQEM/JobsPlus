@@ -1,6 +1,8 @@
 package me.daqem.jobsplus.common.block;
 
-import me.daqem.jobsplus.common.inventory.ConstructionMenu;
+import me.daqem.jobsplus.SideProxy;
+import me.daqem.jobsplus.common.inventory.construction.ConstructionMenu;
+import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
@@ -46,7 +48,11 @@ public class ConstructionTableBlock extends CraftingTableBlock {
                     tag.putIntArray(enabledJob.name(), new int[]{JobGetters.getJobLevel(player, enabledJob), JobGetters.getJobEXP(player, enabledJob)});
                 }
             }
-            NetworkHooks.openScreen((ServerPlayer) player, getMenuProvider(state, level, pos), (buffer -> buffer.writeNbt(tag)));
+            if (tag.isEmpty()) {
+                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.red() + "Press '" + SideProxy.Client.OPEN_GUI_KEYBIND.getKey().getDisplayName().getString().toUpperCase() + "' first, and start a job.");
+            } else {
+                NetworkHooks.openScreen((ServerPlayer) player, getMenuProvider(state, level, pos), (buffer -> buffer.writeNbt(tag)));
+            }
             return InteractionResult.CONSUME;
         }
     }
@@ -54,6 +60,7 @@ public class ConstructionTableBlock extends CraftingTableBlock {
     @Override
     public MenuProvider getMenuProvider(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos) {
         return new SimpleMenuProvider((i, inventory, player) -> new ConstructionMenu(i, inventory, ContainerLevelAccess.create(level, pos)), CONTAINER_TITLE);
+//        return new SimpleMenuProvider((i, inventory, player) -> new ConstructionMenu(i, inventory, ContainerLevelAccess.create(level, pos)), CONTAINER_TITLE);
     }
 
 

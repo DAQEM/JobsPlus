@@ -2,6 +2,7 @@ package me.daqem.jobsplus.common.item;
 
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
+import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.common.entity.ModFishingHook;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModItems;
@@ -21,6 +22,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
@@ -35,19 +37,20 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RodItem extends JobsPlusItem.Rod {
+public class RodItem extends FishingRodItem {
 
     private long lastUsedTime = 0;
 
     public RodItem(Properties properties) {
-        super(properties.tab(JobsPlus.TAB), Jobs.FISHERMAN);
+        super(properties.tab(JobsPlus.TAB));
     }
 
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         final FishingHook fishing = player.fishing;
-        if (JobGetters.jobIsEnabled(player, getJob())) {
-            if (JobGetters.getJobLevel(player, getJob()) >= getRequiredLevel()) {
+        Jobs job = ModRecipeManager.getJob(player.getItemInHand(hand));
+        if (JobGetters.jobIsEnabled(player, job)) {
+            if (JobGetters.getJobLevel(player, job) >= ModRecipeManager.getRequiredJobLevel(player.getItemInHand(hand))) {
                 if (fishing != null) {
                     if (!level.isClientSide) {
                         int i = fishing.retrieve(itemstack);
@@ -66,7 +69,7 @@ public class RodItem extends JobsPlusItem.Rod {
                     player.gameEvent(GameEvent.ITEM_INTERACT_START);
                 }
 
-                if (JobGetters.hasPowerupEnabled(player, getJob(), CapType.POWER_UP3.get(), true)) {
+                if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP3.get(), true)) {
                     if (fishing != null && fishing.tickCount != 0 && !level.isClientSide) {
                         if (lastUsedTime + 2000 < System.currentTimeMillis() || player.isCreative() || player.isOnGround()) {
                             if (level.getBlockState(fishing.blockPosition()) == Blocks.AIR.defaultBlockState()) {
@@ -95,7 +98,7 @@ public class RodItem extends JobsPlusItem.Rod {
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.addAll(new TooltipBuilder()
-                .withRequirement(getJob(), getRequiredLevel())
+                .withRequirement(stack)
                 .withComponent(TooltipBuilder.WHITE_SPACE, TooltipBuilder.ShiftType.SHIFT)
                 .withComponent(JobsPlus.translatable("tooltip.about.rod.drop_chance").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withBold(true)), TooltipBuilder.ShiftType.SHIFT)
                 .withComponents(getDrops(), TooltipBuilder.ShiftType.SHIFT)

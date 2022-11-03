@@ -1,4 +1,4 @@
-package me.daqem.jobsplus.common.crafting;
+package me.daqem.jobsplus.common.crafting.construction;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -6,19 +6,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.common.inventory.construction.container.ConstructionCraftingContainer;
 import me.daqem.jobsplus.init.ModRecipes;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public class ConstructionRecipe implements Recipe<CraftingContainer> {
+public class ConstructionRecipe implements ConstructionCraftingRecipe, IConstructionRecipe<ConstructionCraftingContainer> {
 
     static int MAX_WIDTH = 5;
     static int MAX_HEIGHT = 5;
@@ -64,7 +61,14 @@ public class ConstructionRecipe implements Recipe<CraftingContainer> {
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
             }
 
-            map.put(entry.getKey(), Ingredient.fromJson(entry.getValue()));
+            Ingredient ingredient = Ingredient.fromJson(entry.getValue());
+            if (entry.getValue().getAsJsonObject().has("nbt")) {
+                if (ingredient.getItems().length > 0) {
+                    ingredient.getItems()[0].setTag(CraftingHelper.getNBT(entry.getValue().getAsJsonObject().get("nbt")));
+                }
+            }
+
+            map.put(entry.getKey(), ingredient);
         }
 
         map.put(" ", Ingredient.EMPTY);
@@ -185,14 +189,14 @@ public class ConstructionRecipe implements Recipe<CraftingContainer> {
     }
 
     @Override
-    public boolean matches(@NotNull CraftingContainer container, @NotNull Level level) {
-        for (int i = 0; i <= container.getWidth() - this.width; ++i) {
-            for (int j = 0; j <= container.getHeight() - this.height; ++j) {
-                if (this.matches(container, i, j, true)) {
+    public boolean matches(@NotNull ConstructionCraftingContainer container, @NotNull Level level) {
+        for (int x = 0; x <= container.getWidth() - this.width; ++x) {
+            for (int y = 0; y <= container.getHeight() - this.height; ++y) {
+                if (this.matches(container, x, y, true)) {
                     return true;
                 }
 
-                if (this.matches(container, i, j, false)) {
+                if (this.matches(container, x, y, false)) {
                     return true;
                 }
             }
@@ -201,11 +205,11 @@ public class ConstructionRecipe implements Recipe<CraftingContainer> {
         return false;
     }
 
-    private boolean matches(CraftingContainer p_44171_, int p_44172_, int p_44173_, boolean p_44174_) {
-        for (int i = 0; i < p_44171_.getWidth(); ++i) {
-            for (int j = 0; j < p_44171_.getHeight(); ++j) {
-                int k = i - p_44172_;
-                int l = j - p_44173_;
+    private boolean matches(ConstructionCraftingContainer container, int x, int y, boolean p_44174_) {
+        for (int x1 = 0; x1 < container.getWidth(); ++x1) {
+            for (int y1 = 0; y1 < container.getHeight(); ++y1) {
+                int k = x1 - x;
+                int l = y1 - y;
                 Ingredient ingredient = Ingredient.EMPTY;
                 if (k >= 0 && l >= 0 && k < this.width && l < this.height) {
                     if (p_44174_) {
@@ -215,8 +219,14 @@ public class ConstructionRecipe implements Recipe<CraftingContainer> {
                     }
                 }
 
-                if (!ingredient.test(p_44171_.getItem(i + j * p_44171_.getWidth()))) {
+                if (!ingredient.test(container.getItem(x1 + y1 * container.getWidth()))) {
                     return false;
+                } else if (ingredient.getItems().length > 0) {
+                    if (ingredient.getItems()[0].hasTag()) {
+                        if (!ingredient.getItems()[0].getTag().equals(container.getItem(x1 + y1 * container.getWidth()).getTag())) {
+                            return false;
+                        }
+                    }
                 }
             }
         }
@@ -225,7 +235,7 @@ public class ConstructionRecipe implements Recipe<CraftingContainer> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull CraftingContainer container) {
+    public @NotNull ItemStack assemble(@NotNull ConstructionCraftingContainer container) {
         return this.getResultItem().copy();
     }
 
@@ -249,10 +259,10 @@ public class ConstructionRecipe implements Recipe<CraftingContainer> {
         return ModRecipes.CONSTRUCTION_SERIALIZER.get();
     }
 
-    @Override
-    public @NotNull RecipeType<?> getType() {
-        return ModRecipes.CONSTRUCTION_TYPE.get();
-    }
+//    @Override
+//    public @NotNull RecipeType<?> getType() {
+//        return ModRecipes.CONSTRUCTION_TYPE.get();
+//    }
 
     public Jobs getJob() {
         return job;
@@ -262,13 +272,28 @@ public class ConstructionRecipe implements Recipe<CraftingContainer> {
         return requiredLevel;
     }
 
-    public static class Type implements RecipeType<ConstructionRecipe> {
-
-        public static final Type INSTANCE = new Type();
-
-        private Type() {
-        }
+    @Override
+    public int getRecipeWidth() {
+        return getWidth();
     }
+
+    @Override
+    public int getRecipeHeight() {
+        return getHeight();
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
+    //    public static class Type implements RecipeType<ConstructionRecipe> {
+//
+//        public static final Type INSTANCE = new Type();
+//
+//        private Type() {
+//        }
+//    }
 
     public static class Serializer implements RecipeSerializer<ConstructionRecipe> {
 
@@ -311,9 +336,7 @@ public class ConstructionRecipe implements Recipe<CraftingContainer> {
             ItemStack itemstack = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(serializedRecipe, "result"), true, true);
             Jobs job = Jobs.valueOf(serializedRecipe.get("job").getAsString());
             int requiredLevel = serializedRecipe.get("requiredLevel").getAsInt();
-            ConstructionRecipe constructionRecipe = new ConstructionRecipe(recipeId, s, i, j, nonNullList, itemstack, job, requiredLevel);
-            JobsPlus.recipes.add(constructionRecipe);
-            return constructionRecipe;
+            return new ConstructionRecipe(recipeId, s, i, j, nonNullList, itemstack, job, requiredLevel);
         }
     }
 }

@@ -1,7 +1,7 @@
-package me.daqem.jobsplus.common.inventory;
+package me.daqem.jobsplus.common.inventory.backpack;
 
-import me.daqem.jobsplus.common.inventory.slot.BackpackContainerSlot;
-import me.daqem.jobsplus.common.inventory.slot.LockableSlot;
+import me.daqem.jobsplus.common.inventory.backpack.slot.BackpackContainerSlot;
+import me.daqem.jobsplus.common.inventory.backpack.slot.LockableSlot;
 import me.daqem.jobsplus.init.ModMenuTypes;
 import me.daqem.jobsplus.utils.BackpackUtils;
 import me.daqem.jobsplus.utils.enums.Backpack;
