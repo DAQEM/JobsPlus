@@ -42,10 +42,10 @@ public class TooltipBuilder {
     public TooltipBuilder withAbout(String str, AboutType aboutType) {
         if (shouldShowComponent(ShiftType.SHIFT)) {
             componentList.addAll(List.of(WHITE_SPACE, JobsPlus.translatable("tooltip.about").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withBold(true))));
-            if (aboutType == AboutType.MODES || aboutType == AboutType.HOE) {
+            if (aboutType == AboutType.MODES || aboutType == AboutType.HOE || aboutType == AboutType.HOE_LVL_4) {
                 componentList.add(JobsPlus.translatable("tooltip.about.modes").withStyle(ChatFormatting.GREEN).append(ChatColor.white() + str));
             }
-            if (aboutType == AboutType.HOE) {
+            if (aboutType == AboutType.HOE_LVL_4) {
                 componentList.add(JobsPlus.translatable("tooltip.about.hoe").withStyle(ChatFormatting.GRAY));
             }
             if (aboutType == AboutType.BOW) {
@@ -129,6 +129,6 @@ public class TooltipBuilder {
     }
 
     public enum AboutType {
-        MODES, HOE, BOW, AXE
+        MODES, HOE, BOW, AXE, HOE_LVL_4
     }
 }

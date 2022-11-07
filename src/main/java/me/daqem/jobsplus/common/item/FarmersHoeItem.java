@@ -3,6 +3,7 @@ package me.daqem.jobsplus.common.item;
 import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
+import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.utils.ChatColor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -49,14 +50,25 @@ public class FarmersHoeItem extends HoeItem {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.addAll(new TooltipBuilder()
-                .withRequirement(stack)
-                .withAbout(getAvailableModeString(stack), TooltipBuilder.AboutType.HOE)
-                .withControls(TooltipBuilder.ControlType.HOE)
-                .withMode(getModeString(stack))
-                .withHoldShift()
-                .withEnchantments(stack, false)
-                .build());
+        if (stack.is(ModItems.FARMERS_HOE_LEVEL_4.get())) {
+            tooltip.addAll(new TooltipBuilder()
+                    .withRequirement(stack)
+                    .withAbout(getAvailableModeString(stack), TooltipBuilder.AboutType.HOE_LVL_4)
+                    .withControls(TooltipBuilder.ControlType.HOE)
+                    .withMode(getModeString(stack))
+                    .withHoldShift()
+                    .withEnchantments(stack, false)
+                    .build());
+        } else {
+            tooltip.addAll(new TooltipBuilder()
+                    .withRequirement(stack)
+                    .withAbout(getAvailableModeString(stack), TooltipBuilder.AboutType.HOE)
+                    .withControls(TooltipBuilder.ControlType.HOE)
+                    .withMode(getModeString(stack))
+                    .withHoldShift()
+                    .withEnchantments(stack, false)
+                    .build());
+        }
     }
 
     public String getModeString(ItemStack stack) {
