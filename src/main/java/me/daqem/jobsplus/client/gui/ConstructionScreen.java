@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu> implements RecipeUpdateListener, ModPlaceRecipe {
+public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu> implements RecipeUpdateListener, ModPlaceRecipe<Ingredient> {
 
     private static final ResourceLocation BACKGROUND = JobsPlus.getId("textures/gui/container/construction_gui.png");
     private static final ResourceLocation NONE = JobsPlus.getId("none");
@@ -57,7 +57,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
 
     public ConstructionScreen(ConstructionMenu menu, Inventory inventory, Component ignoredTitle) {
         super(menu, inventory, Component.literal("Construction Table"));
-        this.recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ConstructionRecipeType.INSTANCE);
+        this.recipes = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager().getAllRecipesFor(ConstructionRecipeType.INSTANCE);
         this.enabledJobsData = generateJobsDataArray(menu);
         this.scrollingLeft = false;
         this.scrollingRight = false;
@@ -111,12 +111,12 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     }
 
     private void setupGhostRecipe(@NotNull PoseStack poseStack, float partialTicks) {
-        if (ghostRecipe.getRecipe() != null) ghostRecipe.clear();
+//        if (ghostRecipe.getRecipe() != null) ghostRecipe.clear();
 
         if (selectedRecipe != null) {
             this.setupGhostRecipe(selectedRecipe, menu.slots);
             if (this.minecraft != null) {
-                this.ghostRecipe.render(poseStack, this.minecraft, leftPos, topPos, partialTicks);
+                this.ghostRecipe.render(poseStack, this.minecraft, leftPos, topPos, true, partialTicks);
             }
         }
     }
@@ -137,8 +137,9 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     private void setupGhostRecipe(Recipe<?> recipe, List<Slot> slots) {
         ItemStack itemstack = recipe.getResultItem();
         this.ghostRecipe.setRecipe(recipe);
-        this.ghostRecipe.addIngredient(Ingredient.of(itemstack), (slots.get(0)).x, (slots.get(0)).y);
-        this.placeRecipe(recipe, this.menu.getGridWidth(), this.menu.getGridHeight(), this.menu.getResultSlotIndex(), recipe.getIngredients());
+        this.ghostRecipe.clearIngredients();
+        this.ghostRecipe.addIngredient(Ingredient.of(itemstack), (slots.get(0)).x, (slots.get(0)).y, slots.get(0));
+        this.placeRecipe(this.menu.getGridWidth(), this.menu.getGridHeight(), this.menu.getResultSlotIndex(), recipe, recipe.getIngredients().iterator(), 0);
     }
 
     @Override
@@ -467,12 +468,21 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     protected void renderBg(@NotNull PoseStack poseStack, float partialTicks, int x, int y) {
     }
 
+//    @Override
+//    public void addItemToSlot(Iterator<Ingredient> p_135415_, int p_135416_) {
+//        Ingredient ingredient = p_135415_.next();
+//        if (!ingredient.isEmpty()) {
+//            Slot slot = this.menu.slots.get(p_135416_);
+//            this.ghostRecipe.addIngredient(ingredient, slot.x, slot.y);
+//        }
+//    }
+
     @Override
-    public void addItemToSlot(Iterator<Ingredient> p_135415_, int p_135416_) {
-        Ingredient ingredient = p_135415_.next();
+    public void addItemToSlot(Iterator<Ingredient> p_100338_, int p_100339_, int p_100340_, int p_100341_, int p_100342_) {
+        Ingredient ingredient = p_100338_.next();
         if (!ingredient.isEmpty()) {
-            Slot slot = this.menu.slots.get(p_135416_);
-            this.ghostRecipe.addIngredient(ingredient, slot.x, slot.y);
+            Slot slot = this.menu.slots.get(p_100339_);
+            this.ghostRecipe.addIngredient(ingredient, slot.x, slot.y, slot);
         }
     }
 
@@ -482,7 +492,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     }
 
     @Override
-    public RecipeBookComponent getRecipeBookComponent() {
+    public @NotNull RecipeBookComponent getRecipeBookComponent() {
         return new RecipeBookComponent();
     }
 }
