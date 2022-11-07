@@ -75,6 +75,7 @@ public class ConstructionRecipe implements ConstructionCraftingRecipe, IConstruc
         return map;
     }
 
+    @SuppressWarnings("all")
     private static int firstNonSpace(String s) {
         int i;
         for (i = 0; i < s.length() && s.charAt(i) == ' '; ++i) {
@@ -82,7 +83,8 @@ public class ConstructionRecipe implements ConstructionCraftingRecipe, IConstruc
 
         return i;
     }
-
+    
+    @SuppressWarnings("all")
     private static int lastNonSpace(String s) {
         int i;
         for (i = s.length() - 1; i >= 0 && s.charAt(i) == ' '; --i) {
@@ -219,12 +221,29 @@ public class ConstructionRecipe implements ConstructionCraftingRecipe, IConstruc
                     }
                 }
 
-                if (!ingredient.test(container.getItem(x1 + y1 * container.getWidth()))) {
+                ItemStack containerItem = container.getItem(x1 + y1 * container.getWidth());
+                ItemStack containerItemCopy = containerItem.copy();
+                if (!ingredient.test(containerItem)) {
                     return false;
                 } else if (ingredient.getItems().length > 0) {
                     if (ingredient.getItems()[0].hasTag()) {
-                        if (!ingredient.getItems()[0].getTag().equals(container.getItem(x1 + y1 * container.getWidth()).getTag())) {
-                            return false;
+                        ItemStack item = ingredient.getItems()[0].copy();
+                        if (item.getTag() != null) {
+                            if (containerItem.getTag() != null && containerItemCopy.getTag() != null) {
+                                for (String key : containerItem.getTag().getAllKeys()) {
+                                    if (!item.getTag().contains(key)) {
+                                        containerItemCopy.getTag().remove(key);
+                                    } else {
+                                        if (key.equals("Damage") && item.getTag().contains("Damage")) {
+                                            item.getTag().remove("Damage");
+                                            containerItemCopy.getTag().remove("Damage");
+                                        }
+                                    }
+                                }
+                            }
+                            if (!item.getTag().equals(containerItemCopy.getTag())) {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -259,11 +278,6 @@ public class ConstructionRecipe implements ConstructionCraftingRecipe, IConstruc
         return ModRecipes.CONSTRUCTION_SERIALIZER.get();
     }
 
-//    @Override
-//    public @NotNull RecipeType<?> getType() {
-//        return ModRecipes.CONSTRUCTION_TYPE.get();
-//    }
-
     public Jobs getJob() {
         return job;
     }
@@ -286,14 +300,6 @@ public class ConstructionRecipe implements ConstructionCraftingRecipe, IConstruc
     public boolean isSpecial() {
         return true;
     }
-
-    //    public static class Type implements RecipeType<ConstructionRecipe> {
-//
-//        public static final Type INSTANCE = new Type();
-//
-//        private Type() {
-//        }
-//    }
 
     public static class Serializer implements RecipeSerializer<ConstructionRecipe> {
 

@@ -111,8 +111,6 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     }
 
     private void setupGhostRecipe(@NotNull PoseStack poseStack, float partialTicks) {
-//        if (ghostRecipe.getRecipe() != null) ghostRecipe.clear();
-
         if (selectedRecipe != null) {
             this.setupGhostRecipe(selectedRecipe, menu.slots);
             if (this.minecraft != null) {
