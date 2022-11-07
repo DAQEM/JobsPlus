@@ -4,8 +4,8 @@
       "item": "minecraft:potion",
       "nbt": "{Potion:\"jobsplus:haste\"}"
     },
-    "title": "Digger Powerup 3",
-    "description": "Use the third Digger Powerup",
+    "title": "Digger Power-up 3",
+    "description": "Use the third Digger Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

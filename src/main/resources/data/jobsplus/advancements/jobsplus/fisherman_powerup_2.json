@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:cod"
     },
-    "title": "Fisherman Powerup 2",
-    "description": "Use the second Fisherman Powerup",
+    "title": "Fisherman Power-up 2",
+    "description": "Use the second Fisherman Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:enchanted_book"
     },
-    "title": "Smith Powerup 2",
-    "description": "Use the second Smith Powerup",
+    "title": "Smith Power-up 2",
+    "description": "Use the second Smith Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:oak_log"
     },
-    "title": "Lumberjack Powerup 1",
-    "description": "Use the first Lumberjack Powerup",
+    "title": "Lumberjack Power-up 1",
+    "description": "Use the first Lumberjack Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

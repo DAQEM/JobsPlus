@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:enchanting_table"
     },
-    "title": "Enchanter Powerup 2",
-    "description": "Use the second Enchanter Powerup",
+    "title": "Enchanter Power-up 2",
+    "description": "Use the second Enchanter Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

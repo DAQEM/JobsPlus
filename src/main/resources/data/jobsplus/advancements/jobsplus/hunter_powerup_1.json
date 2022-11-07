@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:cooked_beef"
     },
-    "title": "Hunter Powerup 1",
-    "description": "Use the first Hunter Powerup",
+    "title": "Hunter Power-up 1",
+    "description": "Use the first Hunter Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

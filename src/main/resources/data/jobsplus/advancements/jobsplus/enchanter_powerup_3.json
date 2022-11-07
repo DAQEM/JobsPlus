@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:experience_bottle"
     },
-    "title": "Enchanter Powerup 3",
-    "description": "Use the third Enchanter Powerup",
+    "title": "Enchanter Power-up 3",
+    "description": "Use the third Enchanter Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

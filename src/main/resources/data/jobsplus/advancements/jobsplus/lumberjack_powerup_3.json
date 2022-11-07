@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:golden_apple"
     },
-    "title": "Lumberjack Powerup 3",
-    "description": "Use the third Lumberjack Powerup",
+    "title": "Lumberjack Power-up 3",
+    "description": "Use the third Lumberjack Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

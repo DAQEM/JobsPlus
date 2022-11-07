@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:zombie_head"
     },
-    "title": "Hunter Powerup 3",
-    "description": "Use the third Hunter Powerup",
+    "title": "Hunter Power-up 3",
+    "description": "Use the third Hunter Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

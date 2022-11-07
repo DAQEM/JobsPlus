@@ -3,8 +3,8 @@
     "icon": {
       "item": "jobsplus:fishermans_rod_level_2"
     },
-    "title": "Fisherman Powerup 3",
-    "description": "Use the third Fisherman Powerup",
+    "title": "Fisherman Power-up 3",
+    "description": "Use the third Fisherman Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

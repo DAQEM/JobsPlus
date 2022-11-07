@@ -4,8 +4,8 @@
       "item": "minecraft:potion",
       "nbt": "{Potion:\"minecraft:strength\"}"
     },
-    "title": "Hunter Powerup 2",
-    "description": "Use the second Hunter Powerup",
+    "title": "Hunter Power-up 2",
+    "description": "Use the second Hunter Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

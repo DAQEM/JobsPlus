@@ -4,8 +4,8 @@
       "item": "minecraft:potion",
       "nbt": "{Potion:\"minecraft:healing\"}"
     },
-    "title": "Alchemist Powerup 3",
-    "description": "Use the third Alchemist Powerup",
+    "title": "Alchemist Power-up 3",
+    "description": "Use the third Alchemist Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

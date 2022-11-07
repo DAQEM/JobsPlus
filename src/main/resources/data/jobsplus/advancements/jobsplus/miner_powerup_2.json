@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:coal"
     },
-    "title": "Miner Powerup 2",
-    "description": "Use the second Miner Powerup",
+    "title": "Miner Power-up 2",
+    "description": "Use the second Miner Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

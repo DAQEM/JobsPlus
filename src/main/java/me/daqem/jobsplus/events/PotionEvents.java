@@ -133,7 +133,7 @@ public class PotionEvents {
                     }
                 } else {
                     if (player instanceof ServerPlayer serverPlayer) {
-                        HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, ChatColor.red() + JobsPlus.translatable("potion.disabled"));
+                        HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, JobsPlus.translatable("potion.disabled").withStyle(ChatFormatting.RED));
                         player.removeEffect(ModEffects.FLYING.get());
                     }
                 }

@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:stone"
     },
-    "title": "Builder Powerup 1",
-    "description": "Use the first Builder Powerup",
+    "title": "Builder Power-up 1",
+    "description": "Use the first Builder Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

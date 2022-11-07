@@ -3,8 +3,8 @@
     "icon": {
       "item": "jobsplus:obsidian_chestplate"
     },
-    "title": "Smith Powerup 3",
-    "description": "Use the third Smith Powerup",
+    "title": "Smith Power-up 3",
+    "description": "Use the third Smith Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

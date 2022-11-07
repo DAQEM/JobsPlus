@@ -4,8 +4,8 @@
       "item": "minecraft:potion",
       "nbt": "{Potion:\"minecraft:harming\"}"
     },
-    "title": "Alchemist Powerup 2",
-    "description": "Use the second Alchemist Powerup",
+    "title": "Alchemist Power-up 2",
+    "description": "Use the second Alchemist Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

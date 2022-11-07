@@ -4,8 +4,8 @@
       "item": "minecraft:potion",
       "nbt": "{Potion:\"jobsplus:haste\"}"
     },
-    "title": "Lumberjack Powerup 2",
-    "description": "Use the second Lumberjack Powerup",
+    "title": "Lumberjack Power-up 2",
+    "description": "Use the second Lumberjack Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

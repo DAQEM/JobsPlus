@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:experience_bottle"
     },
-    "title": "Fisherman Powerup 1",
-    "description": "Use the first Fisherman Powerup",
+    "title": "Fisherman Power-up 1",
+    "description": "Use the first Fisherman Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

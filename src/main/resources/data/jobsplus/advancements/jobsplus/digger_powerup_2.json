@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:iron_block"
     },
-    "title": "Digger Powerup 2",
-    "description": "Use the second Digger Powerup",
+    "title": "Digger Power-up 2",
+    "description": "Use the second Digger Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

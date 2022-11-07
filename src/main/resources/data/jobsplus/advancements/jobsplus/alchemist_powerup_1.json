@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:redstone"
     },
-    "title": "Alchemist Powerup 1",
-    "description": "Use the first Alchemist Powerup",
+    "title": "Alchemist Power-up 1",
+    "description": "Use the first Alchemist Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

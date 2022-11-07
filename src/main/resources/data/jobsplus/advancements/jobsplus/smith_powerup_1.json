@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:ice"
     },
-    "title": "Smith Powerup 1",
-    "description": "Use the first Smith Powerup",
+    "title": "Smith Power-up 1",
+    "description": "Use the first Smith Power-up",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
