@@ -69,6 +69,7 @@ public class HunterEvents {
     private static final List<String> llamaTypes = Arrays.asList("creamy", "white", "brown", "gray");
     private static final List<String> parrotTypes = Arrays.asList("red", "blue", "green", "cyan", "gray");
     private static final List<String> rabbitTypes = Arrays.asList("brown", "white", "black", "black_and_white", "gold", "salt_and_pepper");
+    @SuppressWarnings("unused")
     private static final List<String> catTypes = Arrays.asList("tabby", "tuxedo", "red", "siamese", "british_shorthair", "calico", "persian", "ragdoll", "white", "jellie", "black");
     private static final List<String> axolotlTypes = Arrays.asList("lucy", "wild", "gold", "cyan", "blue");
     private final Jobs job = Jobs.HUNTER;
@@ -239,7 +240,7 @@ public class HunterEvents {
         if (EnchantmentHelper.getTagEnchantmentLevel(Enchantments.MULTISHOT, event.getBow()) != 0) return;
 
         float power = BowItem.getPowerForTime(event.getCharge());
-        float[] afloat = getShotPitches((Random) player.getRandom());
+        float[] afloat = getShotPitches(new Random());
 
         shootProjectile(event.getLevel(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[1], power * 3, -10.0F);
         shootProjectile(event.getLevel(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[2], power * 3, 10.0F);
