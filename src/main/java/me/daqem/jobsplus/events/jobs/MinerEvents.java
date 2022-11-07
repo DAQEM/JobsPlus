@@ -135,10 +135,11 @@ public class MinerEvents {
         }
 
         if (ores.size() == 0) return;
-        EventWaitTicks.waitTicks(player, EventWaitTicks.Type.VEIN_MINER, null, ores);
+        EventWaitTicks.waitTicks(player, EventWaitTicks.Type.VEIN_MINER, new Object[]{ores});
         veinMinerArray.remove(player.getUUID());
     }
 
+    @SuppressWarnings("deprecation")
     private boolean isOre(Block block) {
         return ((block instanceof DropExperienceBlock && block != Blocks.SCULK)
                 || block instanceof RedStoneOreBlock

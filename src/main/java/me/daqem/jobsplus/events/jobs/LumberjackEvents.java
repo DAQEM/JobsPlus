@@ -148,7 +148,7 @@ public class LumberjackEvents {
                 }
             }
             if (logs.size() == 0) return;
-            EventWaitTicks.waitTicks(player, EventWaitTicks.Type.TREE_FELLER, null, logs);
+            EventWaitTicks.waitTicks(player, EventWaitTicks.Type.TREE_FELLER, new Object[]{logs});
         }
     }
 }

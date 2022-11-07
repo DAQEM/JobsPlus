@@ -60,7 +60,7 @@ public class BuilderEvents {
                                     if (!giveBlockBack(player, state)) {
                                         data.getHandler().extractItem(i, 1, false);
                                     }
-                                    EventWaitTicks.waitTicks(player, EventWaitTicks.Type.GIVE_BLOCK_BACK, block, null);
+                                    EventWaitTicks.waitTicks(player, EventWaitTicks.Type.GIVE_BLOCK_BACK, new Object[]{block});
                                     return;
                                 }
                             }
@@ -92,7 +92,7 @@ public class BuilderEvents {
                         || block == Blocks.CALCITE || block == Blocks.TUFF || block == Blocks.DRIPSTONE_BLOCK || block == Blocks.POLISHED_BASALT
                         || block == Blocks.BASALT || block == Blocks.BLACKSTONE || block == Blocks.POLISHED_BLACKSTONE || block == Blocks.GILDED_BLACKSTONE
                         || block == Blocks.CHISELED_POLISHED_BLACKSTONE || block == Blocks.POLISHED_BLACKSTONE_BRICKS) {
-                    EventWaitTicks.waitTicks(player, EventWaitTicks.Type.GIVE_BLOCK_BACK, block, null);
+                    EventWaitTicks.waitTicks(player, EventWaitTicks.Type.GIVE_BLOCK_BACK, new Object[]{block});
                     return true;
                 }
             }

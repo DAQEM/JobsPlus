@@ -8,6 +8,7 @@ import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -18,7 +19,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
@@ -53,22 +53,12 @@ public class PotionEvents {
                     if (effect.getEffect().getCategory() == MobEffectCategory.HARMFUL || effect.getEffect() == MobEffects.BAD_OMEN) {
                         if (player instanceof ServerPlayer serverPlayer) {
                             EventPlayerTick.removeEffect.put(serverPlayer, effect.getEffect());
-                            HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, ChatColor.green() + JobsPlus.translatable("potion.removed.bad"));
+                            HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, JobsPlus.translatable("potion.removed.bad").withStyle(ChatFormatting.GREEN));
                         }
                     }
                 }
                 if (duration != 0) {
-                    MinecraftForge.EVENT_BUS.register(new Object() {
-                        int delay = 1;
-
-                        @SubscribeEvent
-                        public void onTick(TickEvent.LevelTickEvent event) {
-                            if (delay-- > 0) return;
-                            player.forceAddEffect(new MobEffectInstance(effect.getEffect(), duration,
-                                    effect.getAmplifier(), effect.isAmbient(), effect.isVisible(), effect.showIcon()), null);
-                            MinecraftForge.EVENT_BUS.unregister(this);
-                        }
-                    });
+                    EventWaitTicks.waitTicks(player, EventWaitTicks.Type.POTION, new Object[]{effect, duration});
                 }
             }
             Map<MobEffect, List<List<Integer>>> map = new HashMap<>(Map.of(
@@ -189,7 +179,7 @@ public class PotionEvents {
                 if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) {
                     if (event.getSource().getLocalizedDeathMessage(event.getEntity()).toString().contains("death.attack.indirectMagic")) {
                         event.setCanceled(true);
-                        HotbarMessageHandler.sendHotbarMessageServer(player, ChatColor.green() + JobsPlus.translatable("potion.removed.bad"));
+                        HotbarMessageHandler.sendHotbarMessageServer(player, JobsPlus.translatable("potion.removed.bad").withStyle(ChatFormatting.GREEN));
                     }
                 }
             }
