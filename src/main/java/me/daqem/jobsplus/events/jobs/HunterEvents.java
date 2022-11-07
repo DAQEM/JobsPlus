@@ -91,16 +91,20 @@ public class HunterEvents {
             if (event.getSource().isProjectile()) ExpHandler.addEXPHigh(player, job);
             else ExpHandler.addEXPMid(player, job);
 
-            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP3.get(), true) && Math.random() * 100 < 5) {
-                if (entity instanceof Zombie && !(entity instanceof Drowned) && !(entity instanceof ZombieVillager) && !(entity instanceof ZombifiedPiglin))
+
+            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP3.get(), true) && Math.random() * 100 < 200) {
+                if (entity instanceof Zombie && !(entity instanceof Drowned) && !(entity instanceof ZombieVillager) && !(entity instanceof ZombifiedPiglin)) {
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.ZOMBIE_HEAD);
-                if (entity instanceof Creeper)
+                }
+                if (entity instanceof Creeper) {
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.CREEPER_HEAD);
-                if (entity instanceof Skeleton)
+                }
+                if (entity instanceof Skeleton) {
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.SKELETON_SKULL);
-                if (entity instanceof WitherSkeleton)
+                }
+                if (entity instanceof WitherSkeleton) {
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.WITHER_SKELETON_SKULL);
-                else {
+                } else {
                     final String mobName = getName(entity);
                     if (!HeadData.headDataMap.containsKey(mobName)) return;
                     final Pair<String, String> stringPair = HeadData.headDataMap.get(mobName);
@@ -292,7 +296,7 @@ public class HunterEvents {
 
     @SuppressWarnings("deprecation")
     public String getEntityString(Entity entity) {
-        String entityString = entity.getType().getDescriptionId().replace("item.", "");
+        String entityString = entity.getType().getDescriptionId().replace("entity.", "");
         if (entityString.contains(".")) entityString = entityString.split("\\.")[1];
         return WordUtils.capitalize(entityString.replace("_", " ")).replace(" ", "").replace("Entity", "");
     }
