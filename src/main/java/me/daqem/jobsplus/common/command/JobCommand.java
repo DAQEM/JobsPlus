@@ -2,7 +2,6 @@ package me.daqem.jobsplus.common.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.capability.ModCapabilityImpl;
 import me.daqem.jobsplus.common.capability.SuperPowerCapabilityImpl;
@@ -136,7 +135,7 @@ public class JobCommand {
         if (source.getEntity() instanceof Player player) {
             ChatHandler.sendMessage(player, ChatHandler.header("SET LEVEL"));
             ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
-                    ChatColor.green() + "/job admin set level [player] [job] [level]\n\n " +
+                    ChatColor.green() + "/job set level [player] [job] [level]\n\n" +
                     "This command will set the level of a certain job.\n\n" +
                     "Note: This does not add job coins automatically!");
             ChatHandler.sendMessage(player, ChatHandler.footer(9));
@@ -148,7 +147,7 @@ public class JobCommand {
         if (source.getEntity() instanceof Player player) {
             ChatHandler.sendMessage(player, ChatHandler.header("SET EXP"));
             ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
-                    ChatColor.green() + "/job admin set exp [player] [job] [exp]\n\n " +
+                    ChatColor.green() + "/job set exp [player] [job] [exp]\n\n" +
                     "This command will set the exp of a certain job.\n\n" +
                     "Note: You cannot go higher than the max EXP of the job-level!");
             ChatHandler.sendMessage(player, ChatHandler.footer(7));
@@ -160,7 +159,7 @@ public class JobCommand {
         if (source.getEntity() instanceof Player player) {
             ChatHandler.sendMessage(player, ChatHandler.header("SET COINS"));
             ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
-                    ChatColor.green() + "/job admin set coins [player] [coins]\n\n " +
+                    ChatColor.green() + "/job set coins [player] [coins]\n\n" +
                     "This command will set the job coins of a player.");
             ChatHandler.sendMessage(player, ChatHandler.footer(9));
         }
@@ -171,7 +170,7 @@ public class JobCommand {
         if (source.getEntity() instanceof Player player) {
             ChatHandler.sendMessage(player, ChatHandler.header("SET DISPLAY"));
             ChatHandler.sendMessage(player, ChatColor.darkGreen() + "Usage: " +
-                    ChatColor.green() + "/job admin set display [player] [job]\n\n " +
+                    ChatColor.green() + "/job set display [player] [job]\n\n" +
                     "This command will set the custom job prefix in tab and chat.");
             ChatHandler.sendMessage(player, ChatHandler.footer(11));
         }
@@ -249,7 +248,7 @@ public class JobCommand {
         return 1;
     }
 
-    private static int debug(CommandSourceStack source, Player target) throws CommandSyntaxException {
+    private static int debug(CommandSourceStack source, Player target) {
         if (source.getEntity() instanceof Player player) {
             if (target == null) target = player;
             Player finalTarget = target;
