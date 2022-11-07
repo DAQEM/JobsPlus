@@ -114,6 +114,20 @@ public class JobsScreen extends Screen {
     public void tick() {
         super.tick();
         selectedJobCraftableStacks.clear();
+        addPotionsToCraftableStacks();
+        addCraftableStacks();
+    }
+
+    private void addCraftableStacks() {
+        ArrayList<ConstructionCraftingRecipe> recipes = new ArrayList<>(Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ConstructionRecipeType.INSTANCE));
+        recipes.sort(Comparator.comparing(ConstructionCraftingRecipe::getRequiredLevel));
+        recipes.forEach(constructionRecipe -> {
+            if (constructionRecipe.getJob().is(getSelectedJob()))
+                selectedJobCraftableStacks.add(constructionRecipe.getResultItem());
+        });
+    }
+
+    private void addPotionsToCraftableStacks() {
         if (hasJobSelected()) {
             if (getSelectedJob().is(Jobs.ALCHEMIST)) {
                 LinkedHashMap<MobEffect, Integer> potionMap = new LinkedHashMap<>();
@@ -131,13 +145,6 @@ public class JobsScreen extends Screen {
                 }
             }
         }
-
-        List<ConstructionCraftingRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ConstructionRecipeType.INSTANCE);
-        recipes.sort(Comparator.comparing(ConstructionCraftingRecipe::getRequiredLevel));
-        recipes.forEach(constructionRecipe -> {
-            if (constructionRecipe.getJob().is(getSelectedJob()))
-                selectedJobCraftableStacks.add(constructionRecipe.getResultItem());
-        });
     }
 
     private void renderBackgroundImage(PoseStack poseStack) {
