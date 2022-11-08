@@ -93,15 +93,14 @@ public class JobsScreen extends Screen {
 
         this.startX = (this.width - this.imageWidth) / 2;
         this.startY = (this.height - this.imageHeight) / 2;
-        int i1 = this.startY + 16;
         int firstHiddenIndex = this.startIndex + 4;
 
         this.renderBackgroundImage(poseStack);
         this.renderScrollWheel(poseStack);
-        this.renderButtons(poseStack, mouseX, mouseY, this.startX + 7, i1, firstHiddenIndex);
+        this.renderButtons(poseStack, mouseX, mouseY, firstHiddenIndex);
         this.renderTooltip(poseStack, mouseX, mouseY);
         this.renderItems(startX, startY);
-        this.renderTexts(poseStack, i1, firstHiddenIndex);
+        this.renderTexts(poseStack, firstHiddenIndex);
         super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
@@ -207,17 +206,6 @@ public class JobsScreen extends Screen {
         }
     }
 
-    private void drawJobButton(PoseStack poseStack, int mouseX, int mouseY, int yOffset, int something, int index) {
-        int j = index - this.startIndex;
-        int i1 = something + j * 35;
-        int j1 = this.imageHeight;
-        if (mouseX >= yOffset && mouseY >= i1 && mouseX < yOffset + 116 && mouseY < i1 + 35) {
-            if (index != this.selectedButton) j1 += 35;
-        }
-        if (index == this.selectedButton) blitThis(poseStack, 7, i1 - startY, 26, j1 + 35 * 2, 116, 35);
-        else blitThis(poseStack, 7, i1 - startY, 26, j1, 116, 35);
-    }
-
     private void drawTopButtons(PoseStack poseStack, int mouseX, int mouseY, int buttonAmount, int posXOffset, int startYOffset, int activeButton) {
         for (int i = 0; i < buttonAmount; ++i) {
             int posX = posXOffset + (28 * i);
@@ -236,7 +224,32 @@ public class JobsScreen extends Screen {
         blitThis(poseStack, posX, -22, 142, activeButton == i ? imageHeight + 22 : imageHeight, 26, 22);
     }
 
-    public void renderButtons(PoseStack poseStack, int mouseX, int mouseY, int yOffset, int something, int firstHiddenIndex) {
+    private void drawButtons(PoseStack poseStack, int mouseX, int mouseY, int level, int xOffset, int i) {
+        int j = i - this.startIndex;
+        int i1 = (this.startY + 16) - startY + j * 35 - 1;
+
+        //BUTTONS
+        if (i == this.selectedButton) {
+            RenderColor.grayedOutSelected();
+        } else {
+            if (isBetween(mouseX, mouseY, this.startX + 7, i1 + startY, this.startX + 121, i1 + startY + 34)) {
+                RenderColor.normalSelected();
+            }
+        }
+        blitThis(poseStack, 7, i1, 26, this.imageHeight, 116, 35);
+        RenderColor.normal();
+
+        //BADGES
+        if (level >= 75) blitThis(poseStack, 7 + 5, i1 + 5, 168 + (27 * 3), imageHeight, 27, 27);
+        else if (level >= 50) blitThis(poseStack, 7 + 5, i1 + 5, 168 + (27 * 2), imageHeight, 27, 27);
+        else if (level >= 25) blitThis(poseStack, 7 + 5, i1 + 5, 168 + 27, imageHeight, 27, 27);
+        else blitThis(poseStack, 7 + 5, i1 + 5, 168, imageHeight, 27, 27);
+
+        //JOB LOGOS
+        blitThis(poseStack, 7 + 3, i1 + 3, imageWidth, xOffset * 31, 31, 27);
+    }
+
+    public void renderButtons(PoseStack poseStack, int mouseX, int mouseY, int firstHiddenIndex) {
         //SETTINGS
         if (isBetween(mouseX, mouseY, 3, height - 20, 18, height - 4))
             RenderSystem.setShaderColor(0.8F, 0.8F, 0.8F, 1);
@@ -252,86 +265,12 @@ public class JobsScreen extends Screen {
         RenderColor.normal();
         poseStack.popPose();
 
-        // JOB BUTTONS
-        if (activeLeftButton == 0) {
-            for (int i = this.startIndex; i < firstHiddenIndex && i < Jobs.values().length; ++i) {
-                drawJobButton(poseStack, mouseX, mouseY, yOffset, something, i);
-            }
-        }
-        //JOB BUTTONS
-        if (activeLeftButton == 1 || activeLeftButton == 2) {
-            Map<Jobs, int[]> map = new HashMap<>();
-            for (Jobs job : Jobs.values()) {
-                int level = getJobLevel(job);
-                int exp = getJobEXP(job);
-                if (activeLeftButton == 1) {
-                    if (level != 0) {
-                        map.put(job, new int[]{level, exp});
-                    }
-                }
-                if (activeLeftButton == 2) {
-                    if (level == 0) {
-                        map.put(job, new int[]{level, exp});
-                    }
-                }
-            }
-            for (int i = this.startIndex; i < firstHiddenIndex && i < map.size(); ++i) {
-                drawJobButton(poseStack, mouseX, mouseY, yOffset, something, i);
-            }
-        }
         // LEFT BUTTONS
         drawTopButtons(poseStack, mouseX, mouseY, 3, 6, 0, activeLeftButton);
         //RIGHT BUTTONS
         drawTopButtons(poseStack, mouseX, mouseY, 4, 156, 60, activeRightButton);
         //JOB BUTTONS
-        if (activeLeftButton == 0) {
-            for (int i = this.startIndex; i < firstHiddenIndex && i < Jobs.values().length; ++i) {
-                int level = getJobLevel(Jobs.getJobFromInt(i));
-                int j = i - this.startIndex;
-                int i1 = something - startY + j * 35 - 1;
-
-                if (level >= 75) blitThis(poseStack, 7 + 5, i1 + 5, 168 + (27 * 3), imageHeight, 27, 27);
-                else if (level >= 50) blitThis(poseStack, 7 + 5, i1 + 5, 168 + (27 * 2), imageHeight, 27, 27);
-                else if (level >= 25) blitThis(poseStack, 7 + 5, i1 + 5, 168 + 27, imageHeight, 27, 27);
-                else blitThis(poseStack, 7 + 5, i1 + 5, 168, imageHeight, 27, 27);
-
-                blitThis(poseStack, 7 + 3, i1 + 3, imageWidth, (i * 31), 31, 27);
-            }
-        }
-        //JOB BUTTONS
-        if (activeLeftButton == 1 || activeLeftButton == 2) {
-            ints = new ArrayList<>();
-            for (Jobs job : Jobs.values()) {
-                int level = getJobLevel(job);
-                int exp = getJobEXP(job);
-                if (activeLeftButton == 1 && level != 0) {
-                    ints.add(level);
-                    ints.add(exp);
-                    ints.add(Jobs.getJobInt(job));
-                }
-                if (activeLeftButton == 2 && level == 0) {
-                    ints.add(level);
-                    ints.add(exp);
-                    ints.add(Jobs.getJobInt(job));
-                }
-            }
-            for (int i = this.startIndex; i < firstHiddenIndex; ++i) {
-                if (i < ints.size() / 3) {
-                    int[] currentJobArray = new int[]{ints.get(i * 3), ints.get(i * 3 + 1), ints.get(i * 3 + 2)};
-
-                    int level = currentJobArray[0];
-                    int j = i - this.startIndex;
-                    int i1 = something - startY + j * 35 - 1;
-
-                    if (level >= 75) blitThis(poseStack, 7 + 5, i1 + 5, 168 + (27 * 3), imageHeight, 27, 27);
-                    else if (level >= 50) blitThis(poseStack, 7 + 5, i1 + 5, 168 + (27 * 2), imageHeight, 27, 27);
-                    else if (level >= 25) blitThis(poseStack, 7 + 5, i1 + 5, 168 + 27, imageHeight, 27, 27);
-                    else blitThis(poseStack, 7 + 5, i1 + 5, 168, imageHeight, 27, 27);
-
-                    blitThis(poseStack, 7 + 3, i1 + 3, imageWidth, (currentJobArray[2] * 31), 31, 27);
-                }
-            }
-        }
+        drawJobButtons(poseStack, mouseX, mouseY, firstHiddenIndex);
         // JOB START AND STOP BUTTONS
         if (activeRightButton == 0) {
             if (hasJobSelected()) {
@@ -456,14 +395,50 @@ public class JobsScreen extends Screen {
         }
     }
 
-    public void renderTexts(PoseStack poseStack, int something, int firstHiddenIndex) {
+    private void drawJobButtons(PoseStack poseStack, int mouseX, int mouseY, int firstHiddenIndex) {
+        if (activeLeftButton == 0) {
+            for (int i = this.startIndex; i < firstHiddenIndex && i < Jobs.values().length; ++i) {
+                drawButtons(poseStack, mouseX, mouseY, getJobLevel(Jobs.getJobFromInt(i)), i, i);
+            }
+        }
+        if (activeLeftButton == 1 || activeLeftButton == 2) {
+            for (int i = this.startIndex; i < firstHiddenIndex; ++i) {
+                if ((activeLeftButton == 1 && getEnabledJobs().size() > i) || (activeLeftButton == 2 && getDisabledJobs().size() > i)) {
+                    ArrayList<Jobs> jobs = activeLeftButton == 1 ? getEnabledJobs() : getDisabledJobs();
+                    drawButtons(poseStack, mouseX, mouseY, getJobLevel(jobs.get(i)), jobs.get(i).get(), i);
+                }
+            }
+        }
+    }
+
+    private ArrayList<Jobs> getEnabledJobs() {
+        ArrayList<Jobs> enabledJobs = new ArrayList<>();
+        for (Jobs job : Jobs.values()) {
+            if (getJobLevel(job) > 0) {
+                enabledJobs.add(job);
+            }
+        }
+        return enabledJobs;
+    }
+
+    private ArrayList<Jobs> getDisabledJobs() {
+        ArrayList<Jobs> disabledJobs = new ArrayList<>();
+        for (Jobs job : Jobs.values()) {
+            if (getJobLevel(job) == 0) {
+                disabledJobs.add(job);
+            }
+        }
+        return disabledJobs;
+    }
+
+    public void renderTexts(PoseStack poseStack, int firstHiddenIndex) {
         font.draw(poseStack, ChatColor.darkGray() + JobsPlus.translatable("gui.jobs").getString(), startX + 7, startY + 6, 16777215);
         drawRightAlignedString(poseStack, font, ChatColor.darkGray() + JobsPlus.translatable("gui.coins.top", getCoins()).getString(), startX + 140, startY + 6, 16777215);
 
         if (activeLeftButton == 0) {
             for (int i = this.startIndex; i < firstHiddenIndex && i < Jobs.values().length; ++i) {
                 int j = i - this.startIndex;
-                int i1 = something + j * 35;
+                int i1 = (this.startY + 16) + j * 35;
                 int level = getJobLevel(Jobs.getJobFromInt(i));
                 int exp = getJobEXP(Jobs.getJobFromInt(i));
                 if (level != 0) {
@@ -507,7 +482,7 @@ public class JobsScreen extends Screen {
                 if (i < ints.size() / 3) {
                     int[] currentJobArray = new int[]{ints.get(i * 3), ints.get(i * 3 + 1), ints.get(i * 3 + 2)};
                     int j = i - this.startIndex;
-                    int i1 = something + j * 35;
+                    int i1 = (this.startY + 16) + j * 35;
                     int level = currentJobArray[0];
                     int exp = currentJobArray[1];
                     if (level != 0) {
