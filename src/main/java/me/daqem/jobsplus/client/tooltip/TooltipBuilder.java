@@ -23,8 +23,8 @@ public class TooltipBuilder {
         if (shouldShowComponent(ShiftType.SHIFT)) {
             componentList.addAll(List.of(
                     Component.literal(ChatColor.boldDarkGreen() + JobsPlus.translatable("tooltip.requirements").getString()),
-                    Component.literal(ChatColor.green() + JobsPlus.translatable("tooltip.job").getString() + ChatColor.reset() + ChatHandler.capitalizeWord(Component.translatable("job." + ModRecipeManager.getJob(stack).name().toLowerCase()).getString().toLowerCase())),
-                    Component.literal(ChatColor.green() + JobsPlus.translatable("tooltip.level").getString() + ChatColor.reset() + ModRecipeManager.getRequiredJobLevel(stack))));
+                    Component.literal(ChatColor.green() + JobsPlus.translatable("tooltip.job").getString() + ChatColor.reset() + ChatHandler.capitalizeWord(Component.translatable("job." + ModRecipeManager.getJobClient(stack).name().toLowerCase()).getString().toLowerCase())),
+                    Component.literal(ChatColor.green() + JobsPlus.translatable("tooltip.level").getString() + ChatColor.reset() + ModRecipeManager.getRequiredJobLevelClient(stack))));
         }
         return this;
     }

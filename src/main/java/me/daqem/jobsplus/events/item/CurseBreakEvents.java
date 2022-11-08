@@ -25,7 +25,7 @@ public class CurseBreakEvents {
         ItemStack left = event.getLeft();
         ItemStack right = event.getRight();
         ItemStack out;
-        if (JobGetters.getJobLevel(event.getPlayer(), Jobs.ENCHANTER) >= ModRecipeManager.getRequiredJobLevel(ModItems.CURSE_BREAKER.get().getDefaultInstance())) {
+        if (JobGetters.getJobLevel(event.getPlayer(), Jobs.ENCHANTER) >= ModRecipeManager.getRequiredJobLevelServer(ModItems.CURSE_BREAKER.get().getDefaultInstance())) {
             if (!left.isEmpty() && !right.isEmpty() && right.getItem() == ModItems.CURSE_BREAKER.get()) {
                 out = left.copy();
                 Map<Enchantment, Integer> map = new HashMap<>();

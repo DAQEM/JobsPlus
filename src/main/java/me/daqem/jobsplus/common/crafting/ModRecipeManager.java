@@ -9,12 +9,21 @@ import java.util.Map;
 
 public class ModRecipeManager {
 
-    public static Map<ItemStack, Map<Jobs, Integer>> requiredLevels = new HashMap<>();
+    public static Map<ItemStack, Map<Jobs, Integer>> requiredLevelsServer = new HashMap<>();
+    public static Map<ItemStack, Map<Jobs, Integer>> requiredLevelsClient = new HashMap<>();
 
-    public static int getRequiredJobLevel(ItemStack itemStack) {
+    public static int getRequiredJobLevelServer(ItemStack itemStack) {
+        return getRequiredJobLevel(itemStack, requiredLevelsServer);
+    }
+
+    public static int getRequiredJobLevelClient(ItemStack itemStack) {
+        return getRequiredJobLevel(itemStack, requiredLevelsClient);
+    }
+
+    public static int getRequiredJobLevel(ItemStack itemStack, Map<ItemStack, Map<Jobs, Integer>> pRequiredLevels) {
         if (!(itemStack.getItem() instanceof ModExperienceBottleItem))
             itemStack = itemStack.getItem().getDefaultInstance();
-        for (Map.Entry<ItemStack, Map<Jobs, Integer>> entry : requiredLevels.entrySet()) {
+        for (Map.Entry<ItemStack, Map<Jobs, Integer>> entry : pRequiredLevels.entrySet()) {
             ItemStack entryItemStack = entry.getKey();
             if (entryItemStack.is(itemStack.getItem())) {
                 if (entryItemStack.equals(itemStack, false)) {
@@ -27,10 +36,18 @@ public class ModRecipeManager {
         return 101;
     }
 
-    public static Jobs getJob(ItemStack itemStack) {
+    public static Jobs getJobServer(ItemStack itemStack) {
+        return getJob(itemStack, requiredLevelsServer);
+    }
+
+    public static Jobs getJobClient(ItemStack itemStack) {
+        return getJob(itemStack, requiredLevelsClient);
+    }
+
+    public static Jobs getJob(ItemStack itemStack, Map<ItemStack, Map<Jobs, Integer>> pRequiredLevels) {
         if (!(itemStack.getItem() instanceof ModExperienceBottleItem))
             itemStack = itemStack.getItem().getDefaultInstance();
-        for (Map.Entry<ItemStack, Map<Jobs, Integer>> entry : requiredLevels.entrySet()) {
+        for (Map.Entry<ItemStack, Map<Jobs, Integer>> entry : pRequiredLevels.entrySet()) {
             ItemStack entryItemStack = entry.getKey();
             if (entryItemStack.is(itemStack.getItem())) {
                 if (entryItemStack.equals(itemStack, false)) {

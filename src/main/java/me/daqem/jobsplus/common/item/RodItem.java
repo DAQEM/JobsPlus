@@ -48,9 +48,9 @@ public class RodItem extends FishingRodItem {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         final FishingHook fishing = player.fishing;
-        Jobs job = ModRecipeManager.getJob(player.getItemInHand(hand));
+        Jobs job = ModRecipeManager.getJobServer(player.getItemInHand(hand));
         if (JobGetters.jobIsEnabled(player, job)) {
-            if (JobGetters.getJobLevel(player, job) >= ModRecipeManager.getRequiredJobLevel(player.getItemInHand(hand))) {
+            if (JobGetters.getJobLevel(player, job) >= ModRecipeManager.getRequiredJobLevelServer(player.getItemInHand(hand))) {
                 if (fishing != null) {
                     if (!level.isClientSide) {
                         int i = fishing.retrieve(itemstack);

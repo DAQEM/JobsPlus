@@ -10,8 +10,9 @@ import java.util.Map;
 public class EventServerAboutToStart {
 
     public static void onServerStarted(ServerAboutToStartEvent event) {
+        ModRecipeManager.requiredLevelsServer.clear();
         for (ConstructionCraftingRecipe recipe : event.getServer().getRecipeManager().getAllRecipesFor(ConstructionRecipeType.INSTANCE)) {
-            ModRecipeManager.requiredLevels.put(recipe.getResultItem(), Map.of(recipe.getJob(), recipe.getRequiredLevel()));
+            ModRecipeManager.requiredLevelsServer.put(recipe.getResultItem(), Map.of(recipe.getJob(), recipe.getRequiredLevel()));
         }
     }
 }

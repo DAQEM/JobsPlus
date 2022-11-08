@@ -45,7 +45,7 @@ public class HunterBowItem extends BowItem {
                     itemstack = new ItemStack(Items.ARROW);
                 }
                 float f = getPowerForTime(i);
-                if (!(JobGetters.getJobLevel(player, ModRecipeManager.getJob(stack)) >= ModRecipeManager.getRequiredJobLevel(stack))) {
+                if (!(JobGetters.getJobLevel(player, ModRecipeManager.getJobServer(stack)) >= ModRecipeManager.getRequiredJobLevelServer(stack))) {
                     f = 0.1F;
                     if (!level.isClientSide) {
                         HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));

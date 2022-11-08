@@ -52,7 +52,7 @@ public class FarmersHoeEvents {
                     || clicked == Blocks.BAMBOO || clicked == Blocks.KELP_PLANT
                     || clicked.getDescriptionId().equals("block.farmersdelight.tomatoes"))
                     &&
-                    (JobGetters.getJobLevel(player, job) >= ModRecipeManager.getRequiredJobLevel(stack))) {
+                    (JobGetters.getJobLevel(player, job) >= ModRecipeManager.getRequiredJobLevelServer(stack))) {
                 if (!stack.getOrCreateTag().contains("mode")) stack.getOrCreateTag().putInt("mode", 0);
                 int mode = stack.getOrCreateTag().getInt("mode");
                 if (mode == 0 || mode == 1 || mode == 2) {

@@ -38,7 +38,7 @@ public class EXPJarItem extends Item {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         InteractionResultHolder<ItemStack> resultHolder = super.use(level, player, hand);
         if (player instanceof ServerPlayer serverPlayer) {
-            if (!(JobGetters.getJobLevel(player, ModRecipeManager.getJob(player.getItemInHand(hand))) >= ModRecipeManager.getRequiredJobLevel(player.getItemInHand(hand)))) {
+            if (!(JobGetters.getJobLevel(player, ModRecipeManager.getJobServer(player.getItemInHand(hand))) >= ModRecipeManager.getRequiredJobLevelServer(player.getItemInHand(hand)))) {
                 HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));
                 return resultHolder;
             }

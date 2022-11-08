@@ -117,7 +117,7 @@ public class LumberjackEvents {
     public void attemptFellTree(Level level, BlockPos pos, Player player) {
         if (level.isClientSide) return;
         if (player.getMainHandItem().getItem() instanceof LumberAxeItem lumberAxeItem) {
-            if (JobGetters.getJobLevel(player, job) < ModRecipeManager.getRequiredJobLevel(player.getMainHandItem()))
+            if (JobGetters.getJobLevel(player, job) < ModRecipeManager.getRequiredJobLevelServer(player.getMainHandItem()))
                 return;
             int maxLogs = lumberAxeItem.getMaxLogs();
 

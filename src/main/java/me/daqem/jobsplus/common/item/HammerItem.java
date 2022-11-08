@@ -29,7 +29,7 @@ public class HammerItem extends PickaxeItem {
     @Override
     public boolean canAttackBlock(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
         ItemStack stack = player.getMainHandItem().getItem() instanceof HammerItem ? player.getMainHandItem() : player.getOffhandItem();
-        return ToolFunctions.breakInRadius(state, level, pos, player, ModRecipeManager.getJob(stack), ModRecipeManager.getRequiredJobLevel(stack));
+        return ToolFunctions.breakInRadius(state, level, pos, player, ModRecipeManager.getJobServer(stack), ModRecipeManager.getRequiredJobLevelServer(stack));
     }
 
     @Override

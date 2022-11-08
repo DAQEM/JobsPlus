@@ -9,6 +9,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.ModIds;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe;
@@ -201,6 +202,14 @@ public class JobsPlusJeiPlugin implements IModPlugin {
         for (IJeiAnvilRecipe anvilRecipe : anvilRecipes) {
             registration.addRecipes(RecipeTypes.ANVIL, Collections.singletonList(anvilRecipe));
         }
+    }
+
+    public static void showJEIPage(ItemStack itemStack) {
+        JobsPlusJeiPlugin.getJeiRuntime().ifPresent(jeiRuntime ->
+                jeiRuntime.getRecipesGui().show(jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(
+                        RecipeIngredientRole.OUTPUT,
+                        jeiRuntime.getIngredientManager().getIngredientType(itemStack),
+                        itemStack)));
     }
 
     @Override

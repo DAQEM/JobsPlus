@@ -73,7 +73,7 @@ public class BackpackItem extends Item {
         Backpack itemTier = ((BackpackItem) backpack.getItem()).tier;
         UUID uuid = Objects.requireNonNull(data).getUuid();
 
-        if (!(JobGetters.getJobLevel(player, ModRecipeManager.getJob(backpack)) >= ModRecipeManager.getRequiredJobLevel(backpack))) {
+        if (!(JobGetters.getJobLevel(player, ModRecipeManager.getJobServer(backpack)) >= ModRecipeManager.getRequiredJobLevelServer(backpack))) {
             HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));
             return InteractionResultHolder.success(player.getItemInHand(hand));
         }

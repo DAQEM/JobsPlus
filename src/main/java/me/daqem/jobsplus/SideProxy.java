@@ -42,6 +42,7 @@ public class SideProxy {
         modEventBus.register(new EventNameFormat());
         modEventBus.register(new EventPlayerTick());
         modEventBus.register(new EventPlayerLoggedIn());
+        modEventBus.register(new EventRecipesUpdated());
 
         modEventBus.register(new FarmersHoeEvents());
         modEventBus.register(new CurseBreakEvents());

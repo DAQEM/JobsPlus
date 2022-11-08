@@ -58,7 +58,7 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
         if (Screen.hasShiftDown()) {
             tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
             tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
-            int requiredJobLevel = ModRecipeManager.getRequiredJobLevel(stack);
+            int requiredJobLevel = ModRecipeManager.getRequiredJobLevelServer(stack);
             String level = requiredJobLevel == 101 ? "depends on use." : String.valueOf(requiredJobLevel);
             tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
         } else {
