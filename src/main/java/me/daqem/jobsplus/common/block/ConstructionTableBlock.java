@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.common.block;
 
-import me.daqem.jobsplus.SideProxy;
 import me.daqem.jobsplus.common.inventory.construction.ConstructionMenu;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.utils.ChatColor;
@@ -49,7 +48,7 @@ public class ConstructionTableBlock extends CraftingTableBlock {
                 }
             }
             if (tag.isEmpty()) {
-                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.red() + "Press '" + SideProxy.Client.OPEN_GUI_KEYBIND.getKey().getDisplayName().getString().toUpperCase() + "' first, and start a job.");
+                HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.red() + "Open the Jobs+ screen to start a job first.");
             } else {
                 NetworkHooks.openScreen((ServerPlayer) player, getMenuProvider(state, level, pos), (buffer -> buffer.writeNbt(tag)));
             }
