@@ -4,6 +4,7 @@ import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.utils.ChatColor;
+import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -21,10 +22,13 @@ public class TooltipBuilder {
 
     public TooltipBuilder withRequirement(ItemStack stack) {
         if (shouldShowComponent(ShiftType.SHIFT)) {
-            componentList.addAll(List.of(
-                    Component.literal(ChatColor.boldDarkGreen() + JobsPlus.translatable("tooltip.requirements").getString()),
-                    Component.literal(ChatColor.green() + JobsPlus.translatable("tooltip.job").getString() + ChatColor.reset() + ChatHandler.capitalizeWord(Component.translatable("job." + ModRecipeManager.getJobClient(stack).name().toLowerCase()).getString().toLowerCase())),
-                    Component.literal(ChatColor.green() + JobsPlus.translatable("tooltip.level").getString() + ChatColor.reset() + ModRecipeManager.getRequiredJobLevelClient(stack))));
+            Jobs job = ModRecipeManager.getJobClient(stack);
+            if (job != null) {
+                componentList.addAll(List.of(
+                        Component.literal(ChatColor.boldDarkGreen() + JobsPlus.translatable("tooltip.requirements").getString()),
+                        Component.literal(ChatColor.green() + JobsPlus.translatable("tooltip.job").getString() + ChatColor.reset() + ChatHandler.capitalizeWord(Component.translatable("job." + job.name().toLowerCase()).getString().toLowerCase())),
+                        Component.literal(ChatColor.green() + JobsPlus.translatable("tooltip.level").getString() + ChatColor.reset() + ModRecipeManager.getRequiredJobLevelClient(stack))));
+            }
         }
         return this;
     }

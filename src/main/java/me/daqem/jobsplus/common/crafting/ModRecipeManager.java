@@ -1,7 +1,10 @@
 package me.daqem.jobsplus.common.crafting;
 
+import me.daqem.jobsplus.common.crafting.construction.ConstructionCraftingRecipe;
+import me.daqem.jobsplus.common.crafting.construction.ConstructionRecipeType;
 import me.daqem.jobsplus.common.item.ModExperienceBottleItem;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
@@ -17,7 +20,12 @@ public class ModRecipeManager {
     }
 
     public static int getRequiredJobLevelClient(ItemStack itemStack) {
-        return getRequiredJobLevel(itemStack, requiredLevelsClient);
+        int requiredJobLevel = getRequiredJobLevel(itemStack, requiredLevelsClient);
+        if (requiredJobLevel == 101) {
+            fillRequiredLevelsClient();
+            requiredJobLevel = getRequiredJobLevel(itemStack, requiredLevelsClient);
+        }
+        return requiredJobLevel;
     }
 
     public static int getRequiredJobLevel(ItemStack itemStack, Map<ItemStack, Map<Jobs, Integer>> pRequiredLevels) {
@@ -41,7 +49,12 @@ public class ModRecipeManager {
     }
 
     public static Jobs getJobClient(ItemStack itemStack) {
-        return getJob(itemStack, requiredLevelsClient);
+        Jobs job = getJob(itemStack, requiredLevelsClient);
+        if (job == null) {
+            fillRequiredLevelsClient();
+            job = getJob(itemStack, requiredLevelsClient);
+        }
+        return job;
     }
 
     public static Jobs getJob(ItemStack itemStack, Map<ItemStack, Map<Jobs, Integer>> pRequiredLevels) {
@@ -58,5 +71,13 @@ public class ModRecipeManager {
             }
         }
         return null;
+    }
+
+    public static void fillRequiredLevelsClient() {
+        if (Minecraft.getInstance().level == null) return;
+        ModRecipeManager.requiredLevelsClient.clear();
+        for (ConstructionCraftingRecipe recipe : Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ConstructionRecipeType.INSTANCE)) {
+            ModRecipeManager.requiredLevelsClient.put(recipe.getResultItem(), Map.of(recipe.getJob(), recipe.getRequiredLevel()));
+        }
     }
 }
