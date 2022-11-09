@@ -11,7 +11,6 @@ import me.daqem.jobsplus.common.packet.*;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.handlers.ModPacketHandler;
-import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.init.ModEffects;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.jei.JobsPlusJeiPlugin;
@@ -25,9 +24,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -82,6 +83,10 @@ public class JobsScreen extends Screen {
 
     public static void drawCenteredPowerupsString(@NotNull PoseStack poseStack, Font font, @NotNull String text, int posX, int posY, int color) {
         font.draw(poseStack, text, (float) (posX - font.width(text) / 2), (float) posY, color);
+    }
+
+    public static void playClientGUIClick() {
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     @Override
@@ -592,7 +597,7 @@ public class JobsScreen extends Screen {
         //CONSTRUCTION TABLE
         if (activeRightButton == 1) {
             if (isBetween(mouseX, mouseY, startX + 162, startY + 168, startX + 162 + 24, startY + 168 + 23)) {
-                SoundHandler.playClientGUIClick();
+                playClientGUIClick();
                 JobsPlusJeiPlugin.showJEIPage(ModItems.CONSTRUCTION_TABLE.get().getDefaultInstance());
             }
         }
@@ -609,7 +614,7 @@ public class JobsScreen extends Screen {
                     selectedButton = (int) (mouseY - j) / 35 + l;
                     if (activeLeftButton != 0) jobId = ints.get(selectedButton * 3 + 2);
                     else jobId = selectedButton;
-                    SoundHandler.playClientGUIClick();
+                    playClientGUIClick();
                     return true;
                 } catch (IndexOutOfBoundsException ignore) {
                 }
@@ -652,7 +657,7 @@ public class JobsScreen extends Screen {
         }
         //ALL JOBS BUTTON
         if (isBetween(mouseX, mouseY, 6, -22, 32, 0)) {
-            SoundHandler.playClientGUIClick();
+            playClientGUIClick();
             if (activeLeftButton != 0) {
                 selectedButton = -1;
                 jobId = -1;
@@ -663,7 +668,7 @@ public class JobsScreen extends Screen {
         }
         //PERFORMING JOBS BUTTON
         else if (isBetween(mouseX, mouseY, 6 + 28, -22, 32 + 28, 0)) {
-            SoundHandler.playClientGUIClick();
+            playClientGUIClick();
             if (activeLeftButton != 1) {
                 selectedButton = -1;
                 jobId = -1;
@@ -674,7 +679,7 @@ public class JobsScreen extends Screen {
         }
         //NOT PERFORMING JOBS BUTTON
         else if (isBetween(mouseX, mouseY, 6 + 28 + 28, -22, 32 + 28 + 28, 0)) {
-            SoundHandler.playClientGUIClick();
+            playClientGUIClick();
             if (activeLeftButton != 2) {
                 selectedButton = -1;
                 jobId = -1;
@@ -685,22 +690,22 @@ public class JobsScreen extends Screen {
         }
         //JOB INFO BUTTON
         else if (isBetween(mouseX, mouseY, 6 + 150, -22, 32 + 150, 0)) {
-            SoundHandler.playClientGUIClick();
+            playClientGUIClick();
             activeRightButton = 0;
         }
         //CRAFTING RECIPES BUTTON
         else if (isBetween(mouseX, mouseY, 6 + 28 + 150, -22, 32 + 28 + 150, 0)) {
-            SoundHandler.playClientGUIClick();
+            playClientGUIClick();
             activeRightButton = 1;
         }
         // POWERUPS BUTTON
         else if (isBetween(mouseX, mouseY, 6 + 28 + 28 + 150, -22, 32 + 28 + 28 + 150, 0)) {
-            SoundHandler.playClientGUIClick();
+            playClientGUIClick();
             activeRightButton = 2;
         }
         // HOW TO GET EXP BUTTON
         else if (isBetween(mouseX, mouseY, 6 + 28 + 28 + 28 + 150, -22, 32 + 28 + 28 + 28 + 150, 0)) {
-            SoundHandler.playClientGUIClick();
+            playClientGUIClick();
             activeRightButton = 3;
         }
         // RIGHT BUTTONS
@@ -708,7 +713,7 @@ public class JobsScreen extends Screen {
             // JOB START STOP BUTTON
             if (activeRightButton == 0) {
                 if (isBetween(mouseX, mouseY, 169, 132, 169 + 138, 132 + 18)) {
-                    SoundHandler.playClientGUIClick();
+                    playClientGUIClick();
                     if (getSelectedJobLevel() == 0) {
                         if (hasFreeClaimableJobs()) {
                             openConfirmScreen(Component.translatable("confirm.start"), "start", 0);
@@ -734,7 +739,7 @@ public class JobsScreen extends Screen {
             if (activeRightButton == 1) {
                 ItemStack itemStack = getHoveredItemStack(mouseX, mouseY);
                 if (itemStack != ItemStack.EMPTY) {
-                    SoundHandler.playClientGUIClick();
+                    playClientGUIClick();
                     JobsPlusJeiPlugin.showJEIPage(itemStack);
                 }
             }
@@ -761,7 +766,7 @@ public class JobsScreen extends Screen {
                             openConfirmScreen(Component.translatable("confirm.not_enough_coins_powerup"), "not_enough_coins_powerup", clickedPowerupID);
                         }
                     }
-                    SoundHandler.playClientGUIClick();
+                    playClientGUIClick();
                 }
                 if (isBetween(mouseX, mouseY, 169, 27 + 103, 169 + 139, 27 + 18 + 103)) {
                     if (getSelectedJobLevel() == 100) {
@@ -770,7 +775,7 @@ public class JobsScreen extends Screen {
                     } else {
                         openConfirmScreen(Component.translatable("error.level.must_be_100"), "must_be_level_100", clickedPowerupID);
                     }
-                    SoundHandler.playClientGUIClick();
+                    playClientGUIClick();
                 }
             }
         }
