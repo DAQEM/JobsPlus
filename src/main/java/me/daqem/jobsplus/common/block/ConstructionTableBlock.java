@@ -59,7 +59,6 @@ public class ConstructionTableBlock extends CraftingTableBlock {
     @Override
     public MenuProvider getMenuProvider(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos) {
         return new SimpleMenuProvider((i, inventory, player) -> new ConstructionMenu(i, inventory, ContainerLevelAccess.create(level, pos)), CONTAINER_TITLE);
-//        return new SimpleMenuProvider((i, inventory, player) -> new ConstructionMenu(i, inventory, ContainerLevelAccess.create(level, pos)), CONTAINER_TITLE);
     }
 
 

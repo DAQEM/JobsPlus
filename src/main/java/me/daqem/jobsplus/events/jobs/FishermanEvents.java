@@ -8,9 +8,9 @@ import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.Item;
@@ -33,30 +33,40 @@ import java.util.Objects;
 public class FishermanEvents {
 
     private static final ArrayList<Item> TREASURE = new ArrayList<>(List.of(Items.BOW, Items.FISHING_ROD, Items.NAME_TAG, Items.ENCHANTED_BOOK, Items.NAUTILUS_SHELL, Items.SADDLE));
-
+    private static final Jobs JOB = Jobs.FISHERMAN;
 
     @SubscribeEvent
     public void onItemFished(ItemFishedEvent event) {
-        Player player = event.getEntity();
-        Jobs job = Jobs.FISHERMAN;
-        if (player.level.isClientSide || !JobGetters.jobIsEnabled(player, job)) return;
-        int exp = 0;
-        for (ItemStack itemStack : event.getDrops()) {
-            exp += itemStack.getItem() == Items.TROPICAL_FISH ? 25 : itemStack.is(ItemTags.FISHES) ? ExpHandler.getEXPHigh() : TREASURE.contains(itemStack.getItem()) ? ExpHandler.getEXPFishing() : ExpHandler.getEXPLow();
-        }
-        ItemStack stack = player.getMainHandItem();
-        int luck = stack.getEnchantmentLevel(Enchantments.FISHING_LUCK);
-        int lure = stack.getEnchantmentLevel(Enchantments.FISHING_SPEED);
-        InteractionHand hand = stack.getItem() instanceof FishingRodItem ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
-        Item usedItem = player.getItemInHand(hand).getItem();
-        LootContext.Builder builder = (new LootContext.Builder((ServerLevel) player.level)).withParameter(LootContextParams.ORIGIN, player.getPosition(player.getOnPos().asLong())).withParameter(LootContextParams.TOOL, usedItem.getDefaultInstance()).withParameter(LootContextParams.THIS_ENTITY, new ModFishingHook(player, player.level, luck, lure)).withRandom(RandomSource.create()).withLuck((float) luck + player.getLuck());
-        builder.withParameter(LootContextParams.KILLER_ENTITY, player).withParameter(LootContextParams.THIS_ENTITY, new ModFishingHook(player, player.level, luck, lure));
+        if (event.getEntity() instanceof ServerPlayer player) {
+            if (!JobGetters.jobIsEnabled(player, JOB)) return;
+            int exp = 0;
+            for (ItemStack itemStack : event.getDrops()) {
+                exp += calculateEXPForDrop(itemStack);
+            }
+            ItemStack usedRodStack = player.getMainHandItem().getItem() instanceof FishingRodItem ? player.getMainHandItem() : player.getOffhandItem();
+            int luck = usedRodStack.getEnchantmentLevel(Enchantments.FISHING_LUCK);
+            int lure = usedRodStack.getEnchantmentLevel(Enchantments.FISHING_SPEED);
 
-        giveFishedItem(player, builder, JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true) ? 2 : JobGetters.hasSuperPowerEnabled(player, job, true) ? 5 : 0);
+            ModFishingHook modFishingHook = new ModFishingHook(player, player.level, luck, lure);
+            LootContext.Builder builder = (new LootContext.Builder((ServerLevel) player.level))
+                    .withParameter(LootContextParams.ORIGIN, player.getPosition(player.getOnPos().asLong()))
+                    .withParameter(LootContextParams.TOOL, usedRodStack)
+                    .withParameter(LootContextParams.THIS_ENTITY, modFishingHook)
+                    .withParameter(LootContextParams.KILLER_ENTITY, player)
+                    .withParameter(LootContextParams.THIS_ENTITY, modFishingHook)
+                    .withRandom(RandomSource.create())
+                    .withLuck((float) luck + player.getLuck());
 
-        if (exp != 0) {
-            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) exp = exp * 2;
-            ExpHandler.addJobEXP(player, job, exp);
+            if (JobGetters.hasPowerupEnabled(player, JOB, CapType.POWER_UP2.get(), true)) {
+                exp += giveFishedItem(player, builder, 2);
+            }
+            if (JobGetters.hasSuperPowerEnabled(player, JOB, true)) {
+                exp += giveFishedItem(player, builder, 5);
+            }
+            if (exp != 0) {
+                if (JobGetters.hasPowerupEnabled(player, JOB, CapType.POWER_UP1.get(), true)) exp *= 2;
+                ExpHandler.addJobEXP(player, JOB, exp);
+            }
         }
     }
 
@@ -70,15 +80,27 @@ public class FishermanEvents {
         }
     }
 
-    private void giveFishedItem(Player player, LootContext.Builder builder, int amount) {
+    private int giveFishedItem(Player player, LootContext.Builder builder, int amount) {
+        int exp = 0;
         if (Math.random() * 100 < 20 && amount != 0) {
             for (int i = 0; i < amount; ++i) {
                 List<ItemStack> list = Objects.requireNonNull(player.level.getServer()).getLootTables().get(new ResourceLocation("gameplay/fishing")).getRandomItems(builder.create(LootContextParamSets.FISHING));
                 for (ItemStack itemStack : list) {
+                    exp += calculateEXPForDrop(itemStack);
                     ItemHandler.addItemsToInventoryOrDrop(itemStack, player, player.level, player.getOnPos(), 0);
                 }
             }
         }
+        return exp;
+    }
 
+    private int calculateEXPForDrop(ItemStack itemStack) {
+        return itemStack.is(Items.TROPICAL_FISH) ?
+                25 :
+                itemStack.is(ItemTags.FISHES) ?
+                        ExpHandler.getEXPHigh() :
+                        TREASURE.contains(itemStack.getItem()) ?
+                                ExpHandler.getEXPFishing() :
+                                ExpHandler.getEXPLow();
     }
 }

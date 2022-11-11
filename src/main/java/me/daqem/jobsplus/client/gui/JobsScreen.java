@@ -50,8 +50,7 @@ public class JobsScreen extends Screen {
     private final int imageWidth = 326;
     private final int imageHeight = 166;
     private final CompoundTag dataTag;
-    ArrayList<Integer> ints = new ArrayList<>();
-    LinkedList<ItemStack> selectedJobCraftableStacks = new LinkedList<>();
+    private final LinkedList<ItemStack> selectedJobCraftableStacks = new LinkedList<>();
     private int activeRightButton;
     private int activeLeftButton;
     private float scrollOffs;
@@ -405,108 +404,60 @@ public class JobsScreen extends Screen {
             for (int i = this.startIndex; i < firstHiddenIndex && i < Jobs.values().length; ++i) {
                 drawButtons(poseStack, mouseX, mouseY, getJobLevel(Jobs.getJobFromInt(i)), i, i);
             }
-        }
-        if (activeLeftButton == 1 || activeLeftButton == 2) {
+        } else if (activeLeftButton == 1 || activeLeftButton == 2) {
             for (int i = this.startIndex; i < firstHiddenIndex; ++i) {
                 if ((activeLeftButton == 1 && getEnabledJobs().size() > i) || (activeLeftButton == 2 && getDisabledJobs().size() > i)) {
-                    ArrayList<Jobs> jobs = activeLeftButton == 1 ? getEnabledJobs() : getDisabledJobs();
-                    drawButtons(poseStack, mouseX, mouseY, getJobLevel(jobs.get(i)), jobs.get(i).get(), i);
+                    Jobs job = activeLeftButton == 1 ? getEnabledJobs().get(i) : getDisabledJobs().get(i);
+                    drawButtons(poseStack, mouseX, mouseY, getJobLevel(job), job.get(), i);
                 }
             }
         }
     }
 
-    private ArrayList<Jobs> getEnabledJobs() {
-        ArrayList<Jobs> enabledJobs = new ArrayList<>();
-        for (Jobs job : Jobs.values()) {
-            if (getJobLevel(job) > 0) {
-                enabledJobs.add(job);
+    private void drawButtonTexts(PoseStack poseStack, int jobId, int i, boolean offset) {
+        int j = offset ? i - this.startIndex : i;
+        int i1 = (this.startY + 16) + j * 35;
+        int level = getJobLevel(Jobs.getJobFromInt(jobId));
+        int exp = getJobEXP(Jobs.getJobFromInt(jobId));
+        if (level != 0) {
+            int maxExp = LevelHandler.calcExp(level);
+            font.draw(poseStack, ChatColor.boldGreen() + Jobs.getString(jobId), startX + 7 + 3 + 35, i1 + 3, 16777215);
+            font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.level", ChatColor.reset(), level).getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
+            if (level != 100)
+                font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
+        } else {
+            font.draw(poseStack, ChatColor.boldRed() + Jobs.getString(jobId), startX + 7 + 3 + 35, i1 + 3, 16777215);
+            font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.want_this_job").getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
+            if (hasFreeClaimableJobs()) {
+                font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.cost", ChatColor.reset(), 0).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
+            } else {
+                font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.cost", ChatColor.reset(), 10).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
             }
         }
-        return enabledJobs;
     }
 
-    private ArrayList<Jobs> getDisabledJobs() {
-        ArrayList<Jobs> disabledJobs = new ArrayList<>();
-        for (Jobs job : Jobs.values()) {
-            if (getJobLevel(job) == 0) {
-                disabledJobs.add(job);
+    private void drawJobButtonsTexts(PoseStack poseStack, int firstHiddenIndex) {
+        if (activeLeftButton == 0) {
+            for (int i = this.startIndex; i < firstHiddenIndex && i < Jobs.values().length; ++i) {
+                drawButtonTexts(poseStack, i, i, true);
+            }
+        } else if (activeLeftButton == 1 || activeLeftButton == 2) {
+            int count = 0;
+            for (int i = this.startIndex; i < firstHiddenIndex; ++i) {
+                if ((activeLeftButton == 1 && getEnabledJobs().size() > i) || (activeLeftButton == 2 && getDisabledJobs().size() > i)) {
+                    Jobs job = activeLeftButton == 1 ? getEnabledJobs().get(i) : getDisabledJobs().get(i);
+                    drawButtonTexts(poseStack, job.get(), count++, false);
+                }
             }
         }
-        return disabledJobs;
     }
 
     public void renderTexts(PoseStack poseStack, int firstHiddenIndex) {
         font.draw(poseStack, ChatColor.darkGray() + JobsPlus.translatable("gui.jobs").getString(), startX + 7, startY + 6, 16777215);
         drawRightAlignedString(poseStack, font, ChatColor.darkGray() + JobsPlus.translatable("gui.coins.top", getCoins()).getString(), startX + 140, startY + 6, 16777215);
 
-        if (activeLeftButton == 0) {
-            for (int i = this.startIndex; i < firstHiddenIndex && i < Jobs.values().length; ++i) {
-                int j = i - this.startIndex;
-                int i1 = (this.startY + 16) + j * 35;
-                int level = getJobLevel(Jobs.getJobFromInt(i));
-                int exp = getJobEXP(Jobs.getJobFromInt(i));
-                if (level != 0) {
-                    int maxExp = LevelHandler.calcExp(level);
-                    font.draw(poseStack, ChatColor.boldGreen() + Jobs.getString(i), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                    font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.level", ChatColor.reset(), level).getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
-                    if (level != 100)
-                        font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
-                } else {
-                    font.draw(poseStack, ChatColor.boldRed() + Jobs.getString(i), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                    font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.want_this_job").getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
-                    if (hasFreeClaimableJobs()) {
-                        font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.cost", ChatColor.reset(), 0).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
-                    } else {
-                        font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.cost", ChatColor.reset(), 10).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
-                    }
-                }
-            }
-        }
-        if (activeLeftButton == 1 || activeLeftButton == 2) {
-            ints = new ArrayList<>();
-            for (Jobs job : Jobs.values()) {
-                int level = getJobLevel(job);
-                int exp = getJobEXP(job);
-                if (activeLeftButton == 1) {
-                    if (level != 0) {
-                        ints.add(level);
-                        ints.add(exp);
-                        ints.add(Jobs.getJobInt(job));
-                    }
-                }
-                if (activeLeftButton == 2) {
-                    if (level == 0) {
-                        ints.add(level);
-                        ints.add(exp);
-                        ints.add(Jobs.getJobInt(job));
-                    }
-                }
-            }
-            for (int i = this.startIndex; i < firstHiddenIndex; ++i) {
-                if (i < ints.size() / 3) {
-                    int[] currentJobArray = new int[]{ints.get(i * 3), ints.get(i * 3 + 1), ints.get(i * 3 + 2)};
-                    int j = i - this.startIndex;
-                    int i1 = (this.startY + 16) + j * 35;
-                    int level = currentJobArray[0];
-                    int exp = currentJobArray[1];
-                    if (level != 0) {
-                        int maxExp = LevelHandler.calcExp(level);
-                        font.draw(poseStack, ChatColor.boldGreen() + Jobs.getString(currentJobArray[2]), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                        font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.level", ChatColor.reset(), level).getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
-                        font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
-                    } else {
-                        font.draw(poseStack, ChatColor.boldRed() + Jobs.getString(currentJobArray[2]), startX + 7 + 3 + 35, i1 + 3, 16777215);
-                        font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.want_this_job").getString(), startX + 7 + 3 + 35, i1 + 14, 16777215);
-                        if (hasFreeClaimableJobs()) {
-                            font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.cost", ChatColor.reset(), 0).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
-                        } else {
-                            font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.cost", ChatColor.reset(), 10).getString(), startX + 7 + 3 + 35, i1 + 23, 16777215);
-                        }
-                    }
-                }
-            }
-        }
+        drawJobButtonsTexts(poseStack, firstHiddenIndex);
+
         if (!hasJobSelected()) {
             if (activeRightButton == 0) drawNoJobSelected(poseStack, "info");
             else if (activeRightButton == 1) drawNoJobSelected(poseStack, "crafting");
@@ -579,6 +530,7 @@ public class JobsScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int clickType) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return false;
+        this.scrolling = false;
 
         //SETTINGS
         if (isBetween(mouseX, mouseY, 3, height - 20, 19, height - 4)) {
@@ -602,18 +554,16 @@ public class JobsScreen extends Screen {
             }
         }
 
-        this.scrolling = false;
-        int i = this.startX + 7;
-        int j = this.startY + 16;
-        int k = this.startIndex + 4;
-
         //JOBS LIST
-        for (int l = this.startIndex; l < k; ++l) {
-            if (isBetween(mouseX - i, mouseY - j, 0, 0, 116, 35 * 4)) {
+        for (int l = this.startIndex; l < this.startIndex + 4; ++l) {
+            if (isBetween(mouseX - startX, mouseY - startY, 7, 16, 122, 35 * (l - startIndex + 1) + 15)) {
                 try {
-                    selectedButton = (int) (mouseY - j) / 35 + l;
-                    if (activeLeftButton != 0) jobId = ints.get(selectedButton * 3 + 2);
-                    else jobId = selectedButton;
+                    selectedButton = l;
+                    jobId = activeLeftButton == 0 ?
+                            selectedButton :
+                            activeLeftButton == 1 ?
+                                    getEnabledJobs().get(selectedButton).get() :
+                                    getDisabledJobs().get(selectedButton).get();
                     playClientGUIClick();
                     return true;
                 } catch (IndexOutOfBoundsException ignore) {
@@ -621,16 +571,13 @@ public class JobsScreen extends Screen {
             }
         }
 
-        i = startX + 127;
-        j = startY + 17;
-
-        //SCROLL BAR
-        if (mouseX >= (double) i && mouseX < (double) (i + 12) && mouseY >= (double) j && mouseY < (double) (j + 140)) {
-            this.scrolling = true;
-        }
-
         mouseX = mouseX - startX;
         mouseY = mouseY - startY;
+
+        //SCROLL BAR
+        if (isBetween(mouseX, mouseY, 127, 17, 139, 155)) {
+            this.scrolling = true;
+        }
 
         //DISPLAY AND BOSSBAR
         if (hasJobSelected()) {
@@ -1021,5 +968,25 @@ public class JobsScreen extends Screen {
 
     private boolean hasSelectedJobSuperpowerEnabled() {
         return getSelectedJobSuperpowerState() == 0;
+    }
+
+    private ArrayList<Jobs> getEnabledJobs() {
+        ArrayList<Jobs> enabledJobs = new ArrayList<>();
+        for (Jobs job : Jobs.values()) {
+            if (getJobLevel(job) > 0) {
+                enabledJobs.add(job);
+            }
+        }
+        return enabledJobs;
+    }
+
+    private ArrayList<Jobs> getDisabledJobs() {
+        ArrayList<Jobs> disabledJobs = new ArrayList<>();
+        for (Jobs job : Jobs.values()) {
+            if (getJobLevel(job) == 0) {
+                disabledJobs.add(job);
+            }
+        }
+        return disabledJobs;
     }
 }
