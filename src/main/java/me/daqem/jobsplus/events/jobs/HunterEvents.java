@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
@@ -15,7 +16,6 @@ import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -301,6 +301,7 @@ public class HunterEvents {
         return WordUtils.capitalize(entityString.replace("_", " ")).replace(" ", "").replace("Entity", "");
     }
 
+    @SuppressWarnings("all")
     public String getName(Entity entity) {
         String entityString = getEntityString(entity);
         String mobName = entityString.split("\\[")[0].replace("Entity", "");
@@ -375,7 +376,7 @@ public class HunterEvents {
         properties.put("textures", textures);
         skullOwner.put("Properties", properties);
         texturedHead.addTagElement("SkullOwner", skullOwner);
-        texturedHead.setHoverName(Component.literal(headName));
+        texturedHead.setHoverName(JobsPlus.literal(headName));
         return texturedHead;
     }
 }

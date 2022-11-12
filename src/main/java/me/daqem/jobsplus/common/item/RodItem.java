@@ -128,6 +128,6 @@ public class RodItem extends FishingRodItem {
     }
 
     private Component getDropsComponent(int percentage, int drops) {
-        return Component.literal(ChatColor.green() + percentage + "% " + ChatColor.reset() + JobsPlus.translatable("tooltip.about.rod.drops", drops).getString());
+        return JobsPlus.literal(ChatColor.green() + percentage + "% " + ChatColor.reset() + JobsPlus.translatable("tooltip.about.rod.drops", drops).getString());
     }
 }

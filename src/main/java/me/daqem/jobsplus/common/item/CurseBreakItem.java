@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -30,7 +31,7 @@ public class CurseBreakItem extends Item {
                 .withAbout(this)
                 .withHoldShift()
                 .withEnchantments(stack, true)
-                .withComponent(Component.translatable("item.jobsplus.curse_breaker").withStyle(ChatFormatting.GRAY), TooltipBuilder.ShiftType.BOTH)
+                .withComponent(JobsPlus.translatable("item.jobsplus.curse_breaker").withStyle(ChatFormatting.GRAY), TooltipBuilder.ShiftType.BOTH)
                 .build());
     }
 }

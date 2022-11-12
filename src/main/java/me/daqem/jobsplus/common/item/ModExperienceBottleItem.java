@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.item;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.common.entity.ModThrownExperienceBottle;
 import me.daqem.jobsplus.utils.ChatColor;
@@ -56,21 +57,21 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
         int tier = stack.getOrCreateTag().getInt("tier");
         int exp = stack.getOrCreateTag().getInt("EXP");
         if (Screen.hasShiftDown()) {
-            tooltip.add(Component.literal(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(Component.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
+            tooltip.add(JobsPlus.literal(ChatColor.boldDarkGreen() + "Requirements:"));
+            tooltip.add(JobsPlus.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
             int requiredJobLevel = ModRecipeManager.getRequiredJobLevelServer(stack);
             String level = requiredJobLevel == 101 ? "depends on use." : String.valueOf(requiredJobLevel);
-            tooltip.add(Component.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
+            tooltip.add(JobsPlus.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
         } else {
-            tooltip.add(Component.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
+            tooltip.add(JobsPlus.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }
         if (exp != 0 || tier != 0) {
-            tooltip.add(Component.literal(" "));
+            tooltip.add(JobsPlus.literal(" "));
             if (exp != 0)
-                tooltip.add(Component.literal(ChatColor.green() + "EXP: " + ChatColor.reset() + exp));
+                tooltip.add(JobsPlus.literal(ChatColor.green() + "EXP: " + ChatColor.reset() + exp));
             if (tier != 0) {
-                tooltip.add(Component.literal(ChatColor.green() + "Tier: " + ChatColor.reset() + tier));
-                tooltip.add(Component.literal(ChatColor.green() + "EXP: " + ChatColor.reset() + tierToEXP(tier)));
+                tooltip.add(JobsPlus.literal(ChatColor.green() + "Tier: " + ChatColor.reset() + tier));
+                tooltip.add(JobsPlus.literal(ChatColor.green() + "EXP: " + ChatColor.reset() + tierToEXP(tier)));
             }
         }
     }

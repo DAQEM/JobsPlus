@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.handlers;
 
 import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.events.EventPlayerTick;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
@@ -17,7 +18,7 @@ public class LevelUpHandler {
         if (player.level.isClientSide) return;
 
         JobSetters.addCoins(player, Config.COINS_PER_LEVEL_UP.get());
-        final Component translatableComponent = Component.translatable("jobsplus.level_up." + job.name().toLowerCase(), ChatColor.green(), ChatColor.boldDarkGreen(), player.getScoreboardName(), ChatColor.green(), ChatColor.boldDarkGreen(), level, ChatColor.green(), ChatHandler.ColorizedJobName(job));
+        final Component translatableComponent = JobsPlus.translatable("jobsplus.level_up." + job.name().toLowerCase(), ChatColor.green(), ChatColor.boldDarkGreen(), player.getScoreboardName(), ChatColor.green(), ChatColor.boldDarkGreen(), level, ChatColor.green(), ChatHandler.ColorizedJobName(job));
         if (JobGetters.getLevelUpChatSetting(player) == 0) {
             for (ServerPlayer serverPlayer : player.getServer().getPlayerList().getPlayers()) {
                 if (JobGetters.getLevelUpChatSetting(serverPlayer) != 2)

@@ -1,6 +1,6 @@
 package me.daqem.jobsplus.utils.enums;
 
-import net.minecraft.network.chat.Component;
+import me.daqem.jobsplus.JobsPlus;
 
 public enum Jobs {
     ALCHEMIST(0),
@@ -23,7 +23,7 @@ public enum Jobs {
     public static String getString(int value) {
         for (Jobs jobs : Jobs.values()) {
             if (value == jobs.get()) {
-                return Component.translatable("job." + jobs.name().toLowerCase()).getString();
+                return JobsPlus.translatable("job." + jobs.name().toLowerCase()).getString();
             }
         }
         return "";

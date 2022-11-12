@@ -3,7 +3,6 @@ package me.daqem.jobsplus.handlers;
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.bossevents.CustomBossEvent;
 import net.minecraft.server.bossevents.CustomBossEvents;
@@ -27,7 +26,7 @@ public class BossBarHandler {
                     customBossEvents.remove(customBossEvent);
                     return;
                 }
-                customBossEvent.setName(Component.literal("(Level: " + jobLevel + ")  " + ChatHandler.ColorizedJobName(job) + " (EXP: " + getEXPPercentage(player, job) + "%)"));
+                customBossEvent.setName(JobsPlus.literal("(Level: " + jobLevel + ")  " + ChatHandler.ColorizedJobName(job) + " (EXP: " + getEXPPercentage(player, job) + "%)"));
                 customBossEvent.setValue(JobGetters.getJobEXP(player, job));
                 customBossEvent.setMax(LevelHandler.calcExp(JobGetters.getJobLevel(player, job)));
                 if (jobLevel == 100) customBossEvent.setProgress(1F);
@@ -45,7 +44,7 @@ public class BossBarHandler {
 
         if (customBossEvent == null) {
             final int jobLevel = JobGetters.getJobLevel(player, job);
-            customBossEvent = customBossEvents.create(id, Component.literal("(Level: " + jobLevel + ")  " + ChatHandler.ColorizedJobName(job) + " (EXP: " + getEXPPercentage(player, job) + "%)"));
+            customBossEvent = customBossEvents.create(id, JobsPlus.literal("(Level: " + jobLevel + ")  " + ChatHandler.ColorizedJobName(job) + " (EXP: " + getEXPPercentage(player, job) + "%)"));
             customBossEvent.addPlayer((ServerPlayer) player);
             customBossEvent.setMax(LevelHandler.calcExp(jobLevel));
             customBossEvent.setColor(getBossBarColor(job));

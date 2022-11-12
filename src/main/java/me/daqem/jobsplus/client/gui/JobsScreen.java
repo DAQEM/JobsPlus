@@ -62,7 +62,7 @@ public class JobsScreen extends Screen {
     private int selectedButton;
 
     public JobsScreen(CompoundTag dataTag) {
-        super(Component.literal("Jobs"));
+        super(JobsPlus.literal("Jobs"));
         this.jobId = dataTag.getInt("JobID");
         this.activeLeftButton = dataTag.getInt("ActiveLeftButton");
         this.activeRightButton = dataTag.getInt("ActiveRightButton");
@@ -180,7 +180,7 @@ public class JobsScreen extends Screen {
                                 JobsPlus.translatable("gui.active", ChatHandler.ColorizedJobName(Objects.requireNonNull(Jobs.getJobFromInt(displayId - 1))).replace(" ", "")));
                     } else {
                         list = List.of(JobsPlus.translatable("gui.toggle_prefix"),
-                                JobsPlus.translatable("gui.active", ChatColor.boldBlue() + Component.translatable("job.none").getString()));
+                                JobsPlus.translatable("gui.active", ChatColor.boldBlue() + JobsPlus.translatable("job.none").getString()));
                     }
                     super.renderTooltip(poseStack, list, Optional.empty(), mouseX + startX, mouseY + startY + 17);
                 }
@@ -196,7 +196,7 @@ public class JobsScreen extends Screen {
                                 JobsPlus.translatable("gui.active", ChatHandler.ColorizedJobName(Objects.requireNonNull(Jobs.getJobFromInt(bossBarId))).replace(" ", "")));
                     } else {
                         list = List.of(JobsPlus.translatable("gui.toggle_boss_bar"),
-                                JobsPlus.translatable("gui.active", ChatColor.boldBlue() + Component.translatable("job.none").getString()));
+                                JobsPlus.translatable("gui.active", ChatColor.boldBlue() + JobsPlus.translatable("job.none").getString()));
                     }
                     super.renderTooltip(poseStack, list, Optional.empty(), mouseX + startX, mouseY + startY + 17);
                 }
@@ -663,21 +663,21 @@ public class JobsScreen extends Screen {
                     playClientGUIClick();
                     if (getSelectedJobLevel() == 0) {
                         if (hasFreeClaimableJobs()) {
-                            openConfirmScreen(Component.translatable("confirm.start"), "start", 0);
+                            openConfirmScreen(JobsPlus.translatable("confirm.start"), "start", 0);
                         } else {
                             if (getCoins() >= getJobStartCost())
-                                openConfirmScreen(Component.translatable("confirm.start_paid", getJobStartCost()), "start_paid", 0);
+                                openConfirmScreen(JobsPlus.translatable("confirm.start_paid", getJobStartCost()), "start_paid", 0);
                             else
-                                openConfirmScreen(Component.translatable("confirm.not_enough_coins_start"), "not_enough_coins_start", 0);
+                                openConfirmScreen(JobsPlus.translatable("confirm.not_enough_coins_start"), "not_enough_coins_start", 0);
 
                         }
                     } else if (getSelectedJobLevel() == getJobLevelToStopJobForFree()) {
-                        openConfirmScreen(Component.translatable("confirm.stop_free"), "stop_free", 0);
+                        openConfirmScreen(JobsPlus.translatable("confirm.stop_free"), "stop_free", 0);
                     } else {
                         if (getCoins() >= getJobStopCost())
-                            openConfirmScreen(Component.translatable("confirm.stop", getJobStopCost()), "stop", 0);
+                            openConfirmScreen(JobsPlus.translatable("confirm.stop", getJobStopCost()), "stop", 0);
                         else
-                            openConfirmScreen(Component.translatable("confirm.not_enough_coins_stop"), "not_enough_coins_stop", 0);
+                            openConfirmScreen(JobsPlus.translatable("confirm.not_enough_coins_stop"), "not_enough_coins_stop", 0);
 
                     }
                 }
@@ -705,12 +705,12 @@ public class JobsScreen extends Screen {
                         if (getCoins() >= getPowerupCost()) {
                             //Check is the player has the job.
                             if (getSelectedJobLevel() != 0)
-                                openConfirmScreen(Component.translatable("confirm.powerup"), "powerup", clickedPowerupID);
+                                openConfirmScreen(JobsPlus.translatable("confirm.powerup"), "powerup", clickedPowerupID);
                             else {
-                                openConfirmScreen(Component.translatable("confirm.job_not_enabled"), "job_not_enabled", clickedPowerupID);
+                                openConfirmScreen(JobsPlus.translatable("confirm.job_not_enabled"), "job_not_enabled", clickedPowerupID);
                             }
                         } else {
-                            openConfirmScreen(Component.translatable("confirm.not_enough_coins_powerup"), "not_enough_coins_powerup", clickedPowerupID);
+                            openConfirmScreen(JobsPlus.translatable("confirm.not_enough_coins_powerup"), "not_enough_coins_powerup", clickedPowerupID);
                         }
                     }
                     playClientGUIClick();
@@ -720,7 +720,7 @@ public class JobsScreen extends Screen {
                         ModPackets.INSTANCE.sendToServer(new PacketSwitchSuperpower(Jobs.getJobFromInt(jobId)));
                         ModPackets.INSTANCE.sendToServer(new PacketOpenMenu(jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
                     } else {
-                        openConfirmScreen(Component.translatable("error.level.must_be_100"), "must_be_level_100", clickedPowerupID);
+                        openConfirmScreen(JobsPlus.translatable("error.level.must_be_100"), "must_be_level_100", clickedPowerupID);
                     }
                     playClientGUIClick();
                 }

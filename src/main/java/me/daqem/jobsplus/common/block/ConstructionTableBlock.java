@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.common.block;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.inventory.construction.ConstructionMenu;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.utils.ChatColor;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class ConstructionTableBlock extends CraftingTableBlock {
 
-    private static final Component CONTAINER_TITLE = Component.translatable("jobsplus.container.construction");
+    private static final Component CONTAINER_TITLE = JobsPlus.translatable("jobsplus.container.construction");
 
     public ConstructionTableBlock(Properties properties) {
         super(properties);
@@ -64,7 +65,7 @@ public class ConstructionTableBlock extends CraftingTableBlock {
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter blockGetter, @NotNull List<Component> components, @NotNull TooltipFlag flag) {
-        components.add(Component.literal(ChatColor.green() + "Used to craft Jobs+ items."));
+        components.add(JobsPlus.literal(ChatColor.green() + "Used to craft Jobs+ items."));
         super.appendHoverText(stack, blockGetter, components, flag);
     }
 

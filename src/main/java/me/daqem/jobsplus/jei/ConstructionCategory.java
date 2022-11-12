@@ -39,7 +39,7 @@ public class ConstructionCategory implements IRecipeCategory<ConstructionCraftin
 
     @Override
     public @NotNull Component getTitle() {
-        return Component.literal("Construction Table");
+        return JobsPlus.literal("Construction Table");
     }
 
     @Override

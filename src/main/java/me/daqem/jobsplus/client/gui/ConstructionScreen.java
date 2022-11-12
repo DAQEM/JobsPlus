@@ -59,7 +59,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     private int startY;
 
     public ConstructionScreen(ConstructionMenu menu, Inventory inventory, Component ignoredTitle) {
-        super(menu, inventory, Component.literal("Construction Table"));
+        super(menu, inventory, JobsPlus.literal("Construction Table"));
         this.recipes = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager().getAllRecipesFor(ConstructionRecipeType.INSTANCE);
         this.enabledJobsData = generateJobsDataArray(menu);
         this.scrollingLeft = false;
@@ -279,8 +279,8 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
                 int exp = currentJobArray[2];
                 int maxExp = LevelHandler.calcExp(level);
                 font.draw(poseStack, ChatColor.boldGreen() + Jobs.getString(currentJobArray[0]), startX + 10, startY + i1 + 3, 16777215);
-                font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.level", ChatColor.reset(), level).getString(), startX + 10, startY + i1 + 14, 16777215);
-                font.draw(poseStack, ChatColor.aqua() + Component.translatable("jobsplus.gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 10, startY + i1 + 23, 16777215);
+                font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("jobsplus.gui.level", ChatColor.reset(), level).getString(), startX + 10, startY + i1 + 14, 16777215);
+                font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("jobsplus.gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 10, startY + i1 + 23, 16777215);
             }
         }
     }

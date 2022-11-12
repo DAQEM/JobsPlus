@@ -59,7 +59,7 @@ public class EXPJarItem extends Item {
 
                 serverPlayer.giveExperiencePoints(nbtExp);
                 nbt.putInt(EXP, 0);
-                HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, Component.literal(String.valueOf(nbtExp)).withStyle(ChatFormatting.DARK_GREEN).append(JobsPlus.translatable("success.exp.extract").withStyle(ChatFormatting.GREEN)));
+                HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, JobsPlus.literal(String.valueOf(nbtExp)).withStyle(ChatFormatting.DARK_GREEN).append(JobsPlus.translatable("success.exp.extract").withStyle(ChatFormatting.GREEN)));
                 SoundHandler.playChangeToolModeSound(serverPlayer);
             } else {
                 int totalExperience = (int) (ExperienceHandler.getExperienceForLevel(serverPlayer.experienceLevel) + (serverPlayer.experienceProgress * serverPlayer.getXpNeededForNextLevel()));
@@ -71,7 +71,7 @@ public class EXPJarItem extends Item {
 
                 serverPlayer.giveExperiencePoints(-totalExperience);
                 stack.setTag(nbt);
-                HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, Component.literal(String.valueOf(totalExperience)).withStyle(ChatFormatting.DARK_GREEN).append(JobsPlus.translatable("success.exp.insert").withStyle(ChatFormatting.GREEN)));
+                HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, JobsPlus.literal(String.valueOf(totalExperience)).withStyle(ChatFormatting.DARK_GREEN).append(JobsPlus.translatable("success.exp.insert").withStyle(ChatFormatting.GREEN)));
                 SoundHandler.playChangeToolModeSound(serverPlayer);
             }
             return InteractionResultHolder.success(stack);

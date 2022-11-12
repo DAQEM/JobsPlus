@@ -41,4 +41,8 @@ public class JobsPlus {
     public static MutableComponent translatable(String str, Object... objects) {
         return Component.translatable("jobsplus." + str, objects);
     }
+
+    public static MutableComponent literal(String str) {
+        return Component.literal(str);
+    }
 }

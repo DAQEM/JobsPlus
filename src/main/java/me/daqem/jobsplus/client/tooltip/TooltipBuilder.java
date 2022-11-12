@@ -17,7 +17,7 @@ import java.util.List;
 
 public class TooltipBuilder {
 
-    public static final Component WHITE_SPACE = Component.literal(" ");
+    public static final Component WHITE_SPACE = JobsPlus.literal(" ");
     private final ArrayList<Component> componentList = new ArrayList<>();
 
     public TooltipBuilder withRequirement(ItemStack stack) {
@@ -25,9 +25,9 @@ public class TooltipBuilder {
             Jobs job = ModRecipeManager.getJobClient(stack);
             if (job != null) {
                 componentList.addAll(List.of(
-                        Component.literal(ChatColor.boldDarkGreen() + JobsPlus.translatable("tooltip.requirements").getString()),
-                        Component.literal(ChatColor.green() + JobsPlus.translatable("tooltip.job").getString() + ChatColor.reset() + ChatHandler.capitalizeWord(Component.translatable("job." + job.name().toLowerCase()).getString().toLowerCase())),
-                        Component.literal(ChatColor.green() + JobsPlus.translatable("tooltip.level").getString() + ChatColor.reset() + ModRecipeManager.getRequiredJobLevelClient(stack))));
+                        JobsPlus.literal(ChatColor.boldDarkGreen() + JobsPlus.translatable("tooltip.requirements").getString()),
+                        JobsPlus.literal(ChatColor.green() + JobsPlus.translatable("tooltip.job").getString() + ChatColor.reset() + ChatHandler.capitalizeWord(JobsPlus.translatable("job." + job.name().toLowerCase()).getString().toLowerCase())),
+                        JobsPlus.literal(ChatColor.green() + JobsPlus.translatable("tooltip.level").getString() + ChatColor.reset() + ModRecipeManager.getRequiredJobLevelClient(stack))));
             }
         }
         return this;
@@ -101,7 +101,7 @@ public class TooltipBuilder {
         if (stack.isEnchanted() || force) {
             componentList.addAll(List.of(
                     WHITE_SPACE,
-                    Component.literal(ChatColor.boldDarkGreen() + "Enchantments:")));
+                    JobsPlus.literal(ChatColor.boldDarkGreen() + "Enchantments:")));
         }
         return this;
     }

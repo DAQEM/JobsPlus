@@ -42,7 +42,7 @@ import java.util.UUID;
 
 public class BackpackItem extends Item {
 
-    private static final Component CONTAINER_TITLE = Component.translatable("container.enderchest");
+    private static final Component CONTAINER_TITLE = JobsPlus.translatable("container.enderchest");
     private static final String UUID_NBT = "UUID";
     private static final String INVENTORY_NBT = "Inventory";
     final String name;

@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ConfirmationScreen extends Screen {
 
-    private static final Component TITLE = Component.literal("Confirmation");
+    private static final Component TITLE = JobsPlus.literal("Confirmation");
     private static final ResourceLocation BACKGROUND = JobsPlus.getId("textures/gui/confirmation_screen.png");
     private static final List<String> showBackButtonList = List.of("not_enough_coins_stop", "not_enough_coins_start", "not_enough_coins_powerup", "job_not_enabled", "must_be_level_100");
     private final Screen lastScreen;
@@ -143,7 +143,7 @@ public class ConfirmationScreen extends Screen {
     }
 
     public void drawNewCenteredString(PoseStack poseStack, String text, int x, int y) {
-        Component component = Component.translatable(text);
+        Component component = JobsPlus.translatable(text);
         font.draw(poseStack, component, (float) (x - font.width(component) / 2), (float) y, 16777215);
     }
 
