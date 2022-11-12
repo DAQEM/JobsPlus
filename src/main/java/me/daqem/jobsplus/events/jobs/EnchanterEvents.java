@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
@@ -61,14 +60,7 @@ public class EnchanterEvents {
                                 if (enchantedItem.isEnchanted() || enchantedItem.is(Items.ENCHANTED_BOOK)) {
                                     Map<Enchantment, Integer> newMap = new HashMap<>();
                                     for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(enchantedItem).entrySet()) {
-                                        if (entry.getKey() == Enchantments.SILK_TOUCH || entry.getKey() == Enchantments.AQUA_AFFINITY ||
-                                                entry.getKey() == Enchantments.MENDING || entry.getKey() == Enchantments.INFINITY_ARROWS ||
-                                                entry.getKey() == Enchantments.FLAMING_ARROWS || entry.getKey() == Enchantments.MULTISHOT ||
-                                                entry.getKey() == Enchantments.CHANNELING) {
-                                            newMap.put(entry.getKey(), entry.getValue());
-                                        } else {
-                                            newMap.put(entry.getKey(), entry.getValue() + 1);
-                                        }
+                                        newMap.put(entry.getKey(), entry.getKey().getMaxLevel() == 1 ? entry.getValue() : entry.getValue() + 1);
                                     }
                                     EnchantmentHelper.setEnchantments(newMap, enchantedItem);
                                     containerMenu.getSlot(0).set(enchantedItem);
