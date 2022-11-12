@@ -58,7 +58,7 @@ public class ConfirmationScreen extends Screen {
     }
 
     private void renderTexts(@NotNull PoseStack poseStack) {
-        drawNewCenteredString(poseStack, confirmationText.getString(), width / 2, startY + 15);
+        drawNewCenteredString(poseStack, confirmationText, width / 2, startY + 15);
         if (showBackButtonList.contains(action)) {
             drawNewCenteredString(poseStack, "confirm.back", width / 2, startY + 33);
         } else {
@@ -145,6 +145,10 @@ public class ConfirmationScreen extends Screen {
     public void drawNewCenteredString(PoseStack poseStack, String text, int x, int y) {
         Component component = JobsPlus.translatable(text);
         font.draw(poseStack, component, (float) (x - font.width(component) / 2), (float) y, 16777215);
+    }
+
+    public void drawNewCenteredString(PoseStack poseStack, Component component, int x, int y) {
+        font.draw(poseStack, component.getString(), (float) (x - font.width(component) / 2), (float) y, 16777215);
     }
 
     @Override

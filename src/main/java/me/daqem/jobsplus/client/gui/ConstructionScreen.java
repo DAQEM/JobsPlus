@@ -425,7 +425,7 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     }
 
     private boolean isScrollBarLeftActive() {
-        return enabledJobsData.size() > 4;
+        return enabledJobsData.size() > 3;
     }
 
     private boolean isScrollBarRightActive() {
@@ -480,15 +480,6 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
     @Override
     protected void renderBg(@NotNull PoseStack poseStack, float partialTicks, int x, int y) {
     }
-
-//    @Override
-//    public void addItemToSlot(Iterator<Ingredient> p_135415_, int p_135416_) {
-//        Ingredient ingredient = p_135415_.next();
-//        if (!ingredient.isEmpty()) {
-//            Slot slot = this.menu.slots.get(p_135416_);
-//            this.ghostRecipe.addIngredient(ingredient, slot.x, slot.y);
-//        }
-//    }
 
     @Override
     public void addItemToSlot(Iterator<Ingredient> p_100338_, int p_100339_, int p_100340_, int p_100341_, int p_100342_) {
