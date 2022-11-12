@@ -279,8 +279,8 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
                 int exp = currentJobArray[2];
                 int maxExp = LevelHandler.calcExp(level);
                 font.draw(poseStack, ChatColor.boldGreen() + Jobs.getString(currentJobArray[0]), startX + 10, startY + i1 + 3, 16777215);
-                font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("jobsplus.gui.level", ChatColor.reset(), level).getString(), startX + 10, startY + i1 + 14, 16777215);
-                font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("jobsplus.gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 10, startY + i1 + 23, 16777215);
+                font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.level", ChatColor.reset(), level).getString(), startX + 10, startY + i1 + 14, 16777215);
+                font.draw(poseStack, ChatColor.aqua() + JobsPlus.translatable("gui.exp", ChatColor.reset(), (int) ((double) exp / maxExp * 100), "%").getString(), startX + 10, startY + i1 + 23, 16777215);
             }
         }
     }

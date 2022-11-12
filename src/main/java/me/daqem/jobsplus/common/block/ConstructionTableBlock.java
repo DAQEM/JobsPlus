@@ -32,7 +32,7 @@ import java.util.List;
 
 public class ConstructionTableBlock extends CraftingTableBlock {
 
-    private static final Component CONTAINER_TITLE = JobsPlus.translatable("jobsplus.container.construction");
+    private static final Component CONTAINER_TITLE = JobsPlus.translatable("container.construction");
 
     public ConstructionTableBlock(Properties properties) {
         super(properties);

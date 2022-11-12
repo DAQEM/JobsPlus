@@ -18,7 +18,7 @@ public class LevelUpHandler {
         if (player.level.isClientSide) return;
 
         JobSetters.addCoins(player, Config.COINS_PER_LEVEL_UP.get());
-        final Component translatableComponent = JobsPlus.translatable("jobsplus.level_up." + job.name().toLowerCase(), ChatColor.green(), ChatColor.boldDarkGreen(), player.getScoreboardName(), ChatColor.green(), ChatColor.boldDarkGreen(), level, ChatColor.green(), ChatHandler.ColorizedJobName(job));
+        final Component translatableComponent = JobsPlus.translatable("level_up." + job.name().toLowerCase(), ChatColor.green(), ChatColor.boldDarkGreen(), player.getScoreboardName(), ChatColor.green(), ChatColor.boldDarkGreen(), level, ChatColor.green(), ChatHandler.ColorizedJobName(job));
         if (JobGetters.getLevelUpChatSetting(player) == 0) {
             for (ServerPlayer serverPlayer : player.getServer().getPlayerList().getPlayers()) {
                 if (JobGetters.getLevelUpChatSetting(serverPlayer) != 2)
