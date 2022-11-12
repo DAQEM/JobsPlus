@@ -1,14 +1,14 @@
 package me.daqem.jobsplus;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import me.daqem.jobsplus.client.gui.BackpackScreen;
+import me.daqem.jobsplus.client.gui.ConstructionScreen;
 import me.daqem.jobsplus.client.renderer.entity.ModFishingHookRenderer;
-import me.daqem.jobsplus.common.container.backpack.BackpackGUI;
-import me.daqem.jobsplus.data.ModDataGenerator;
+import me.daqem.jobsplus.common.data.generation.ModDataGenerator;
 import me.daqem.jobsplus.events.*;
 import me.daqem.jobsplus.events.item.CurseBreakEvents;
 import me.daqem.jobsplus.events.item.FarmersHoeEvents;
 import me.daqem.jobsplus.events.jobs.*;
-import me.daqem.jobsplus.handlers.ModPacketHandler;
 import me.daqem.jobsplus.init.*;
 import me.daqem.jobsplus.utils.HeadData;
 import net.minecraft.client.KeyMapping;
@@ -38,11 +38,10 @@ public class SideProxy {
         modEventBus.register(new EventRegisterCapabilities());
         modEventBus.register(new EventAttachCapabilities());
         modEventBus.register(new EventRegisterCommands());
-        modEventBus.register(new EventServerChat());
         modEventBus.register(new EventNameFormat());
         modEventBus.register(new EventPlayerTick());
         modEventBus.register(new EventPlayerLoggedIn());
-        modEventBus.register(new EventPlayerLoggedIn());
+        modEventBus.register(new EventRecipesUpdated());
 
         modEventBus.register(new FarmersHoeEvents());
         modEventBus.register(new CurseBreakEvents());
@@ -64,14 +63,15 @@ public class SideProxy {
         ModBlocks.BLOCKS.register(eventBus);
         ModPotions.POTIONS.register(eventBus);
         ModEffects.EFFECTS.register(eventBus);
-        ModContainers.CONTAINERS.register(eventBus);
-        ModRecipes.RECIPES.register(eventBus);
+        ModRecipes.RECIPE_SERIALIZERS.register(eventBus);
         ModEntities.ENTITY_TYPES.register(eventBus);
+        ModMenuTypes.MENU_TYPES.register(eventBus);
 
         modEventBus.addListener(EventClone::onDeath);
+        modEventBus.addListener(EventServerAboutToStart::onServerStarted);
         eventBus.addListener(ModDataGenerator::gatherData);
 
-        ModPacketHandler.init();
+        ModPackets.init();
         HeadData.loadHeadData();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
@@ -95,7 +95,6 @@ public class SideProxy {
         public static final KeyMapping VEIN_MINER_KEYBIND = new KeyMapping("keys.jobsplus.vein_miner", KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, "keys.jobsplus.category");
         public static final KeyMapping DOUBLE_JUMP_KEYBIND = new KeyMapping("keys.jobsplus.double_jump", KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_SPACE, "keys.jobsplus.category");
 
-
         Client() {
             IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
             MinecraftForge.EVENT_BUS.register(new EventKeyInput());
@@ -104,7 +103,9 @@ public class SideProxy {
         }
 
         private void clientStuff(final FMLClientSetupEvent event) {
-            MenuScreens.register(ModContainers.BACKPACK_CONTAINER.get(), BackpackGUI::new);
+            MenuScreens.register(ModMenuTypes.BACKPACK.get(), BackpackScreen::new);
+            MenuScreens.register(ModMenuTypes.CONSTRUCTION.get(), ConstructionScreen::new);
+
             EntityRenderers.register(ModEntities.FISHING_BOBBER.get(), ModFishingHookRenderer::new);
             EntityRenderers.register(ModEntities.EXPERIENCE_BOTTLE.get(), ThrownItemRenderer::new);
 

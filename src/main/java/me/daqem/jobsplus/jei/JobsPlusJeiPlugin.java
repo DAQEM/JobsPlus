@@ -1,15 +1,24 @@
 package me.daqem.jobsplus.jei;
 
+import me.daqem.jobsplus.client.gui.ConstructionScreen;
+import me.daqem.jobsplus.common.crafting.construction.ConstructionCraftingRecipe;
+import me.daqem.jobsplus.common.crafting.construction.ConstructionRecipeType;
 import me.daqem.jobsplus.init.ModItems;
 import me.daqem.jobsplus.init.ModPotions;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.ModIds;
+import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -19,11 +28,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @JeiPlugin
 public class JobsPlusJeiPlugin implements IModPlugin {
 
+    public static RecipeType<ConstructionCraftingRecipe> CONSTRUCTION_TYPE = new RecipeType<>(ConstructionCategory.UID, ConstructionCraftingRecipe.class);
     private static IJeiRuntime jeiRuntime;
 
     public static Optional<IJeiRuntime> getJeiRuntime() {
@@ -114,7 +125,7 @@ public class JobsPlusJeiPlugin implements IModPlugin {
                 luck, longLuck, strongLuck, longStrongLuck, jesus, longJesus, flying, longFlying);
 
         for (IJeiBrewingRecipe brewingRecipe : brewingRecipes) {
-            registration.addRecipes(Collections.singletonList(brewingRecipe), new ResourceLocation(ModIds.MINECRAFT_ID, "brewing"));
+            registration.addRecipes(RecipeTypes.BREWING, Collections.singletonList(brewingRecipe));
         }
 
     }
@@ -189,8 +200,21 @@ public class JobsPlusJeiPlugin implements IModPlugin {
                 reinforced_netherite_helmet, reinforced_netherite_chestplate, reinforced_netherite_leggings, reinforced_netherite_boots);
 
         for (IJeiAnvilRecipe anvilRecipe : anvilRecipes) {
-            registration.addRecipes(Collections.singletonList(anvilRecipe), new ResourceLocation(ModIds.MINECRAFT_ID, "anvil"));
+            registration.addRecipes(RecipeTypes.ANVIL, Collections.singletonList(anvilRecipe));
         }
+    }
+
+    public static void showJEIPage(ItemStack itemStack) {
+        JobsPlusJeiPlugin.getJeiRuntime().ifPresent(jeiRuntime ->
+                jeiRuntime.getRecipesGui().show(jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(
+                        RecipeIngredientRole.OUTPUT,
+                        jeiRuntime.getIngredientManager().getIngredientType(itemStack),
+                        itemStack)));
+    }
+
+    @Override
+    public void registerCategories(IRecipeCategoryRegistration registration) {
+        registration.addRecipeCategories(new ConstructionCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -199,6 +223,9 @@ public class JobsPlusJeiPlugin implements IModPlugin {
 
         addPotionRecipes(registration, factory);
         addAnvilRecipes(registration, factory);
+
+        List<ConstructionCraftingRecipe> recipesTutorialTableCrafting = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager().getAllRecipesFor(ConstructionRecipeType.INSTANCE);
+        registration.addRecipes(CONSTRUCTION_TYPE, recipesTutorialTableCrafting);
     }
 
     @Override
@@ -210,4 +237,10 @@ public class JobsPlusJeiPlugin implements IModPlugin {
     public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
         JobsPlusJeiPlugin.jeiRuntime = jeiRuntime;
     }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGuiContainerHandler(ConstructionScreen.class, new ScreenJEIHandler());
+    }
+
 }

@@ -1,0 +1,32 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:miners_hammer_level_3"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:diamond_block"
+    },
+    "I": {
+      "item": "minecraft:diamond"
+    },
+    "H": {
+      "item": "jobsplus:miners_hammer_level_2"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    " NI  ",
+    "NBII ",
+    " IHII",
+    " SIBN",
+    "S  N "
+  ],
+  "job": "MINER",
+  "requiredLevel": 50
+}

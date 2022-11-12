@@ -146,11 +146,11 @@ public class ModFishingHookRenderer extends EntityRenderer<ModFishingHook> {
             float f4 = (float) (d4 - d9);
             float f5 = (float) (d5 - d10) + f3;
             float f6 = (float) (d6 - d8);
-            VertexConsumer vertexconsumer1 = multiBufferSource.getBuffer(RenderType.lineStrip());
-            PoseStack.Pose posestack$pose1 = poseStack.last();
+            VertexConsumer vertexConsumer = multiBufferSource.getBuffer(RenderType.lineStrip());
+            PoseStack.Pose pose = poseStack.last();
 
             for (int k = 0; k <= 16; ++k) {
-                stringVertex(f4, f5, f6, vertexconsumer1, posestack$pose1, fraction(k), fraction(k + 1));
+                stringVertex(f4, f5, f6, vertexConsumer, pose, fraction(k), fraction(k + 1));
             }
 
             poseStack.popPose();

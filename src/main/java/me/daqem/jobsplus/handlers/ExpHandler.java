@@ -1,12 +1,12 @@
 package me.daqem.jobsplus.handlers;
 
 import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -19,52 +19,51 @@ public class ExpHandler {
     }
 
     public static void addEXPLow(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 1, 3);
+        addRandomJobEXP(player, job, 2, 4);
     }
 
     public static void addEXPMid(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 2, 6);
+        addRandomJobEXP(player, job, 4, 6);
     }
 
     public static void addEXPHigh(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 3, 9);
+        addRandomJobEXP(player, job, 6, 10);
     }
 
     public static void addEXPBrewing(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 12, 24);
+        addRandomJobEXP(player, job, 30, 50);
     }
 
     public static void addEXPOneLapis(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 12, 24);
+        addRandomJobEXP(player, job, 30, 50);
     }
 
     public static void addEXPTwoLapis(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 18, 30);
+        addRandomJobEXP(player, job, 50, 70);
     }
 
     public static void addEXPTheeLapis(Player player, Jobs job) {
-        addRandomJobEXP(player, job, 30, 36);
+        addRandomJobEXP(player, job, 70, 100);
     }
-
 
     public static int getEXPLowest() {
         return getRandomJobEXP(0, 2);
     }
 
     public static int getEXPLow() {
-        return getRandomJobEXP(1, 3);
+        return getRandomJobEXP(2, 4);
     }
 
     public static int getEXPMid() {
-        return getRandomJobEXP(2, 6);
+        return getRandomJobEXP(4, 6);
     }
 
     public static int getEXPHigh() {
-        return getRandomJobEXP(3, 9);
+        return getRandomJobEXP(6, 10);
     }
 
     public static int getEXPFishing() {
-        return getRandomJobEXP(10, 16);
+        return getRandomJobEXP(15, 20);
     }
 
     public static void addRandomJobEXP(Player player, Jobs job, int lowerBound, int upperBound) {
@@ -77,7 +76,10 @@ public class ExpHandler {
     }
 
     public static void addJobEXP(Player player, Jobs job, int exp) {
-        if (player.isCreative()) return;
+        if (player.isCreative() && JobGetters.getEXPHotBarSetting(player) == 0) {
+            HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.boldRed() + "Gaining job-EXP is disabled in Creative.");
+            return;
+        }
         if (JobGetters.getJobLevel(player, job) >= 100) return;
 
         //Job-EXP Multipliers.
@@ -99,11 +101,11 @@ public class ExpHandler {
         if (newEXP >= maxEXP) {
             JobSetters.setLevel(job, player, -2);
             JobSetters.setEXP(job, player, newEXP - maxEXP);
-            LevelUpHandler.handler(player, job, JobGetters.getJobLevel(player, job));
+            LevelUpHandler.handle(player, job, JobGetters.getJobLevel(player, job));
         }
         if (player instanceof ServerPlayer serverPlayer) {
             if (exp != 0 && JobGetters.getEXPHotBarSetting(player) == 0) {
-                serverPlayer.sendMessage(new KeybindComponent(ChatHandler.ColorizedJobName(job) + ChatColor.gray() +
+                serverPlayer.sendMessage(JobsPlus.literal(ChatHandler.ColorizedJobName(job) + ChatColor.gray() +
                         " +" + exp + " EXP"), ChatType.GAME_INFO, player.getUUID());
             }
         }

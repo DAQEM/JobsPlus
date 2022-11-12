@@ -1,0 +1,29 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:farmers_hoe_level_1"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "II   ",
+    "III  ",
+    " BDI ",
+    " SBI ",
+    "S    "
+  ],
+  "job": "FARMER",
+  "requiredLevel": 5
+}

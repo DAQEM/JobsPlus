@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "jobsplus:medium_backpack"
+    },
+    "title": "Builder Power-up 2",
+    "description": "Use the second Builder Power-up",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "jobsplus:jobsplus/builder",
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 2500
+  }
+}

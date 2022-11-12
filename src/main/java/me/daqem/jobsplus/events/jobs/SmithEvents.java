@@ -43,7 +43,7 @@ public class SmithEvents {
     public void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
         craftAndRepair(event.getPlayer(), event.getCrafting());
 
-        if (JobGetters.hasSuperPowerEnabled(event.getPlayer(), job)) {
+        if (JobGetters.hasSuperPowerEnabled(event.getPlayer(), job, true)) {
             if (event.getCrafting().getMaxDamage() > 0) {
                 event.getCrafting().getOrCreateTag().putBoolean("Unbreakable", true);
             }
@@ -80,9 +80,9 @@ public class SmithEvents {
     @SubscribeEvent
     public void onPlayerTickGrindstone(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        if (JobGetters.jobIsEnabled(player, job)) {
-            AbstractContainerMenu containerMenu = player.containerMenu;
-            if (containerMenu instanceof GrindstoneMenu) {
+        AbstractContainerMenu containerMenu = player.containerMenu;
+        if (containerMenu instanceof GrindstoneMenu) {
+            if (JobGetters.jobIsEnabled(player, job)) {
                 if (grindstoneHashMap.containsKey(player) && grindstoneHashMap.get(player)) {
                     boolean firstSlot = false;
                     boolean secondSlot = false;
@@ -122,9 +122,9 @@ public class SmithEvents {
     @SubscribeEvent
     public void onPlayerTickFurnace(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        if (JobGetters.jobIsEnabled(player, job)) {
-            AbstractContainerMenu containerMenu = player.containerMenu;
-            if (containerMenu instanceof FurnaceMenu || containerMenu instanceof BlastFurnaceMenu) {
+        AbstractContainerMenu containerMenu = player.containerMenu;
+        if (containerMenu instanceof FurnaceMenu || containerMenu instanceof BlastFurnaceMenu) {
+            if (JobGetters.jobIsEnabled(player, job)) {
                 for (Slot slot : containerMenu.slots) {
                     if (!(slot.container instanceof Inventory)) {
                         ItemStack item = slot.getItem();
@@ -174,7 +174,7 @@ public class SmithEvents {
     public void onDamageSmith(LivingHurtEvent event) {
         if (event.getEntity() instanceof Player player) {
             if (event.getSource().getEntity() instanceof LivingEntity source && !(event.getSource().getEntity() instanceof Player)) {
-                if (!JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) return;
+                if (!JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) return;
                 if (!(Math.random() * 100 < 20)) return;
                 source.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 9));
             }
@@ -185,7 +185,7 @@ public class SmithEvents {
     public void onAttackSmith(LivingAttackEvent event) {
         if (event.getEntity() instanceof Player player) {
             if (event.getSource().isFire()) {
-                if (!JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get())) return;
+                if (!JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP3.get(), true)) return;
                 int pieces = 0;
                 for (ItemStack armorSlot : player.getArmorSlots()) {
                     if (armorSlot.getItem() instanceof ModArmorItem) pieces++;
@@ -197,7 +197,7 @@ public class SmithEvents {
 
     @SubscribeEvent
     public void onAnvilUpdate(AnvilUpdateEvent event) {
-        if (!JobGetters.hasEnabledPowerup(event.getPlayer(), job, CapType.POWER_UP2.get())) return;
+        if (!JobGetters.hasPowerupEnabled(event.getPlayer(), job, CapType.POWER_UP2.get(), true)) return;
         ItemStack left = event.getLeft();
         ItemStack right = event.getRight();
         ItemStack out = new ItemStack(Items.ENCHANTED_BOOK);

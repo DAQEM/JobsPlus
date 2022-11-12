@@ -1,0 +1,26 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:obsidian_boots"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:obsidian"
+    },
+    "D": {
+      "item": "minecraft:diamond_block"
+    },
+    "N": {
+      "item": "jobsplus:reinforced_iron_boots"
+    }
+  },
+  "pattern": [
+    "     ",
+    " B B ",
+    " BNB ",
+    "DB BD",
+    "     "
+  ],
+  "job": "SMITH",
+  "requiredLevel": 5
+}

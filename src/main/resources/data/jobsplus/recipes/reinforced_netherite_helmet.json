@@ -1,0 +1,23 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:reinforced_netherite_helmet"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "N": {
+      "item": "jobsplus:reinforced_diamond_helmet"
+    }
+  },
+  "pattern": [
+    "     ",
+    "DDNDD",
+    "D   D",
+    "D   D",
+    "     "
+  ],
+  "job": "SMITH",
+  "requiredLevel": 50
+}

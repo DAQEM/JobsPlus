@@ -20,9 +20,7 @@ public enum Backpack {
     public final ResourceLocation texture;
     public final int xSize;
     public final int ySize;
-    //offset from left edge of texture, to left edge of first player inventory slot.
     public final int slotXOffset;
-    //offset from left edge of texture, to left edge of first player inventory slot.
     public final int slotYOffset;
     public final int slotRows;
     public final int slotCols;

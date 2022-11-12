@@ -1,7 +1,8 @@
 package me.daqem.jobsplus.events.jobs;
 
-import me.daqem.jobsplus.common.container.backpack.BackpackSavedData;
+import me.daqem.jobsplus.common.data.BackpackSavedData;
 import me.daqem.jobsplus.common.item.BackpackItem;
+import me.daqem.jobsplus.events.EventWaitTicks;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
@@ -14,72 +15,66 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BuilderEvents {
+
+    private static final String[] bannedTools = new String[]{"structurize", "constructionwand", "wrench"};
 
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-        if (!event.getWorld().isClientSide()) {
-            if (event.getEntity() instanceof Player player) {
-                if (player.isCreative()) return;
-                if (player.getMainHandItem().getDescriptionId().contains("structurize")
-                        || player.getOffhandItem().getDescriptionId().contains("structurize")) return;
-                if (JobGetters.jobIsEnabled(player, Jobs.BUILDER)) {
-                    final BlockState state = event.getPlacedBlock();
-                    Block block = state.getBlock();
-                    ArrayList<String> bannedBlocks = new ArrayList<>(List.of("farmland", "jukebox"));
-                    if (!bannedBlocks.contains(block.getDescriptionId().replace("block.minecraft.", ""))
-                            && state.getMaterial().isSolid()
-                            && !block.getDescriptionId().endsWith(".twig")) {
-                        float destroySpeed = state.getDestroySpeed(player.level, event.getPos());
-                        if (destroySpeed <= 2.5) {
-                            ExpHandler.addEXPLowest(player, Jobs.BUILDER);
-                        }
-                        if (destroySpeed <= 5) {
-                            ExpHandler.addEXPLow(player, Jobs.BUILDER);
-                        } else {
-                            ExpHandler.addEXPMid(player, Jobs.BUILDER);
-                        }
-                    }
-                    if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWER_UP2.get())) {
-                        for (ItemStack item : player.getInventory().items) {
-                            if (!Objects.equals(item.getItem(), Items.AIR)) {
-                                if (item.getItem() instanceof BackpackItem) {
-                                    BackpackSavedData data = BackpackItem.getData(item);
-                                    for (int i = 0; i < Objects.requireNonNull(data).getHandler().getSlots(); ++i) {
-                                        ItemStack itemInBackpack = data.getHandler().getStackInSlot(i);
+        if (event.getWorld().isClientSide()) return;
+        if (event.getEntity() instanceof Player player) {
+            for (String bannedTool : bannedTools) {
+                if (player.getMainHandItem().getDescriptionId().contains(bannedTool)
+                        || player.getOffhandItem().getDescriptionId().contains(bannedTool)) return;
+            }
+            if (!JobGetters.jobIsEnabled(player, Jobs.BUILDER)) return;
+            BlockState state = event.getPlacedBlock();
+            Block block = state.getBlock();
+            ArrayList<String> bannedBlocks = new ArrayList<>(List.of("farmland", "jukebox"));
+            if (!bannedBlocks.contains(block.getDescriptionId().replace("block.minecraft.", ""))
+                    && state.getMaterial().isSolid()
+                    && !block.getDescriptionId().endsWith(".twig")) {
+                float destroySpeed = state.getDestroySpeed(player.level, event.getPos());
+                if (destroySpeed <= 2.5) ExpHandler.addEXPLowest(player, Jobs.BUILDER);
+                if (destroySpeed <= 5) ExpHandler.addEXPLow(player, Jobs.BUILDER);
+                else ExpHandler.addEXPMid(player, Jobs.BUILDER);
+            }
+            if (JobGetters.hasPowerupEnabled(player, Jobs.BUILDER, CapType.POWER_UP2.get(), true)) {
+                for (ItemStack item : player.getInventory().items) {
+                    if (item.getItem() != Items.AIR) {
+                        if (item.getItem() instanceof BackpackItem) {
+                            BackpackSavedData data = BackpackItem.getData(item);
+                            for (int i = 0; i < Objects.requireNonNull(data).getHandler().getSlots(); ++i) {
+                                ItemStack itemInBackpack = data.getHandler().getStackInSlot(i);
 
-                                        if (itemInBackpack.getItem() == player.getInventory().getSelected().getItem()) {
-                                            if (!giveBlockBack(player, state)) {
-                                                itemInBackpack.setCount(itemInBackpack.getCount() - 1);
-                                            }
-                                            giveItemBack(player, block);
-                                            return;
-                                        }
+                                Item item1 = player.getInventory().getSelected().getItem();
+                                if (item1 == Items.AIR) item1 = player.getOffhandItem().getItem();
+                                if (itemInBackpack.getItem() == item1) {
+                                    if (!giveBlockBack(player, state)) {
+                                        data.getHandler().extractItem(i, 1, false);
                                     }
+                                    EventWaitTicks.waitTicks(player, EventWaitTicks.Type.GIVE_BLOCK_BACK, new Object[]{block});
+                                    return;
                                 }
                             }
                         }
-                    } else {
-                        giveBlockBack(player, state);
                     }
                 }
+            } else {
+                giveBlockBack(player, state);
             }
         }
     }
 
     public boolean giveBlockBack(Player player, BlockState state) {
-        if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWER_UP1.get())) {
+        if (JobGetters.hasPowerupEnabled(player, Jobs.BUILDER, CapType.POWER_UP1.get(), true)) {
             if (Math.random() * 100 < 5) {
                 Block block = state.getBlock();
                 if (state.is(BlockTags.LOGS) || state.is(BlockTags.PLANKS) || state.is(BlockTags.WOOL)
@@ -97,26 +92,12 @@ public class BuilderEvents {
                         || block == Blocks.CALCITE || block == Blocks.TUFF || block == Blocks.DRIPSTONE_BLOCK || block == Blocks.POLISHED_BASALT
                         || block == Blocks.BASALT || block == Blocks.BLACKSTONE || block == Blocks.POLISHED_BLACKSTONE || block == Blocks.GILDED_BLACKSTONE
                         || block == Blocks.CHISELED_POLISHED_BLACKSTONE || block == Blocks.POLISHED_BLACKSTONE_BRICKS) {
-                    giveItemBack(player, block);
+                    EventWaitTicks.waitTicks(player, EventWaitTicks.Type.GIVE_BLOCK_BACK, new Object[]{block});
                     return true;
                 }
             }
         }
         return false;
-    }
-
-    public void giveItemBack(Player player, Block block) {
-        MinecraftForge.EVENT_BUS.register(new Object() {
-            final Item item = block.asItem();
-            int delay = 1;
-
-            @SubscribeEvent
-            public void onTick(TickEvent.WorldTickEvent event) {
-                if (delay-- > 0) return;
-                player.getInventory().add(new ItemStack(item, 1));
-                MinecraftForge.EVENT_BUS.unregister(this);
-            }
-        });
     }
 }
 

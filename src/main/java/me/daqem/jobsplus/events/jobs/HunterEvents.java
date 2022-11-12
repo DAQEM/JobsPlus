@@ -4,21 +4,20 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
 import me.daqem.jobsplus.utils.HeadData;
 import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.ModItemUtils;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -50,7 +49,6 @@ import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.WallSkullBlock;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -71,6 +69,7 @@ public class HunterEvents {
     private static final List<String> llamaTypes = Arrays.asList("creamy", "white", "brown", "gray");
     private static final List<String> parrotTypes = Arrays.asList("red", "blue", "green", "cyan", "gray");
     private static final List<String> rabbitTypes = Arrays.asList("brown", "white", "black", "black_and_white", "gold", "salt_and_pepper");
+    @SuppressWarnings("unused")
     private static final List<String> catTypes = Arrays.asList("tabby", "tuxedo", "red", "siamese", "british_shorthair", "calico", "persian", "ragdoll", "white", "jellie", "black");
     private static final List<String> axolotlTypes = Arrays.asList("lucy", "wild", "gold", "cyan", "blue");
     private final Jobs job = Jobs.HUNTER;
@@ -92,16 +91,20 @@ public class HunterEvents {
             if (event.getSource().isProjectile()) ExpHandler.addEXPHigh(player, job);
             else ExpHandler.addEXPMid(player, job);
 
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP3.get()) && Math.random() * 100 < 5) {
-                if (entity instanceof Zombie && !(entity instanceof Drowned) && !(entity instanceof ZombieVillager) && !(entity instanceof ZombifiedPiglin))
+
+            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP3.get(), true) && Math.random() * 100 < 5) {
+                if (entity instanceof Zombie && !(entity instanceof Drowned) && !(entity instanceof ZombieVillager) && !(entity instanceof ZombifiedPiglin)) {
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.ZOMBIE_HEAD);
-                if (entity instanceof Creeper)
+                }
+                if (entity instanceof Creeper) {
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.CREEPER_HEAD);
-                if (entity instanceof Skeleton)
+                }
+                if (entity instanceof Skeleton) {
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.SKELETON_SKULL);
-                if (entity instanceof WitherSkeleton)
+                }
+                if (entity instanceof WitherSkeleton) {
                     ItemHandler.addFreshItemEntity(player.level, entity.getOnPos().above(), Items.WITHER_SKELETON_SKULL);
-                else {
+                } else {
                     final String mobName = getName(entity);
                     if (!HeadData.headDataMap.containsKey(mobName)) return;
                     final Pair<String, String> stringPair = HeadData.headDataMap.get(mobName);
@@ -115,7 +118,7 @@ public class HunterEvents {
                     }
                 }
             }
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
+            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 60, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 60));
             }
@@ -131,8 +134,7 @@ public class HunterEvents {
         if (!(block instanceof SkullBlock || block instanceof WallSkullBlock)) return;
         BlockPos pos = event.getPos();
         SkullBlockEntity sbe = (SkullBlockEntity) level.getBlockEntity(pos);
-        if (event.getPlayer().isCreative() && sbe == null) return;
-        @SuppressWarnings("ConstantConditions")
+        if (event.getPlayer().isCreative() || sbe == null) return;
         GameProfile profile = sbe.getOwnerProfile();
         if (profile == null) return;
         UUID uuid = profile.getId();
@@ -161,9 +163,9 @@ public class HunterEvents {
     @SubscribeEvent
     public void onPlayerTickFurnace(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        if (JobGetters.jobIsEnabled(player, job)) {
-            AbstractContainerMenu containerMenu = player.containerMenu;
-            if (containerMenu instanceof FurnaceMenu || containerMenu instanceof SmokerMenu) {
+        AbstractContainerMenu containerMenu = player.containerMenu;
+        if (containerMenu instanceof FurnaceMenu || containerMenu instanceof SmokerMenu) {
+            if (JobGetters.jobIsEnabled(player, job)) {
                 for (Slot slot : containerMenu.slots) {
                     if (!(slot.container instanceof Inventory)) {
                         ItemStack item = slot.getItem();
@@ -212,12 +214,15 @@ public class HunterEvents {
     public void onEat(LivingEntityUseItemEvent.Finish event) {
         if (!event.getItem().isEdible()) return;
         if (event.getEntity() instanceof Player player) {
-            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
+            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) {
                 final Item item = event.getItem().getItem();
-                if (item == Items.COOKED_BEEF || item == Items.COOKED_CHICKEN || item == Items.COOKED_MUTTON || item == Items.COOKED_RABBIT || item == Items.COOKED_PORKCHOP) {
+                if (item == Items.COOKED_BEEF || item == Items.COOKED_CHICKEN || item == Items.COOKED_MUTTON
+                        || item == Items.COOKED_RABBIT || item == Items.COOKED_PORKCHOP
+                        || item.getDescriptionId().equalsIgnoreCase("item.artifacts.eternal_steak")) {
 
                     final FoodData foodData = player.getFoodData();
                     foodData.setFoodLevel(foodData.getFoodLevel() + 2);
+                    foodData.setSaturation(foodData.getSaturationLevel() + 2);
                 }
             }
         }
@@ -226,7 +231,7 @@ public class HunterEvents {
     @SubscribeEvent
     public void onDamage(LivingHurtEvent event) {
         if (!(event.getSource().getEntity() instanceof Player player)) return;
-        if (!JobGetters.hasSuperPowerEnabled(player, job)) return;
+        if (!JobGetters.hasSuperPowerEnabled(player, job, true)) return;
 
         event.setAmount((float) (event.getAmount() * 1.25));
     }
@@ -234,39 +239,35 @@ public class HunterEvents {
     @SubscribeEvent
     public void onArrowShoot(ArrowLooseEvent event) {
         if (event.getWorld().isClientSide) return;
-        if (!(event.getEntity() instanceof Player player)) return;
-        if (!JobGetters.hasSuperPowerEnabled(player, job)) return;
+        Player player = event.getPlayer();
+        if (!JobGetters.hasSuperPowerEnabled(player, job, true)) return;
         if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, event.getBow()) != 0) return;
 
         float power = BowItem.getPowerForTime(event.getCharge());
-        boolean flag = player.getAbilities().instabuild;
-        float[] afloat = getShotPitches(player.getRandom());
+        float[] afloat = getShotPitches(new Random());
 
-        shootProjectile(event.getWorld(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[1], flag, power * 3, -10.0F);
-        shootProjectile(event.getWorld(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[2], flag, power * 3, 10.0F);
+        shootProjectile(event.getWorld(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[1], power * 3, -10.0F);
+        shootProjectile(event.getWorld(), player, event.getBow(), Items.ARROW.getDefaultInstance(), afloat[2], power * 3, 10.0F);
     }
 
-    private void shootProjectile(Level p_40895_, LivingEntity p_40896_, ItemStack p_40898_, ItemStack p_40899_,
-                                 float p_40900_, boolean p_40901_, float p_40902_, float p_40904_) {
-        AbstractArrow projectile = getArrow(p_40895_, p_40896_, p_40898_, p_40899_);
-        if (p_40901_ || p_40904_ != 0.0F) {
-            projectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+    private void shootProjectile(Level level, LivingEntity livingEntity, ItemStack bow, ItemStack arrow,
+                                 float shotPitch, float power, float pitch) {
+        if (livingEntity instanceof Player player) {
+            AbstractArrow projectile = getArrow(level, player, bow, arrow);
+            if (player.getAbilities().instabuild || pitch != 0.0F) {
+                projectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+            }
+            Vector3f vector3f = new Vector3f(player.getViewVector(1.0F));
+            vector3f.transform(new Quaternion(new Vector3f(player.getUpVector(1.0F)), pitch, true));
+            projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), power, (float) 1.0);
+
+            ModItemUtils.damageItem(1, bow, player);
+            level.addFreshEntity(projectile);
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, shotPitch);
         }
-        Vec3 vec31 = p_40896_.getUpVector(1.0F);
-        Quaternion quaternion = new Quaternion(new Vector3f(vec31), p_40904_, true);
-        Vec3 vec3 = p_40896_.getViewVector(1.0F);
-        Vector3f vector3f = new Vector3f(vec3);
-        vector3f.transform(quaternion);
-        projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), p_40902_, (float) 1.0);
-
-
-        p_40898_.hurtAndBreak(1, p_40896_, (p_40858_) -> p_40858_.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-        p_40895_.addFreshEntity(projectile);
-        p_40895_.playSound(null, p_40896_.getX(), p_40896_.getY(), p_40896_.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, p_40900_);
-
     }
 
-    private AbstractArrow getArrow(Level p_40915_, LivingEntity p_40916_, ItemStack p_40917_, ItemStack p_40918_) {
+    private AbstractArrow getArrow(Level p_40915_, LivingEntity p_40916_, ItemStack stack, ItemStack p_40918_) {
         ArrowItem arrowitem = (ArrowItem) (p_40918_.getItem() instanceof ArrowItem ? p_40918_.getItem() : Items.ARROW);
         AbstractArrow abstractarrow = arrowitem.createArrow(p_40915_, p_40918_, p_40916_);
         if (p_40916_ instanceof Player) {
@@ -275,7 +276,7 @@ public class HunterEvents {
 
         abstractarrow.setSoundEvent(SoundEvents.CROSSBOW_HIT);
         abstractarrow.setShotFromCrossbow(true);
-        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, p_40917_);
+        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, stack);
         if (i > 0) {
             abstractarrow.setPierceLevel((byte) i);
         }
@@ -295,16 +296,12 @@ public class HunterEvents {
 
     @SuppressWarnings("deprecation")
     public String getEntityString(Entity entity) {
-        String entityString = "";
-        ResourceLocation rl = entity.getType().getRegistryName();
-        if (rl != null) {
-            entityString = rl.toString();
-            if (entityString.contains(":")) entityString = entityString.split(":")[1];
-            entityString = WordUtils.capitalize(entityString.replace("_", " ")).replace(" ", "").replace("Entity", "");
-        }
-        return entityString;
+        String entityString = entity.getType().getDescriptionId().replace("entity.", "");
+        if (entityString.contains(".")) entityString = entityString.split("\\.")[1];
+        return WordUtils.capitalize(entityString.replace("_", " ")).replace(" ", "").replace("Entity", "");
     }
 
+    @SuppressWarnings("all")
     public String getName(Entity entity) {
         String entityString = getEntityString(entity);
         String mobName = entityString.split("\\[")[0].replace("Entity", "");
@@ -378,7 +375,7 @@ public class HunterEvents {
         properties.put("textures", textures);
         skullOwner.put("Properties", properties);
         texturedHead.addTagElement("SkullOwner", skullOwner);
-        texturedHead.setHoverName(new TextComponent(headName));
+        texturedHead.setHoverName(JobsPlus.literal(headName));
         return texturedHead;
     }
 }

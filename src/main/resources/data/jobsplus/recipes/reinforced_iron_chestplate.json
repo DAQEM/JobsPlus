@@ -1,0 +1,29 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:reinforced_iron_chestplate"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "pattern": [
+    "I   I",
+    "IIBII",
+    "DBNBD",
+    "IIBII",
+    "IIIII"
+  ],
+  "job": "SMITH",
+  "requiredLevel": 10
+}

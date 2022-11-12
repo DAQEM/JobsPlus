@@ -1,0 +1,26 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:huge_backpack"
+  },
+  "key": {
+    "B": {
+      "item": "jobsplus:large_backpack"
+    },
+    "E": {
+      "item": "minecraft:emerald"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "pattern": [
+    "     ",
+    " ELE ",
+    " LBL ",
+    " ELE ",
+    "     "
+  ],
+  "job": "BUILDER",
+  "requiredLevel": 50
+}

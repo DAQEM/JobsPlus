@@ -1,0 +1,24 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:experience_bottle",
+    "nbt": "{}"
+  },
+  "key": {
+    "E": {
+      "item": "jobsplus:exp_jar"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    }
+  },
+  "pattern": [
+    "     ",
+    "  G  ",
+    " GEG ",
+    "  G  ",
+    "     "
+  ],
+  "job": "ENCHANTER",
+  "requiredLevel": 25
+}

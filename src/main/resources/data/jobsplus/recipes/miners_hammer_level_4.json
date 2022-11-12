@@ -1,0 +1,32 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:miners_hammer_level_4"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:emerald_block"
+    },
+    "I": {
+      "item": "minecraft:emerald"
+    },
+    "H": {
+      "item": "jobsplus:miners_hammer_level_3"
+    },
+    "N": {
+      "item": "minecraft:netherite_block"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    " NI  ",
+    "NBII ",
+    " IHII",
+    " SIBN",
+    "S  N "
+  ],
+  "job": "MINER",
+  "requiredLevel": 75
+}

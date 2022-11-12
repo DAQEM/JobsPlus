@@ -1,0 +1,26 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:obsidian_leggings"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:obsidian"
+    },
+    "D": {
+      "item": "minecraft:diamond_block"
+    },
+    "N": {
+      "item": "jobsplus:reinforced_iron_leggings"
+    }
+  },
+  "pattern": [
+    "BDNDB",
+    "B   B",
+    "B   B",
+    "B   B",
+    "B   B"
+  ],
+  "job": "SMITH",
+  "requiredLevel": 10
+}

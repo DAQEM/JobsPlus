@@ -1,6 +1,6 @@
 package me.daqem.jobsplus.utils.enums;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import me.daqem.jobsplus.JobsPlus;
 
 public enum Jobs {
     ALCHEMIST(0),
@@ -23,7 +23,7 @@ public enum Jobs {
     public static String getString(int value) {
         for (Jobs jobs : Jobs.values()) {
             if (value == jobs.get()) {
-                return new TranslatableComponent("job." + jobs.name().toLowerCase()).getString();
+                return JobsPlus.translatable("job." + jobs.name().toLowerCase()).getString();
             }
         }
         return "";
@@ -39,19 +39,19 @@ public enum Jobs {
     }
 
     public static int getJobInt(Jobs job) {
-        int value = job.get();
-        for (Jobs jobs : Jobs.values()) {
-            if (value == jobs.get()) {
-                return value;
+        int jobId = job.get();
+        for (Jobs forJob : Jobs.values()) {
+            if (jobId == forJob.get()) {
+                return jobId;
             }
         }
-        return value;
+        return jobId;
     }
 
-    public static Jobs getJobFromInt(int job) {
-        for (Jobs jobs : Jobs.values()) {
-            if (job == jobs.get()) {
-                return jobs;
+    public static Jobs getJobFromInt(int jobId) {
+        for (Jobs job : Jobs.values()) {
+            if (jobId == job.get()) {
+                return job;
             }
         }
         return null;
@@ -59,5 +59,9 @@ public enum Jobs {
 
     public int get() {
         return value;
+    }
+
+    public boolean is(Jobs job) {
+        return this.equals(job);
     }
 }

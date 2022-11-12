@@ -4,6 +4,7 @@ import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.item.RodItem;
 import me.daqem.jobsplus.init.ModEntities;
 import me.daqem.jobsplus.init.ModItems;
+import me.daqem.jobsplus.utils.ModItemUtils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -51,9 +52,9 @@ public class ModFishingHook extends FishingHook {
 
     public static final EntityDataAccessor<Integer> DATA_HOOKED_ENTITY = SynchedEntityData.defineId(ModFishingHook.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> DATA_BITING = SynchedEntityData.defineId(ModFishingHook.class, EntityDataSerializers.BOOLEAN);
-    public final Random syncronizedRandom = new Random();
     public final int luck;
     public final int lureSpeed;
+    private final Random syncronizedRandom = new Random();
     public boolean openWater = true;
     public ModFishingHook.FishHookState currentState = ModFishingHook.FishHookState.FLYING;
     public boolean biting;
@@ -363,7 +364,7 @@ public class ModFishingHook extends FishingHook {
                         }
                         CriteriaTriggers.FISHING_ROD_HOOKED.trigger((ServerPlayer) player, stack, this, list);
                         for (ItemStack itemstack : list) {
-                            itemstack.hurtAndBreak(1, player, (player1) -> player1.broadcastBreakEvent(hand));
+                            ModItemUtils.damageItem(1, itemstack, player);
                             ItemEntity itementity = new ItemEntity(this.level, this.getX() + 0.5, this.getY() + 0.5, this.getZ() + 0.5, itemstack);
                             double d0 = player.getX() - this.getX();
                             double d1 = player.getY() - this.getY();

@@ -1,0 +1,32 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:hunters_sword_level_3"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "E": {
+      "item": "jobsplus:hunters_sword_level_2"
+    },
+    "B": {
+      "item": "minecraft:diamond_block"
+    },
+    "I": {
+      "item": "minecraft:diamond"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "   DD",
+    "I IID",
+    " III ",
+    "BEI  ",
+    "SB I "
+  ],
+  "job": "HUNTER",
+  "requiredLevel": 50
+}

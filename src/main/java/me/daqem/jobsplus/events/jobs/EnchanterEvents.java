@@ -13,9 +13,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -35,9 +35,9 @@ public class EnchanterEvents {
     @SubscribeEvent
     public void onEnchant(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        if (JobGetters.jobIsEnabled(player, job)) {
-            AbstractContainerMenu containerMenu = player.containerMenu;
-            if (containerMenu instanceof EnchantmentMenu) {
+        AbstractContainerMenu containerMenu = player.containerMenu;
+        if (containerMenu instanceof EnchantmentMenu) {
+            if (JobGetters.jobIsEnabled(player, job)) {
                 int lapisCount = containerMenu.getSlot(1).getItem().getCount();
                 if (multiMap.containsKey(player)) {
                     if (containerMenu.getSlot(0).getItem().isEnchanted() || containerMenu.getSlot(0).getItem().getOrCreateTag().contains("StoredEnchantments")) {
@@ -56,18 +56,11 @@ public class EnchanterEvents {
                             }
                             multiMap.remove(player);
                             final ItemStack enchantedItem = containerMenu.getSlot(0).getItem();
-                            if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP2.get())) {
+                            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true)) {
                                 if (enchantedItem.isEnchanted() || enchantedItem.is(Items.ENCHANTED_BOOK)) {
                                     Map<Enchantment, Integer> newMap = new HashMap<>();
                                     for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(enchantedItem).entrySet()) {
-                                        if (entry.getKey() == Enchantments.SILK_TOUCH || entry.getKey() == Enchantments.AQUA_AFFINITY ||
-                                                entry.getKey() == Enchantments.MENDING || entry.getKey() == Enchantments.INFINITY_ARROWS ||
-                                                entry.getKey() == Enchantments.FLAMING_ARROWS || entry.getKey() == Enchantments.MULTISHOT ||
-                                                entry.getKey() == Enchantments.CHANNELING) {
-                                            newMap.put(entry.getKey(), entry.getValue());
-                                        } else {
-                                            newMap.put(entry.getKey(), entry.getValue() + 1);
-                                        }
+                                        newMap.put(entry.getKey(), entry.getKey().getMaxLevel() == 1 ? entry.getValue() : entry.getValue() + 1);
                                     }
                                     EnchantmentHelper.setEnchantments(newMap, enchantedItem);
                                     containerMenu.getSlot(0).set(enchantedItem);
@@ -99,7 +92,7 @@ public class EnchanterEvents {
 
     @SubscribeEvent
     public void onPlayerEXPPickup(PlayerXpEvent.PickupXp event) {
-        if (JobGetters.hasEnabledPowerup(event.getPlayer(), Jobs.ENCHANTER, CapType.POWER_UP3.get())) {
+        if (JobGetters.hasPowerupEnabled(event.getPlayer(), Jobs.ENCHANTER, CapType.POWER_UP3.get(), true)) {
             event.getOrb().value = event.getOrb().value * 2;
         }
     }
@@ -107,15 +100,15 @@ public class EnchanterEvents {
     @SubscribeEvent
     public void onPlayerTickGrindstone(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        if (JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) {
-            AbstractContainerMenu containerMenu = player.containerMenu;
-            if (containerMenu instanceof GrindstoneMenu grindstoneMenu) {
+        AbstractContainerMenu containerMenu = player.containerMenu;
+        if (containerMenu instanceof GrindstoneMenu grindstoneMenu) {
+            if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) {
                 final Slot slot = grindstoneMenu.getSlot(2);
                 final ItemStack item = slot.getItem();
                 Map<Enchantment, Integer> map = new HashMap<>();
-                EnchantmentHelper.deserializeEnchantments(item.getEnchantmentTags()).forEach((key, value) -> {
-                    if (!key.isCurse()) map.put(key, value);
-                });
+                for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.deserializeEnchantments(item.getEnchantmentTags()).entrySet()) {
+                    if (!entry.getKey().isCurse()) map.put(entry.getKey(), entry.getValue());
+                }
                 EnchantmentHelper.setEnchantments(map, item);
                 slot.set(item);
                 slot.setChanged();
@@ -131,7 +124,7 @@ public class EnchanterEvents {
         if (!(left.getDescriptionId().contains("item.minecraft.") || right.getDescriptionId().contains("item.minecraft.")
                 || left.getDescriptionId().contains("item.jobsplus.") || right.getDescriptionId().contains("item.jobsplus.")))
             return;
-        if (!JobGetters.hasSuperPowerEnabled(event.getPlayer(), job) || left.isEmpty() || right.isEmpty()) return;
+        if (!JobGetters.hasSuperPowerEnabled(event.getPlayer(), job, true) || left.isEmpty() || right.isEmpty()) return;
         if (left.getItem() != right.getItem()) return;
 
         final Map<Enchantment, Integer> leftEnchantments = EnchantmentHelper.getEnchantments(left);
@@ -147,5 +140,13 @@ public class EnchanterEvents {
         EnchantmentHelper.setEnchantments(leftEnchantments, out);
         event.setOutput(out);
         event.setCost(3);
+    }
+
+    @SubscribeEvent
+    public void onAddEnchantUsingAnvil(AnvilRepairEvent event) {
+        final Player player = event.getPlayer();
+        if (player.level.isClientSide) return;
+        if (!JobGetters.jobIsEnabled(player, job)) return;
+        ExpHandler.addEXPMid(player, job);
     }
 }

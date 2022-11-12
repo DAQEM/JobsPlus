@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.handlers;
 
-import me.daqem.jobsplus.common.container.backpack.BackpackHandler;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;

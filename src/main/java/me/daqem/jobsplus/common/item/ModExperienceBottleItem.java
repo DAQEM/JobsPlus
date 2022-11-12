@@ -1,11 +1,11 @@
 package me.daqem.jobsplus.common.item;
 
-import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.common.entity.ModThrownExperienceBottle;
 import me.daqem.jobsplus.utils.ChatColor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -27,28 +27,6 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
         super(properties);
     }
 
-    public static int tierToEXP(int tier) {
-        if (tier == 1) {
-            return 10;
-        }
-        if (tier == 2) {
-            return 25;
-        }
-        if (tier == 3) {
-            return 50;
-        }
-        if (tier == 4) {
-            return 100;
-        }
-        if (tier == 5) {
-            return 200;
-        }
-        if (tier == 6) {
-            return 500;
-        }
-        return 0;
-    }
-
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
@@ -58,7 +36,7 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
             if (exp == 0) {
                 int tier = itemstack.getOrCreateTag().getInt("tier");
                 if (tier != 0) {
-                    exp = ModExperienceBottleItem.tierToEXP(tier);
+                    exp = tierToEXP(tier);
                 }
             }
             ModThrownExperienceBottle thrownExperienceBottle = new ModThrownExperienceBottle(level, player, exp);
@@ -66,12 +44,10 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
             thrownExperienceBottle.shootFromRotation(player, player.getXRot(), player.getYRot(), -20.0F, 0.7F, 1.0F);
             level.addFreshEntity(thrownExperienceBottle);
         }
-
         player.awardStat(Stats.ITEM_USED.get(this));
         if (!player.getAbilities().instabuild) {
             itemstack.shrink(1);
         }
-
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
 
@@ -81,29 +57,26 @@ public class ModExperienceBottleItem extends ExperienceBottleItem {
         int tier = stack.getOrCreateTag().getInt("tier");
         int exp = stack.getOrCreateTag().getInt("EXP");
         if (Screen.hasShiftDown()) {
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
-            String level;
-            if (tier == 1) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_1.get();
-            else if (tier == 2) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_2.get();
-            else if (tier == 3) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_3.get();
-            else if (tier == 4) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_4.get();
-            else if (tier == 5) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_5.get();
-            else if (tier == 6) level = "" + Config.REQUIRED_LEVEL_EXPERIENCE_BOTTLE_TIER_6.get();
-            else if (exp != 0) level = "" + Config.REQUIRED_LEVEL_EXP_JAR_TO_EXPERIENCE_BOTTLE.get();
-            else level = "depends on use.";
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
+            tooltip.add(JobsPlus.literal(ChatColor.boldDarkGreen() + "Requirements:"));
+            tooltip.add(JobsPlus.literal(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
+            int requiredJobLevel = ModRecipeManager.getRequiredJobLevelServer(stack);
+            String level = requiredJobLevel == 101 ? "depends on use." : String.valueOf(requiredJobLevel);
+            tooltip.add(JobsPlus.literal(ChatColor.green() + "Job Level: " + ChatColor.reset() + level));
         } else {
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
+            tooltip.add(JobsPlus.literal(ChatColor.gray() + "Hold [SHIFT] for more info."));
         }
         if (exp != 0 || tier != 0) {
-            tooltip.add(new KeybindComponent(" "));
+            tooltip.add(JobsPlus.literal(" "));
             if (exp != 0)
-                tooltip.add(new KeybindComponent(ChatColor.green() + "EXP: " + ChatColor.reset() + exp));
+                tooltip.add(JobsPlus.literal(ChatColor.green() + "EXP: " + ChatColor.reset() + exp));
             if (tier != 0) {
-                tooltip.add(new KeybindComponent(ChatColor.green() + "Tier: " + ChatColor.reset() + tier));
-                tooltip.add(new KeybindComponent(ChatColor.green() + "EXP: " + ChatColor.reset() + tierToEXP(tier)));
+                tooltip.add(JobsPlus.literal(ChatColor.green() + "Tier: " + ChatColor.reset() + tier));
+                tooltip.add(JobsPlus.literal(ChatColor.green() + "EXP: " + ChatColor.reset() + tierToEXP(tier)));
             }
         }
+    }
+
+    public int tierToEXP(int tier) {
+        return tier == 1 ? 10 : tier == 2 ? 25 : tier == 3 ? 50 : tier == 4 ? 100 : tier == 5 ? 200 : tier == 6 ? 500 : 0;
     }
 }

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "minecraft:block/spruce_planks",
+    "east": "jobsplus:block/construction_table_right",
+    "north": "jobsplus:block/construction_table_left",
+    "particle": "jobsplus:block/construction_table_left",
+    "south": "jobsplus:block/construction_table_left",
+    "up": "jobsplus:block/construction_table_top",
+    "west": "jobsplus:block/construction_table_right"
+  }
+}

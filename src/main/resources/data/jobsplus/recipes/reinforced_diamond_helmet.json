@@ -1,0 +1,26 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:reinforced_diamond_helmet"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:diamond_block"
+    },
+    "I": {
+      "item": "minecraft:diamond"
+    },
+    "N": {
+      "item": "jobsplus:obsidian_helmet"
+    }
+  },
+  "pattern": [
+    "     ",
+    "IBNBI",
+    "I   I",
+    "I   I",
+    "     "
+  ],
+  "job": "SMITH",
+  "requiredLevel": 20
+}

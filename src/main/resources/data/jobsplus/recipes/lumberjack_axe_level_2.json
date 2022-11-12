@@ -1,0 +1,32 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:lumberjack_axe_level_2"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "E": {
+      "item": "jobsplus:lumberjack_axe_level_1"
+    },
+    "B": {
+      "item": "minecraft:gold_block"
+    },
+    "I": {
+      "item": "minecraft:gold_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    " II  ",
+    "IDI  ",
+    "IBEI ",
+    " SBI ",
+    "S    "
+  ],
+  "job": "LUMBERJACK",
+  "requiredLevel": 25
+}

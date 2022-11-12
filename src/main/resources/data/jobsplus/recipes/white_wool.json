@@ -1,0 +1,16 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "minecraft:white_wool"
+  },
+  "key": {
+    "W": {
+      "tag": "jobsplus:wool"
+    }
+  },
+  "pattern": [
+    "W"
+  ],
+  "job": "HUNTER",
+  "requiredLevel": 1
+}

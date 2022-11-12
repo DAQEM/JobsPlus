@@ -3,7 +3,6 @@ package me.daqem.jobsplus.events.jobs;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
 import me.daqem.jobsplus.handlers.MobEffectHandler;
-import me.daqem.jobsplus.utils.BlockPosUtil;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
@@ -14,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,15 +25,15 @@ import java.util.List;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DiggerEvents {
 
-    public static final ArrayList<BlockPos> timeoutList = new ArrayList<>();
-    public static final ArrayList<String> lowestList = new ArrayList<>(List.of("dirt", "sand"));
-    public static final ArrayList<String> lowList = new ArrayList<>(List.of("grass_block", "coarse_dirt", "podzol", "rooted_dirt", "clay",
-            "red_sand", "soul_sand", "soul_soil", "mycelium", "gravel"));
+    public static final ArrayList<Block> lowestList = new ArrayList<>(List.of(Blocks.DIRT, Blocks.SAND));
+    public static final ArrayList<Block> lowList = new ArrayList<>(List.of(Blocks.GRASS_BLOCK, Blocks.COARSE_DIRT,
+            Blocks.PODZOL, Blocks.ROOTED_DIRT, Blocks.CLAY, Blocks.RED_SAND, Blocks.SOUL_SAND, Blocks.SOUL_SOIL,
+            Blocks.MYCELIUM, Blocks.GRAVEL));
 
     private final Jobs job = Jobs.DIGGER;
 
     public static void addFreshItemEntity(Player player, Level level, BlockPos pos, Item item) {
-        if (JobGetters.hasEnabledPowerup(player, Jobs.DIGGER, CapType.POWER_UP1.get())) {
+        if (JobGetters.hasPowerupEnabled(player, Jobs.DIGGER, CapType.POWER_UP1.get(), true)) {
             ItemHandler.addItemsToInventoryOrDrop(item.getDefaultInstance(), player, level, pos, 1);
         } else {
             ItemHandler.addFreshItemEntity(level, pos, item.getDefaultInstance());
@@ -41,7 +41,7 @@ public class DiggerEvents {
     }
 
     public static void dropMinerals(Player player, Level level, BlockPos pos) {
-        if (JobGetters.hasEnabledPowerup(player, Jobs.DIGGER, CapType.POWER_UP2.get())) {
+        if (JobGetters.hasPowerupEnabled(player, Jobs.DIGGER, CapType.POWER_UP2.get(), true)) {
             if (Math.random() * 100 <= 2) addFreshItemEntity(player, level, pos, Items.GOLD_NUGGET);
             else if (Math.random() * 100 <= 1) addFreshItemEntity(player, level, pos, Items.RAW_GOLD);
             else if (Math.random() * 100 <= 0.05) addFreshItemEntity(player, level, pos, Items.RAW_GOLD_BLOCK);
@@ -59,43 +59,27 @@ public class DiggerEvents {
                 Block block = event.getState().getBlock();
                 boolean didGetEXP = false;
                 final BlockPos pos = event.getPos();
-                if (BlockPosUtil.testAllSides(timeoutList, pos)) {
-                    if (lowList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
-                        ExpHandler.addEXPLow(player, job);
-                        didGetEXP = true;
-                    } else if (lowestList.contains(block.getDescriptionId().replace("block.minecraft.", ""))) {
-                        ExpHandler.addEXPLowest(player, job);
-                        didGetEXP = true;
-                    }
-                    if (didGetEXP) {
-                        MobEffectHandler.addPlayerPowerUpEffects(player, job);
-                        handleBreak(player, event.getState(), pos);
-                        dropMinerals(player, player.getLevel(), pos);
-                    }
-                } else {
-                    timeoutList.remove(pos);
+                if (lowList.contains(block)) {
+                    ExpHandler.addEXPLow(player, job);
+                    didGetEXP = true;
+                } else if (lowestList.contains(block)) {
+                    ExpHandler.addEXPLowest(player, job);
+                    didGetEXP = true;
+                }
+                if (didGetEXP) {
+                    MobEffectHandler.addPlayerPowerUpEffects(player, job);
+                    handleBreak(player, event.getState(), pos);
+                    dropMinerals(player, player.getLevel(), pos);
                 }
             }
         }
     }
 
     public void handleBreak(Player player, BlockState state, BlockPos pos) {
-        if (!JobGetters.hasEnabledPowerup(player, job, CapType.POWER_UP1.get())) return;
+        if (!JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) return;
         player.getLevel().removeBlock(pos, false);
         for (ItemStack drop : state.getDrops(ItemHandler.drops(player.getLevel(), pos, player, player.getMainHandItem()))) {
             ItemHandler.addItemsToInventoryOrDrop(drop, player, player.getLevel(), pos, 0);
-        }
-    }
-
-    @SubscribeEvent
-    public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            if (JobGetters.jobIsEnabled(player, job)) {
-                if (!(timeoutList.size() < 10000)) {
-                    timeoutList.remove(0);
-                }
-                timeoutList.add(event.getPos());
-            }
         }
     }
 }

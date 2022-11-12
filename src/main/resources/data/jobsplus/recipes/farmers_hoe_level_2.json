@@ -1,0 +1,32 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:farmers_hoe_level_2"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "E": {
+      "item": "jobsplus:farmers_hoe_level_1"
+    },
+    "B": {
+      "item": "minecraft:gold_block"
+    },
+    "I": {
+      "item": "minecraft:gold_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "DI   ",
+    "III  ",
+    " BEI ",
+    " SBI ",
+    "S    "
+  ],
+  "job": "FARMER",
+  "requiredLevel": 25
+}

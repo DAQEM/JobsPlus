@@ -1,0 +1,23 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:reinforced_netherite_chestplate"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "N": {
+      "item": "jobsplus:reinforced_diamond_chestplate"
+    }
+  },
+  "pattern": [
+    "D   D",
+    "DDDDD",
+    "DDNDD",
+    "DDDDD",
+    "DDDDD"
+  ],
+  "job": "SMITH",
+  "requiredLevel": 100
+}

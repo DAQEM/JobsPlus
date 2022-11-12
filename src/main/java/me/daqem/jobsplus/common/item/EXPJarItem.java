@@ -1,17 +1,18 @@
 package me.daqem.jobsplus.common.item;
 
-import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
+import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.handlers.ExperienceHandler;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.handlers.SoundHandler;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
-import me.daqem.jobsplus.utils.TranslatableString;
-import me.daqem.jobsplus.utils.enums.Jobs;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.KeybindComponent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -27,85 +28,82 @@ import java.util.List;
 
 public class EXPJarItem extends Item {
 
+    private static final String EXP = "EXP";
+
     public EXPJarItem(Properties properties) {
         super(properties);
     }
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        if (!level.isClientSide) {
-            if (JobGetters.getJobLevel(player, Jobs.ENCHANTER) >= Config.REQUIRED_LEVEL_EXP_JAR.get()) {
-                InteractionHand usedHand = InteractionHand.OFF_HAND;
-                if (player.getMainHandItem().getItem() instanceof EXPJarItem) {
-                    usedHand = InteractionHand.MAIN_HAND;
-                }
-                ItemStack stack = player.getItemInHand(usedHand);
-                if (usedHand == hand) {
-                    CompoundTag nbt;
-                    if (stack.hasTag()) {
-                        nbt = stack.getTag();
-                    } else {
-                        nbt = new CompoundTag();
-                    }
-                    if (nbt == null) return super.use(level, player, hand);
-                    if (player.isShiftKeyDown()) {
-                        if (stack.getOrCreateTag().contains("EXP")) {
-                            player.giveExperiencePoints(nbt.getInt("EXP"));
-                            if (nbt.getInt("EXP") != 0) {
-                                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("success.exp.extract", nbt.getInt("EXP")));
-                                SoundHandler.playLevelUpSound(player, 0.7F, 1F);
-                            }
-                            nbt.putInt("EXP", 0);
-                        }
-                    } else {
-                        int totalExperience = (int) (ExperienceHandler.getExperienceForLevel(player.experienceLevel) + (player.experienceProgress * player.getXpNeededForNextLevel()));
-                        if (stack.getOrCreateTag().contains("EXP")) {
-                            nbt.putInt("EXP", nbt.getInt("EXP") + totalExperience);
-                        } else {
-                            nbt.putInt("EXP", totalExperience);
-                        }
-                        if (totalExperience != 0) {
-                            HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("success.exp.insert", totalExperience));
-                            SoundHandler.playEXPOrbPickupSound(player, 0.7F, 1F);
-                        }
-                        player.giveExperiencePoints(-totalExperience);
-                        stack.setTag(nbt);
-                    }
-                    return InteractionResultHolder.success(stack);
-                }
-            } else {
-                HotbarMessageHandler.sendHotbarMessage((ServerPlayer) player, TranslatableString.get("error.magic"));
+        InteractionResultHolder<ItemStack> resultHolder = super.use(level, player, hand);
+        if (player instanceof ServerPlayer serverPlayer) {
+            if (!(JobGetters.getJobLevel(player, ModRecipeManager.getJobServer(player.getItemInHand(hand))) >= ModRecipeManager.getRequiredJobLevelServer(player.getItemInHand(hand)))) {
+                HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));
+                return resultHolder;
             }
+
+            InteractionHand usedHand = serverPlayer.getMainHandItem().getItem() instanceof EXPJarItem ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+            if (usedHand != hand) return resultHolder;
+
+            ItemStack stack = serverPlayer.getItemInHand(usedHand);
+            CompoundTag nbt = stack.hasTag() ? stack.getTag() : new CompoundTag();
+
+            if (nbt == null) return resultHolder;
+
+            int nbtExp = nbt.getInt(EXP);
+
+            if (serverPlayer.isShiftKeyDown()) {
+                if (!stack.getOrCreateTag().contains(EXP)) return resultHolder;
+                if (nbtExp == 0) return resultHolder;
+
+                serverPlayer.giveExperiencePoints(nbtExp);
+                nbt.putInt(EXP, 0);
+                HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, JobsPlus.literal(String.valueOf(nbtExp)).withStyle(ChatFormatting.DARK_GREEN).append(JobsPlus.translatable("success.exp.extract").withStyle(ChatFormatting.GREEN)));
+                SoundHandler.playChangeToolModeSound(serverPlayer);
+            } else {
+                int totalExperience = (int) (ExperienceHandler.getExperienceForLevel(serverPlayer.experienceLevel) + (serverPlayer.experienceProgress * serverPlayer.getXpNeededForNextLevel()));
+
+                if (totalExperience == 0) return resultHolder;
+
+                if (stack.getOrCreateTag().contains(EXP)) nbt.putInt(EXP, nbtExp + totalExperience);
+                else nbt.putInt(EXP, totalExperience);
+
+                serverPlayer.giveExperiencePoints(-totalExperience);
+                stack.setTag(nbt);
+                HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, JobsPlus.literal(String.valueOf(totalExperience)).withStyle(ChatFormatting.DARK_GREEN).append(JobsPlus.translatable("success.exp.insert").withStyle(ChatFormatting.GREEN)));
+                SoundHandler.playChangeToolModeSound(serverPlayer);
+            }
+            return InteractionResultHolder.success(stack);
         }
-        return super.use(level, player, hand);
+        return resultHolder;
     }
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level p_41422_, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, p_41422_, tooltip, flag);
+        tooltip.addAll(new TooltipBuilder()
+                .withRequirement(stack)
+                .withControls(TooltipBuilder.ControlType.INSERT_EXTRACT)
+                .withComponent(getEXPComponent(stack), TooltipBuilder.ShiftType.NO_SHIFT)
+                .withHoldShift()
+                .build());
+    }
 
-        if (Screen.hasShiftDown()) {
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Requirements:"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job: " + ChatColor.reset() + "Enchanter"));
-            tooltip.add(new KeybindComponent(ChatColor.green() + "Job Level: " + ChatColor.reset() + Config.REQUIRED_LEVEL_EXP_JAR.get()));
-            tooltip.add(new KeybindComponent(""));
-            tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "Controls:"));
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Right-click to insert EXP"));
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Shift + right-click to extract EXP."));
-        } else {
-            if (stack.getOrCreateTag().contains("EXP")) {
-                final int exp = stack.getOrCreateTag().getInt("EXP");
-                if (exp == 0) {
-                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + "Empty"));
-                } else if (ExperienceHandler.getLevelFromExperience(exp) == 0) {
-                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp));
-                } else if (ExperienceHandler.getLevelFromExperience(exp) == 1) {
-                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp + ", or " + ExperienceHandler.getLevelFromExperience(exp) + " level"));
-                } else {
-                    tooltip.add(new KeybindComponent(ChatColor.boldDarkGreen() + "EXP: " + ChatColor.reset() + exp + ", or " + ExperienceHandler.getLevelFromExperience(exp) + " levels"));
-                }
+    private Component getEXPComponent(ItemStack stack) {
+        if (stack.getOrCreateTag().contains(EXP)) {
+            final int exp = stack.getOrCreateTag().getInt(EXP);
+            final int levelFromExperience = ExperienceHandler.getLevelFromExperience(exp);
+            MutableComponent component = JobsPlus.translatable("tooltip.exp_jar.exp").withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withBold(true));
+            if (exp == 0) {
+                component.append(ChatColor.white() + JobsPlus.translatable("tooltip.exp_jar.empty").getString());
+            } else {
+                component.append(ChatColor.white() + exp);
+                if (levelFromExperience != 0)
+                    component.append(ChatColor.white() + JobsPlus.translatable(levelFromExperience == 1 ? "tooltip.exp_jar.level" : "tooltip.exp_jar.levels", levelFromExperience).getString());
             }
-            tooltip.add(new KeybindComponent(ChatColor.gray() + "Hold [SHIFT] for more info."));
+            return component;
         }
+        return TooltipBuilder.WHITE_SPACE;
     }
 }

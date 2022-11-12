@@ -1,0 +1,32 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:miners_hammer_level_2"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:gold_block"
+    },
+    "I": {
+      "item": "minecraft:gold_ingot"
+    },
+    "H": {
+      "item": "jobsplus:miners_hammer_level_1"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    " II  ",
+    "IBIN ",
+    " IHII",
+    " SIBI",
+    "S  I "
+  ],
+  "job": "MINER",
+  "requiredLevel": 25
+}

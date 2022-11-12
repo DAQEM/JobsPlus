@@ -1,0 +1,37 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:experience_bottle",
+    "nbt": "{tier: 3}"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "E": {
+      "item": "jobsplus:experience_bottle",
+      "nbt": "{tier: 2}"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "R": {
+      "item": "minecraft:rotten_flesh"
+    },
+    "S": {
+      "item": "minecraft:string"
+    },
+    "U": {
+      "item": "minecraft:gunpowder"
+    }
+  },
+  "pattern": [
+    "     ",
+    " BGR ",
+    " GEG ",
+    " UGS ",
+    "     "
+  ],
+  "job": "ENCHANTER",
+  "requiredLevel": 35
+}

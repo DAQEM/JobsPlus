@@ -1,0 +1,29 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:reinforced_diamond_boots"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:diamond_block"
+    },
+    "I": {
+      "item": "minecraft:diamond"
+    },
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "N": {
+      "item": "jobsplus:obsidian_boots"
+    }
+  },
+  "pattern": [
+    "     ",
+    " I I ",
+    " INI ",
+    "DB BD",
+    "     "
+  ],
+  "job": "SMITH",
+  "requiredLevel": 20
+}

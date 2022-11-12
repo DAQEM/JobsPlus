@@ -2,8 +2,8 @@ package me.daqem.jobsplus.events;
 
 import me.daqem.jobsplus.SideProxy.Client;
 import me.daqem.jobsplus.client.gui.JobsScreen;
-import me.daqem.jobsplus.handlers.ModPacketHandler;
-import me.daqem.jobsplus.packet.PacketOpenMenu;
+import me.daqem.jobsplus.common.packet.PacketOpenMenu;
+import me.daqem.jobsplus.init.ModPackets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
@@ -25,14 +25,14 @@ public class EventKeyInput {
                 Screen screen = Minecraft.getInstance().screen;
                 if (screen instanceof JobsScreen) screen.onClose();
                 if (screen == null)
-                    ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(-1, 0, 0, -1, 0, 0));
+                    ModPackets.INSTANCE.sendToServer(new PacketOpenMenu(-1, 0, 0, -1, 0, 0));
             }
             if (key == Client.VEIN_MINER_KEYBIND.getKey().getValue()) {
-                if (action == 1) ModPacketHandler.sendPowerupPacket("enable_veinminer", player);
-                if (action == 0) ModPacketHandler.sendPowerupPacket("disable_veinminer", player);
+                if (action == 1) ModPackets.sendPowerUpPacket("enable_veinminer", player);
+                if (action == 0) ModPackets.sendPowerUpPacket("disable_veinminer", player);
             }
             if (key == Client.DOUBLE_JUMP_KEYBIND.getKey().getValue() && action == 1 && DoubleJumpEvents.isPlayerAllowedToDoubleJump(player)) {
-                ModPacketHandler.sendPowerupPacket("doublejump", player);
+                ModPackets.sendPowerUpPacket("doublejump", player);
             }
         }
     }

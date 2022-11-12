@@ -1,0 +1,35 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:fishermans_rod_level_4"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_block"
+    },
+    "E": {
+      "item": "jobsplus:fishermans_rod_level_3"
+    },
+    "B": {
+      "item": "minecraft:emerald_block"
+    },
+    "I": {
+      "item": "minecraft:emerald"
+    },
+    "S": {
+      "item": "minecraft:string"
+    },
+    "T": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "    B",
+    "   DS",
+    "  E S",
+    " I  S",
+    "T  D "
+  ],
+  "job": "FISHERMAN",
+  "requiredLevel": 75
+}

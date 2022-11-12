@@ -1,0 +1,35 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:hunters_bow_level_4"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_block"
+    },
+    "E": {
+      "item": "jobsplus:hunters_bow_level_3"
+    },
+    "B": {
+      "item": "minecraft:emerald_block"
+    },
+    "I": {
+      "item": "minecraft:emerald"
+    },
+    "S": {
+      "item": "minecraft:string"
+    },
+    "T": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "  BIT",
+    " D  S",
+    "B ES ",
+    "I S  ",
+    "TS   "
+  ],
+  "job": "HUNTER",
+  "requiredLevel": 75
+}

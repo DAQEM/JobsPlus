@@ -59,7 +59,7 @@ public class DoubleJumpEvents {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void multiJump(DoubleJumpEvent.MultiJump.Post event) {
         Player player = event.getPlayer();
-        if (event.getPlayer().getLevel() instanceof ServerLevel serverWorld && player instanceof ServerPlayer serverPlayer) {
+        if (event.getEntity().getLevel() instanceof ServerLevel serverWorld && player instanceof ServerPlayer serverPlayer) {
             for (int x = -1; x <= 1; x++) {
                 for (int z = -1; z <= 1; z++) {
                     serverWorld.sendParticles(serverPlayer, ParticleTypes.CLOUD, false, player.getX() + (x < 0 ? x + 0.65 : x > 0 ? x - 0.65 : 0), player.getY(), player.getZ() + (z < 0 ? z + 0.65 : z > 0 ? z - 0.65 : 0), 1, 0, 0, 0, 0);
@@ -73,9 +73,9 @@ public class DoubleJumpEvents {
     public void onFall(LivingFallEvent event) {
         if (event.getEntity() instanceof Player player) {
             if (player.getLevel().isClientSide) return;
-            if (JobGetters.hasSuperPowerEnabled(player, Jobs.BUILDER)) {
+            if (JobGetters.hasSuperPowerEnabled(player, Jobs.BUILDER, true)) {
                 event.setCanceled(true);
-            } else if (JobGetters.hasEnabledPowerup(player, Jobs.BUILDER, CapType.POWER_UP3.get())) {
+            } else if (JobGetters.hasPowerupEnabled(player, Jobs.BUILDER, CapType.POWER_UP3.get(), true)) {
                 event.setDistance(event.getDistance() - 3F);
             }
         }

@@ -1,0 +1,26 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:reinforced_iron_boots"
+  },
+  "key": {
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "pattern": [
+    "     ",
+    " I I ",
+    " I I ",
+    "DB BD",
+    "     "
+  ],
+  "job": "SMITH",
+  "requiredLevel": 1
+}

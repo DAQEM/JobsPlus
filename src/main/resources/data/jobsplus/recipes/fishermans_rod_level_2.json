@@ -1,0 +1,35 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:fishermans_rod_level_2"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "E": {
+      "item": "jobsplus:fishermans_rod_level_1"
+    },
+    "B": {
+      "item": "minecraft:gold_block"
+    },
+    "I": {
+      "item": "minecraft:gold_ingot"
+    },
+    "S": {
+      "item": "minecraft:string"
+    },
+    "T": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "    B",
+    "   IS",
+    "  E S",
+    " I  S",
+    "T  D "
+  ],
+  "job": "FISHERMAN",
+  "requiredLevel": 25
+}

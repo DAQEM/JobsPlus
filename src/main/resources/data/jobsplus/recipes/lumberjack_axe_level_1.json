@@ -1,0 +1,29 @@
+{
+  "type": "jobsplus:construction",
+  "result": {
+    "item": "jobsplus:lumberjack_axe_level_1"
+  },
+  "key": {
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    " II  ",
+    "III  ",
+    "IBDI ",
+    " SBI ",
+    "S    "
+  ],
+  "job": "LUMBERJACK",
+  "requiredLevel": 5
+}
