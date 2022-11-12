@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.events;
 
+import me.daqem.jobsplus.events.jobs.MinerEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -35,11 +36,17 @@ public class EventWaitTicks {
                             player.getLevel().levelEvent(2001, blockPos, Block.getId(blockState));
                         } else {
                             MinecraftForge.EVENT_BUS.unregister(this);
+                            if (!MinerEvents.veinMinerArray.contains(player.getUUID())) {
+                                MinerEvents.veinMinerArray.add(player.getUUID());
+                            }
                             return;
                         }
                         i++;
                     } else {
                         MinecraftForge.EVENT_BUS.unregister(this);
+                        if (!MinerEvents.veinMinerArray.contains(player.getUUID())) {
+                            MinerEvents.veinMinerArray.add(player.getUUID());
+                        }
                     }
                 } else if (type == Type.GIVE_BLOCK_BACK) {
                     Block block = (Block) objects[0];
