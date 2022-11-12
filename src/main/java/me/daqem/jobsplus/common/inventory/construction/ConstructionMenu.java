@@ -22,6 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -65,7 +66,7 @@ public class ConstructionMenu extends RecipeBookMenu<ConstructionCraftingContain
     }
 
     protected static void slotChangedCraftingGrid(AbstractContainerMenu menu, Level level, Player player, ConstructionCraftingContainer craftingContainer, ConstructionResultContainer resultContainer) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide && level.getServer() != null) {
             ServerPlayer serverplayer = (ServerPlayer) player;
             ItemStack itemstack = ItemStack.EMPTY;
             Optional<ConstructionCraftingRecipe> optional = level.getServer().getRecipeManager().getRecipeFor(ModRecipes.CONSTRUCTION_TYPE.get(), craftingContainer, level);
@@ -114,14 +115,12 @@ public class ConstructionMenu extends RecipeBookMenu<ConstructionCraftingContain
         return new CompoundTag();
     }
 
-    public void slotsChanged(Container container) {
-        this.access.execute((level, blockPos) -> {
-            slotChangedCraftingGrid(this, level, this.player, this.craftSlots, this.resultSlots);
-        });
+    public void slotsChanged(@NotNull Container container) {
+        this.access.execute((level, blockPos) -> slotChangedCraftingGrid(this, level, this.player, this.craftSlots, this.resultSlots));
     }
 
-    public void fillCraftSlotsStackedContents(StackedContents p_39374_) {
-        this.craftSlots.fillStackedContents(p_39374_);
+    public void fillCraftSlotsStackedContents(@NotNull StackedContents stackedContents) {
+        this.craftSlots.fillStackedContents(stackedContents);
     }
 
     public void clearCraftingContent() {
@@ -133,67 +132,63 @@ public class ConstructionMenu extends RecipeBookMenu<ConstructionCraftingContain
         return p_39384_.matches(this.craftSlots, this.player.level);
     }
 
-    public void removed(Player p_39389_) {
-        super.removed(p_39389_);
-        this.access.execute((p_39371_, p_39372_) -> {
-            this.clearContainer(p_39389_, this.craftSlots);
-        });
+    public void removed(@NotNull Player player) {
+        super.removed(player);
+        this.access.execute((level, blockPos) -> this.clearContainer(player, this.craftSlots));
     }
 
-    public boolean stillValid(Player p_39368_) {
-        return stillValid(this.access, p_39368_, ModBlocks.CONSTRUCTION_TABLE.get());
+    public boolean stillValid(@NotNull Player player) {
+        return stillValid(this.access, player, ModBlocks.CONSTRUCTION_TABLE.get());
     }
 
-    public ItemStack quickMoveStack(Player p_39391_, int p_39392_) {
+    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int slotIndex) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(p_39392_);
-        if (slot != null && slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
-            itemstack = itemstack1.copy();
-            if (p_39392_ == 0) {
-                this.access.execute((p_39378_, p_39379_) -> {
-                    itemstack1.getItem().onCraftedBy(itemstack1, p_39378_, p_39391_);
-                });
-                if (!this.moveItemStackTo(itemstack1, 26, 62, true)) {
+        Slot slot = this.slots.get(slotIndex);
+        if (slot.hasItem()) {
+            ItemStack slotItemStack = slot.getItem();
+            itemstack = slotItemStack.copy();
+            if (slotIndex == 0) {
+                this.access.execute((p_39378_, p_39379_) -> slotItemStack.getItem().onCraftedBy(slotItemStack, p_39378_, player));
+                if (!this.moveItemStackTo(slotItemStack, 26, 62, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onQuickCraft(itemstack1, itemstack);
-            } else if (p_39392_ >= 26 && p_39392_ < 62) {
-                if (!this.moveItemStackTo(itemstack1, 1, 26, false)) {
-                    if (p_39392_ < 37) {
-                        if (!this.moveItemStackTo(itemstack1, 53, 62, false)) {
+                slot.onQuickCraft(slotItemStack, itemstack);
+            } else if (slotIndex >= 26 && slotIndex < 62) {
+                if (!this.moveItemStackTo(slotItemStack, 1, 26, false)) {
+                    if (slotIndex < 37) {
+                        if (!this.moveItemStackTo(slotItemStack, 53, 62, false)) {
                             return ItemStack.EMPTY;
                         }
-                    } else if (!this.moveItemStackTo(itemstack1, 26, 53, false)) {
+                    } else if (!this.moveItemStackTo(slotItemStack, 26, 53, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
-            } else if (!this.moveItemStackTo(itemstack1, 26, 62, false)) {
+            } else if (!this.moveItemStackTo(slotItemStack, 26, 62, false)) {
                 return ItemStack.EMPTY;
             }
 
-            if (itemstack1.isEmpty()) {
+            if (slotItemStack.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
             }
 
-            if (itemstack1.getCount() == itemstack.getCount()) {
+            if (slotItemStack.getCount() == itemstack.getCount()) {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(p_39391_, itemstack1);
-            if (p_39392_ == 0) {
-                p_39391_.drop(itemstack1, false);
+            slot.onTake(player, slotItemStack);
+            if (slotIndex == 0) {
+                player.drop(slotItemStack, false);
             }
         }
 
         return itemstack;
     }
 
-    public boolean canTakeItemForPickAll(ItemStack p_39381_, Slot p_39382_) {
-        return p_39382_.container != this.resultSlots && super.canTakeItemForPickAll(p_39381_, p_39382_);
+    public boolean canTakeItemForPickAll(@NotNull ItemStack itemStack, Slot slot) {
+        return slot.container != this.resultSlots && super.canTakeItemForPickAll(itemStack, slot);
     }
 
     public int getResultSlotIndex() {
@@ -212,12 +207,12 @@ public class ConstructionMenu extends RecipeBookMenu<ConstructionCraftingContain
         return 10;
     }
 
-    public RecipeBookType getRecipeBookType() {
+    public @NotNull RecipeBookType getRecipeBookType() {
         return RecipeBookType.CRAFTING;
     }
 
-    public boolean shouldMoveToInventory(int p_150553_) {
-        return p_150553_ != this.getResultSlotIndex();
+    public boolean shouldMoveToInventory(int slotIndex) {
+        return slotIndex != this.getResultSlotIndex();
     }
 
     public CompoundTag getDataTag() {

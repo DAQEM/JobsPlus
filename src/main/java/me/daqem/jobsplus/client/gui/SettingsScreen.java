@@ -1,9 +1,9 @@
 package me.daqem.jobsplus.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import me.daqem.jobsplus.handlers.ModPacketHandler;
 import me.daqem.jobsplus.common.packet.PacketOpenMenu;
 import me.daqem.jobsplus.common.packet.PacketUserSettingsServer;
+import me.daqem.jobsplus.init.ModPackets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -30,19 +30,19 @@ public class SettingsScreen extends Screen {
         if (settingsType == SettingsType.MAIN) {
             this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 48 - 6, 150, 20, Component.translatable("jobsplus.gui.settings.main.hotbar"), (p_96276_) -> Minecraft.getInstance().setScreen(new SettingsScreen(settings, SettingsType.HOTBAR))));
             this.addRenderableWidget(new Button(this.width / 2 + 5, this.height / 6 + 48 - 6, 150, 20, Component.translatable("jobsplus.gui.settings.main.level_up"), (p_96274_) -> Minecraft.getInstance().setScreen(new SettingsScreen(settings, SettingsType.LEVEL_UP))));
-            this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 6 + 168, 200, 20, CommonComponents.GUI_DONE, (p_96257_) -> ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(-1, 0, 0, -1, 0, 0))));
+            this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 6 + 168, 200, 20, CommonComponents.GUI_DONE, (p_96257_) -> ModPackets.INSTANCE.sendToServer(new PacketOpenMenu(-1, 0, 0, -1, 0, 0))));
         } else if (settingsType == SettingsType.HOTBAR) {
-            this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 48 - 6, 150, 20, Component.translatable("jobsplus.gui.settings.hotbar.exp", settings[0] == 0 ? Component.translatable("jobsplus.gui.settings.on") : Component.translatable("jobsplus.gui.settings.off")), (p_96276_) -> ModPacketHandler.INSTANCE.sendToServer(new PacketUserSettingsServer("switch_hotbar_exp")), (button, poseStack, mouseX, mouseY) -> {
+            this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 48 - 6, 150, 20, Component.translatable("jobsplus.gui.settings.hotbar.exp", settings[0] == 0 ? Component.translatable("jobsplus.gui.settings.on") : Component.translatable("jobsplus.gui.settings.off")), (p_96276_) -> ModPackets.INSTANCE.sendToServer(new PacketUserSettingsServer("switch_hotbar_exp")), (button, poseStack, mouseX, mouseY) -> {
                 List<Component> componentList = new ArrayList<>(List.of(Component.translatable("jobsplus.gui.settings.hotbar.exp"), Component.translatable("jobsplus.gui.settings.hotbar.exp.on"), Component.translatable("jobsplus.gui.settings.hotbar.exp.off")));
                 renderComponentTooltip(poseStack, componentList, mouseX, mouseY);
             }));
             this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 6 + 168, 200, 20, CommonComponents.GUI_DONE, (p_96257_) -> Minecraft.getInstance().setScreen(new SettingsScreen(settings, SettingsType.MAIN))));
         } else if (settingsType == SettingsType.LEVEL_UP) {
-            this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 48 - 6, 150, 20, Component.translatable("jobsplus.gui.settings.level_up.sound", settings[1] == 0 ? Component.translatable("jobsplus.gui.settings.on") : Component.translatable("jobsplus.gui.settings.off")), (p_96276_) -> ModPacketHandler.INSTANCE.sendToServer(new PacketUserSettingsServer("switch_level_up_sound")), (button, poseStack, mouseX, mouseY) -> {
+            this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 48 - 6, 150, 20, Component.translatable("jobsplus.gui.settings.level_up.sound", settings[1] == 0 ? Component.translatable("jobsplus.gui.settings.on") : Component.translatable("jobsplus.gui.settings.off")), (p_96276_) -> ModPackets.INSTANCE.sendToServer(new PacketUserSettingsServer("switch_level_up_sound")), (button, poseStack, mouseX, mouseY) -> {
                 List<Component> componentList = new ArrayList<>(List.of(Component.translatable("jobsplus.gui.settings.level_up.sound"), Component.translatable("jobsplus.gui.settings.level_up.sound.on"), Component.translatable("jobsplus.gui.settings.level_up.sound.off")));
                 renderComponentTooltip(poseStack, componentList, mouseX, mouseY);
             }));
-            this.addRenderableWidget(new Button(this.width / 2 + 5, this.height / 6 + 48 - 6, 150, 20, Component.translatable("jobsplus.gui.settings.level_up.chat", settings[2] == 0 ? Component.translatable("jobsplus.gui.settings.level_up.everyone") : settings[2] == 1 ? Component.translatable("jobsplus.gui.settings.level_up.self") : Component.translatable("jobsplus.gui.settings.off")), (p_96274_) -> ModPacketHandler.INSTANCE.sendToServer(new PacketUserSettingsServer("switch_level_up_chat")), (button, poseStack, mouseX, mouseY) -> {
+            this.addRenderableWidget(new Button(this.width / 2 + 5, this.height / 6 + 48 - 6, 150, 20, Component.translatable("jobsplus.gui.settings.level_up.chat", settings[2] == 0 ? Component.translatable("jobsplus.gui.settings.level_up.everyone") : settings[2] == 1 ? Component.translatable("jobsplus.gui.settings.level_up.self") : Component.translatable("jobsplus.gui.settings.off")), (p_96274_) -> ModPackets.INSTANCE.sendToServer(new PacketUserSettingsServer("switch_level_up_chat")), (button, poseStack, mouseX, mouseY) -> {
                 List<Component> componentList = new ArrayList<>(List.of(Component.translatable("jobsplus.gui.settings.level_up.chat"), Component.translatable("jobsplus.gui.settings.level_up.chat.everyone"), Component.translatable("jobsplus.gui.settings.level_up.chat.self"), Component.translatable("jobsplus.gui.settings.level_up.chat.off")));
                 renderComponentTooltip(poseStack, componentList, mouseX, mouseY);
             }));

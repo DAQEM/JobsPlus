@@ -7,7 +7,7 @@ import me.daqem.jobsplus.client.renderer.RenderColor;
 import me.daqem.jobsplus.common.packet.PacketJobStartStop;
 import me.daqem.jobsplus.common.packet.PacketMenuPowerUp;
 import me.daqem.jobsplus.common.packet.PacketOpenMenu;
-import me.daqem.jobsplus.handlers.ModPacketHandler;
+import me.daqem.jobsplus.init.ModPackets;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -111,11 +111,11 @@ public class ConfirmationScreen extends Screen {
                 if (lastScreen instanceof JobsScreen jobsScreen) {
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     if (action.equals("start") || action.equals("start_paid"))
-                        ModPacketHandler.INSTANCE.sendToServer(new PacketJobStartStop(true, job));
+                        ModPackets.INSTANCE.sendToServer(new PacketJobStartStop(true, job));
                     if (action.equals("stop") || action.equals("stop_free"))
-                        ModPacketHandler.INSTANCE.sendToServer(new PacketJobStartStop(false, job));
+                        ModPackets.INSTANCE.sendToServer(new PacketJobStartStop(false, job));
                     if (action.equals("powerup"))
-                        ModPacketHandler.INSTANCE.sendToServer(new PacketMenuPowerUp(false, job, powerUp + 1));
+                        ModPackets.INSTANCE.sendToServer(new PacketMenuPowerUp(false, job, powerUp + 1));
                     openNewJobsScreen(jobsScreen);
                 }
             }
@@ -131,7 +131,7 @@ public class ConfirmationScreen extends Screen {
     }
 
     private void openNewJobsScreen(JobsScreen jobsScreen) {
-        ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(Jobs.getJobInt(job), jobsScreen.getActiveLeftButton(), jobsScreen.getActiveRightButton(), jobsScreen.getSelectedButton(), jobsScreen.getScrollOffs(), jobsScreen.getStartIndex()));
+        ModPackets.INSTANCE.sendToServer(new PacketOpenMenu(Jobs.getJobInt(job), jobsScreen.getActiveLeftButton(), jobsScreen.getActiveRightButton(), jobsScreen.getSelectedButton(), jobsScreen.getScrollOffs(), jobsScreen.getStartIndex()));
     }
 
     public void blitThis(PoseStack poseStack, int posX, int posY, int startX, int startY, int stopX, int stopY) {

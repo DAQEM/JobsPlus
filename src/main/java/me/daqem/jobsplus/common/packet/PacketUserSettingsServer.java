@@ -1,6 +1,6 @@
 package me.daqem.jobsplus.common.packet;
 
-import me.daqem.jobsplus.handlers.ModPacketHandler;
+import me.daqem.jobsplus.init.ModPackets;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,18 +29,18 @@ public record PacketUserSettingsServer(String settingsType) {
                 if (settingsType.contains("switch")) {
                     if (settingsType.equals("switch_hotbar_exp")) {
                         JobSetters.setEXPHotBarSetting(player, JobGetters.getEXPHotBarSetting(player) == 0 ? 1 : 0);
-                        ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), "HOTBAR"));
+                        ModPackets.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), "HOTBAR"));
                     }
                     if (settingsType.equals("switch_level_up_sound")) {
                         JobSetters.setLevelUpSoundSetting(player, JobGetters.getLevelUpSoundSetting(player) == 0 ? 1 : 0);
-                        ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), "LEVEL_UP"));
+                        ModPackets.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), "LEVEL_UP"));
                     }
                     if (settingsType.equals("switch_level_up_chat")) {
                         JobSetters.setLevelUpChatSetting(player, JobGetters.getLevelUpChatSetting(player) == 0 ? 1 : JobGetters.getLevelUpChatSetting(player) == 1 ? 2 : 0);
-                        ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), "LEVEL_UP"));
+                        ModPackets.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), "LEVEL_UP"));
                     }
                 } else {
-                    ModPacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), settingsType));
+                    ModPackets.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketUserSettingsClient(JobGetters.getAllSettings(player), settingsType));
                 }
             }
         }

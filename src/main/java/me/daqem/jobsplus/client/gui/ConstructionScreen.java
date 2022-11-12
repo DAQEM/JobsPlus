@@ -9,7 +9,9 @@ import me.daqem.jobsplus.common.crafting.ModPlaceRecipe;
 import me.daqem.jobsplus.common.crafting.construction.ConstructionCraftingRecipe;
 import me.daqem.jobsplus.common.crafting.construction.ConstructionRecipeType;
 import me.daqem.jobsplus.common.inventory.construction.ConstructionMenu;
+import me.daqem.jobsplus.common.packet.PacketMoveConstructionRecipe;
 import me.daqem.jobsplus.handlers.LevelHandler;
+import me.daqem.jobsplus.init.ModPackets;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.client.Minecraft;
@@ -18,6 +20,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -186,7 +189,19 @@ public class ConstructionScreen extends AbstractContainerScreen<ConstructionMenu
                     return true;
                 }
                 selectedItemStackID = clickedStack;
-                selectedRecipe = getRecipe();
+                Recipe<?> recipe = getRecipe();
+                if (selectedRecipe == recipe) {
+                    CompoundTag recipeData = new CompoundTag();
+                    for (int i = 0; i < this.ghostRecipe.getIngredients().size(); i++) {
+                        if (i != 0) {
+                            ModGhostRecipe.GhostIngredient ghostIngredient = this.ghostRecipe.get(i);
+                            recipeData.putString(String.valueOf(ghostIngredient.getSlot().index), ghostIngredient.getItem().getDescriptionId());
+                        }
+                    }
+                    ModPackets.INSTANCE.sendToServer(new PacketMoveConstructionRecipe(hasShiftDown(), recipeData));
+                } else {
+                    selectedRecipe = recipe;
+                }
                 playClickSound();
                 return true;
             }

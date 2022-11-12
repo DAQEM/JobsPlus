@@ -11,7 +11,7 @@
       "item": "minecraft:emerald"
     },
     "C": {
-      "item": "minecraft:oak_planks"
+      "tag": "minecraft:planks"
     }
   },
   "pattern": [

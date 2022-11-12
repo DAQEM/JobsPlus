@@ -35,6 +35,10 @@ public class ModGhostRecipe {
         this.ingredients.add(new GhostIngredient(ingredient, x, y, slot));
     }
 
+    public List<GhostIngredient> getIngredients() {
+        return ingredients;
+    }
+
     public GhostIngredient get(int index) {
         return this.ingredients.get(index);
     }

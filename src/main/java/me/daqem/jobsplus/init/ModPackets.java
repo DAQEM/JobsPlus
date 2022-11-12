@@ -1,4 +1,4 @@
-package me.daqem.jobsplus.handlers;
+package me.daqem.jobsplus.init;
 
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.packet.*;
@@ -6,7 +6,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-public class ModPacketHandler {
+public class ModPackets {
 
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
@@ -28,9 +28,10 @@ public class ModPacketHandler {
         INSTANCE.registerMessage(++id, PacketBossBarr.class, PacketBossBarr::encode, PacketBossBarr::decode, PacketBossBarr::handle);
         INSTANCE.registerMessage(++id, PacketSwitchSuperpower.class, PacketSwitchSuperpower::encode, PacketSwitchSuperpower::decode, PacketSwitchSuperpower::handle);
         INSTANCE.registerMessage(++id, PacketMenuPowerUp.class, PacketMenuPowerUp::encode, PacketMenuPowerUp::decode, PacketMenuPowerUp::handle);
+        INSTANCE.registerMessage(++id, PacketMoveConstructionRecipe.class, PacketMoveConstructionRecipe::encode, PacketMoveConstructionRecipe::decode, PacketMoveConstructionRecipe::handle);
     }
 
     public static void sendPowerUpPacket(String str, LocalPlayer player) {
-        ModPacketHandler.INSTANCE.sendToServer(new PacketPowerUps(str, player.getUUID()));
+        ModPackets.INSTANCE.sendToServer(new PacketPowerUps(str, player.getUUID()));
     }
 }

@@ -9,7 +9,6 @@ import me.daqem.jobsplus.events.*;
 import me.daqem.jobsplus.events.item.CurseBreakEvents;
 import me.daqem.jobsplus.events.item.FarmersHoeEvents;
 import me.daqem.jobsplus.events.jobs.*;
-import me.daqem.jobsplus.handlers.ModPacketHandler;
 import me.daqem.jobsplus.init.*;
 import me.daqem.jobsplus.utils.HeadData;
 import net.minecraft.client.KeyMapping;
@@ -73,7 +72,7 @@ public class SideProxy {
         modEventBus.addListener(EventServerAboutToStart::onServerStarted);
         eventBus.addListener(ModDataGenerator::gatherData);
 
-        ModPacketHandler.init();
+        ModPackets.init();
         HeadData.loadHeadData();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);

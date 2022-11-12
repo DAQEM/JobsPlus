@@ -10,9 +10,9 @@ import me.daqem.jobsplus.common.crafting.construction.ConstructionRecipeType;
 import me.daqem.jobsplus.common.packet.*;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
-import me.daqem.jobsplus.handlers.ModPacketHandler;
 import me.daqem.jobsplus.init.ModEffects;
 import me.daqem.jobsplus.init.ModItems;
+import me.daqem.jobsplus.init.ModPackets;
 import me.daqem.jobsplus.jei.JobsPlusJeiPlugin;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.enums.Jobs;
@@ -534,7 +534,7 @@ public class JobsScreen extends Screen {
 
         //SETTINGS
         if (isBetween(mouseX, mouseY, 3, height - 20, 19, height - 4)) {
-            ModPacketHandler.INSTANCE.sendToServer(new PacketUserSettingsServer("MAIN"));
+            ModPackets.INSTANCE.sendToServer(new PacketUserSettingsServer("MAIN"));
         }
 
         //DISCORD
@@ -590,15 +590,15 @@ public class JobsScreen extends Screen {
                             job = "NONE";
                         else
                             job = Jobs.getEnglishString(jobId);
-                        ModPacketHandler.INSTANCE.sendToServer(new PacketJobDisplay(job));
-                        ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                        ModPackets.INSTANCE.sendToServer(new PacketJobDisplay(job));
+                        ModPackets.INSTANCE.sendToServer(new PacketOpenMenu(jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
                     }
                 }
                 //BOSSBAR
                 if (isBetween(mouseX, mouseY, imageWidth, 35, imageWidth + 21, 60)) {
-                    if (jobId == getActiveBossBar()) ModPacketHandler.INSTANCE.sendToServer(new PacketBossBarr("NONE"));
-                    else ModPacketHandler.INSTANCE.sendToServer(new PacketBossBarr(Jobs.getEnglishString(jobId)));
-                    ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                    if (jobId == getActiveBossBar()) ModPackets.INSTANCE.sendToServer(new PacketBossBarr("NONE"));
+                    else ModPackets.INSTANCE.sendToServer(new PacketBossBarr(Jobs.getEnglishString(jobId)));
+                    ModPackets.INSTANCE.sendToServer(new PacketOpenMenu(jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
                 }
             }
         }
@@ -698,8 +698,8 @@ public class JobsScreen extends Screen {
                 if (isBetween(mouseX, mouseY, 169, 27 + 50, 169 + 139, 27 + 18 + 50)) clickedPowerupID = 3;
                 if (clickedPowerupID != 0) {
                     if (hasBoughtPowerup(clickedPowerupID)) {
-                        ModPacketHandler.INSTANCE.sendToServer(new PacketMenuPowerUp(true, Jobs.getJobFromInt(jobId), clickedPowerupID + 1));
-                        ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                        ModPackets.INSTANCE.sendToServer(new PacketMenuPowerUp(true, Jobs.getJobFromInt(jobId), clickedPowerupID + 1));
+                        ModPackets.INSTANCE.sendToServer(new PacketOpenMenu(jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
                     } else {
                         //Check if player has enough coins to buy a power-up
                         if (getCoins() >= getPowerupCost()) {
@@ -717,8 +717,8 @@ public class JobsScreen extends Screen {
                 }
                 if (isBetween(mouseX, mouseY, 169, 27 + 103, 169 + 139, 27 + 18 + 103)) {
                     if (getSelectedJobLevel() == 100) {
-                        ModPacketHandler.INSTANCE.sendToServer(new PacketSwitchSuperpower(Jobs.getJobFromInt(jobId)));
-                        ModPacketHandler.INSTANCE.sendToServer(new PacketOpenMenu(jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
+                        ModPackets.INSTANCE.sendToServer(new PacketSwitchSuperpower(Jobs.getJobFromInt(jobId)));
+                        ModPackets.INSTANCE.sendToServer(new PacketOpenMenu(jobId, activeLeftButton, activeRightButton, selectedButton, scrollOffs, startIndex));
                     } else {
                         openConfirmScreen(Component.translatable("error.level.must_be_100"), "must_be_level_100", clickedPowerupID);
                     }
