@@ -55,8 +55,10 @@ public class LumberjackEvents {
             ExpHandler.addEXPLow(player, job);
 
             powerUpHaste(player);
-            if (!superpowerAddToInventory(event, player, block, pos)) {
-                attemptFellTree(player.level, pos, player);
+            if (player.getMainHandItem().getOrCreateTag().getInt("mode") == 0) {
+                if (!superpowerAddToInventory(event, player, block, pos)) {
+                    attemptFellTree(player.level, pos, player);
+                }
             }
             powerupDoubleLogs(player, block, pos);
         }
