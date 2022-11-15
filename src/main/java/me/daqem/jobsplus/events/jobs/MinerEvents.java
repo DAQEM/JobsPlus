@@ -145,6 +145,5 @@ public class MinerEvents {
 
         if (ores.size() == 0) return;
         EventWaitTicks.waitTicks(player, EventWaitTicks.Type.VEIN_MINER, new Object[]{ores});
-        veinMinerArray.remove(player.getUUID());
     }
 }

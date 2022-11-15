@@ -1,6 +1,7 @@
 package me.daqem.jobsplus.events;
 
 import me.daqem.jobsplus.events.jobs.MinerEvents;
+import me.daqem.jobsplus.handlers.BlockHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -32,7 +33,7 @@ public class EventWaitTicks {
                         BlockPos blockPos = blockPosArray.get(i);
                         BlockState blockState = player.level.getBlockState(blockPos);
                         if (blockState.canHarvestBlock(player.level, blockPos, player)) {
-                            ((ServerPlayer) player).gameMode.destroyBlock(blockPos);
+                            BlockHandler.destroyBlock((ServerPlayer) player, blockPos);
                             player.getLevel().levelEvent(2001, blockPos, Block.getId(blockState));
                         } else {
                             MinecraftForge.EVENT_BUS.unregister(this);
