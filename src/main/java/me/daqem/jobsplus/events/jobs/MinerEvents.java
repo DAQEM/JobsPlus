@@ -1,6 +1,6 @@
 package me.daqem.jobsplus.events.jobs;
 
-import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.config.Config;
 import me.daqem.jobsplus.events.EventWaitTicks;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.handlers.ItemHandler;
@@ -136,7 +136,6 @@ public class MinerEvents {
 
         if (ores.size() == 0) return;
         EventWaitTicks.waitTicks(player, EventWaitTicks.Type.VEIN_MINER, new Object[]{ores});
-        veinMinerArray.remove(player.getUUID());
     }
 
     @SuppressWarnings("deprecation")

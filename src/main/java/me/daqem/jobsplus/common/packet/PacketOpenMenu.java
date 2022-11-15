@@ -1,6 +1,6 @@
 package me.daqem.jobsplus.common.packet;
 
-import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.config.Config;
 import me.daqem.jobsplus.init.ModPackets;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;

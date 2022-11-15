@@ -1,6 +1,6 @@
 package me.daqem.jobsplus.common.packet;
 
-import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.config.Config;
 import me.daqem.jobsplus.handlers.AdvancementHandler;
 import me.daqem.jobsplus.handlers.BossBarHandler;
 import me.daqem.jobsplus.utils.JobGetters;

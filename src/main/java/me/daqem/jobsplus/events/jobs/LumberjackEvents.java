@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.events.jobs;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.common.item.LumberAxeItem;
 import me.daqem.jobsplus.events.EventWaitTicks;
@@ -10,6 +11,7 @@ import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,9 +57,16 @@ public class LumberjackEvents {
             ExpHandler.addEXPLow(player, job);
 
             powerUpHaste(player);
-            if (player.getMainHandItem().getOrCreateTag().getInt("mode") == 0) {
-                if (!superpowerAddToInventory(event, player, block, pos)) {
-                    attemptFellTree(player.level, pos, player);
+            if (player.getMainHandItem().getItem() instanceof LumberAxeItem) {
+                if (JobGetters.getJobLevel(player, ModRecipeManager.getJobServer(player.getMainHandItem())) >= ModRecipeManager.getRequiredJobLevelServer(player.getMainHandItem())) {
+                    if (player.getMainHandItem().getOrCreateTag().getInt("mode") == 0) {
+                        if (!superpowerAddToInventory(event, player, block, pos)) {
+                            attemptFellTree(player.level, pos, player);
+                        }
+                    }
+                } else {
+                    HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));
+                    event.setCanceled(true);
                 }
             }
             powerupDoubleLogs(player, block, pos);

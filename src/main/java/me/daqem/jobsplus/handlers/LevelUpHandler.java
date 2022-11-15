@@ -1,7 +1,7 @@
 package me.daqem.jobsplus.handlers;
 
-import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.config.Config;
 import me.daqem.jobsplus.events.EventPlayerTick;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;

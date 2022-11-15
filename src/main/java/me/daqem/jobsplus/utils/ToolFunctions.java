@@ -188,6 +188,7 @@ public class ToolFunctions {
         }
     }
 
+    @SuppressWarnings("all")
     public static boolean breakInRadius(BlockState state, Level level, BlockPos pos, Player player, Jobs job, int requiredLevel) {
         if (player.isCrouching() || level.isClientSide || state.getBlock() instanceof ShulkerBoxBlock) return true;
         if (JobGetters.jobIsEnabled(player, job) && JobGetters.getJobLevel(player, job) >= requiredLevel) {
@@ -203,6 +204,7 @@ public class ToolFunctions {
             }
         } else {
             HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, JobsPlus.translatable("error.magic").withStyle(ChatFormatting.RED));
+            return false;
         }
         return true;
     }

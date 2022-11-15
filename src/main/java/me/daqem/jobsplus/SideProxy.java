@@ -5,6 +5,7 @@ import me.daqem.jobsplus.client.gui.BackpackScreen;
 import me.daqem.jobsplus.client.gui.ConstructionScreen;
 import me.daqem.jobsplus.client.renderer.entity.ModFishingHookRenderer;
 import me.daqem.jobsplus.common.data.generation.ModDataGenerator;
+import me.daqem.jobsplus.config.Config;
 import me.daqem.jobsplus.events.*;
 import me.daqem.jobsplus.events.item.CurseBreakEvents;
 import me.daqem.jobsplus.events.item.FarmersHoeEvents;
@@ -69,13 +70,14 @@ public class SideProxy {
         ModMenuTypes.MENU_TYPES.register(eventBus);
 
         modEventBus.addListener(EventClone::onDeath);
-        modEventBus.addListener(EventServerAboutToStart::onServerStarted);
+        modEventBus.addListener(EventServerAboutToStart::onServerAboutToStart);
         eventBus.addListener(ModDataGenerator::gatherData);
 
         ModPackets.init();
         HeadData.loadHeadData();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
+//        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, RequirementsConfig.SERVER_CONFIG, "jobsplus-server-requirements.toml");
     }
 
     @SubscribeEvent

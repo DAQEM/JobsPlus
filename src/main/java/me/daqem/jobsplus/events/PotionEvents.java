@@ -1,7 +1,7 @@
 package me.daqem.jobsplus.events;
 
-import me.daqem.jobsplus.Config;
 import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.config.Config;
 import me.daqem.jobsplus.handlers.HotbarMessageHandler;
 import me.daqem.jobsplus.init.ModEffects;
 import me.daqem.jobsplus.utils.ChatColor;

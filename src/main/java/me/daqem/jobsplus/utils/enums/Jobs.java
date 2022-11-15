@@ -57,6 +57,14 @@ public enum Jobs {
         return null;
     }
 
+    public static Jobs getFromString(String jobString) {
+        try {
+            return Jobs.valueOf(jobString);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
     public int get() {
         return value;
     }

@@ -32,7 +32,7 @@ public record PacketPowerUps(String str, UUID uuid) {
             if (player != null) {
                 switch (str) {
                     case "enable_veinminer":
-                        if (!MinerEvents.veinMinerArray.contains(uuid)) {
+                        if (!MinerEvents.veinMinerArray.add(uuid)) {
                             MinerEvents.veinMinerArray.add(uuid);
                         }
                         break;

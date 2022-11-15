@@ -1,6 +1,6 @@
 package me.daqem.jobsplus.common.packet;
 
-import me.daqem.jobsplus.Config;
+import me.daqem.jobsplus.config.Config;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.JobSetters;
 import me.daqem.jobsplus.utils.enums.Jobs;

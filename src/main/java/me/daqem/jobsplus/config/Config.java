@@ -1,4 +1,4 @@
-package me.daqem.jobsplus;
+package me.daqem.jobsplus.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
