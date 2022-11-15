@@ -130,7 +130,7 @@
   "jobsplus.gui.job.stop": "Stop met deze baan.",
   "jobsplus.gui.crafting": "Beschikbare Werkbank recepten",
   "jobsplus.gui.powerups.powerups": "Power-ups",
-  "jobsplus.gui.powerups.cost": "10 Munten Per Stuk",
+  "jobsplus.gui.powerups.cost": "%s Munten Per Stuk",
   "jobsplus.gui.powerups.superpowers": "Superkracht",
   "jobsplus.gui.powerups.superpowers.cost": "Ontgrendeld bij level 100",
   "jobsplus.gui.powerups.alchemist.1": "Shadelijke immuniteit",

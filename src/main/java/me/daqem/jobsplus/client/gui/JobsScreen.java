@@ -480,7 +480,7 @@ public class JobsScreen extends Screen {
                 font.draw(poseStack, ChatColor.darkGray() + "the Construction Table.", startX + 189, startY + 181, 16777215);
             } else if (activeRightButton == 2) {
                 drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + JobsPlus.translatable("gui.powerups.powerups").getString(), centerR, startY + 6, 16777215);
-                drawCenteredStringNew(poseStack, font, ChatColor.gray() + JobsPlus.translatable("gui.powerups.cost").getString(), centerR, startY + 16, 16777215);
+                drawCenteredStringNew(poseStack, font, ChatColor.gray() + JobsPlus.translatable("gui.powerups.cost", getPowerupCost()).getString(), centerR, startY + 16, 16777215);
                 drawCenteredStringNew(poseStack, font, ChatColor.darkGray() + JobsPlus.translatable("gui.powerups.superpowers").getString(), centerR, startY + 110, 16777215);
                 drawCenteredStringNew(poseStack, font, ChatColor.gray() + JobsPlus.translatable("gui.powerups.superpowers.cost").getString(), centerR, startY + 120, 16777215);
                 poseStack.pushPose();
@@ -705,7 +705,7 @@ public class JobsScreen extends Screen {
                         if (getCoins() >= getPowerupCost()) {
                             //Check is the player has the job.
                             if (getSelectedJobLevel() != 0)
-                                openConfirmScreen(JobsPlus.translatable("confirm.powerup"), "powerup", clickedPowerupID);
+                                openConfirmScreen(JobsPlus.translatable("confirm.powerup", getPowerupCost()), "powerup", clickedPowerupID);
                             else {
                                 openConfirmScreen(JobsPlus.translatable("confirm.job_not_enabled"), "job_not_enabled", clickedPowerupID);
                             }
