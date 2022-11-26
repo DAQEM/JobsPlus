@@ -2,18 +2,14 @@ package me.daqem.jobsplus.events.jobs;
 
 import me.daqem.jobsplus.config.Config;
 import me.daqem.jobsplus.events.EventWaitTicks;
-import me.daqem.jobsplus.handlers.ExpHandler;
-import me.daqem.jobsplus.handlers.ItemHandler;
-import me.daqem.jobsplus.handlers.MobEffectHandler;
+import me.daqem.jobsplus.handlers.*;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,8 +20,6 @@ import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DropExperienceBlock;
-import net.minecraft.world.level.block.RedStoneOreBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,7 +27,6 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MinerEvents {
@@ -44,7 +37,6 @@ public class MinerEvents {
             Blocks.TUFF, Blocks.OBSIDIAN));
     public final static ArrayList<Block> lowestList = new ArrayList<>(List.of(Blocks.STONE, Blocks.DEEPSLATE,
             Blocks.NETHERRACK, Blocks.END_STONE, Blocks.COBBLESTONE));
-    public static final ArrayList<UUID> veinMinerArray = new ArrayList<>();
     private final Jobs job = Jobs.MINER;
 
     private static void dropItems(Level level, List<ItemStack> stacks, BlockPos pos, int exp) {
@@ -65,7 +57,9 @@ public class MinerEvents {
         if (event.getLevel().isClientSide()) return;
         if (!JobGetters.jobIsEnabled(player, job)) return;
 
-        if (isOre(block)) {
+        VeinMinerHandler.disableVeinMiningIfNotOre((ServerPlayer) player, block);
+
+        if (BlockHandler.isOre(block)) {
             ExpHandler.addEXPMid(player, job);
             MobEffectHandler.addPlayerPowerUpEffects(player, job);
         } else if (lowestList.contains(block)) {
@@ -77,7 +71,7 @@ public class MinerEvents {
             ExpHandler.addEXPLow(player, job);
             MobEffectHandler.addPlayerPowerUpEffects(player, job);
         }
-        if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true) && !veinMinerArray.contains(player.getUUID())) {
+        if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true) && VeinMinerHandler.isNotVeinMining((ServerPlayer) player)) {
             if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES) || state.is(Blocks.ANCIENT_DEBRIS)) {
                 event.setCanceled(true);
                 event.getLevel().removeBlock(event.getPos(), false);
@@ -102,12 +96,12 @@ public class MinerEvents {
         ArrayList<BlockPos> candidates = new ArrayList<>();
 
         if (level.isClientSide()) return;
-        if (!isOre(event.getState().getBlock())) return;
+        if (!BlockHandler.isOre(event.getState().getBlock())) return;
         if (!event.getState().requiresCorrectToolForDrops()) return;
         if (!itemInHand.isCorrectToolForDrops(event.getState())) return;
         if (!JobGetters.jobIsEnabled(player, Jobs.MINER)) return;
         if (!(JobGetters.getPowerup(player, Jobs.MINER, CapType.POWER_UP1.get()) == 1)) return;
-        if (!veinMinerArray.contains(player.getUUID())) return;
+        if (VeinMinerHandler.isNotVeinMining((ServerPlayer) player)) return;
 
         event.setCanceled(true);
         candidates.add(event.getPos());
@@ -118,7 +112,7 @@ public class MinerEvents {
             BlockPos candidate = candidates.get(i);
             Block block = level.getBlockState(candidate).getBlock();
 
-            if (isOre(block)) {
+            if (BlockHandler.isOre(block)) {
                 if (event.getState().is(block)) {
                     ores.add(candidate);
                     for (int x = -1; x <= 1; x++) {
@@ -136,14 +130,5 @@ public class MinerEvents {
 
         if (ores.size() == 0) return;
         EventWaitTicks.waitTicks(player, EventWaitTicks.Type.VEIN_MINER, new Object[]{ores});
-    }
-
-    @SuppressWarnings("deprecation")
-    private boolean isOre(Block block) {
-        return ((block instanceof DropExperienceBlock && block != Blocks.SCULK)
-                || block instanceof RedStoneOreBlock
-                || block.builtInRegistryHolder().containsTag(new TagKey<>(Registry.BLOCK_REGISTRY, new ResourceLocation("forge", "ores")))
-                || block.getDescriptionId().endsWith("_ore")
-                || block == Blocks.ANCIENT_DEBRIS);
     }
 }

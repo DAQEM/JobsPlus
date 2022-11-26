@@ -5,10 +5,7 @@ import me.daqem.jobsplus.common.item.ExcavatorItem;
 import me.daqem.jobsplus.common.item.HammerItem;
 import me.daqem.jobsplus.events.jobs.DiggerEvents;
 import me.daqem.jobsplus.events.jobs.MinerEvents;
-import me.daqem.jobsplus.handlers.ExpHandler;
-import me.daqem.jobsplus.handlers.HotbarMessageHandler;
-import me.daqem.jobsplus.handlers.ItemHandler;
-import me.daqem.jobsplus.handlers.MobEffectHandler;
+import me.daqem.jobsplus.handlers.*;
 import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.ChatFormatting;
@@ -193,7 +190,7 @@ public class ToolFunctions {
         if (player.isCrouching() || level.isClientSide || state.getBlock() instanceof ShulkerBoxBlock) return true;
         if (JobGetters.jobIsEnabled(player, job) && JobGetters.getJobLevel(player, job) >= requiredLevel) {
             CompoundTag tag = player.getMainHandItem().getOrCreateTag();
-            if (!MinerEvents.veinMinerArray.contains(player.getUUID())) {
+            if (VeinMinerHandler.isNotVeinMining((ServerPlayer) player)) {
                 float destroySpeed = level.getBlockState(pos).getDestroySpeed(null, null);
                 ToolFunctions.breakInRadius(level, player, tag.contains("mode") ? tag.getInt("mode") : 0, (breakState) -> {
                     double hardness = breakState.getDestroySpeed(null, null);

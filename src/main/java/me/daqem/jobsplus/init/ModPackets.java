@@ -2,7 +2,6 @@ package me.daqem.jobsplus.init;
 
 import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.common.packet.*;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
@@ -31,7 +30,7 @@ public class ModPackets {
         INSTANCE.registerMessage(++id, PacketMoveConstructionRecipe.class, PacketMoveConstructionRecipe::encode, PacketMoveConstructionRecipe::decode, PacketMoveConstructionRecipe::handle);
     }
 
-    public static void sendPowerUpPacket(String str, LocalPlayer player) {
-        ModPackets.INSTANCE.sendToServer(new PacketPowerUps(str, player.getUUID()));
+    public static void sendPowerUpPacket(String str) {
+        ModPackets.INSTANCE.sendToServer(new PacketPowerUps(str));
     }
 }

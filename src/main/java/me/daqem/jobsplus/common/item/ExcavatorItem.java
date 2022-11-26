@@ -3,9 +3,11 @@ package me.daqem.jobsplus.common.item;
 import me.daqem.jobsplus.client.tooltip.TooltipBuilder;
 import me.daqem.jobsplus.common.crafting.ModRecipeManager;
 import me.daqem.jobsplus.handlers.ItemHandler;
+import me.daqem.jobsplus.handlers.VeinMinerHandler;
 import me.daqem.jobsplus.utils.ToolFunctions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +30,9 @@ public class ExcavatorItem extends ShovelItem {
 
     @Override
     public boolean canAttackBlock(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
+        if (level.isClientSide) return super.canAttackBlock(state, level, pos, player);
         ItemStack stack = player.getMainHandItem().getItem() instanceof ShovelItem ? player.getMainHandItem() : player.getOffhandItem();
+        VeinMinerHandler.disableVeinMiningIfNotOre((ServerPlayer) player, state.getBlock());
         return ToolFunctions.breakInRadius(state, level, pos, player, ModRecipeManager.getJobServer(stack), ModRecipeManager.getRequiredJobLevelServer(stack));
     }
 

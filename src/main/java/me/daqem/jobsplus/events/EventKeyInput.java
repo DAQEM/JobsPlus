@@ -28,11 +28,11 @@ public class EventKeyInput {
                     ModPackets.INSTANCE.sendToServer(new PacketOpenMenu(-1, 0, 0, -1, 0, 0));
             }
             if (key == Client.VEIN_MINER_KEYBIND.getKey().getValue()) {
-                if (action == 1) ModPackets.sendPowerUpPacket("enable_veinminer", player);
-                if (action == 0) ModPackets.sendPowerUpPacket("disable_veinminer", player);
+                if (action == 1) ModPackets.sendPowerUpPacket("enable_veinminer");
+                if (action == 0) ModPackets.sendPowerUpPacket("disable_veinminer");
             }
             if (key == Client.DOUBLE_JUMP_KEYBIND.getKey().getValue() && action == 1 && DoubleJumpEvents.isPlayerAllowedToDoubleJump(player)) {
-                ModPackets.sendPowerUpPacket("doublejump", player);
+                ModPackets.sendPowerUpPacket("doublejump");
             }
         }
     }

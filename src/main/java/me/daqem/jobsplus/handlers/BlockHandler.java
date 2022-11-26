@@ -1,13 +1,15 @@
 package me.daqem.jobsplus.handlers;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.GameMasterBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockHandler {
@@ -50,5 +52,14 @@ public class BlockHandler {
         if (removed)
             state.getBlock().destroy(player.level, blockPos, state);
         return removed;
+    }
+
+    @SuppressWarnings("deprecation")
+    public static boolean isOre(Block block) {
+        return ((block instanceof DropExperienceBlock && block != Blocks.SCULK)
+                || block instanceof RedStoneOreBlock
+                || block.builtInRegistryHolder().containsTag(new TagKey<>(Registry.BLOCK_REGISTRY, new ResourceLocation("forge", "ores")))
+                || block.getDescriptionId().endsWith("_ore")
+                || block == Blocks.ANCIENT_DEBRIS);
     }
 }
