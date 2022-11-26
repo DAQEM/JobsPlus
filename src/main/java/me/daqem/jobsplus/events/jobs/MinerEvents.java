@@ -62,7 +62,8 @@ public class MinerEvents {
         if (BlockHandler.isOre(block)) {
             ExpHandler.addEXPMid(player, job);
             MobEffectHandler.addPlayerPowerUpEffects(player, job);
-        } else if (lowestList.contains(block)) {
+        } else if (lowestList.contains(block)
+                || block.getDescriptionId().contains("soapstone")) {
             ExpHandler.addEXPLowest(player, job);
             MobEffectHandler.addPlayerPowerUpEffects(player, job);
         } else if (lowList.contains(block)
