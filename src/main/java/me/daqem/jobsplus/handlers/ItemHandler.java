@@ -14,8 +14,11 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
@@ -30,16 +33,29 @@ public class ItemHandler {
     private static final String MODE_5X5 = "5x5";
     private static final String MODE_5X5X5 = "5x5x5";
 
-    public static List<ItemStack> smeltedRawMaterials(Player player, List<ItemStack> drops) {
+    public static List<ItemStack> smeltedRawMaterials(Player player, List<ItemStack> drops, Block block) {
         List<ItemStack> newDrops = new ArrayList<>();
-        if (!JobGetters.hasPowerupEnabled(player, Jobs.MINER, CapType.POWER_UP2.get(), true)) return drops;
-        for (ItemStack drop : drops) {
-            final Item item = drop.getItem();
-            final int count = drop.getCount();
-            newDrops.add(item == Items.RAW_COPPER ? new ItemStack(Items.COPPER_INGOT, count) : item == Items.RAW_IRON ? new ItemStack(Items.IRON_INGOT, count) : item == Items.RAW_GOLD ? new ItemStack(Items.GOLD_INGOT, count) : item == Items.ANCIENT_DEBRIS ? new ItemStack(Items.NETHERITE_SCRAP, count) : drop);
+        if (BlockHandler.isOre(block)) {
+            if (JobGetters.hasPowerupEnabled(player, Jobs.MINER, CapType.POWER_UP2.get(), true)) {
+                for (ItemStack drop : drops) {
+                    for (int i = 0; i < drop.getCount(); i++) {
+                        if (player.getLevel().getServer() != null) {
+                            List<SmeltingRecipe> allRecipesFor = player.getLevel().getServer().getRecipeManager().getAllRecipesFor(RecipeType.SMELTING);
+                            for (SmeltingRecipe smeltingRecipe : allRecipesFor) {
+                                for (Ingredient ingredient : smeltingRecipe.getIngredients()) {
+                                    for (ItemStack item : ingredient.getItems()) {
+                                        if (item.is(block.asItem().asItem())) {
+                                            newDrops.add(smeltingRecipe.getResultItem());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        if (newDrops.isEmpty()) return drops;
-        return newDrops;
+        return newDrops.isEmpty() ? drops : newDrops;
     }
 
     public static void addItemsToInventoryOrDrop(ItemStack drop, Player player, Level level, BlockPos blockPos, int exp) {

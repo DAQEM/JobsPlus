@@ -3,14 +3,25 @@ package me.daqem.jobsplus.handlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 public class BlockHandler {
 
@@ -33,7 +44,7 @@ public class BlockHandler {
                 boolean flag = removeBlock(player, blockPos, flag1);
 
                 if (flag && flag1) {
-                    block.playerDestroy(player.level, player, blockPos, blockstate, player.level.getBlockEntity(blockPos), itemStackCopy);
+                    playerDestroy(block, player.level, player, blockPos, blockstate, player.level.getBlockEntity(blockPos), itemStackCopy);
                 }
 
                 if (flag) {
@@ -52,6 +63,38 @@ public class BlockHandler {
         if (removed)
             state.getBlock().destroy(player.level, blockPos, state);
         return removed;
+    }
+
+    public static void playerDestroy(Block block, Level level, Player player, BlockPos blockPos, BlockState blockState, @Nullable BlockEntity blockEntity, ItemStack mainHandStack) {
+        player.awardStat(Stats.BLOCK_MINED.get(block));
+        player.causeFoodExhaustion(0.005F);
+        dropResources(block, blockState, level, blockPos, blockEntity, player, mainHandStack);
+    }
+
+    public static void dropResources(Block block, BlockState blockState, Level level, BlockPos blockPos, @Nullable BlockEntity blockEntity, Entity player, ItemStack mainHandStack) {
+        if (level instanceof ServerLevel) {
+            Block.getDrops(blockState, (ServerLevel) level, blockPos, blockEntity, player, mainHandStack).forEach((itemStack) -> {
+                if (BlockHandler.isOre(block)) {
+                    if (level.getServer() != null) {
+                        for (SmeltingRecipe smeltingRecipe : level.getServer().getRecipeManager().getAllRecipesFor(RecipeType.SMELTING)) {
+                            for (Ingredient ingredient : smeltingRecipe.getIngredients()) {
+                                for (ItemStack item : ingredient.getItems()) {
+                                    if (item.is(block.asItem())) {
+                                        ItemStack newItem = smeltingRecipe.getResultItem().copy();
+                                        newItem.setCount(itemStack.getCount());
+                                        itemStack = newItem;
+                                        blockState.getBlock().popExperience((ServerLevel) player.getLevel(), blockPos, Math.round(smeltingRecipe.getExperience()));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                Block.popResource(level, blockPos, itemStack);
+            });
+            blockState.spawnAfterBreak((ServerLevel) level, blockPos, mainHandStack, true);
+        }
+
     }
 
     @SuppressWarnings("deprecation")

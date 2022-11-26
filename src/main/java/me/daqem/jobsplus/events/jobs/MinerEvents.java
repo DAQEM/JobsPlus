@@ -15,11 +15,11 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,7 +44,7 @@ public class MinerEvents {
             if (exp > 0) {
                 level.addFreshEntity(new ExperienceOrb(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, exp));
             }
-            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack));
+            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack.copy()));
         }
     }
 
@@ -72,18 +72,15 @@ public class MinerEvents {
             ExpHandler.addEXPLow(player, job);
             MobEffectHandler.addPlayerPowerUpEffects(player, job);
         }
+        //SMELT ORES AUTOMATICALLY
         if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true) && VeinMinerHandler.isNotVeinMining((ServerPlayer) player)) {
-            if (state.is(BlockTags.IRON_ORES) || state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.COPPER_ORES) || state.is(Blocks.ANCIENT_DEBRIS)) {
+            BlockEntity blockentity = state.hasBlockEntity() ? event.getLevel().getBlockEntity(event.getPos()) : null;
+            List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getLevel(), event.getPos(), blockentity, player, player.getMainHandItem());
+            List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops, block);
+            if (!stacks.equals(drops)) {
                 event.setCanceled(true);
                 event.getLevel().removeBlock(event.getPos(), false);
-                List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getLevel(), event.getPos(), null, player, player.getMainHandItem());
-                List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops);
-                int exp = 0;
-                for (ItemStack stack : stacks) {
-                    if (stack.is(Items.COPPER_INGOT) || stack.is(Items.IRON_INGOT) || stack.is(Items.GOLD_INGOT) || stack.is(Items.NETHERITE_INGOT))
-                        ++exp;
-                }
-                dropItems((Level) event.getLevel(), stacks, event.getPos(), exp);
+                dropItems((Level) event.getLevel(), new ArrayList<>(stacks), event.getPos(), stacks.size());
             }
         }
     }
