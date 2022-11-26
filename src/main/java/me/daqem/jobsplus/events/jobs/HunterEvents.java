@@ -133,30 +133,31 @@ public class HunterEvents {
         Block block = state.getBlock();
         if (!(block instanceof SkullBlock || block instanceof WallSkullBlock)) return;
         BlockPos pos = event.getPos();
-        SkullBlockEntity sbe = (SkullBlockEntity) level.getBlockEntity(pos);
-        if (event.getPlayer().isCreative() || sbe == null) return;
-        GameProfile profile = sbe.getOwnerProfile();
-        if (profile == null) return;
-        UUID uuid = profile.getId();
-        if (uuid == null) return;
-        String headId = uuid.toString();
+        if (level.getBlockEntity(pos) instanceof SkullBlockEntity sbe) {
+            if (event.getPlayer().isCreative()) return;
+            GameProfile profile = sbe.getOwnerProfile();
+            if (profile == null) return;
+            UUID uuid = profile.getId();
+            if (uuid == null) return;
+            String headId = uuid.toString();
 
-        String correctHeadName = "";
-        String texture = "";
-        for (String headName : HeadData.headDataMap.keySet()) {
-            String headNameId = HeadData.headDataMap.get(headName).getFirst();
-            if (headId.equals(headNameId)) {
-                correctHeadName = ChatHandler.capitalizeWord(headName.replace("_", " ")) + " Head";
-                texture = HeadData.headDataMap.get(headName).getSecond();
-                break;
+            String correctHeadName = "";
+            String texture = "";
+            for (String headName : HeadData.headDataMap.keySet()) {
+                String headNameId = HeadData.headDataMap.get(headName).getFirst();
+                if (headId.equals(headNameId)) {
+                    correctHeadName = ChatHandler.capitalizeWord(headName.replace("_", " ")) + " Head";
+                    texture = HeadData.headDataMap.get(headName).getSecond();
+                    break;
+                }
             }
-        }
-        ItemStack namedHeadStack = getHead(correctHeadName, texture, headId, 1);
-        if (namedHeadStack != null) {
-            event.setCanceled(true);
-            level.destroyBlock(pos, false);
+            ItemStack namedHeadStack = getHead(correctHeadName, texture, headId, 1);
+            if (namedHeadStack != null) {
+                event.setCanceled(true);
+                level.destroyBlock(pos, false);
 
-            level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY() + 0.5, pos.getZ(), namedHeadStack));
+                level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY() + 0.5, pos.getZ(), namedHeadStack));
+            }
         }
     }
 
