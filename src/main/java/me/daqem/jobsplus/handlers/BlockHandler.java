@@ -94,7 +94,6 @@ public class BlockHandler {
             });
             blockState.spawnAfterBreak((ServerLevel) level, blockPos, mainHandStack, true);
         }
-
     }
 
     @SuppressWarnings("deprecation")

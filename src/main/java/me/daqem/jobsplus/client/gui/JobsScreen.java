@@ -61,6 +61,10 @@ public class JobsScreen extends Screen {
     private int jobId;
     private int selectedButton;
 
+    private float scrollOffsCrafting;
+    private boolean scrollingCrafting;
+    private int startIndexCrafting;
+
     public JobsScreen(CompoundTag dataTag) {
         super(JobsPlus.literal("Jobs"));
         this.jobId = dataTag.getInt("JobID");
@@ -98,12 +102,13 @@ public class JobsScreen extends Screen {
         this.startX = (this.width - this.imageWidth) / 2;
         this.startY = (this.height - this.imageHeight) / 2;
         int firstHiddenIndex = this.startIndex + 4;
+        int firstHiddenIndexCrafting = this.startIndexCrafting + 49;
 
         this.renderBackgroundImage(poseStack);
         this.renderScrollWheel(poseStack);
-        this.renderButtons(poseStack, mouseX, mouseY, firstHiddenIndex);
+        this.renderButtons(poseStack, mouseX, mouseY, firstHiddenIndex, firstHiddenIndexCrafting);
         this.renderTooltip(poseStack, mouseX, mouseY);
-        this.renderItems(startX, startY);
+        this.renderItems(startX, startY, firstHiddenIndexCrafting);
         this.renderTexts(poseStack, firstHiddenIndex);
         super.render(poseStack, mouseX, mouseY, partialTicks);
     }
@@ -253,7 +258,7 @@ public class JobsScreen extends Screen {
         blitThis(poseStack, 7 + 3, i1 + 3, imageWidth, xOffset * 31, 31, 27);
     }
 
-    public void renderButtons(PoseStack poseStack, int mouseX, int mouseY, int firstHiddenIndex) {
+    public void renderButtons(PoseStack poseStack, int mouseX, int mouseY, int firstHiddenIndex, int firstHiddenIndexCrafting) {
         //SETTINGS
         if (isBetween(mouseX, mouseY, 3, height - 20, 18, height - 4))
             RenderSystem.setShaderColor(0.8F, 0.8F, 0.8F, 1);
@@ -290,20 +295,34 @@ public class JobsScreen extends Screen {
             // CRAFTING RECIPE BUTTONS
         } else if (activeRightButton == 1) {
             if (hasJobSelected()) {
-                for (int i = 0; i < selectedJobCraftableStacks.size(); ++i) {
-                    int xOffset = 172 + i % 5 * 27;
-                    int yOffset1 = 18 + (i / 5) * 27;
-                    if (isBetween(mouseX - startX, mouseY - startY, xOffset, yOffset1, xOffset + 23, yOffset1 + 23)) {
-                        RenderSystem.setShaderColor(0.7F, 0.7F, 1F, 1);
+                //BROWN BACKGROUND
+                blitThis(poseStack, 171, 17, 189, 198, 128, 128);
+
+                //BUTTONS
+                for (int i = this.startIndexCrafting; i < firstHiddenIndexCrafting && i < selectedJobCraftableStacks.size(); ++i) {
+                    int j = i - this.startIndexCrafting;
+                    int k = 172 + j % 7 * 18;
+                    int l = j / 7;
+                    int i1 = 18 + l * 18;
+
+                    if (isBetween(mouseX - startX, mouseY - startY, k, i1, k + 17, i1 + 17)) {
+                        RenderColor.buttonHover();
                     }
-                    blitThis(poseStack, xOffset, yOffset1, 142, 210, 24, 24);
+                    blitThis(poseStack, k, i1, 142, 210, 18, 18);
                     RenderColor.normal();
                 }
+
                 //CONSTRUCTION TABLE
                 blitThis(poseStack, 158, imageHeight, 150, 136, 100, 30);
                 blitThis(poseStack, 218, imageHeight, 226, 136, 100, 30);
-                blitThis(poseStack, 162, 167, 142, 210, 24, 24);
+
+                //SCROLLBAR
+                blitThis(poseStack, 302, 17, 317, 198, 9, 128);
+
+                //SCROLL WHEEL
+                blitThis(poseStack, 303, (int) (18 + (111.0F * getScrollOffsCrafting())), 160, 210, 7, 15);
             }
+            //POWERUP BUTTONS
         } else if (activeRightButton == 2) {
             if (hasJobSelected()) {
                 //POWER-UP 1
@@ -393,8 +412,7 @@ public class JobsScreen extends Screen {
                 if (getActiveBossBar() == jobId) blitThis(poseStack, imageWidth, 9 + 26, 142, 234, 22, 26);
                 else blitThis(poseStack, imageWidth, 9 + 26, 164, 234, 19, 26);
                 // Boss Bar Icon
-                if (getActiveBossBar() == jobId) blitThis(poseStack, imageWidth + 2, 9 + 32, 164 + 19, 234, 15, 14);
-                else blitThis(poseStack, imageWidth + 1, 9 + 32, 164 + 19, 234, 15, 14);
+                blitThis(poseStack, imageWidth + 1, 9 + 32, 165, 271, 15, 14);
             }
         }
     }
@@ -504,15 +522,16 @@ public class JobsScreen extends Screen {
         }
     }
 
-    public void renderItems(int x, int y) {
+    public void renderItems(int x, int y, int firstHiddenIndexCrafting) {
         if (minecraft == null) return;
         ItemRenderer itemRenderer = minecraft.getItemRenderer();
         if (hasJobSelected()) {
             if (activeRightButton == 1) {
-                for (int i = 0; i < selectedJobCraftableStacks.size(); i++) {
-                    int xOffset = x + 176 + i % 5 * 27;
-                    int l = i / 5;
-                    int yOffset = y + 20 + l * 27 + 2;
+                for (int i = this.startIndexCrafting; i < firstHiddenIndexCrafting && i < selectedJobCraftableStacks.size(); i++) {
+                    int j = i - this.startIndexCrafting;
+                    int xOffset = x + 173 + j % 7 * 18;
+                    int l = j / 7;
+                    int yOffset = y + 19 + l * 18;
                     itemRenderer.renderAndDecorateItem(selectedJobCraftableStacks.get(i), xOffset, yOffset);
                 }
                 //CONSTRUCTION TABLE
@@ -531,6 +550,7 @@ public class JobsScreen extends Screen {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return false;
         this.scrolling = false;
+        this.scrollingCrafting = false;
 
         //SETTINGS
         if (isBetween(mouseX, mouseY, 3, height - 20, 19, height - 4)) {
@@ -564,6 +584,8 @@ public class JobsScreen extends Screen {
                             activeLeftButton == 1 ?
                                     getEnabledJobs().get(selectedButton).get() :
                                     getDisabledJobs().get(selectedButton).get();
+                    scrollOffsCrafting = 0;
+                    startIndexCrafting = 0;
                     playClientGUIClick();
                     return true;
                 } catch (IndexOutOfBoundsException ignore) {
@@ -577,6 +599,11 @@ public class JobsScreen extends Screen {
         //SCROLL BAR
         if (isBetween(mouseX, mouseY, 127, 17, 139, 155)) {
             this.scrolling = true;
+        }
+
+        //SCROLL BAR CRAFTING
+        if (isBetween(mouseX, mouseY, 302, 17, 311, 155)) {
+            this.scrollingCrafting = true;
         }
 
         //DISPLAY AND BOSSBAR
@@ -610,6 +637,8 @@ public class JobsScreen extends Screen {
                 jobId = -1;
                 startIndex = 0;
                 scrollOffs = 0;
+                scrollOffsCrafting = 0;
+                startIndexCrafting = 0;
             }
             activeLeftButton = 0;
         }
@@ -621,6 +650,8 @@ public class JobsScreen extends Screen {
                 jobId = -1;
                 startIndex = 0;
                 scrollOffs = 0;
+                scrollOffsCrafting = 0;
+                startIndexCrafting = 0;
             }
             activeLeftButton = 1;
         }
@@ -632,6 +663,8 @@ public class JobsScreen extends Screen {
                 jobId = -1;
                 startIndex = 0;
                 scrollOffs = 0;
+                scrollOffsCrafting = 0;
+                startIndexCrafting = 0;
             }
             activeLeftButton = 2;
         }
@@ -639,21 +672,29 @@ public class JobsScreen extends Screen {
         else if (isBetween(mouseX, mouseY, 6 + 150, -22, 32 + 150, 0)) {
             playClientGUIClick();
             activeRightButton = 0;
+            scrollOffsCrafting = 0;
+            startIndexCrafting = 0;
         }
         //CRAFTING RECIPES BUTTON
         else if (isBetween(mouseX, mouseY, 6 + 28 + 150, -22, 32 + 28 + 150, 0)) {
             playClientGUIClick();
             activeRightButton = 1;
+            scrollOffsCrafting = 0;
+            startIndexCrafting = 0;
         }
         // POWERUPS BUTTON
         else if (isBetween(mouseX, mouseY, 6 + 28 + 28 + 150, -22, 32 + 28 + 28 + 150, 0)) {
             playClientGUIClick();
             activeRightButton = 2;
+            scrollOffsCrafting = 0;
+            startIndexCrafting = 0;
         }
         // HOW TO GET EXP BUTTON
         else if (isBetween(mouseX, mouseY, 6 + 28 + 28 + 28 + 150, -22, 32 + 28 + 28 + 28 + 150, 0)) {
             playClientGUIClick();
             activeRightButton = 3;
+            scrollOffsCrafting = 0;
+            startIndexCrafting = 0;
         }
         // RIGHT BUTTONS
         if (hasJobSelected()) {
@@ -738,37 +779,60 @@ public class JobsScreen extends Screen {
 
         mouseX -= 150D;
 
-        for (int i = 0; i < selectedJobCraftableStacks.size(); i++) {
+        for (int i = this.startIndexCrafting; i < selectedJobCraftableStacks.size(); i++) {
+            int j = i - this.startIndexCrafting;
             if (isBetween(mouseX, mouseY,
-                    22 + (i % 5) * 27, 18 + (i / 5) * 27,
-                    46 + (i % 5) * 27, 42 + (i / 5) * 27)) {
+                    22 + (j % 7) * 18, 18 + (j / 7) * 18,
+                    22 + 17 + (j % 7) * 18, 18 + 17 + (j / 7) * 18)) {
                 return selectedJobCraftableStacks.get(i);
             }
         }
         return ItemStack.EMPTY;
     }
 
+    @Override
     public boolean mouseDragged(double mouseX, double mouseY, int clickType, double speedX, double speedY) {
-        if (this.scrolling) {
-            int i = startY + 14;
-            int j = i + 54;
-            this.scrollOffs = ((float) mouseY - (float) i - 7.5F) / ((float) (j - i) - 15.0F);
-            this.scrollOffs = Mth.clamp(this.scrollOffs, 0.0F, 3F);
-            this.startIndex = (int) ((double) (this.scrollOffs * (float) this.getOffscreenRows()) + 0.5D);
-            return true;
+        if (isBetween(mouseX, mouseY, 0, 0, width / 2, height)) {
+            if (this.scrolling) {
+                int i = startY + 14;
+                int j = i + 54;
+                this.scrollOffs = ((float) mouseY - (float) i - 7.5F) / ((float) (j - i) - 15.0F);
+                this.scrollOffs = Mth.clamp(this.scrollOffs, 0.0F, 3F);
+                this.startIndex = (int) ((double) (this.scrollOffs * (float) this.getOffscreenRows()) + 0.5D);
+                return true;
+            } else {
+                return super.mouseDragged(mouseX, mouseY, clickType, speedX, speedY);
+            }
         } else {
-            return super.mouseDragged(mouseX, mouseY, clickType, speedX, speedY);
+            if (this.scrollingCrafting && this.isScrollBarCraftingActive()) {
+                int i = startY + 14;
+                int j = i + 128;
+                this.scrollOffsCrafting = ((float) mouseY - (float) i - 7.5F) / ((float) (j - i) - 15.0F);
+                this.scrollOffsCrafting = Mth.clamp(this.scrollOffsCrafting, 0.0F, 1.0F);
+                this.startIndexCrafting = (int) ((double) (this.scrollOffsCrafting * (float) this.getOffscreenRowsCrafting()) + 0.5D) * 7;
+                return true;
+            } else {
+                return super.mouseDragged(mouseX, mouseY, clickType, speedX, speedY);
+            }
         }
     }
 
-    public boolean mouseScrolled(double p_99314_, double p_99315_, double p_99316_) {
-        if (this.isScrollBarActive()) {
-            int i = this.getOffscreenRows();
-            this.scrollOffs = (float) ((double) this.scrollOffs - p_99316_ / (double) i);
-            this.scrollOffs = Mth.clamp(this.scrollOffs, 0.0F, 3F);
-            this.startIndex = (int) ((double) (this.scrollOffs * (float) i) + 0.5D);
+    public boolean mouseScrolled(double mouseX, double mouseY, double p_99316_) {
+        if (isBetween(mouseX, mouseY, 0, 0, width / 2 - 14, height) || getActiveRightButton() != 1) {
+            if (this.isScrollBarActive()) {
+                int i = this.getOffscreenRows();
+                this.scrollOffs = (float) ((double) this.scrollOffs - p_99316_ / (double) i);
+                this.scrollOffs = Mth.clamp(this.scrollOffs, 0.0F, 3F);
+                this.startIndex = (int) ((double) (this.scrollOffs * (float) i) + 0.5D);
+            }
+        } else {
+            if (this.isScrollBarCraftingActive()) {
+                int i = this.getOffscreenRowsCrafting();
+                float f = (float) p_99316_ / (float) i;
+                this.scrollOffsCrafting = Mth.clamp(this.scrollOffsCrafting - f, 0.0F, 1.0F);
+                this.startIndexCrafting = (int) ((double) (this.scrollOffsCrafting * (float) i) + 0.5D) * 7;
+            }
         }
-
         return true;
     }
 
@@ -778,6 +842,14 @@ public class JobsScreen extends Screen {
 
     private boolean isScrollBarActive() {
         return true;
+    }
+
+    protected int getOffscreenRowsCrafting() {
+        return (this.selectedJobCraftableStacks.size() + 7 - 1) / 7 - 7;
+    }
+
+    private boolean isScrollBarCraftingActive() {
+        return this.selectedJobCraftableStacks.size() > 49;
     }
 
     public void blitThis(PoseStack poseStack, int posX, int posY, int startX, int startY, int stopX, int stopY) {
@@ -892,6 +964,10 @@ public class JobsScreen extends Screen {
         return scrollOffs;
     }
 
+    public float getScrollOffsCrafting() {
+        return scrollOffsCrafting;
+    }
+
     public int getStartIndex() {
         return startIndex;
     }
@@ -945,21 +1021,21 @@ public class JobsScreen extends Screen {
         return this.dataTag.getInt("ActiveBossBar");
     }
 
-    private int getSelctedJobPowerupState(int powerupID) {
+    private int getSelectedJobPowerupState(int powerupID) {
         if (powerupID != 1 && powerupID != 2 && powerupID != 3) return 0;
         return getSelectedJobData().getInt("Powerup" + powerupID);
     }
 
     private boolean hasBoughtPowerup(int powerupID) {
-        return getSelctedJobPowerupState(powerupID) != 0;
+        return getSelectedJobPowerupState(powerupID) != 0;
     }
 
     private boolean hasPowerupActive(int powerupID) {
-        return getSelctedJobPowerupState(powerupID) == 1;
+        return getSelectedJobPowerupState(powerupID) == 1;
     }
 
     private boolean hasPowerupDisabled(int powerupID) {
-        return getSelctedJobPowerupState(powerupID) == 2;
+        return getSelectedJobPowerupState(powerupID) == 2;
     }
 
     private int getSelectedJobSuperpowerState() {
