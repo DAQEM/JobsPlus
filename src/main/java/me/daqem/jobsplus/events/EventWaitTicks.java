@@ -1,6 +1,10 @@
 package me.daqem.jobsplus.events;
 
+import me.daqem.jobsplus.JobsPlus;
+import me.daqem.jobsplus.events.jobs.MinerEvents;
 import me.daqem.jobsplus.handlers.BlockHandler;
+import me.daqem.jobsplus.handlers.ExpHandler;
+import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -33,7 +37,15 @@ public class EventWaitTicks {
                         BlockState blockState = player.level.getBlockState(blockPos);
                         if (blockState.canHarvestBlock(player.level, blockPos, player)) {
                             BlockHandler.destroyBlock((ServerPlayer) player, blockPos);
+                            JobsPlus.LOGGER.error("Destroyed block at " + blockPos);
                             player.getLevel().levelEvent(2001, blockPos, Block.getId(blockState));
+
+                            if (type == Type.VEIN_MINER) {
+                                MinerEvents.addMinerExpForMinedBlock(player, blockState);
+                            } else if (type == Type.TREE_FELLER) {
+                                ExpHandler.addEXPLow(player, Jobs.LUMBERJACK);
+                            }
+
                         } else {
                             MinecraftForge.EVENT_BUS.unregister(this);
                             return;

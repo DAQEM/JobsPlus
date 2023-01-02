@@ -1,5 +1,8 @@
 package me.daqem.jobsplus.handlers;
 
+import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.enums.CapType;
+import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -73,25 +76,32 @@ public class BlockHandler {
 
     public static void dropResources(Block block, BlockState blockState, Level level, BlockPos blockPos, @Nullable BlockEntity blockEntity, Entity player, ItemStack mainHandStack) {
         if (level instanceof ServerLevel) {
-            Block.getDrops(blockState, (ServerLevel) level, blockPos, blockEntity, player, mainHandStack).forEach((itemStack) -> {
-                if (BlockHandler.isOre(block)) {
-                    if (level.getServer() != null) {
-                        for (SmeltingRecipe smeltingRecipe : level.getServer().getRecipeManager().getAllRecipesFor(RecipeType.SMELTING)) {
-                            for (Ingredient ingredient : smeltingRecipe.getIngredients()) {
-                                for (ItemStack item : ingredient.getItems()) {
-                                    if (item.is(block.asItem())) {
-                                        ItemStack newItem = smeltingRecipe.getResultItem().copy();
-                                        newItem.setCount(itemStack.getCount());
-                                        itemStack = newItem;
-                                        blockState.getBlock().popExperience((ServerLevel) player.getLevel(), blockPos, Math.round(smeltingRecipe.getExperience()));
+            if (player instanceof Player) {
+                if (JobGetters.hasPowerupEnabled((Player) player, Jobs.MINER, CapType.POWER_UP2.get(), true)) {
+                    Block.getDrops(blockState, (ServerLevel) level, blockPos, blockEntity, player, mainHandStack).forEach((itemStack) -> {
+                        if (BlockHandler.isOre(block)) {
+                            if (level.getServer() != null) {
+                                for (SmeltingRecipe smeltingRecipe : level.getServer().getRecipeManager().getAllRecipesFor(RecipeType.SMELTING)) {
+                                    for (Ingredient ingredient : smeltingRecipe.getIngredients()) {
+                                        for (ItemStack item : ingredient.getItems()) {
+                                            if (item.is(block.asItem())) {
+                                                ItemStack newItem = smeltingRecipe.getResultItem().copy();
+                                                newItem.setCount(itemStack.getCount());
+                                                itemStack = newItem;
+                                                blockState.getBlock().popExperience((ServerLevel) player.getLevel(), blockPos, Math.round(smeltingRecipe.getExperience()));
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
+                        Block.popResource(level, blockPos, itemStack);
+                    });
+                } else {
+                    Block.getDrops(blockState, (ServerLevel) level, blockPos, blockEntity, player, mainHandStack).forEach((itemStack) ->
+                            Block.popResource(level, blockPos, itemStack));
                 }
-                Block.popResource(level, blockPos, itemStack);
-            });
+            }
             blockState.spawnAfterBreak((ServerLevel) level, blockPos, mainHandStack, true);
         }
     }

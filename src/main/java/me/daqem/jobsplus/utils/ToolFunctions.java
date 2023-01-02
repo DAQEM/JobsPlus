@@ -85,6 +85,7 @@ public class ToolFunctions {
                     int silkLevel = stack.getEnchantmentLevel(Enchantments.SILK_TOUCH);
                     final List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, stack);
                     final List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops, block);
+                    JobsPlus.LOGGER.error("two");
                     final int exp = state.getExpDrop(level, level.random, pos, bonusLevel, silkLevel);
 
                     //Add drops to inventory for Digger powerup

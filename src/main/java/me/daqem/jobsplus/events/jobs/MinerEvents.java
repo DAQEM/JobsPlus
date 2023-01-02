@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.events.jobs;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.config.Config;
 import me.daqem.jobsplus.events.EventWaitTicks;
 import me.daqem.jobsplus.handlers.*;
@@ -48,6 +49,26 @@ public class MinerEvents {
         }
     }
 
+    public static void addMinerExpForMinedBlock(Player player, BlockState state) {
+        int exp = 0;
+        Block block = state.getBlock();
+        if (BlockHandler.isOre(block)) {
+            exp += ExpHandler.getEXPMid();
+        } else if (lowestList.contains(block)
+                || block.getDescriptionId().contains("soapstone")) {
+            exp += ExpHandler.getEXPLowest();
+        } else if (lowList.contains(block)
+                || state.is(BlockTags.TERRACOTTA)
+                || (player.getMainHandItem().getItem() instanceof PickaxeItem && player.getMainHandItem().isCorrectToolForDrops(state))) {
+            exp += ExpHandler.getEXPLow();
+        }
+        if (exp != 0) {
+            Jobs job = Jobs.MINER;
+            ExpHandler.addJobEXP(player, job, exp);
+            MobEffectHandler.addPlayerPowerUpEffects(player, job);
+        }
+    }
+
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
@@ -59,28 +80,20 @@ public class MinerEvents {
 
         VeinMinerHandler.disableVeinMiningIfNotOre((ServerPlayer) player, block);
 
-        if (BlockHandler.isOre(block)) {
-            ExpHandler.addEXPMid(player, job);
-            MobEffectHandler.addPlayerPowerUpEffects(player, job);
-        } else if (lowestList.contains(block)
-                || block.getDescriptionId().contains("soapstone")) {
-            ExpHandler.addEXPLowest(player, job);
-            MobEffectHandler.addPlayerPowerUpEffects(player, job);
-        } else if (lowList.contains(block)
-                || state.is(BlockTags.TERRACOTTA)
-                || (player.getMainHandItem().getItem() instanceof PickaxeItem && player.getMainHandItem().isCorrectToolForDrops(state))) {
-            ExpHandler.addEXPLow(player, job);
-            MobEffectHandler.addPlayerPowerUpEffects(player, job);
-        }
+        addMinerExpForMinedBlock(player, state);
+
         //SMELT ORES AUTOMATICALLY
         if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP2.get(), true) && VeinMinerHandler.isNotVeinMining((ServerPlayer) player)) {
-            BlockEntity blockentity = state.hasBlockEntity() ? event.getLevel().getBlockEntity(event.getPos()) : null;
-            List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getLevel(), event.getPos(), blockentity, player, player.getMainHandItem());
-            List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops, block);
-            if (!stacks.equals(drops)) {
-                event.setCanceled(true);
-                event.getLevel().removeBlock(event.getPos(), false);
-                dropItems((Level) event.getLevel(), new ArrayList<>(stacks), event.getPos(), stacks.size());
+            if (state.canHarvestBlock(event.getLevel(), event.getPos(), player) && !player.isCreative()) {
+                BlockEntity blockentity = state.hasBlockEntity() ? event.getLevel().getBlockEntity(event.getPos()) : null;
+                List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getLevel(), event.getPos(), blockentity, player, player.getMainHandItem());
+                List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops, block);
+                JobsPlus.LOGGER.error("one");
+                if (!stacks.equals(drops)) {
+                    event.setCanceled(true);
+                    event.getLevel().removeBlock(event.getPos(), false);
+                    dropItems((Level) event.getLevel(), new ArrayList<>(stacks), event.getPos(), stacks.size());
+                }
             }
         }
     }
