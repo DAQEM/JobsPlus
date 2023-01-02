@@ -8,6 +8,7 @@ import me.daqem.jobsplus.client.renderer.RenderColor;
 import me.daqem.jobsplus.common.crafting.construction.ConstructionCraftingRecipe;
 import me.daqem.jobsplus.common.crafting.construction.ConstructionRecipeType;
 import me.daqem.jobsplus.common.packet.*;
+import me.daqem.jobsplus.config.Config;
 import me.daqem.jobsplus.handlers.ChatHandler;
 import me.daqem.jobsplus.handlers.LevelHandler;
 import me.daqem.jobsplus.init.ModEffects;
@@ -709,7 +710,7 @@ public class JobsScreen extends Screen {
                             if (getCoins() >= getJobStartCost())
                                 openConfirmScreen(JobsPlus.translatable("confirm.start_paid", getJobStartCost()), "start_paid", 0);
                             else
-                                openConfirmScreen(JobsPlus.translatable("confirm.not_enough_coins_start"), "not_enough_coins_start", 0);
+                                openConfirmScreen(JobsPlus.translatable("confirm.not_enough_coins_start", Config.JOB_START_COST.get()), "not_enough_coins_start", 0);
 
                         }
                     } else if (getSelectedJobLevel() == getJobLevelToStopJobForFree()) {
@@ -718,7 +719,7 @@ public class JobsScreen extends Screen {
                         if (getCoins() >= getJobStopCost())
                             openConfirmScreen(JobsPlus.translatable("confirm.stop", getJobStopCost()), "stop", 0);
                         else
-                            openConfirmScreen(JobsPlus.translatable("confirm.not_enough_coins_stop"), "not_enough_coins_stop", 0);
+                            openConfirmScreen(JobsPlus.translatable("confirm.not_enough_coins_stop", Config.JOB_STOP_COST.get()), "not_enough_coins_stop", 0);
 
                     }
                 }
@@ -751,7 +752,7 @@ public class JobsScreen extends Screen {
                                 openConfirmScreen(JobsPlus.translatable("confirm.job_not_enabled"), "job_not_enabled", clickedPowerupID);
                             }
                         } else {
-                            openConfirmScreen(JobsPlus.translatable("confirm.not_enough_coins_powerup"), "not_enough_coins_powerup", clickedPowerupID);
+                            openConfirmScreen(JobsPlus.translatable("confirm.not_enough_coins_powerup", Config.POWERUP_COST.get()), "not_enough_coins_powerup", clickedPowerupID);
                         }
                     }
                     playClientGUIClick();
