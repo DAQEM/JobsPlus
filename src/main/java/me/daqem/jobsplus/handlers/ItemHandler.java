@@ -28,6 +28,7 @@ import java.util.List;
 
 public class ItemHandler {
 
+    private static final String MODE_1X1 = "1x1";
     private static final String MODE_3X3 = "3x3";
     private static final String MODE_3X3X3 = "3x3x3";
     private static final String MODE_5X5 = "5x5";
@@ -101,15 +102,16 @@ public class ItemHandler {
 
     public static String getModeString(ItemStack stack) {
         int mode = stack.getOrCreateTag().getInt("mode");
-        return mode == 0 ? MODE_3X3 : mode == 1 ? MODE_3X3X3 : mode == 2 ? MODE_5X5 : MODE_5X5X5;
+        return mode == -1 ? MODE_1X1 : mode == 0 ? MODE_3X3 : mode == 1 ? MODE_3X3X3 : mode == 2 ? MODE_5X5 : MODE_5X5X5;
     }
 
     public static String getAvailableModeString(ItemStack stack) {
-        if (stack.getDescriptionId().contains("_level_1")) return MODE_3X3;
-        if (stack.getDescriptionId().contains("_level_2")) return String.join(", ", MODE_3X3, MODE_3X3X3);
-        if (stack.getDescriptionId().contains("_level_3")) return String.join(", ", MODE_3X3, MODE_3X3X3, MODE_5X5);
+        if (stack.getDescriptionId().contains("_level_1")) return String.join(", ", MODE_1X1, MODE_3X3);
+        if (stack.getDescriptionId().contains("_level_2")) return String.join(", ", MODE_1X1, MODE_3X3, MODE_3X3X3);
+        if (stack.getDescriptionId().contains("_level_3"))
+            return String.join(", ", MODE_1X1, MODE_3X3, MODE_3X3X3, MODE_5X5);
         if (stack.getDescriptionId().contains("_level_4"))
-            return String.join(", ", MODE_3X3, MODE_3X3X3, MODE_5X5, MODE_5X5X5);
+            return String.join(", ", MODE_1X1, MODE_3X3, MODE_3X3X3, MODE_5X5, MODE_5X5X5);
         return "";
     }
 
@@ -124,7 +126,7 @@ public class ItemHandler {
                 || (stack.getDescriptionId().contains("_level_4") && tagInt != 3)) {
             tag.putInt(MODE, ++tagInt);
         } else {
-            tag.putInt(MODE, 0);
+            tag.putInt(MODE, -1);
         }
         HotbarMessageHandler.sendHotbarMessageServer((ServerPlayer) player, ChatColor.boldDarkGreen() + "Mode: " + ChatColor.green() + ItemHandler.getModeString(stack));
         SoundHandler.playChangeToolModeSound(player);

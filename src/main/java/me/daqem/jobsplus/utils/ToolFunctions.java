@@ -184,7 +184,11 @@ public class ToolFunctions {
 
     @SuppressWarnings("all")
     public static boolean breakInRadius(BlockState state, Level level, BlockPos pos, Player player, Jobs job, int requiredLevel) {
-        if (player.isCrouching() || level.isClientSide || state.getBlock() instanceof ShulkerBoxBlock) return true;
+        if (player.isCrouching() || level.isClientSide || state.getBlock() instanceof ShulkerBoxBlock)
+            return true;
+        if (player.getMainHandItem().getOrCreateTag().getInt("mode") == -1) {
+            return true;
+        }
         if (JobGetters.jobIsEnabled(player, job) && JobGetters.getJobLevel(player, job) >= requiredLevel) {
             CompoundTag tag = player.getMainHandItem().getOrCreateTag();
             if (VeinMinerHandler.isNotVeinMining((ServerPlayer) player)) {
