@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.events;
 
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.events.jobs.MinerEvents;
 import me.daqem.jobsplus.handlers.BlockHandler;
 import me.daqem.jobsplus.handlers.ExpHandler;
@@ -37,7 +36,6 @@ public class EventWaitTicks {
                         BlockState blockState = player.level.getBlockState(blockPos);
                         if (blockState.canHarvestBlock(player.level, blockPos, player)) {
                             BlockHandler.destroyBlock((ServerPlayer) player, blockPos);
-                            JobsPlus.LOGGER.error("Destroyed block at " + blockPos);
                             player.getLevel().levelEvent(2001, blockPos, Block.getId(blockState));
 
                             if (type == Type.VEIN_MINER) {
