@@ -40,14 +40,26 @@ public class SmithEvents {
     private final HashMap<Player, Integer> furnaceHashmap = new HashMap<>();
 
     @SubscribeEvent
+    public void makeCraftedItemUnbreakable(TickEvent.PlayerTickEvent event) {
+        if (event.player.containerMenu instanceof CraftingMenu menu) {
+            ItemStack result = menu.slots.get(menu.getResultSlotIndex()).getItem();
+            makeItemUnbreakable(event.player, result);
+        }
+    }
+
+    private void makeItemUnbreakable(Player player, ItemStack resultItemStack) {
+        if (JobGetters.hasSuperPowerEnabled(player, job, true)) {
+            if (resultItemStack.getMaxDamage() > 0) {
+                resultItemStack.getOrCreateTag().putBoolean("Unbreakable", true);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
         craftAndRepair(event.getEntity(), event.getCrafting());
 
-        if (JobGetters.hasSuperPowerEnabled(event.getEntity(), job, true)) {
-            if (event.getCrafting().getMaxDamage() > 0) {
-                event.getCrafting().getOrCreateTag().putBoolean("Unbreakable", true);
-            }
-        }
+        makeItemUnbreakable(event.getEntity(), event.getCrafting());
     }
 
     @SubscribeEvent
