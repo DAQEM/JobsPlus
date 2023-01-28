@@ -4,51 +4,52 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class Config {
 
+    public static final ForgeConfigSpec.Builder serverBuilder = new ForgeConfigSpec.Builder();
     public static final String CATEGORY_GENERAL = "general";
     public static final String CATEGORY_CHAT = "chat";
     public static final String CATEGORY_LEVEL_UP = "level_up";
     public static final String CATEGORY_MULTIPLIER = "multiplier";
     public static final String CATEGORY_ALCHEMIST = "alchemist";
     public static final String CATEGORY_MINER = "miner";
-    public static ForgeConfigSpec SERVER_CONFIG;
+    public static final ForgeConfigSpec COMMON_CONFIG;
     //CATEGORY_GENERAL
-    public static ForgeConfigSpec.IntValue JOB_START_COST;
-    public static ForgeConfigSpec.IntValue JOB_STOP_COST;
-    public static ForgeConfigSpec.IntValue POWERUP_COST;
-    public static ForgeConfigSpec.IntValue AMOUNT_OF_FREE_JOBS;
-    public static ForgeConfigSpec.IntValue JOB_LEVEL_TO_STOP_JOB_FOR_FREE;
-    public static ForgeConfigSpec.BooleanValue SET_FIRST_JOB_AS_DISPLAY;
+    public static final ForgeConfigSpec.IntValue JOB_START_COST;
+    public static final ForgeConfigSpec.IntValue JOB_STOP_COST;
+    public static final ForgeConfigSpec.IntValue POWERUP_COST;
+    public static final ForgeConfigSpec.IntValue AMOUNT_OF_FREE_JOBS;
+    public static final ForgeConfigSpec.IntValue JOB_LEVEL_TO_STOP_JOB_FOR_FREE;
+    public static final ForgeConfigSpec.BooleanValue SET_FIRST_JOB_AS_DISPLAY;
 
     //CATEGORY_CHAT
-    public static ForgeConfigSpec.BooleanValue FORMAT_CHAT;
-    public static ForgeConfigSpec.BooleanValue DISPLAY_JOB_IN_CHAT_AND_TAB;
+    public static final ForgeConfigSpec.BooleanValue FORMAT_CHAT;
+    public static final ForgeConfigSpec.BooleanValue DISPLAY_JOB_IN_CHAT_AND_TAB;
 
     //CATEGORY_LEVEL_UP
-    public static ForgeConfigSpec.IntValue COINS_PER_LEVEL_UP;
+    public static final ForgeConfigSpec.IntValue COINS_PER_LEVEL_UP;
 
     //CATEGORY_MULTIPLIER
-    public static ForgeConfigSpec.DoubleValue GLOBAL_EXP_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue GLOBAL_EXP_MULTIPLIER;
 
-    public static ForgeConfigSpec.DoubleValue ALCHEMIST_EXP_MULTIPLIER;
-    public static ForgeConfigSpec.DoubleValue BUILDER_EXP_MULTIPLIER;
-    public static ForgeConfigSpec.DoubleValue DIGGER_EXP_MULTIPLIER;
-    public static ForgeConfigSpec.DoubleValue ENCHANTER_EXP_MULTIPLIER;
-    public static ForgeConfigSpec.DoubleValue FARMER_EXP_MULTIPLIER;
-    public static ForgeConfigSpec.DoubleValue FISHERMAN_EXP_MULTIPLIER;
-    public static ForgeConfigSpec.DoubleValue HUNTER_EXP_MULTIPLIER;
-    public static ForgeConfigSpec.DoubleValue LUMBERJACK_EXP_MULTIPLIER;
-    public static ForgeConfigSpec.DoubleValue MINER_EXP_MULTIPLIER;
-    public static ForgeConfigSpec.DoubleValue SMITH_EXP_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue ALCHEMIST_EXP_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue BUILDER_EXP_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue DIGGER_EXP_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue ENCHANTER_EXP_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue FARMER_EXP_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue FISHERMAN_EXP_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue HUNTER_EXP_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue LUMBERJACK_EXP_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue MINER_EXP_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue SMITH_EXP_MULTIPLIER;
 
     //CATEGORY_ALCHEMIST
-    public static ForgeConfigSpec.BooleanValue ALLOW_ALL_EFFECTS;
-    public static ForgeConfigSpec.BooleanValue ENABLE_POTION_OF_FLIGHT;
+    public static final ForgeConfigSpec.BooleanValue ALLOW_ALL_EFFECTS;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_POTION_OF_FLIGHT;
 
     //CATEGORY_MINER
-    public static ForgeConfigSpec.IntValue MAX_VEIN_MINER_BLOCKS;
+    public static final ForgeConfigSpec.IntValue MAX_VEIN_MINER_BLOCKS;
 
     static {
-        ForgeConfigSpec.Builder serverBuilder = new ForgeConfigSpec.Builder();
+
         serverBuilder.push(CATEGORY_GENERAL);
         JOB_START_COST = serverBuilder.defineInRange("job_start_cost", 10, 1, 1000);
         JOB_STOP_COST = serverBuilder.defineInRange("job_stop_cost", 5, 1, 1000);
@@ -89,7 +90,7 @@ public class Config {
         MAX_VEIN_MINER_BLOCKS = serverBuilder.defineInRange("max_vein_miner_blocks", 511, 0, 4095);
         serverBuilder.pop();
 
-        SERVER_CONFIG = serverBuilder.build();
+        COMMON_CONFIG = serverBuilder.build();
     }
 
 }

@@ -74,7 +74,7 @@ public class SideProxy {
         ModPackets.init();
         HeadData.loadHeadData();
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
+
     }
 
     @SubscribeEvent
