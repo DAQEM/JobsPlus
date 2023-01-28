@@ -28,7 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DropExperienceBlock;
-import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -53,7 +53,7 @@ public class ToolFunctions {
         int toolDamage = -1;
         for (BlockPos pos : brokenBlocks) {
             BlockState state = level.getBlockState(pos);
-            if (breakValidator.canBreak(state) && !(state.getBlock() instanceof ShulkerBoxBlock)) {
+            if (breakValidator.canBreak(state) && !(state.getBlock() instanceof EntityBlock)) {
                 Block block = state.getBlock();
                 ItemStack stack = player.getMainHandItem();
                 if (stack.getItem() instanceof HammerItem) {
@@ -184,7 +184,7 @@ public class ToolFunctions {
 
     @SuppressWarnings("all")
     public static boolean breakInRadius(BlockState state, Level level, BlockPos pos, Player player, Jobs job, int requiredLevel) {
-        if (player.isCrouching() || level.isClientSide || state.getBlock() instanceof ShulkerBoxBlock)
+        if (player.isCrouching() || level.isClientSide || state.getBlock() instanceof EntityBlock)
             return true;
         if (player.getMainHandItem().getOrCreateTag().getInt("mode") == -1) {
             return true;
