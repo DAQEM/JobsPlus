@@ -1,6 +1,5 @@
 package me.daqem.jobsplus.events.jobs;
 
-import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.config.Config;
 import me.daqem.jobsplus.events.EventWaitTicks;
 import me.daqem.jobsplus.handlers.*;
@@ -88,7 +87,6 @@ public class MinerEvents {
                 BlockEntity blockentity = state.hasBlockEntity() ? event.getLevel().getBlockEntity(event.getPos()) : null;
                 List<ItemStack> drops = Block.getDrops(state, (ServerLevel) event.getLevel(), event.getPos(), blockentity, player, player.getMainHandItem());
                 List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops, block);
-                JobsPlus.LOGGER.error("one");
                 if (!stacks.equals(drops)) {
                     event.setCanceled(true);
                     event.getLevel().removeBlock(event.getPos(), false);

@@ -22,7 +22,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -64,7 +63,7 @@ public class ToolFunctions {
                         minerExp += ExpHandler.getEXPMid();
                     } else if (MinerEvents.lowList.contains(block)
                             || state.is(BlockTags.TERRACOTTA)
-                            || (stack.getItem() instanceof PickaxeItem && stack.isCorrectToolForDrops(state))) {
+                            || stack.isCorrectToolForDrops(state)) {
                         minerExp += ExpHandler.getEXPLow();
                     }
                     player.awardStat(Stats.BLOCK_MINED.get(block));
@@ -85,7 +84,6 @@ public class ToolFunctions {
                     int silkLevel = stack.getEnchantmentLevel(Enchantments.SILK_TOUCH);
                     final List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, null, player, stack);
                     final List<ItemStack> stacks = ItemHandler.smeltedRawMaterials(player, drops, block);
-                    JobsPlus.LOGGER.error("two");
                     final int exp = state.getExpDrop(level, level.random, pos, bonusLevel, silkLevel);
 
                     //Add drops to inventory for Digger powerup

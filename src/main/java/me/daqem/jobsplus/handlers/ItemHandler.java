@@ -1,5 +1,6 @@
 package me.daqem.jobsplus.handlers;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.utils.ChatColor;
 import me.daqem.jobsplus.utils.JobGetters;
 import me.daqem.jobsplus.utils.enums.CapType;
@@ -44,8 +45,10 @@ public class ItemHandler {
                             for (SmeltingRecipe smeltingRecipe : allRecipesFor) {
                                 for (Ingredient ingredient : smeltingRecipe.getIngredients()) {
                                     for (ItemStack item : ingredient.getItems()) {
-                                        if (item.is(block.asItem().asItem())) {
+                                        if (item.is(drop.getItem())) {
                                             newDrops.add(smeltingRecipe.getResultItem());
+                                            JobsPlus.LOGGER.error("Smelted " + item + " to " + smeltingRecipe.getResultItem());
+                                            JobsPlus.LOGGER.error("Drops: " + drops);
                                         }
                                     }
                                 }
