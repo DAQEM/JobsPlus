@@ -121,7 +121,8 @@ public class ItemHandler {
         CompoundTag tag = stack.getOrCreateTag();
         if (!tag.contains(MODE)) tag.putInt(MODE, 0);
         int tagInt = tag.getInt(MODE);
-        if ((stack.getDescriptionId().contains("_level_2") && tagInt != 1)
+        if ((stack.getDescriptionId().contains("_level_1") && tagInt != 0)
+                || (stack.getDescriptionId().contains("_level_2") && tagInt != 1)
                 || (stack.getDescriptionId().contains("_level_3") && tagInt != 2)
                 || (stack.getDescriptionId().contains("_level_4") && tagInt != 3)) {
             tag.putInt(MODE, ++tagInt);
