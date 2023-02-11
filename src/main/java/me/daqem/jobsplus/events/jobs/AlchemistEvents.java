@@ -1,8 +1,10 @@
 package me.daqem.jobsplus.events.jobs;
 
+import me.daqem.jobsplus.JobsPlus;
 import me.daqem.jobsplus.handlers.CropHandler;
 import me.daqem.jobsplus.handlers.ExpHandler;
 import me.daqem.jobsplus.utils.JobGetters;
+import me.daqem.jobsplus.utils.enums.CapType;
 import me.daqem.jobsplus.utils.enums.Jobs;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;

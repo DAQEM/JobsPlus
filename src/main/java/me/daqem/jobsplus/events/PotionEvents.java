@@ -52,7 +52,7 @@ public class PotionEvents {
                 if (JobGetters.hasPowerupEnabled(player, job, CapType.POWER_UP1.get(), true)) {
                     if (effect.getEffect().getCategory() == MobEffectCategory.HARMFUL || effect.getEffect() == MobEffects.BAD_OMEN) {
                         if (player instanceof ServerPlayer serverPlayer) {
-                            EventPlayerTick.removeEffect.put(serverPlayer, effect.getEffect());
+                            EventPlayerTick.addRemoveEffect(serverPlayer, effect.getEffect());
                             HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, JobsPlus.translatable("potion.removed.bad").withStyle(ChatFormatting.GREEN));
                         }
                     }
@@ -97,7 +97,7 @@ public class PotionEvents {
             }
             if (!pass.get() && !Config.ALLOW_ALL_EFFECTS.get()) {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    EventPlayerTick.removeEffect.put(serverPlayer, effect.getEffect());
+                    EventPlayerTick.addRemoveEffect(serverPlayer, effect.getEffect());
                     HotbarMessageHandler.sendHotbarMessageServer(serverPlayer, ChatColor.red() + "You are not allowed to use this effect yet.");
                 }
             }

@@ -10,13 +10,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EventPlayerTick {
 
     public static HashMap<ServerPlayer, Integer> levelUpHashMap = new HashMap<>();
-    public static HashMap<ServerPlayer, MobEffect> removeEffect = new HashMap<>();
+    public static HashMap<ServerPlayer, ArrayList<MobEffect>> removeEffect = new HashMap<>();
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -46,9 +48,17 @@ public class EventPlayerTick {
                 }
             }
             if (removeEffect.containsKey(serverPlayer)) {
-                serverPlayer.removeEffect(removeEffect.get(serverPlayer));
+                removeEffect.get(serverPlayer).forEach(serverPlayer::removeEffect);
                 removeEffect.remove(serverPlayer);
             }
+        }
+    }
+
+    public static void addRemoveEffect(ServerPlayer player, MobEffect effect) {
+        if (removeEffect.containsKey(player)) {
+            removeEffect.get(player).add(effect);
+        } else {
+            removeEffect.put(player, new ArrayList<>(List.of(effect)));
         }
     }
 }
