@@ -192,10 +192,6 @@ public class FarmerEvents {
         if (block == Blocks.SUGAR_CANE || block == Blocks.CACTUS || block == Blocks.PUMPKIN || block == Blocks.MELON || block == Blocks.BAMBOO || block == Blocks.KELP_PLANT) {
             blockPosArrayList.add(event.getPos());
         }
-
-        if (block instanceof BonemealableBlock) {
-            ExpHandler.addEXPLowest(player, job);
-        }
     }
 
     @SubscribeEvent
