@@ -219,6 +219,7 @@ public class SmithEvents {
         final Map<Enchantment, Integer> enchantmentsLeft = EnchantmentHelper.getEnchantments(left);
         if (enchantmentsLeft.isEmpty()) return;
         EnchantmentHelper.setEnchantments(enchantmentsLeft, out);
+        event.setMaterialCost(1);
         event.setCost(5);
         event.setOutput(out);
     }
