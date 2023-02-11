@@ -33,7 +33,7 @@ public record PacketMoveConstructionRecipe(boolean hasShiftDown, CompoundTag rec
                                 ItemStack inventorySlotItem = menu.getSlot(invSlotIndex).getItem();
                                 String inventorySlotItemName = inventorySlotItem.getDescriptionId();
                                 if (craftingSlotItemName.equals(inventorySlotItemName)) {
-                                    if (!inventorySlotItem.hasTag()) {
+                                    if (!inventorySlotItem.hasTag() && inventorySlotItem.getMaxStackSize() > craftSlotIndex) {
                                         if (!menu.getSlot(craftSlotIndex).hasItem() ||
                                                 menu.getSlot(craftSlotIndex).getItem().is(menu.getSlot(invSlotIndex).getItem().getItem())) {
                                             ItemStack copy = inventorySlotItem.copy();
