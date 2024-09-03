@@ -11,6 +11,7 @@ import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.*;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
@@ -51,14 +52,14 @@ public class JobExperiencePercentageCondition extends AbstractCondition {
         }
 
         @Override
-        public JobExperiencePercentageCondition fromNetwork(ResourceLocation location, FriendlyByteBuf friendlyByteBuf, boolean inverted) {
+        public JobExperiencePercentageCondition fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, boolean inverted) {
             return new JobExperiencePercentageCondition(
                     inverted,
                     friendlyByteBuf.readDouble());
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, JobExperiencePercentageCondition type) {
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobExperiencePercentageCondition type) {
             IConditionSerializer.super.toNetwork(friendlyByteBuf, type);
             friendlyByteBuf.writeDouble(type.percentage);
         }

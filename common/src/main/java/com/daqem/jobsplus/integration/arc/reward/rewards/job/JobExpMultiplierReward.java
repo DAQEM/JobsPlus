@@ -15,6 +15,7 @@ import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
@@ -69,12 +70,12 @@ public class JobExpMultiplierReward extends AbstractReward {
             return new JobExpMultiplierReward(
                     chance,
                     priority,
-                    new ResourceLocation(GsonHelper.getAsString(jsonObject, "job")),
+                    getResourceLocation(jsonObject, "job"),
                     GsonHelper.getAsDouble(jsonObject, "multiplier"));
         }
 
         @Override
-        public JobExpMultiplierReward fromNetwork(FriendlyByteBuf friendlyByteBuf, double chance, int priority) {
+        public JobExpMultiplierReward fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, double chance, int priority) {
             return new JobExpMultiplierReward(
                     chance,
                     priority,
@@ -83,7 +84,7 @@ public class JobExpMultiplierReward extends AbstractReward {
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, JobExpMultiplierReward type) {
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobExpMultiplierReward type) {
             IRewardSerializer.super.toNetwork(friendlyByteBuf, type);
             friendlyByteBuf.writeResourceLocation(type.jobLocation);
             friendlyByteBuf.writeDouble(type.multiplier);

@@ -116,10 +116,10 @@ public class JobCommand {
                             if (serverPlayer != null) {
                                 serverPlayer.getAttributes().getSyncableAttributes().forEach(attribute -> {
                                     serverPlayer.sendSystemMessage(JobsPlus.literal(
-                                            attribute.getAttribute().getDescriptionId() + ": " + attribute.getValue()
+                                            attribute.getAttribute().getRegisteredName() + ": " + attribute.getValue()
                                     ));
                                     attribute.getModifiers().forEach(attributeModifier -> serverPlayer.sendSystemMessage(JobsPlus.literal(
-                                            attributeModifier.getName() + ": " + attributeModifier.getAmount()
+                                            attributeModifier.id() + ": " + attributeModifier.amount()
                                     )));
                                     serverPlayer.sendSystemMessage(JobsPlus.literal(" "));
                                 });

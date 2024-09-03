@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 
 public class PowerupWidget {
 
-    private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
+    private static final ResourceLocation WIDGETS_LOCATION = ResourceLocation.parse("textures/gui/advancements/widgets.png");
     public final static int HEIGHT = 29;
     public final static int WIDTH = 28;
 
@@ -397,7 +397,7 @@ public class PowerupWidget {
         }
         int lines = 32 + var10001 * 9 + priceExtraHeight + textHeight + heightBetweenText + textHeight;
 
-        guiGraphics.blitNineSliced(WIDGETS_LOCATION, x - 4, y + 2, totalWidth, lines, 10, 200, 26, 0, 52);
+        guiGraphics.blitSprite(WIDGETS_LOCATION, x - 4, y + 2, totalWidth, lines, 10, 200, 26, 0, 52);
         if (this.getPowerupState() == PowerupState.NOT_OWNED || this.getPowerupState() == PowerupState.LOCKED) {
             guiGraphics.blit(WIDGETS_LOCATION, x - 4 + 2, y + 2 + lines - 28, 2, 52 + 26 - 10 + 5, totalWidth - 4, 1);
         }

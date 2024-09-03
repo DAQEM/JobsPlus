@@ -16,6 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -113,11 +114,16 @@ public class PowerupInstance extends AbstractActionHolder {
         @Override
         public PowerupInstance deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
+            return fromJson(jsonObject, getResourceLocation(jsonObject, "location"));
+        }
+
+        @Override
+        public PowerupInstance fromJson(JsonObject jsonObject, ResourceLocation resourceLocation) {
             String parentLocation = GsonHelper.getAsString(jsonObject, "parent", null);
             return new PowerupInstance(
-                    new ResourceLocation(GsonHelper.getAsString(jsonObject, "location")),
-                    new ResourceLocation(GsonHelper.getAsString(jsonObject, "job")),
-                    parentLocation == null ? null : new ResourceLocation(parentLocation),
+                    resourceLocation,
+                    getResourceLocation(jsonObject, "job"),
+                    parentLocation == null ? null : ResourceLocation.parse(parentLocation),
                     GsonHelper.getAsString(jsonObject, "name"),
                     GsonHelper.getAsString(jsonObject, "description"),
                     getItemStack(GsonHelper.getAsJsonObject(jsonObject, "icon")),
@@ -126,29 +132,21 @@ public class PowerupInstance extends AbstractActionHolder {
         }
 
         @Override
-        public PowerupInstance fromJson(ResourceLocation location, JsonObject jsonObject, int i) {
-            return null;
-        }
-
-        @Override
-        public PowerupInstance fromNetwork(ResourceLocation location, FriendlyByteBuf friendlyByteBuf, int i) {
-            return fromNetwork(friendlyByteBuf);
-        }
-
-        public PowerupInstance fromNetwork(FriendlyByteBuf friendlyByteBuf) {
+        public PowerupInstance fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, ResourceLocation resourceLocation) {
             return new PowerupInstance(
                     friendlyByteBuf.readResourceLocation(),
                     friendlyByteBuf.readResourceLocation(),
                     friendlyByteBuf.readBoolean() ? friendlyByteBuf.readResourceLocation() : null,
                     friendlyByteBuf.readUtf(),
                     friendlyByteBuf.readUtf(),
-                    friendlyByteBuf.readItem(),
+                    ItemStack.STREAM_CODEC.decode(friendlyByteBuf),
                     friendlyByteBuf.readInt(),
                     friendlyByteBuf.readInt()
             );
         }
 
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, PowerupInstance powerupInstance) {
+        @Override
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, PowerupInstance powerupInstance) {
             friendlyByteBuf.writeResourceLocation(powerupInstance.getLocation());
             friendlyByteBuf.writeResourceLocation(powerupInstance.getJobLocation());
             friendlyByteBuf.writeBoolean(powerupInstance.getParentLocation() != null);
@@ -157,9 +155,10 @@ public class PowerupInstance extends AbstractActionHolder {
             }
             friendlyByteBuf.writeUtf(powerupInstance.getName());
             friendlyByteBuf.writeUtf(powerupInstance.getDescription());
-            friendlyByteBuf.writeItem(powerupInstance.getIcon());
+            ItemStack.STREAM_CODEC.encode(friendlyByteBuf, powerupInstance.getIcon());
             friendlyByteBuf.writeInt(powerupInstance.getPrice());
             friendlyByteBuf.writeInt(powerupInstance.getRequiredLevel());
+            IActionHolderSerializer.super.toNetwork(friendlyByteBuf, powerupInstance);
         }
     }
 }

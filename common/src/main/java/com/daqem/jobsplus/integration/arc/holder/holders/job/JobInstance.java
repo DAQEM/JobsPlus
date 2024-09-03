@@ -17,6 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -128,47 +129,43 @@ public class JobInstance extends AbstractActionHolder {
 
         @Override
         public JobInstance deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            JsonObject json = element.getAsJsonObject();
+            JsonObject jsonObject = element.getAsJsonObject();
+            return fromJson(jsonObject, getResourceLocation(jsonObject, "location"));
+        }
+
+        @Override
+        public JobInstance fromJson(JsonObject jsonObject, ResourceLocation resourceLocation) {
             return new JobInstance(
-                    new ResourceLocation(GsonHelper.getAsString(json, "location")),
-                    GsonHelper.getAsInt(json, "price"),
-                    GsonHelper.getAsInt(json, "max_level"),
-                    GsonHelper.getAsString(json, "color"),
-                    getItemStack(GsonHelper.getAsJsonObject(json, "icon")),
-                    new ResourceLocation(GsonHelper.getAsString(json, "background", "minecraft:textures/block/stone.png")),
-                    GsonHelper.getAsBoolean(json, "is_default", false));
+                    resourceLocation,
+                    GsonHelper.getAsInt(jsonObject, "price"),
+                    GsonHelper.getAsInt(jsonObject, "max_level"),
+                    GsonHelper.getAsString(jsonObject, "color"),
+                    getItemStack(GsonHelper.getAsJsonObject(jsonObject, "icon")),
+                    ResourceLocation.parse(GsonHelper.getAsString(jsonObject, "background", "minecraft:textures/block/stone.png")),
+                    GsonHelper.getAsBoolean(jsonObject, "is_default", false));
         }
 
-        @Override
-        public JobInstance fromJson(ResourceLocation location, JsonObject jsonObject, int i) {
-            return null;
-        }
-
-        @Override
-        public JobInstance fromNetwork(ResourceLocation location, FriendlyByteBuf friendlyByteBuf, int i) {
-            return fromNetwork(friendlyByteBuf);
-        }
-
-        public JobInstance fromNetwork(FriendlyByteBuf friendlyByteBuf) {
+        public JobInstance fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, ResourceLocation resourceLocation) {
             return new JobInstance(
                     friendlyByteBuf.readResourceLocation(),
                     friendlyByteBuf.readVarInt(),
                     friendlyByteBuf.readVarInt(),
                     friendlyByteBuf.readUtf(),
-                    friendlyByteBuf.readItem(),
+                    ItemStack.STREAM_CODEC.decode(friendlyByteBuf),
                     friendlyByteBuf.readResourceLocation(),
                     friendlyByteBuf.readBoolean()
             );
         }
 
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, JobInstance jobInstance) {
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobInstance jobInstance) {
             friendlyByteBuf.writeResourceLocation(jobInstance.location);
             friendlyByteBuf.writeVarInt(jobInstance.price);
             friendlyByteBuf.writeVarInt(jobInstance.maxLevel);
             friendlyByteBuf.writeUtf(jobInstance.color);
-            friendlyByteBuf.writeItem(jobInstance.iconItem);
+            ItemStack.STREAM_CODEC.encode(friendlyByteBuf, jobInstance.iconItem);
             friendlyByteBuf.writeResourceLocation(jobInstance.powerupBackground);
             friendlyByteBuf.writeBoolean(jobInstance.isDefault);
+            IActionHolderSerializer.super.toNetwork(friendlyByteBuf, jobInstance);
         }
     }
 }

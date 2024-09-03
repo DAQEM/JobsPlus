@@ -75,8 +75,8 @@ public class ConfirmationScreen extends AbstractScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(guiGraphics);
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(guiGraphics, mouseX, mouseY, delta);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderColor.normal();
         RenderSystem.setShaderTexture(0, BACKGROUND);
@@ -92,7 +92,7 @@ public class ConfirmationScreen extends AbstractScreen {
         drawMessage(guiGraphics);
         drawButtonMessages(guiGraphics);
 
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        super.render(guiGraphics, mouseX, mouseY, delta);
     }
 
     private void drawButtons(@NotNull GuiGraphics guiGraphics) {

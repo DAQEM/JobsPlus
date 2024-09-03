@@ -136,7 +136,7 @@ public class Job {
 
     public static Job fromNBT(JobsPlayer player, CompoundTag tag) {
 
-        ResourceLocation jobInstanceLocation = new ResourceLocation(tag.getString(Constants.JOB_INSTANCE_LOCATION));
+        ResourceLocation jobInstanceLocation = ResourceLocation.parse(tag.getString(Constants.JOB_INSTANCE_LOCATION));
         int level = tag.getInt(Constants.LEVEL);
         int exp = tag.getInt(Constants.EXPERIENCE);
         ListTag powerupsTag = tag.getList(Constants.POWERUPS, Tag.TAG_COMPOUND);
@@ -145,7 +145,7 @@ public class Job {
 
         for (int i = 0; i < powerupsTag.size(); i++) {
             CompoundTag powerupTag = powerupsTag.getCompound(i);
-            ResourceLocation powerupLocation = new ResourceLocation(powerupTag.getString(Constants.POWERUP_LOCATION));
+            ResourceLocation powerupLocation = ResourceLocation.parse(powerupTag.getString(Constants.POWERUP_LOCATION));
             PowerupState state = PowerupState.valueOf(powerupTag.getString(Constants.POWERUP_STATE));
 
             powerups.add(new Powerup(PowerupInstance.of(powerupLocation), state));

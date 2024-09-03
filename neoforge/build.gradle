@@ -1,20 +1,19 @@
 //file:noinspection GroovyAssignabilityCheck
-//file:noinspection DependencyNotationArgument
 //file:noinspection GrDeprecatedAPIUsage
+//file:noinspection DependencyNotationArgument
 plugins {
-    id 'com.github.johnrengelman.shadow'
+    id "com.github.johnrengelman.shadow"
     id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'com.modrinth.minotaur' version '2.+'
+    id "com.modrinth.minotaur" version "2.+"
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
 architectury {
     platformSetupLoomIde()
-    fabric()
-}
-
-loom {
-    //noinspection GroovyAccessibility
-    accessWidenerPath = project(":common").loom.accessWidenerPath
+    neoForge()
 }
 
 configurations {
@@ -24,7 +23,7 @@ configurations {
     }
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentFabric.extendsFrom common
+    developmentNeoForge.extendsFrom common
 
     // Files in this configuration will be bundled into your mod using the Shadow plugin.
     // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
@@ -34,18 +33,26 @@ configurations {
     }
 }
 
+repositories {
+    maven {
+        name = 'NeoForged'
+        url = 'https://maven.neoforged.net/releases'
+    }
+}
+
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-    modApi "dev.architectury:architectury-fabric:${project.architectury_version}"
+    neoForge "net.neoforged:neoforge:${project.neoforge_version}"
+    // Remove the next line if you don't want to depend on the API
+    modApi "dev.architectury:architectury-neoforge:${project.architectury_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
+    shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
 
-    modImplementation "curse.maven:supermartijn642s-config-lib-438332:${project.config_library_file_fabric}"
-    modImplementation "curse.maven:arc-883593:${project.arc_file_fabric}"
-    modImplementation "curse.maven:item-restrictions-887774:${project.item_restrictions_file_fabric}"
-    modImplementation "curse.maven:ui-933200:${project.ui_library_file_fabric}"
+    // Config library
+    modImplementation "curse.maven:supermartijn642s-config-lib-438332:${project.config_library_file_neoforge}"
+    modImplementation "curse.maven:arc-883593:${project.arc_file_neoforge}"
+    modImplementation "curse.maven:item-restrictions-887774:${project.item_restrictions_file_neoforge}"
+    modImplementation "curse.maven:ui-933200:${project.ui_library_file_neoforge}"
 }
 
 processResources {
@@ -56,11 +63,10 @@ processResources {
             "mod_description": project.mod_description,
             "mod_author": project.mod_author,
             "mod_license": project.mod_license,
-            "mod_website": project.mod_website,
             "mod_repository": project.mod_repository,
 
-            "fabric_loader_version": project.fabric_loader_version,
-            "fabric_api_version": project.fabric_api_version,
+            "neoforge_loader_version": project.neoforge_loader_version,
+            "neoforge_version": project.neoforge_version,
             "minecraft_version": project.minecraft_version,
             "architectury_version": project.architectury_version,
             "config_library_version": project.config_library_version,
@@ -70,23 +76,25 @@ processResources {
     ]
     inputs.properties replaceProperties
 
-    filesMatching(['fabric.mod.json']) {
+    filesMatching(['META-INF/neoforge.mods.toml']) {
         expand replaceProperties
     }
 }
 
 shadowJar {
+    exclude "architectury.common.json"
+
     configurations = [project.configurations.shadowBundle]
-    archiveClassifier = "fabric-dev-shadow"
+    archiveClassifier = "neoforge-dev-shadow"
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
-    archiveClassifier = "fabric"
+    inputFile.set shadowJar.archiveFile
+    archiveClassifier = "neoforge"
 }
 
 remapSourcesJar {
-    archiveClassifier = "fabric-sources"
+    archiveClassifier = "neoforge-sources"
 }
 
 curseforge {
@@ -102,7 +110,7 @@ curseforge {
         }
 
         addGameVersion "Java 21"
-        addGameVersion "Fabric"
+        addGameVersion "NeoForge"
 
         relations {
             project.curseforge_dependencies.split(',').each { dep ->
@@ -111,7 +119,7 @@ curseforge {
         }
 
         mainArtifact(remapJar) {
-            displayName = "$project.mod_name Fabric $project.minecraft_version - $project.mod_version"
+            displayName = "$project.mod_name NeoForge $project.minecraft_version - $project.mod_version"
         }
 
         addArtifact(remapSourcesJar) {
@@ -122,13 +130,13 @@ curseforge {
 modrinth {
     token = System.getenv("MODRINTH_API_KEY")
     projectId = project.modrinth_project_id
-    versionName = "$project.mod_name Fabric $project.minecraft_version - $project.mod_version"
+    versionName = "$project.mod_name NeoForge $project.minecraft_version - $project.mod_version"
     versionNumber = "$project.mod_version"
     versionType = "$project.release_type"
     uploadFile = remapJar
     additionalFiles = [remapSourcesJar]
     gameVersions = project.supported_minecraft_versions.split(',').toList()
-    loaders = ["fabric"]
+    loaders = ["neoforge"]
     changelog = rootProject.file('changelog.md').text
     dependencies {
         project.modrinth_dependencies.split(',').each { dep ->

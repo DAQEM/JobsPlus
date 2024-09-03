@@ -11,6 +11,7 @@ import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.*;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
@@ -30,7 +31,7 @@ public class JobLevelCondition extends AbstractCondition implements IJobConditio
     @Override
     public boolean isMet(ActionData actionData) {
         JobInstance jobInstance;
-        if (!jobLocation.equals(new ResourceLocation(EMPTY_JOB_LOCATION))) {
+        if (!jobLocation.equals(ResourceLocation.parse(EMPTY_JOB_LOCATION))) {
             jobInstance = JobInstance.of(jobLocation);
         } else if (actionData.getSourceActionHolder() instanceof JobInstance jobInstance2) {
             jobInstance = jobInstance2;
@@ -69,12 +70,12 @@ public class JobLevelCondition extends AbstractCondition implements IJobConditio
         public JobLevelCondition fromJson(ResourceLocation location, JsonObject jsonObject, boolean inverted) {
             return new JobLevelCondition(
                     inverted,
-                    new ResourceLocation(GsonHelper.getAsString(jsonObject, "job", EMPTY_JOB_LOCATION)),
+                    ResourceLocation.parse(GsonHelper.getAsString(jsonObject, "job", EMPTY_JOB_LOCATION)),
                     GsonHelper.getAsInt(jsonObject, "level"));
         }
 
         @Override
-        public JobLevelCondition fromNetwork(ResourceLocation location, FriendlyByteBuf friendlyByteBuf, boolean inverted) {
+        public JobLevelCondition fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, boolean inverted) {
             return new JobLevelCondition(
                     inverted,
                     friendlyByteBuf.readResourceLocation(),
@@ -82,7 +83,7 @@ public class JobLevelCondition extends AbstractCondition implements IJobConditio
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, JobLevelCondition type) {
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobLevelCondition type) {
             IConditionSerializer.super.toNetwork(friendlyByteBuf, type);
             friendlyByteBuf.writeResourceLocation(type.jobLocation);
             friendlyByteBuf.writeInt(type.level);

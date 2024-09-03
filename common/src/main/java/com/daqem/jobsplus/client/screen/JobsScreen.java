@@ -85,8 +85,8 @@ public class JobsScreen extends AbstractScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(guiGraphics);
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(guiGraphics, mouseX, mouseY, delta);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderColor.normal();
         RenderSystem.setShaderTexture(0, BACKGROUND);
@@ -105,7 +105,7 @@ public class JobsScreen extends AbstractScreen {
         this.renderTooltip(guiGraphics, mouseX, mouseY);
         this.renderItems(guiGraphics);
         this.renderTexts(guiGraphics);
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        super.render(guiGraphics, mouseX, mouseY, delta);
     }
 
     @Override

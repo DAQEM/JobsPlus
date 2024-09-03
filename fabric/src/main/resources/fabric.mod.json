@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "id": "jobsplus",
+  "id": "${mod_id}",
   "version": "${version}",
-  "name": "Jobs+",
-  "description": "",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
   "authors": [
-    "DAQEM"
+    "${mod_author}"
   ],
   "contact": {
-    "homepage": "https://daqem.com/",
-    "sources": "https://github.com/DAQEM/JobsPlusRemastered"
+    "homepage": "${mod_website}",
+    "sources": "${mod_repository}"
   },
-  "license": "MIT",
+  "license": "${mod_license}",
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
@@ -27,9 +27,9 @@
     "jobsplus-common.mixins.json"
   ],
   "depends": {
-    "fabric": "*",
-    "minecraft": ">=1.20.1",
-    "architectury": ">=9.1.12",
+    "fabric": ">=${fabric_api_version}",
+    "minecraft": ">=${minecraft_version}",
+    "architectury": ">=${architectury_version}",
     "supermartijn642configlib": ">=${config_library_version}",
     "arc": ">=${arc_version}",
     "itemrestrictions": ">=${item_restrictions_version}",

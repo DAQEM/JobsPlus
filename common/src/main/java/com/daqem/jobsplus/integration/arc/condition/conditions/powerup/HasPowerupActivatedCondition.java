@@ -16,6 +16,7 @@ import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class HasPowerupActivatedCondition extends AbstractCondition  {
@@ -58,14 +59,14 @@ public class HasPowerupActivatedCondition extends AbstractCondition  {
         }
 
         @Override
-        public HasPowerupActivatedCondition fromNetwork(ResourceLocation location, FriendlyByteBuf friendlyByteBuf, boolean inverted) {
+        public HasPowerupActivatedCondition fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, boolean inverted) {
             return new HasPowerupActivatedCondition(
                     inverted,
                     friendlyByteBuf.readResourceLocation());
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, HasPowerupActivatedCondition type) {
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, HasPowerupActivatedCondition type) {
             IConditionSerializer.super.toNetwork(friendlyByteBuf, type);
             friendlyByteBuf.writeResourceLocation(type.powerupLocation);
         }

@@ -67,7 +67,7 @@ public class PowerUpsScreen extends AbstractScreen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float ticks) {
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         this.startX = (double) (this.width - WINDOW_WIDTH) / 2;
         this.startY = (double) (this.height - WINDOW_HEIGHT) / 2;
 
@@ -84,7 +84,7 @@ public class PowerUpsScreen extends AbstractScreen {
             this.centered = true;
         }
 
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, delta);
         guiGraphics.fill((int) (WINDOW_WIDTH + startX) + 21, (int) (WINDOW_HEIGHT + startY) + 24, (int) this.startX - 16 - 6, (int) this.startY - 16 - 18, 0x80000000);
 
 
@@ -106,7 +106,7 @@ public class PowerUpsScreen extends AbstractScreen {
         }
 
         if (isHoveringInWindow(mouseX, mouseY)) {
-            PoseStack hoverPoseStack = RenderSystem.getModelViewStack();
+            PoseStack hoverPoseStack =  guiGraphics.pose();
             hoverPoseStack.pushPose();
             hoverPoseStack.translate(0, 0, 400);
             RenderSystem.applyModelViewMatrix();
@@ -140,7 +140,7 @@ public class PowerUpsScreen extends AbstractScreen {
         guiGraphics.disableScissor();
 
         //Border
-        PoseStack borderPoseStack = RenderSystem.getModelViewStack();
+        PoseStack borderPoseStack = guiGraphics.pose();
         borderPoseStack.pushPose();
         borderPoseStack.translate(0, 0, 300);
         RenderSystem.applyModelViewMatrix();
@@ -154,11 +154,11 @@ public class PowerUpsScreen extends AbstractScreen {
         int textureHeight = 140;
         int borderSize = 9;
         int borderSizeTop = 18;
-        guiGraphics.blit(new ResourceLocation("textures/gui/advancements/window.png"), (int) this.startX - 16 - borderSize, (int) this.startY - 16 - borderSizeTop, 0.0F, 0.0F, width / 2 + borderSize, textureHeight / 2 + borderSizeTop + borderSize + 1, 256, 256);
-        guiGraphics.blit(new ResourceLocation("textures/gui/advancements/window.png"), (int) this.startX - 16 - borderSize + (width / 2 + borderSize), (int) this.startY - 16 - borderSizeTop, (float) textureWidth / 2 - borderSize * 2, 0.0F, width / 2 + borderSize, textureHeight / 2 + borderSizeTop + borderSize + 1, 256, 256);
+        guiGraphics.blit(ResourceLocation.parse("textures/gui/advancements/window.png"), (int) this.startX - 16 - borderSize, (int) this.startY - 16 - borderSizeTop, 0.0F, 0.0F, width / 2 + borderSize, textureHeight / 2 + borderSizeTop + borderSize + 1, 256, 256);
+        guiGraphics.blit(ResourceLocation.parse("textures/gui/advancements/window.png"), (int) this.startX - 16 - borderSize + (width / 2 + borderSize), (int) this.startY - 16 - borderSizeTop, (float) textureWidth / 2 - borderSize * 2, 0.0F, width / 2 + borderSize, textureHeight / 2 + borderSizeTop + borderSize + 1, 256, 256);
 
-        guiGraphics.blit(new ResourceLocation("textures/gui/advancements/window.png"), (int) this.startX - 16 - borderSize, (int) this.startY - 16 - borderSize + height / 2 + borderSize, 0.0F, (float) textureHeight / 2 - borderSize * 2, width / 2 + borderSize, textureHeight / 2 + borderSizeTop, 256, 256);
-        guiGraphics.blit(new ResourceLocation("textures/gui/advancements/window.png"), (int) this.startX - 16 - borderSize + (width / 2 + borderSize), (int) this.startY - 16 - borderSize + height / 2 + borderSize, (float) textureWidth / 2 - borderSize * 2, (float) textureHeight / 2 - borderSize * 2, width / 2 + borderSize, textureHeight / 2 + borderSizeTop, 256, 256);
+        guiGraphics.blit(ResourceLocation.parse("textures/gui/advancements/window.png"), (int) this.startX - 16 - borderSize, (int) this.startY - 16 - borderSize + height / 2 + borderSize, 0.0F, (float) textureHeight / 2 - borderSize * 2, width / 2 + borderSize, textureHeight / 2 + borderSizeTop, 256, 256);
+        guiGraphics.blit(ResourceLocation.parse("textures/gui/advancements/window.png"), (int) this.startX - 16 - borderSize + (width / 2 + borderSize), (int) this.startY - 16 - borderSize + height / 2 + borderSize, (float) textureWidth / 2 - borderSize * 2, (float) textureHeight / 2 - borderSize * 2, width / 2 + borderSize, textureHeight / 2 + borderSizeTop, 256, 256);
         borderPoseStack.popPose();
     }
 
