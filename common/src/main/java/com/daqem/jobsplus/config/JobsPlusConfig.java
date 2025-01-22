@@ -10,6 +10,7 @@ public class JobsPlusConfig {
 
     public static final Supplier<Boolean> enableDefaultJobs;
     public static final Supplier<Integer> amountOfFreeJobs;
+    public static final Supplier<Integer> maxJobs;
     public static final Supplier<Integer> jobStopRefundPercentage;
     public static final Supplier<Boolean> allowJobStopRefund;
 
@@ -23,6 +24,7 @@ public class JobsPlusConfig {
         config.push("jobs");
         enableDefaultJobs = config.comment("if true, the default jobs are enabled. WARNING: setting this to false will erase all the stats for these jobs").define("enable_default_jobs", true);
         amountOfFreeJobs = config.comment("the amount of free jobs a player can have").define("amount_of_free_jobs", 2, 0, Integer.MAX_VALUE);
+        maxJobs = config.comment("the maximum amount of jobs a player can have").define("max_jobs", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
         jobStopRefundPercentage = config.comment("the percentage of the job cost that is refunded when a player stops a job").define("job_stop_refund_percentage", 50, 0, 100);
         allowJobStopRefund = config.comment("if true, players can stop a job and get a refund").define("allow_job_stop_refund", false);
         config.push("coins");

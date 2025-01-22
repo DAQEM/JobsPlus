@@ -4,7 +4,7 @@
   "name": "Shovel Efficiency III",
   "description": "Shovels dig 30% faster.",
   "icon": {
-    "item": "minecraft:golden_shovel",
+    "id": "minecraft:golden_shovel",
     "count": 3
   },
   "price": 10,

@@ -1,6 +1,6 @@
 package com.daqem.jobsplus.client;
 
-import com.daqem.jobsplus.event.client.EventKeyPressed;
+import com.daqem.jobsplus.client.event.EventKeyPressed;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;

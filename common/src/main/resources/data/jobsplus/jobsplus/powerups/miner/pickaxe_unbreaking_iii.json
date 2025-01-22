@@ -4,7 +4,7 @@
   "name": "Pickaxe Unbreaking III",
   "description": "Pickaxes are 30% less likely to take damage when used.",
   "icon": {
-    "item": "minecraft:diamond_pickaxe",
+    "id": "minecraft:diamond_pickaxe",
     "count": 3
   },
   "price": 10,

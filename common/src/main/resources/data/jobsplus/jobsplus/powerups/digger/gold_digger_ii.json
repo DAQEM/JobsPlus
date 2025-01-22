@@ -4,7 +4,7 @@
   "name": "Gold Digger II",
   "description": "Grants a 3% chance to find a gold ingot when digging.",
   "icon": {
-    "item": "minecraft:gold_ingot",
+    "id": "minecraft:gold_ingot",
     "count": 2
   },
   "price": 8,

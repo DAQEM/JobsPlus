@@ -4,7 +4,7 @@
   "name": "Harmful Potion Immunity III",
   "description": "Become 60% immune to harmful potions.",
   "icon": {
-    "item": "minecraft:potion",
+    "id": "minecraft:potion",
     "tag": "{Potion:\"minecraft:poison\"}",
     "count": 3
   },

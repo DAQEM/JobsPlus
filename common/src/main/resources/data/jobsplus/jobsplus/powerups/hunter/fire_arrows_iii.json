@@ -4,7 +4,7 @@
   "name": "Fire Arrows III",
   "description": "Arrows have a 100% chance to ignite.",
   "icon": {
-    "item": "minecraft:fire_charge",
+    "id": "minecraft:fire_charge",
     "count": 3
   },
   "price": 10,

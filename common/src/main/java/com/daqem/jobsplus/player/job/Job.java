@@ -3,6 +3,7 @@ package com.daqem.jobsplus.player.job;
 import com.daqem.jobsplus.Constants;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.event.triggers.JobEvents;
+import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.exp.ExpCollector;
@@ -12,11 +13,13 @@ import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
+import dev.architectury.networking.NetworkManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -65,6 +68,7 @@ public class Job {
 
     public void setLevel(int level) {
         this.level = level;
+        syncWithClient();
     }
 
     public int getExperience() {
@@ -72,17 +76,16 @@ public class Job {
     }
 
     public void setExperience(int experience) {
+        JobEvents.onJobExperience(player, this, experience - this.experience);
         expCollector.addExp(experience - this.experience);
         this.experience = experience;
-        while (this.experience >= getExperienceToLevelUp(level)) {
-            checkForLevelUp();
-        }
+        checkForLevelUp();
+        syncWithClient();
     }
 
     public void addExperience(int experience) {
         JobsPlus.debug("Adding {} experience to {}'s {} job.", experience, player.jobsplus$getName(), jobInstance.getName().getString());
         setExperience(getExperience() + experience);
-        JobEvents.onJobExperience(player, this, experience);
     }
 
     public void addExperienceWithoutEvent(int experience) {
@@ -93,12 +96,18 @@ public class Job {
     private void checkForLevelUp() {
         int experienceToLevelUp = getExperienceToLevelUp(level);
         if (experience >= experienceToLevelUp) {
-            level++;
-            experience -= experienceToLevelUp;
+            setLevel(level + 1);
+            setExperience(experience - experienceToLevelUp);
             JobEvents.onJobLevelUp(player, this);
             if (this.player instanceof JobsServerPlayer serverPlayer) {
                 serverPlayer.jobsplus$updateJobOnClient(this);
             }
+        }
+    }
+
+    private void syncWithClient() {
+        if (player instanceof ServerPlayer serverPlayer) {
+            NetworkManager.sendToPlayer(serverPlayer, new ClientboundUpdateJobPacket(this));
         }
     }
 
@@ -124,7 +133,7 @@ public class Job {
             CompoundTag powerupTag = new CompoundTag();
 
             powerupTag.putString(Constants.POWERUP_LOCATION, powerup.getPowerupInstance().getLocation().toString());
-            powerupTag.putString(Constants.POWERUP_STATE, powerup.getPowerupState().name());
+            powerupTag.putString(Constants.POWERUP_STATE, powerup.getState().name());
 
             powerupsTag.add(powerupTag);
         }
@@ -185,7 +194,7 @@ public class Job {
             friendlyByteBuf.writeVarInt(job.getPowerupManager().getAllPowerups().size());
             for (Powerup powerup : job.getPowerupManager().getAllPowerups()) {
                 friendlyByteBuf.writeResourceLocation(powerup.getPowerupInstance().getLocation());
-                friendlyByteBuf.writeEnum(powerup.getPowerupState());
+                friendlyByteBuf.writeEnum(powerup.getState());
             }
         }
 

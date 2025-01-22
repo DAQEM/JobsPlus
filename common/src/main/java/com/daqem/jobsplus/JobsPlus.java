@@ -20,11 +20,10 @@ public class JobsPlus {
 
     public static void init() {
         JobsPlusConfig.init();
+        JobsPlusNetworking.init();
 
         registerEvents();
         initRegistry();
-
-        JobsPlusNetworking.init();
     }
 
     private static void initRegistry() {

@@ -9,14 +9,16 @@ import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
-import com.daqem.jobsplus.networking.sync.jobs.ClientboundRemoveJobPacket;
-import com.daqem.jobsplus.networking.sync.jobs.ClientboundUpdateJobPacket;
+import com.daqem.jobsplus.networking.sync.coin.ClientBoundUpdateCoinsPacket;
+import com.daqem.jobsplus.networking.sync.job.ClientboundRemoveJobPacket;
+import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobPacket;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.jobsplus.player.job.exp.ExpCollector;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.mojang.authlib.GameProfile;
+import dev.architectury.networking.NetworkManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -37,9 +39,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Mixin(ServerPlayer.class)
@@ -151,6 +151,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     @Override
     public void jobsplus$setCoins(int coins) {
         this.jobsplus$coins = coins;
+        NetworkManager.sendToPlayer(jobsplus$getServerPlayer(), new ClientBoundUpdateCoinsPacket(coins));
     }
 
     @Override
@@ -159,7 +160,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         actionHolders.addAll(jobsplus$getJobs().stream()
                 .map(Job::getPowerupManager)
                 .flatMap(powerupManager -> powerupManager.getAllPowerups().stream()
-                        .filter(powerup -> powerup.getPowerupState() == PowerupState.ACTIVE))
+                        .filter(powerup -> powerup.getState() == PowerupState.ACTIVE))
                 .map(Powerup::getPowerupInstance)
                 .toList());
         return actionHolders;
@@ -195,19 +196,19 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
             job.getPowerupManager().getAllPowerups().forEach(powerup -> arcPlayer.arc$removeActionHolder(powerup.getPowerupInstance()));
             arcPlayer.arc$addActionHolder(job.getJobInstance());
             job.getPowerupManager().getAllPowerups().stream()
-                    .filter(powerup -> powerup.getPowerupState() == PowerupState.ACTIVE)
+                    .filter(powerup -> powerup.getState() == PowerupState.ACTIVE)
                     .forEach(powerup -> arcPlayer.arc$addActionHolder(powerup.getPowerupInstance()));
         }
     }
 
     @Override
     public void jobsplus$updateJobOnClient(Job job) {
-        new ClientboundUpdateJobPacket(job).sendTo(jobsplus$getServerPlayer());
+        NetworkManager.sendToPlayer(jobsplus$getServerPlayer(), new ClientboundUpdateJobPacket(job));
     }
 
     @Override
     public void jobsplus$removeJobOnClient(Job job) {
-        new ClientboundRemoveJobPacket(job.getJobInstance().getLocation()).sendTo(jobsplus$getServerPlayer());
+        NetworkManager.sendToPlayer(jobsplus$getServerPlayer(), new ClientboundRemoveJobPacket(job.getJobInstance()));
     }
 
     @Override
@@ -251,10 +252,10 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void tickTail(CallbackInfo ci) {
         jobsplus$jobs.forEach((job) -> {
-            JobInstance jobInstance = job.getJobInstance();
             ExpCollector expCollector = job.getExpCollector();
             int exp = expCollector.getExp();
             if (exp > 0) {
+                JobInstance jobInstance = job.getJobInstance();
                 MutableComponent component = JobsPlus.translatable("job.exp.gain", exp, jobInstance.getName().getString()).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(jobInstance.getColorDecimal()))).withStyle(ChatFormatting.BOLD);
                 jobsplus$getServerPlayer().sendSystemMessage(component, true);
             }

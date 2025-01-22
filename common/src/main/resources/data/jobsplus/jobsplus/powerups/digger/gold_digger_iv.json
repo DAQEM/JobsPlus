@@ -4,7 +4,7 @@
   "name": "Gold Digger IV",
   "description": "Grants a 0.5% chance to find a gold block when digging.",
   "icon": {
-    "item": "minecraft:gold_block",
+    "id": "minecraft:gold_block",
     "count": 4
   },
   "price": 12,

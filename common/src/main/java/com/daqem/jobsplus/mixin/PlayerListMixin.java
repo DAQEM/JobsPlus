@@ -1,9 +1,12 @@
 package com.daqem.jobsplus.mixin;
 
-import com.daqem.jobsplus.networking.sync.jobs.ClientboundUpdateJobsPacket;
+import com.daqem.jobsplus.networking.sync.coin.ClientBoundUpdateCoinsPacket;
+import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobsPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
+import dev.architectury.networking.NetworkManager;
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,15 +26,16 @@ public class PlayerListMixin {
     private void reloadResources(CallbackInfo ci) {
         for (ServerPlayer player : this.players) {
             if (player instanceof JobsPlayer jobsPlayer) {
-                new ClientboundUpdateJobsPacket(jobsPlayer.jobsplus$getJobs()).sendTo(player);
+                NetworkManager.sendToPlayer(player, new ClientboundUpdateJobsPacket(jobsPlayer.jobsplus$getJobs()));
             }
         }
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;sendPlayerPermissionLevel(Lnet/minecraft/server/level/ServerPlayer;)V", shift = At.Shift.BEFORE), method = "placeNewPlayer")
-    private void placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci) {
+    private void placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CommonListenerCookie commonListenerCookie, CallbackInfo ci) {
         if (serverPlayer instanceof JobsPlayer jobsPlayer) {
-            new ClientboundUpdateJobsPacket(jobsPlayer.jobsplus$getJobs()).sendTo(serverPlayer);
+            NetworkManager.sendToPlayer(serverPlayer, new ClientboundUpdateJobsPacket(jobsPlayer.jobsplus$getJobs()));
+            NetworkManager.sendToPlayer(serverPlayer, new ClientBoundUpdateCoinsPacket(jobsPlayer.jobsplus$getCoins()));
         }
     }
 }

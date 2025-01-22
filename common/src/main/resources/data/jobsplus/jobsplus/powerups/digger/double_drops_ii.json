@@ -4,7 +4,7 @@
   "name": "Double Drops II",
   "description": "Grants a 10% chance to get double drops when digging.",
   "icon": {
-    "item": "minecraft:grass_block"
+    "id": "minecraft:grass_block"
   },
   "price": 10,
   "required_level": 25

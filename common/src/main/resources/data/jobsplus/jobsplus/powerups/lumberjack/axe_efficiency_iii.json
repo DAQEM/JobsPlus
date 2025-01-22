@@ -4,7 +4,7 @@
   "name": "Axe Efficiency III",
   "description": "Axes chop 30% faster.",
   "icon": {
-    "item": "minecraft:golden_axe",
+    "id": "minecraft:golden_axe",
     "count": 3
   },
   "price": 10,

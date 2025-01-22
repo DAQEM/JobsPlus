@@ -8,7 +8,9 @@
     {
       "type": "arc:drop_item",
       "chance": 5,
-      "item": "minecraft:gold_ingot"
+      "item": {
+        "id": "minecraft:gold_ingot"
+      }
     }
   ],
   "conditions": [

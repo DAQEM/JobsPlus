@@ -4,7 +4,7 @@
   "name": "Attack Speed V",
   "description": "50% faster attack speed.",
   "icon": {
-    "item": "minecraft:golden_sword",
+    "id": "minecraft:golden_sword",
     "count": 5
   },
   "price": 15,

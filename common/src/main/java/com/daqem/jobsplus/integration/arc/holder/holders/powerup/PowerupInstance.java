@@ -5,18 +5,16 @@ import com.daqem.arc.api.action.holder.AbstractActionHolder;
 import com.daqem.arc.api.action.holder.serializer.IActionHolderSerializer;
 import com.daqem.arc.api.action.holder.type.IActionHolderType;
 import com.daqem.arc.api.player.ArcPlayer;
-import com.daqem.jobsplus.data.serializer.JobsPlusSerializer;
+import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import net.minecraft.network.FriendlyByteBuf;
+import com.daqem.jobsplus.player.job.powerup.PowerupType;
+import com.google.gson.*;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -29,29 +27,27 @@ public class PowerupInstance extends AbstractActionHolder {
 
     private final ResourceLocation jobLocation;
     private final @Nullable ResourceLocation parentLocation;
-    private final String name;
-    private final String description;
     private final ItemStack icon;
     private final int price;
     private final int requiredLevel;
+    private final PowerupType type;
 
-    public PowerupInstance(ResourceLocation location, ResourceLocation jobLocation, @Nullable ResourceLocation parentLocation, String name, String description, ItemStack icon, int price, int requiredLevel) {
+    public PowerupInstance(ResourceLocation location, ResourceLocation jobLocation, @Nullable ResourceLocation parentLocation, ItemStack icon, int price, int requiredLevel, PowerupType type) {
         super(location);
         this.jobLocation = jobLocation;
         this.parentLocation = parentLocation;
-        this.name = name;
-        this.description = description;
         this.icon = icon;
         this.price = price;
         this.requiredLevel = requiredLevel;
+        this.type = type;
     }
 
-    public String getName() {
-        return name;
+    public MutableComponent getName() {
+        return JobsPlus.translatable("powerup." + location.getNamespace() + "." + location.getPath().replace('/', '.') + ".name");
     }
 
-    public String getDescription() {
-        return description;
+    public MutableComponent getDescription() {
+        return JobsPlus.translatable("powerup." + location.getNamespace() + "." + location.getPath().replace('/', '.') + ".description");
     }
 
     public ResourceLocation getJobLocation() {
@@ -74,6 +70,10 @@ public class PowerupInstance extends AbstractActionHolder {
         return requiredLevel;
     }
 
+    public PowerupType getPowerupType() {
+        return this.type;
+    }
+
     @Override
     public IActionHolderType<?> getType() {
         return JobsPlusActionHolderType.POWERUP_INSTANCE;
@@ -92,7 +92,7 @@ public class PowerupInstance extends AbstractActionHolder {
             if (job != null) {
                 Powerup powerup = job.getPowerupManager().getAllPowerups().stream().filter(powerup1 -> powerup1.getPowerupInstance().getLocation().equals(this.getLocation())).findFirst().orElse(null);
                 if (powerup != null) {
-                    return powerup.getPowerupState() == PowerupState.ACTIVE;
+                    return powerup.getState() == PowerupState.ACTIVE;
                 }
             }
         }
@@ -109,7 +109,7 @@ public class PowerupInstance extends AbstractActionHolder {
                 .toList();
     }
 
-    public static class Serializer implements JobsPlusSerializer<PowerupInstance>, IActionHolderSerializer<PowerupInstance> {
+    public static class Serializer implements JsonDeserializer<PowerupInstance>, IActionHolderSerializer<PowerupInstance> {
 
         @Override
         public PowerupInstance deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -124,11 +124,11 @@ public class PowerupInstance extends AbstractActionHolder {
                     resourceLocation,
                     getResourceLocation(jsonObject, "job"),
                     parentLocation == null ? null : ResourceLocation.parse(parentLocation),
-                    GsonHelper.getAsString(jsonObject, "name"),
-                    GsonHelper.getAsString(jsonObject, "description"),
                     getItemStack(GsonHelper.getAsJsonObject(jsonObject, "icon")),
                     GsonHelper.getAsInt(jsonObject, "price"),
-                    GsonHelper.getAsInt(jsonObject, "required_level"));
+                    GsonHelper.getAsInt(jsonObject, "required_level"),
+                    PowerupType.valueOf(GsonHelper.getAsString(jsonObject, "type", "basic").toUpperCase())
+            );
         }
 
         @Override
@@ -137,11 +137,10 @@ public class PowerupInstance extends AbstractActionHolder {
                     friendlyByteBuf.readResourceLocation(),
                     friendlyByteBuf.readResourceLocation(),
                     friendlyByteBuf.readBoolean() ? friendlyByteBuf.readResourceLocation() : null,
-                    friendlyByteBuf.readUtf(),
-                    friendlyByteBuf.readUtf(),
                     ItemStack.STREAM_CODEC.decode(friendlyByteBuf),
                     friendlyByteBuf.readInt(),
-                    friendlyByteBuf.readInt()
+                    friendlyByteBuf.readInt(),
+                    friendlyByteBuf.readEnum(PowerupType.class)
             );
         }
 
@@ -153,11 +152,10 @@ public class PowerupInstance extends AbstractActionHolder {
             if (powerupInstance.getParentLocation() != null) {
                 friendlyByteBuf.writeResourceLocation(powerupInstance.getParentLocation());
             }
-            friendlyByteBuf.writeUtf(powerupInstance.getName());
-            friendlyByteBuf.writeUtf(powerupInstance.getDescription());
             ItemStack.STREAM_CODEC.encode(friendlyByteBuf, powerupInstance.getIcon());
             friendlyByteBuf.writeInt(powerupInstance.getPrice());
             friendlyByteBuf.writeInt(powerupInstance.getRequiredLevel());
+            friendlyByteBuf.writeEnum(powerupInstance.getPowerupType());
             IActionHolderSerializer.super.toNetwork(friendlyByteBuf, powerupInstance);
         }
     }

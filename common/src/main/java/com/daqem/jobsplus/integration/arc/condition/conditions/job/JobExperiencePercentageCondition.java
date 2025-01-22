@@ -12,6 +12,7 @@ import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
@@ -40,6 +41,11 @@ public class JobExperiencePercentageCondition extends AbstractCondition {
     @Override
     public IConditionType<? extends ICondition> getType() {
         return JobsPlusConditionType.JOB_EXPERIENCE_PERCENTAGE;
+    }
+
+    @Override
+    public Component getDescription() {
+        return getDescription(this.percentage);
     }
 
     public static class Serializer implements IConditionSerializer<JobExperiencePercentageCondition> {

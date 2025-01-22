@@ -4,7 +4,7 @@
   "name": "Job Experience II",
   "description": "Multiply your job experience by 2x",
   "icon": {
-    "item": "minecraft:experience_bottle",
+    "id": "minecraft:experience_bottle",
     "count": 2
   },
   "price": 8,

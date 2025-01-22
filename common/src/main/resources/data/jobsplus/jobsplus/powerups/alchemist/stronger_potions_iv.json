@@ -4,7 +4,7 @@
   "name": "Stronger potions IV",
   "description": "Potions have a 80% change to become stronger.",
   "icon": {
-    "item": "minecraft:potion",
+    "id": "minecraft:potion",
     "tag": "{Potion:\"minecraft:strength\"}",
     "count": 4
   },

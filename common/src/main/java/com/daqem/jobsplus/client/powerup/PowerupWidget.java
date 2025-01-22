@@ -1,8 +1,6 @@
 package com.daqem.jobsplus.client.powerup;
 
-import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.render.RenderColor;
-import com.daqem.jobsplus.client.screen.PowerUpsScreen;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.jobsplus.player.job.powerup.JobPowerupManager;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
@@ -75,7 +73,7 @@ public class PowerupWidget {
 
     public PowerupState getPowerupState() {
         if (this.powerup != null) {
-            return powerup.getPowerupState();
+            return powerup.getState();
         } else {
             if (this.parent == null) {
                 return PowerupState.ACTIVE;
@@ -376,7 +374,7 @@ public class PowerupWidget {
         int extraWidthCondition = i > 1 ? minecraftFont.width("  ") + minecraftFont.width("0") * stringLength * 2 + minecraftFont.width("/") : 0;
         int totalWidth = 29 + minecraftFont.width(powerupInstance.getName()) + extraWidthCondition + 3 + 5;
 
-        List<FormattedCharSequence> descriptions = Language.getInstance().getVisualOrder(findOptimalLines(JobsPlus.literal(powerupInstance.getDescription()).copy(), totalWidth));
+        List<FormattedCharSequence> descriptions = Language.getInstance().getVisualOrder(findOptimalLines(powerupInstance.getDescription().copy(), totalWidth));
 
 
         for(FormattedCharSequence descriptionLine : descriptions) {
@@ -526,10 +524,5 @@ public class PowerupWidget {
         Stream<FormattedText> var10000 = list.stream();
         Objects.requireNonNull(stringSplitter);
         return (float)var10000.mapToDouble(stringSplitter::stringWidth).max().orElse(0.0);
-    }
-
-    public void setMinMaxXY(PowerUpsScreen screen) {
-        this.children.forEach(child -> child.setMinMaxXY(screen));
-        screen.setMinMaxXY(Mth.floor(this.x * WIDTH), Mth.floor(this.y * HEIGHT), Mth.floor(this.x * WIDTH) + 24, Mth.floor(this.y * HEIGHT) + 24);
     }
 }

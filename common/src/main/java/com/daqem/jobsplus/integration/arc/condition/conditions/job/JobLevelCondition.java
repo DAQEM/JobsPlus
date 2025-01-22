@@ -5,6 +5,7 @@ import com.daqem.arc.api.condition.AbstractCondition;
 import com.daqem.arc.api.condition.ICondition;
 import com.daqem.arc.api.condition.serializer.IConditionSerializer;
 import com.daqem.arc.api.condition.type.IConditionType;
+import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.condition.type.JobsPlusConditionType;
 import com.daqem.jobsplus.player.JobsServerPlayer;
@@ -12,6 +13,7 @@ import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
@@ -62,6 +64,15 @@ public class JobLevelCondition extends AbstractCondition implements IJobConditio
     @Override
     public int getRequiredLevel() {
         return level;
+    }
+
+    @Override
+    public Component getDescription() {
+        JobInstance jobInstance = JobInstance.of(this.jobLocation);
+        if (jobInstance == null) {
+            return JobsPlus.literal("ERROR: Job not found: '" + this.jobLocation.toString() + "'");
+        }
+        return this.getDescription(jobInstance.getName(), this.level);
     }
 
     public static class Serializer implements IConditionSerializer<JobLevelCondition> {

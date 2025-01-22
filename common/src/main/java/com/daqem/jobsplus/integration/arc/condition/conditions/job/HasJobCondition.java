@@ -13,6 +13,7 @@ import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class HasJobCondition extends AbstractCondition implements IJobCondition{
@@ -54,6 +55,15 @@ public class HasJobCondition extends AbstractCondition implements IJobCondition{
     @Override
     public int getRequiredLevel() {
         return 0;
+    }
+
+    @Override
+    public Component getDescription() {
+        JobInstance jobInstance = JobInstance.of(jobLocation);
+        if (jobInstance == null) {
+            return JobsPlus.literal("ERROR: Job not found: '" + this.jobLocation.toString() + "'");
+        }
+        return this.getDescription(jobInstance.getName());
     }
 
     public static class Serializer implements IConditionSerializer<HasJobCondition> {

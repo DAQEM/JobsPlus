@@ -13,6 +13,7 @@ import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
 
 public class JobExpReward extends AbstractReward {
@@ -47,6 +48,11 @@ public class JobExpReward extends AbstractReward {
             }
         }
         return new ActionResult();
+    }
+
+    @Override
+    public Component getDescription() {
+        return this.getDescription(this.min, this.max);
     }
 
     public static class Serializer implements IRewardSerializer<JobExpReward> {

@@ -3,7 +3,7 @@
   "name": "Stronger potions I",
   "description": "Potions have a 20% change to become stronger.",
   "icon": {
-    "item": "minecraft:potion",
+    "id": "minecraft:potion",
     "tag": "{Potion:\"minecraft:strength\"}"
   },
   "price": 10,

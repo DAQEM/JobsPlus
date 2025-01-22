@@ -8,15 +8,10 @@ import com.daqem.itemrestrictions.data.ItemRestriction;
 import com.daqem.itemrestrictions.data.ItemRestrictionManager;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.config.JobsPlusConfig;
-import com.daqem.jobsplus.data.serializer.JobsPlusSerializer;
 import com.daqem.jobsplus.integration.arc.condition.conditions.job.IJobCondition;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import net.minecraft.network.FriendlyByteBuf;
+import com.google.gson.*;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -96,6 +91,9 @@ public class JobInstance extends AbstractActionHolder {
         return isDefault;
     }
 
+    /**
+     * @return a map of item restrictions and their corresponding required levels for this job instance
+     */
     public Map<ItemRestriction, Integer> getItemRestrictions() {
         return ItemRestrictionManager.getInstance().getItemRestrictions().stream()
                 .filter(itemRestriction -> itemRestriction.getConditions().stream()
@@ -125,7 +123,7 @@ public class JobInstance extends AbstractActionHolder {
         return obj instanceof JobInstance jobInstance && jobInstance.location.equals(location);
     }
 
-    public static class Serializer implements JobsPlusSerializer<JobInstance>, IActionHolderSerializer<JobInstance> {
+    public static class Serializer implements JsonDeserializer<JobInstance>, IActionHolderSerializer<JobInstance> {
 
         @Override
         public JobInstance deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
