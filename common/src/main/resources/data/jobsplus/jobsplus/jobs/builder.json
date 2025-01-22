@@ -4,7 +4,7 @@
   "max_level": 100,
   "color": "#FFC107",
   "icon": {
-    "item": "minecraft:scaffolding"
+    "id": "minecraft:scaffolding"
   },
   "description": "Builds structures.",
   "background": "minecraft:textures/block/stone_bricks.png",

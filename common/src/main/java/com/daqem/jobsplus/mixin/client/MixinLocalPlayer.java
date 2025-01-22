@@ -134,7 +134,12 @@ public abstract class MixinLocalPlayer extends AbstractClientPlayer implements J
         jobsplus$jobs.addAll(jobs);
 
         if (jobsplus$getLocalPlayer() instanceof ArcPlayer arcPlayer) {
-            arcPlayer.arc$getActionHolders().forEach(arcPlayer::arc$removeActionHolder);
+            for (int i = arcPlayer.arc$getActionHolders().size() - 1; i >= 0; i--) {
+                IActionHolder actionHolder = arcPlayer.arc$getActionHolders().get(i);
+                if (actionHolder instanceof JobInstance jobInstance) {
+                    arcPlayer.arc$removeActionHolder(jobInstance);
+                }
+            }
             arcPlayer.arc$addActionHolders(jobsplus$getActionHolders());
         }
     }
@@ -149,7 +154,7 @@ public abstract class MixinLocalPlayer extends AbstractClientPlayer implements J
             job.getPowerupManager().getAllPowerups().forEach(powerup -> arcPlayer.arc$removeActionHolder(powerup.getPowerupInstance()));
             arcPlayer.arc$addActionHolder(job.getJobInstance());
             job.getPowerupManager().getAllPowerups().stream()
-                    .filter(powerup -> powerup.getPowerupState() == PowerupState.ACTIVE)
+                    .filter(powerup -> powerup.getState() == PowerupState.ACTIVE)
                     .forEach(powerup -> arcPlayer.arc$addActionHolder(powerup.getPowerupInstance()));
         }
     }

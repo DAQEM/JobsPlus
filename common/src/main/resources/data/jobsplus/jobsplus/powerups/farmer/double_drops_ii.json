@@ -4,7 +4,7 @@
   "name": "Double Drops II",
   "description": "Grants a 10% chance to get double drops when harvesting crops.",
   "icon": {
-    "item": "minecraft:potato"
+    "id": "minecraft:potato"
   },
   "price": 10,
   "required_level": 25

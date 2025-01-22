@@ -20,11 +20,10 @@ public class JobsPlus {
 
     public static void init() {
         JobsPlusConfig.init();
+        JobsPlusNetworking.init();
 
         registerEvents();
         initRegistry();
-
-        JobsPlusNetworking.init();
     }
 
     private static void initRegistry() {
@@ -41,7 +40,7 @@ public class JobsPlus {
     }
 
     public static ResourceLocation getId(String id) {
-        return new ResourceLocation(MOD_ID, id);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, id);
     }
 
     public static MutableComponent translatable(String str) {

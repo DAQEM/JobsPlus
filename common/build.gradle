@@ -8,22 +8,11 @@ loom {
     accessWidenerPath = file("src/main/resources/jobsplus.accesswidener")
 }
 
-repositories {
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-}
-
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
-    // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury:${project.architectury_version}"
-    //source: https://github.com/Fuzss/forgeconfigapiport-fabric
 
     compileOnlyApi "curse.maven:supermartijn642s-config-lib-438332:${project.config_library_file_fabric}"
     modImplementation "curse.maven:arc-883593:${project.arc_file_fabric}-sources-${project.arc_file_fabric_sources}"
@@ -35,18 +24,6 @@ dependencies {
 
 }
 
-publishing {
-    publications {
-        mavenCommon(MavenPublication) {
-            //noinspection GrUnresolvedAccess
-            artifactId = rootProject.archives_base_name
-            //noinspection GrUnresolvedAccess
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-    }
+test {
+    useJUnitPlatform()
 }

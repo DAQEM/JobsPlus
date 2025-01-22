@@ -7,8 +7,10 @@ import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.data.type.JobsPlusActionDataType;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.action.type.JobsPlusActionType;
+import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
+import dev.architectury.networking.NetworkManager;
 import net.minecraft.server.level.ServerPlayer;
 
 public class JobEvents {
@@ -22,7 +24,6 @@ public class JobEvents {
         }
         player.jobsplus$addCoins(JobsPlusConfig.coinsPerLevelUp.get());
         if (player.jobsplus$getPlayer() instanceof ServerPlayer serverPlayer) {
-
             JobInstance jobInstance = job.getJobInstance();
             if (serverPlayer.getServer() == null) return;
             serverPlayer.getServer().getPlayerList().broadcastSystemMessage(JobsPlus.translatable("job.level_up", serverPlayer.getName().copy().withStyle(style -> style.withColor(jobInstance.getColorDecimal())), JobsPlus.literal(String.valueOf(job.getLevel())).withStyle(style -> style.withColor(jobInstance.getColorDecimal())), jobInstance.getName().getString()), false);

@@ -1,0 +1,65 @@
+modLoader = "javafml"
+loaderVersion = "[${neoforge_loader_version},)"
+issueTrackerURL = "${mod_repository}/issues"
+license = "${mod_license}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${version}"
+license = "${mod_license}"
+displayName = "${mod_name}"
+authors = "${mod_author}"
+credits = "${mod_author}"
+description = "${mod_description}"
+
+[[dependencies."${mod_id}"]]
+modId = "neoforge"
+mandatory = true
+versionRange = "[${neoforge_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[${minecraft_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "architectury"
+mandatory = true
+versionRange = "[${architectury_version},)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "supermartijn642configlib"
+mandatory = true
+versionRange = "[${config_library_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "arc"
+mandatory = true
+versionRange = "[${arc_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "itemrestrictions"
+mandatory = true
+versionRange = "[${item_restrictions_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "uilib"
+mandatory = true
+versionRange = "[${ui_library_version},)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[mixins]]
+config = "jobsplus-common.mixins.json"

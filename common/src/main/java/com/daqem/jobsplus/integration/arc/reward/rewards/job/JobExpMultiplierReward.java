@@ -7,6 +7,7 @@ import com.daqem.arc.api.player.ArcPlayer;
 import com.daqem.arc.api.reward.AbstractReward;
 import com.daqem.arc.api.reward.serializer.IRewardSerializer;
 import com.daqem.arc.api.reward.type.IRewardType;
+import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.integration.arc.data.type.JobsPlusActionDataType;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
@@ -15,6 +16,8 @@ import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
@@ -62,6 +65,15 @@ public class JobExpMultiplierReward extends AbstractReward {
         return new ActionResult();
     }
 
+    @Override
+    public Component getDescription() {
+        JobInstance jobInstance = JobInstance.of(this.jobLocation);
+        if (jobInstance == null) {
+            return JobsPlus.literal("ERROR: Job not found: '" + this.jobLocation.toString() + "'");
+        }
+        return this.getDescription(jobInstance.getName(), this.multiplier);
+    }
+
     public static class Serializer implements IRewardSerializer<JobExpMultiplierReward> {
 
         @Override
@@ -69,12 +81,12 @@ public class JobExpMultiplierReward extends AbstractReward {
             return new JobExpMultiplierReward(
                     chance,
                     priority,
-                    new ResourceLocation(GsonHelper.getAsString(jsonObject, "job")),
+                    getResourceLocation(jsonObject, "job"),
                     GsonHelper.getAsDouble(jsonObject, "multiplier"));
         }
 
         @Override
-        public JobExpMultiplierReward fromNetwork(FriendlyByteBuf friendlyByteBuf, double chance, int priority) {
+        public JobExpMultiplierReward fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, double chance, int priority) {
             return new JobExpMultiplierReward(
                     chance,
                     priority,
@@ -83,7 +95,7 @@ public class JobExpMultiplierReward extends AbstractReward {
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, JobExpMultiplierReward type) {
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobExpMultiplierReward type) {
             IRewardSerializer.super.toNetwork(friendlyByteBuf, type);
             friendlyByteBuf.writeResourceLocation(type.jobLocation);
             friendlyByteBuf.writeDouble(type.multiplier);

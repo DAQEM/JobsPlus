@@ -4,7 +4,7 @@
   "name": "Pickaxe Unbreaking IV",
   "description": "Pickaxes are 40% less likely to take damage when used.",
   "icon": {
-    "item": "minecraft:diamond_pickaxe",
+    "id": "minecraft:diamond_pickaxe",
     "count": 4
   },
   "price": 12,

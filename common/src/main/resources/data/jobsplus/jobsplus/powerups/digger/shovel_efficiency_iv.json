@@ -4,7 +4,7 @@
   "name": "Shovel Efficiency IV",
   "description": "Shovels dig 40% faster.",
   "icon": {
-    "item": "minecraft:golden_shovel",
+    "id": "minecraft:golden_shovel",
     "count": 4
   },
   "price": 12,

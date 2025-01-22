@@ -4,7 +4,7 @@
   "name": "Longer potions I",
   "description": "Potions last 20% longer.",
   "icon": {
-    "item": "minecraft:potion",
+    "id": "minecraft:potion",
     "tag": "{Potion:\"minecraft:swiftness\"}"
   },
   "price": 10,

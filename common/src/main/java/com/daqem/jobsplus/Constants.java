@@ -11,11 +11,4 @@ public class Constants {
     public static final String POWERUPS = "Powerups";
     public static final String POWERUP_LOCATION = "PowerupLocation";
     public static final String POWERUP_STATE = "State";
-    public static final String ACTIVE_LEFT_BUTTON = "ActiveLeftButton";
-    public static final String ACTIVE_RIGHT_BUTTON = "ActiveRightButton";
-    public static final String SELECTED_BUTTON = "SelectedButton";
-    public static final String SCROLL_OFFSET = "ScrollOffset";
-    public static final String START_INDEX = "StartIndex";
-    public static final String SCROLL_OFFSET_RIGHT = "ScrollOffsetRight";
-    public static final String START_INDEX_RIGHT = "StartIndexRight";
 }

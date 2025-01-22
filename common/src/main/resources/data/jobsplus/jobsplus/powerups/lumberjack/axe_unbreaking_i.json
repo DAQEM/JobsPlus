@@ -3,7 +3,7 @@
   "name": "Axe Unbreaking I",
   "description": "Axes are 10% less likely to take damage when used.",
   "icon": {
-    "item": "minecraft:diamond_axe"
+    "id": "minecraft:diamond_axe"
   },
   "price": 5,
   "required_level": 5

@@ -4,7 +4,7 @@
   "name": "Double Drops I",
   "description": "Grants a 5% chance to get double drops when mining blocks.",
   "icon": {
-    "item": "minecraft:iron_ore"
+    "id": "minecraft:iron_ore"
   },
   "price": 5,
   "required_level": 10

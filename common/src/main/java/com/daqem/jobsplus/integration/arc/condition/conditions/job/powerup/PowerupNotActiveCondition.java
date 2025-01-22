@@ -5,16 +5,17 @@ import com.daqem.arc.api.condition.AbstractCondition;
 import com.daqem.arc.api.condition.ICondition;
 import com.daqem.arc.api.condition.serializer.IConditionSerializer;
 import com.daqem.arc.api.condition.type.IConditionType;
+import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.integration.arc.condition.type.JobsPlusConditionType;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.google.gson.*;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class PowerupNotActiveCondition extends AbstractCondition {
@@ -38,7 +39,7 @@ public class PowerupNotActiveCondition extends AbstractCondition {
 
             return powerup.isEmpty() ||
                     (powerup.get().getPowerupInstance().getLocation().equals(this.powerupThatShouldNotBeActiveLocation)
-                            && powerup.get().getPowerupState() != PowerupState.ACTIVE);
+                            && powerup.get().getState() != PowerupState.ACTIVE);
         }
         return false;
     }
@@ -46,6 +47,15 @@ public class PowerupNotActiveCondition extends AbstractCondition {
     @Override
     public IConditionType<? extends ICondition> getType() {
         return JobsPlusConditionType.POWERUP_NOT_ACTIVE;
+    }
+
+    @Override
+    public Component getDescription() {
+        PowerupInstance powerupInstance = PowerupInstance.of(powerupThatShouldNotBeActiveLocation);
+        if (powerupInstance == null) {
+            return JobsPlus.literal("ERROR: Powerup not found: '" + powerupThatShouldNotBeActiveLocation.toString() + "'");
+        }
+        return getDescription(powerupInstance.getName());
     }
 
     public static class Serializer implements IConditionSerializer<PowerupNotActiveCondition> {
@@ -59,14 +69,14 @@ public class PowerupNotActiveCondition extends AbstractCondition {
         }
 
         @Override
-        public PowerupNotActiveCondition fromNetwork(ResourceLocation location, FriendlyByteBuf friendlyByteBuf, boolean inverted) {
+        public PowerupNotActiveCondition fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, boolean inverted) {
             return new PowerupNotActiveCondition(
                     inverted,
                     friendlyByteBuf.readResourceLocation());
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, PowerupNotActiveCondition type) {
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, PowerupNotActiveCondition type) {
             IConditionSerializer.super.toNetwork(friendlyByteBuf, type);
             friendlyByteBuf.writeResourceLocation(type.powerupThatShouldNotBeActiveLocation);
         }

@@ -2,30 +2,61 @@ package com.daqem.jobsplus.networking;
 
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.networking.c2s.*;
-import com.daqem.jobsplus.networking.s2c.PacketOpenMenuS2C;
-import com.daqem.jobsplus.networking.s2c.PacketOpenPowerupsMenuS2C;
-import com.daqem.jobsplus.networking.sync.jobs.ClientboundRemoveJobPacket;
-import com.daqem.jobsplus.networking.sync.jobs.ClientboundUpdateJobPacket;
-import com.daqem.jobsplus.networking.sync.jobs.ClientboundUpdateJobsPacket;
-import dev.architectury.networking.simple.MessageType;
-import dev.architectury.networking.simple.SimpleNetworkManager;
+import com.daqem.jobsplus.networking.s2c.ClientboundOpenJobsScreenPacket;
+import com.daqem.jobsplus.networking.sync.coin.ClientBoundUpdateCoinsPacket;
+import com.daqem.jobsplus.networking.sync.job.ClientboundRemoveJobPacket;
+import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobPacket;
+import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobsPacket;
+import dev.architectury.networking.NetworkManager;
+import dev.architectury.utils.Env;
+import dev.architectury.utils.EnvExecutor;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public interface JobsPlusNetworking {
 
-    SimpleNetworkManager NETWORK = SimpleNetworkManager.create(JobsPlus.MOD_ID);
+    CustomPacketPayload.Type<ServerboundTogglePowerUpPacket> SERVERBOUND_TOGGLE_POWERUP =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_toggle_powerup"));
+    CustomPacketPayload.Type<ServerboundStartJobPacket> SERVERBOUND_START_JOB =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_start_job"));
+    CustomPacketPayload.Type<ServerboundStartPowerupPacket> SERVERBOUND_START_POWERUP =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_start_powerup"));
 
-    MessageType S2C_OPEN_MENU = NETWORK.registerS2C("s2c_open_menu", PacketOpenMenuS2C::new);
-    MessageType S2C_OPEN_POWERUPS_MENU = NETWORK.registerS2C("s2c_open_powerups_menu", PacketOpenPowerupsMenuS2C::new);
-    MessageType CLIENTBOUND_UPDATE_JOBS = NETWORK.registerS2C("clientbound_update_jobs", ClientboundUpdateJobsPacket::new);
-    MessageType CLIENTBOUND_UPDATE_JOB = NETWORK.registerS2C("clientbound_update_job", ClientboundUpdateJobPacket::new);
-    MessageType CLIENTBOUND_REMOVE_JOB = NETWORK.registerS2C("clientbound_remove_job", ClientboundRemoveJobPacket::new);
+    CustomPacketPayload.Type<ClientboundRemoveJobPacket> CLIENTBOUND_REMOVE_JOB =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_remove_job"));
+    CustomPacketPayload.Type<ClientboundUpdateJobPacket> CLIENTBOUND_UPDATE_JOB =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_update_job"));
+    CustomPacketPayload.Type<ClientboundUpdateJobsPacket> CLIENTBOUND_UPDATE_JOBS =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_update_jobs"));
+    CustomPacketPayload.Type<ClientBoundUpdateCoinsPacket> CLIENTBOUND_UPDATE_COINS =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_update_coins"));
+    CustomPacketPayload.Type<ClientboundOpenJobsScreenPacket> CLIENTBOUND_OPEN_JOBS_SCREEN =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_open_jobs_screen"));
 
-    MessageType C2S_OPEN_MENU = NETWORK.registerC2S("c2s_open_menu", PacketOpenMenuC2S::new);
-    MessageType C2S_OPEN_POWERUPS_MENU = NETWORK.registerC2S("c2s_open_powerups_menu", PacketOpenPowerupsMenuC2S::new);
-    MessageType C2S_CONFIRMATION = NETWORK.registerC2S("c2s_confirmation", PacketConfirmationC2S::new);
-    MessageType C2S_TOGGLE_POWER_UP = NETWORK.registerC2S("c2s_toggle_power_up", PacketTogglePowerUpC2S::new);
-    MessageType C2S_APPROVED_UPDATE = NETWORK.registerC2S("c2s_approved_update", PacketApprovedUpdateC2S::new);
+    static void initClient() {
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_REMOVE_JOB, ClientboundRemoveJobPacket.STREAM_CODEC, ClientboundRemoveJobPacket::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_UPDATE_JOB, ClientboundUpdateJobPacket.STREAM_CODEC, ClientboundUpdateJobPacket::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_UPDATE_JOBS, ClientboundUpdateJobsPacket.STREAM_CODEC, ClientboundUpdateJobsPacket::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_UPDATE_COINS, ClientBoundUpdateCoinsPacket.STREAM_CODEC, ClientBoundUpdateCoinsPacket::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC, ClientboundOpenJobsScreenPacket::handleClientSide);
+    }
+
+    static void initCommon() {
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_TOGGLE_POWERUP, ServerboundTogglePowerUpPacket.STREAM_CODEC, ServerboundTogglePowerUpPacket::handleServerSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_START_JOB, ServerboundStartJobPacket.STREAM_CODEC, ServerboundStartJobPacket::handleServerSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_START_POWERUP, ServerboundStartPowerupPacket.STREAM_CODEC, ServerboundStartPowerupPacket::handleServerSide);
+    }
+
+    static void initServer() {
+        NetworkManager.registerS2CPayloadType(CLIENTBOUND_REMOVE_JOB, ClientboundRemoveJobPacket.STREAM_CODEC);
+        NetworkManager.registerS2CPayloadType(CLIENTBOUND_UPDATE_JOB, ClientboundUpdateJobPacket.STREAM_CODEC);
+        NetworkManager.registerS2CPayloadType(CLIENTBOUND_UPDATE_JOBS, ClientboundUpdateJobsPacket.STREAM_CODEC);
+        NetworkManager.registerS2CPayloadType(CLIENTBOUND_UPDATE_COINS, ClientBoundUpdateCoinsPacket.STREAM_CODEC);
+        NetworkManager.registerS2CPayloadType(CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC);
+    }
 
     static void init() {
+        EnvExecutor.runInEnv(Env.CLIENT, () -> JobsPlusNetworking::initClient);
+        EnvExecutor.runInEnv(Env.SERVER, () -> JobsPlusNetworking::initServer);
+        initCommon();
     }
 }

@@ -4,7 +4,7 @@
   "name": "Armor Unbreaking V",
   "description": "Armor is 50% less likely to take damage when attacked.",
   "icon": {
-    "item": "minecraft:diamond_chestplate",
+    "id": "minecraft:diamond_chestplate",
     "count": 5
   },
   "price": 15,

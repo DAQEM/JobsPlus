@@ -6,16 +6,13 @@ import com.daqem.arc.api.condition.ICondition;
 import com.daqem.arc.api.condition.serializer.IConditionSerializer;
 import com.daqem.arc.api.condition.type.IConditionType;
 import com.daqem.jobsplus.JobsPlus;
-import com.daqem.jobsplus.integration.arc.condition.conditions.job.HasJobCondition;
 import com.daqem.jobsplus.integration.arc.condition.type.JobsPlusConditionType;
-import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.player.JobsServerPlayer;
-import com.daqem.jobsplus.player.job.Job;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.google.gson.JsonObject;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class HasPowerupActivatedCondition extends AbstractCondition  {
@@ -39,7 +36,7 @@ public class HasPowerupActivatedCondition extends AbstractCondition  {
             if (powerupInstance.getLocation().equals(powerupLocation)) {
                 if (actionData.getPlayer() instanceof JobsServerPlayer jobsServerPlayer) {
                     Powerup powerup = jobsServerPlayer.jobsplus$getPowerup(powerupInstance);
-                    return powerup != null && powerup.getPowerupState() == PowerupState.ACTIVE;
+                    return powerup != null && powerup.getState() == PowerupState.ACTIVE;
                 }
             }
         } else {
@@ -58,14 +55,14 @@ public class HasPowerupActivatedCondition extends AbstractCondition  {
         }
 
         @Override
-        public HasPowerupActivatedCondition fromNetwork(ResourceLocation location, FriendlyByteBuf friendlyByteBuf, boolean inverted) {
+        public HasPowerupActivatedCondition fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, boolean inverted) {
             return new HasPowerupActivatedCondition(
                     inverted,
                     friendlyByteBuf.readResourceLocation());
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, HasPowerupActivatedCondition type) {
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, HasPowerupActivatedCondition type) {
             IConditionSerializer.super.toNetwork(friendlyByteBuf, type);
             friendlyByteBuf.writeResourceLocation(type.powerupLocation);
         }

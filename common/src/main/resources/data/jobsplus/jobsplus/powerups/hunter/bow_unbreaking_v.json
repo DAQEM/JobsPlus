@@ -4,7 +4,7 @@
   "name": "Bow Unbreaking V",
   "description": "Bows are 50% less likely to take damage when used.",
   "icon": {
-    "item": "minecraft:bow",
+    "id": "minecraft:bow",
     "count": 5
   },
   "price": 15,

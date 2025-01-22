@@ -9,6 +9,7 @@ import com.daqem.arc.api.reward.IReward;
 import com.daqem.jobsplus.integration.arc.action.type.JobsPlusActionType;
 import com.google.gson.*;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
@@ -32,12 +33,12 @@ public class JobLevelUpAction extends AbstractAction {
         }
 
         @Override
-        public JobLevelUpAction fromNetwork(ResourceLocation location, FriendlyByteBuf friendlyByteBuf, ResourceLocation actionHolderLocation, IActionHolderType<?> actionHolderType, boolean performOnClient, List<IReward> rewards, List<ICondition> conditions) {
+        public JobLevelUpAction fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, ResourceLocation actionHolderLocation, IActionHolderType<?> actionHolderType, boolean performOnClient, List<IReward> rewards, List<ICondition> conditions) {
             return new JobLevelUpAction(location, actionHolderLocation, actionHolderType, performOnClient, rewards, conditions);
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, JobLevelUpAction type) {
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobLevelUpAction type) {
             IActionSerializer.super.toNetwork(friendlyByteBuf, type);
         }
     }

@@ -47,6 +47,7 @@ public class JobPowerupManager {
     }
 
     public boolean canAddPowerup(PowerupInstance powerupInstance) {
+        if (powerups.stream().anyMatch(powerup -> powerup.getPowerupInstance().getLocation().equals(powerupInstance.getLocation()))) return false;
         if (powerupInstance.getParent() == null) return true;
         return getPowerup(powerupInstance.getParent()).isPresent();
     }

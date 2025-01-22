@@ -11,6 +11,8 @@ import com.daqem.jobsplus.integration.arc.reward.type.JobsPlusRewardType;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
 
 public class JobCoinReward extends AbstractReward {
@@ -24,7 +26,7 @@ public class JobCoinReward extends AbstractReward {
 
     @Override
     public IRewardType<?> getType() {
-        return JobsPlusRewardType.JOB_EXP_MULTIPLIER;
+        return JobsPlusRewardType.JOB_COIN;
     }
 
     @Override
@@ -34,6 +36,11 @@ public class JobCoinReward extends AbstractReward {
             jobsServerPlayer.jobsplus$addCoins(this.amount);
         }
         return new ActionResult();
+    }
+
+    @Override
+    public Component getDescription() {
+        return this.getDescription(this.amount);
     }
 
     public static class Serializer implements IRewardSerializer<JobCoinReward> {
@@ -47,7 +54,7 @@ public class JobCoinReward extends AbstractReward {
         }
 
         @Override
-        public JobCoinReward fromNetwork(FriendlyByteBuf friendlyByteBuf, double chance, int priority) {
+        public JobCoinReward fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, double chance, int priority) {
             return new JobCoinReward(
                     chance,
                     priority,
@@ -55,7 +62,7 @@ public class JobCoinReward extends AbstractReward {
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, JobCoinReward type) {
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobCoinReward type) {
             IRewardSerializer.super.toNetwork(friendlyByteBuf, type);
             friendlyByteBuf.writeInt(type.amount);
         }

@@ -12,6 +12,8 @@ import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.*;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
 
 public class JobExpReward extends AbstractReward {
@@ -48,6 +50,11 @@ public class JobExpReward extends AbstractReward {
         return new ActionResult();
     }
 
+    @Override
+    public Component getDescription() {
+        return this.getDescription(this.min, this.max);
+    }
+
     public static class Serializer implements IRewardSerializer<JobExpReward> {
         @Override
         public JobExpReward fromJson(JsonObject jsonObject, double chance, int priority) {
@@ -59,7 +66,7 @@ public class JobExpReward extends AbstractReward {
         }
 
         @Override
-        public JobExpReward fromNetwork(FriendlyByteBuf friendlyByteBuf, double chance, int priority) {
+        public JobExpReward fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, double chance, int priority) {
             return new JobExpReward(
                     chance,
                     priority,
@@ -68,7 +75,7 @@ public class JobExpReward extends AbstractReward {
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf friendlyByteBuf, JobExpReward type) {
+        public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobExpReward type) {
             IRewardSerializer.super.toNetwork(friendlyByteBuf, type);
             friendlyByteBuf.writeInt(type.min);
             friendlyByteBuf.writeInt(type.max);

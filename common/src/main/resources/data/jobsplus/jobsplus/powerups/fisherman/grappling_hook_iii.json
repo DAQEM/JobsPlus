@@ -4,7 +4,7 @@
   "name": "Grappling Hook III",
   "description": "Make your grappling hook pull you even further.",
   "icon": {
-    "item": "minecraft:fishing_rod",
+    "id": "minecraft:fishing_rod",
     "count": 3
   },
   "price": 10,

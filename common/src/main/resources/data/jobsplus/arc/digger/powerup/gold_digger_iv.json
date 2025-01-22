@@ -8,7 +8,9 @@
     {
       "type": "arc:drop_item",
       "chance": 0.5,
-      "item": "minecraft:gold_block"
+      "item": {
+        "id": "minecraft:gold_block"
+      }
     }
   ],
   "conditions": [

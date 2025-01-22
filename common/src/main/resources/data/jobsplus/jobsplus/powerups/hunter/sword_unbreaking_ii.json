@@ -4,7 +4,7 @@
   "name": "Sword Unbreaking II",
   "description": "Swords are 20% less likely to take damage when used.",
   "icon": {
-    "item": "minecraft:diamond_sword",
+    "id": "minecraft:diamond_sword",
     "count": 2
   },
   "price": 8,

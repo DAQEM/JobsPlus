@@ -1,10 +1,6 @@
 package com.daqem.jobsplus.player.job.powerup;
 
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Powerup {
 
@@ -20,11 +16,11 @@ public class Powerup {
         return powerupInstance;
     }
 
-    public PowerupState getPowerupState() {
+    public PowerupState getState() {
         return powerupState;
     }
 
-    public void setPowerupState(PowerupState powerupState) {
+    public void setState(PowerupState powerupState) {
         this.powerupState = powerupState;
     }
 

@@ -3,7 +3,7 @@
   "name": "Job Experience I",
   "description": "Multiply your job experience by 1.5x",
   "icon": {
-    "item": "minecraft:experience_bottle"
+    "id": "minecraft:experience_bottle"
   },
   "price": 5,
   "required_level": 15

@@ -1,8 +1,6 @@
 package com.daqem.jobsplus.client.powerup;
 
-import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.render.RenderColor;
-import com.daqem.jobsplus.client.screen.PowerUpsScreen;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.jobsplus.player.job.powerup.JobPowerupManager;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
@@ -31,7 +29,7 @@ import java.util.stream.Stream;
 
 public class PowerupWidget {
 
-    private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
+    private static final ResourceLocation WIDGETS_LOCATION = ResourceLocation.parse("textures/gui/advancements/widgets.png");
     public final static int HEIGHT = 29;
     public final static int WIDTH = 28;
 
@@ -75,7 +73,7 @@ public class PowerupWidget {
 
     public PowerupState getPowerupState() {
         if (this.powerup != null) {
-            return powerup.getPowerupState();
+            return powerup.getState();
         } else {
             if (this.parent == null) {
                 return PowerupState.ACTIVE;
@@ -376,7 +374,7 @@ public class PowerupWidget {
         int extraWidthCondition = i > 1 ? minecraftFont.width("  ") + minecraftFont.width("0") * stringLength * 2 + minecraftFont.width("/") : 0;
         int totalWidth = 29 + minecraftFont.width(powerupInstance.getName()) + extraWidthCondition + 3 + 5;
 
-        List<FormattedCharSequence> descriptions = Language.getInstance().getVisualOrder(findOptimalLines(JobsPlus.literal(powerupInstance.getDescription()).copy(), totalWidth));
+        List<FormattedCharSequence> descriptions = Language.getInstance().getVisualOrder(findOptimalLines(powerupInstance.getDescription().copy(), totalWidth));
 
 
         for(FormattedCharSequence descriptionLine : descriptions) {
@@ -397,7 +395,7 @@ public class PowerupWidget {
         }
         int lines = 32 + var10001 * 9 + priceExtraHeight + textHeight + heightBetweenText + textHeight;
 
-        guiGraphics.blitNineSliced(WIDGETS_LOCATION, x - 4, y + 2, totalWidth, lines, 10, 200, 26, 0, 52);
+        guiGraphics.blitSprite(WIDGETS_LOCATION, x - 4, y + 2, totalWidth, lines, 10, 200, 26, 0, 52);
         if (this.getPowerupState() == PowerupState.NOT_OWNED || this.getPowerupState() == PowerupState.LOCKED) {
             guiGraphics.blit(WIDGETS_LOCATION, x - 4 + 2, y + 2 + lines - 28, 2, 52 + 26 - 10 + 5, totalWidth - 4, 1);
         }
@@ -526,10 +524,5 @@ public class PowerupWidget {
         Stream<FormattedText> var10000 = list.stream();
         Objects.requireNonNull(stringSplitter);
         return (float)var10000.mapToDouble(stringSplitter::stringWidth).max().orElse(0.0);
-    }
-
-    public void setMinMaxXY(PowerUpsScreen screen) {
-        this.children.forEach(child -> child.setMinMaxXY(screen));
-        screen.setMinMaxXY(Mth.floor(this.x * WIDTH), Mth.floor(this.y * HEIGHT), Mth.floor(this.x * WIDTH) + 24, Mth.floor(this.y * HEIGHT) + 24);
     }
 }

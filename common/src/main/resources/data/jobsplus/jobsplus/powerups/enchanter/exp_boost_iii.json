@@ -4,7 +4,7 @@
   "name": "Experience Boost III",
   "description": "Multiply your experience from blocks and mobs by 2.5x",
   "icon": {
-    "item": "minecraft:enchanting_table",
+    "id": "minecraft:enchanting_table",
     "count": 3
   },
   "price": 10,
