@@ -117,7 +117,7 @@ curseforge {
         }
 
         mainArtifact(remapJar) {
-            displayName = "$project.mod_name NeoForge $project.minecraft_version - $project.mod_version"
+            displayName = "$project.mod_name NeoForge - $project.mod_version"
         }
 
         addArtifact(remapSourcesJar) {
@@ -128,7 +128,7 @@ curseforge {
 modrinth {
     token = System.getenv("MODRINTH_API_KEY")
     projectId = project.modrinth_project_id
-    versionName = "$project.mod_name NeoForge $project.minecraft_version - $project.mod_version"
+    versionName = "$project.mod_name NeoForge - $project.mod_version"
     versionNumber = "$project.mod_version"
     versionType = "$project.release_type"
     uploadFile = remapJar
