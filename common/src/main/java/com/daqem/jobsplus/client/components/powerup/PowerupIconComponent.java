@@ -5,6 +5,7 @@ import com.daqem.jobsplus.client.components.ModalComponent;
 import com.daqem.jobsplus.client.components.SpriteComponent;
 import com.daqem.jobsplus.client.components.jobs.JobsComponent;
 import com.daqem.jobsplus.client.options.JobsScreenOptions;
+import com.daqem.jobsplus.client.screen.job.tab.RightTab;
 import com.daqem.jobsplus.client.textures.JobsPlusTextures;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
@@ -23,6 +24,7 @@ public class PowerupIconComponent extends SpriteComponent {
 
     private final PowerupType type;
     private PowerupState state;
+    private JobsScreenOptions options;
 
     private boolean isClicked = false;
     private long clickedAt;
@@ -34,6 +36,7 @@ public class PowerupIconComponent extends SpriteComponent {
         super(getSprite(state, type), x, y, 26, 26);
         this.state = state;
         this.type = type;
+        this.options = options;
 
         ItemComponent itemComponent = new ItemComponent(5, 5, itemStack, true);
 
@@ -159,5 +162,23 @@ public class PowerupIconComponent extends SpriteComponent {
     public void setState(PowerupState powerupState) {
         this.state = powerupState;
         setSelectedSprite(getSprite(powerupState, this.type));
+    }
+
+    @Override
+    public boolean preformOnClickEvent(double mouseX, double mouseY, int button) {
+        if (options.getSelectedRightTab() == RightTab.POWER_UPS) {
+            return super.preformOnMouseReleaseEvent(mouseX, mouseY, button);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean preformOnMouseReleaseEvent(double mouseX, double mouseY, int button) {
+        if (options.getSelectedRightTab() == RightTab.POWER_UPS) {
+            return super.preformOnMouseReleaseEvent(mouseX, mouseY, button);
+        } else {
+            return false;
+        }
     }
 }

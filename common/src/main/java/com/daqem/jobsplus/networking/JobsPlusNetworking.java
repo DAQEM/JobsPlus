@@ -20,6 +20,8 @@ public interface JobsPlusNetworking {
             new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_start_job"));
     CustomPacketPayload.Type<ServerboundStartPowerupPacket> SERVERBOUND_START_POWERUP =
             new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_start_powerup"));
+    CustomPacketPayload.Type<ServerboundRequestJobsPacket> SERVERBOUND_REQUEST_JOBS =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_request_jobs"));
 
     CustomPacketPayload.Type<ClientboundRemoveJobPacket> CLIENTBOUND_REMOVE_JOB =
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_remove_job"));
@@ -44,6 +46,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_TOGGLE_POWERUP, ServerboundTogglePowerUpPacket.STREAM_CODEC, ServerboundTogglePowerUpPacket::handleServerSide);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_START_JOB, ServerboundStartJobPacket.STREAM_CODEC, ServerboundStartJobPacket::handleServerSide);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_START_POWERUP, ServerboundStartPowerupPacket.STREAM_CODEC, ServerboundStartPowerupPacket::handleServerSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_REQUEST_JOBS, ServerboundRequestJobsPacket.STREAM_CODEC, ServerboundRequestJobsPacket::handleServerSide);
     }
 
     static void initServer() {

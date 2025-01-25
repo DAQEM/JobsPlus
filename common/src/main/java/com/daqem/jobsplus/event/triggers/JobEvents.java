@@ -22,11 +22,23 @@ public class JobEvents {
                     .build()
                     .sendToAction();
         }
-        player.jobsplus$addCoins(JobsPlusConfig.coinsPerLevelUp.get());
         if (player.jobsplus$getPlayer() instanceof ServerPlayer serverPlayer) {
+            player.jobsplus$addCoins(JobsPlusConfig.coinsPerLevelUp.get());
             JobInstance jobInstance = job.getJobInstance();
             if (serverPlayer.getServer() == null) return;
-            serverPlayer.getServer().getPlayerList().broadcastSystemMessage(JobsPlus.translatable("job.level_up", serverPlayer.getName().copy().withStyle(style -> style.withColor(jobInstance.getColorDecimal())), JobsPlus.literal(String.valueOf(job.getLevel())).withStyle(style -> style.withColor(jobInstance.getColorDecimal())), jobInstance.getName().getString()), false);
+            serverPlayer.getServer().getPlayerList()
+                    .broadcastSystemMessage(
+                            JobsPlus.translatable("job.level_up",
+                                    serverPlayer.getName().copy()
+                                            .withStyle(style -> style
+                                                    .withColor(jobInstance.getColorDecimal())
+                                            ),
+                                    JobsPlus.literal(String.valueOf(job.getLevel()))
+                                            .withStyle(style -> style
+                                                    .withColor(jobInstance.getColorDecimal())
+                                            ),
+                                    jobInstance.getName().getString()
+                            ), false);
         }
     }
 
