@@ -145,7 +145,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
 
     @Override
     public void jobsplus$addCoins(int coins) {
-        this.jobsplus$coins = Mth.clamp(this.jobsplus$coins + coins, 0, Integer.MAX_VALUE);
+        this.jobsplus$setCoins(Mth.clamp(this.jobsplus$coins + coins, 0, Integer.MAX_VALUE));
     }
 
     @Override

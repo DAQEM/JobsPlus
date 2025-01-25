@@ -5,18 +5,26 @@ import com.daqem.arc.api.player.ArcPlayer;
 import com.daqem.jobsplus.client.player.JobsClientPlayer;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
+import com.daqem.jobsplus.networking.c2s.ServerboundRequestJobsPacket;
+import com.daqem.jobsplus.networking.sync.coin.ClientBoundUpdateCoinsPacket;
+import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.mojang.authlib.GameProfile;
+import dev.architectury.networking.NetworkManager;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,5 +165,10 @@ public abstract class MixinLocalPlayer extends AbstractClientPlayer implements J
                     .filter(powerup -> powerup.getState() == PowerupState.ACTIVE)
                     .forEach(powerup -> arcPlayer.arc$addActionHolder(powerup.getPowerupInstance()));
         }
+    }
+
+    @Inject(at = @At("TAIL"), method = "respawn")
+    public void restoreFrom(CallbackInfo ci) {
+        NetworkManager.sendToServer(new ServerboundRequestJobsPacket());
     }
 }

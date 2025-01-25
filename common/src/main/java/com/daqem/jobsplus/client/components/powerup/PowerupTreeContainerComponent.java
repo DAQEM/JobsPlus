@@ -1,7 +1,6 @@
 package com.daqem.jobsplus.client.components.powerup;
 
 import com.daqem.jobsplus.client.options.JobsScreenOptions;
-import com.daqem.jobsplus.player.job.Job;
 import com.daqem.uilib.client.gui.component.AbstractComponent;
 import com.daqem.uilib.client.gui.component.texture.RepeatingTextureComponent;
 import com.daqem.uilib.client.gui.texture.Texture;
@@ -51,9 +50,5 @@ public class PowerupTreeContainerComponent extends AbstractComponent<PowerupTree
             return super.preformOnClickEvent(mouseX, mouseY, button);
         }
         return false;
-    }
-
-    public PowerupTreeComponent getTreeComponent() {
-        return treeComponent;
     }
 }
