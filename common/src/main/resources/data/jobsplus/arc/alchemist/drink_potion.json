@@ -14,7 +14,9 @@
   "conditions": [
     {
       "type": "arc:item",
-      "item": "minecraft:potion"
+      "item": {
+        "id": "minecraft:potion"
+      }
     }
   ]
 }

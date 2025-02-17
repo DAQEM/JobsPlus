@@ -86,6 +86,11 @@ public class JobItemRestrictionsComponent extends AbstractComponent<JobItemRestr
                     if (components.isEmpty()) {
                         this.noRestrictionsComponent.setVisible(true);
                     } else {
+                        components.sort((o1, o2) -> {
+                            int level1 = o1.getRequiredLevel();
+                            int level2 = o2.getRequiredLevel();
+                            return Integer.compare(level1, level2);
+                        });
                         this.itemRestrictionsMap.put(this.cachedJob, components);
                         this.scrollContentComponent.addChildren(new ArrayList<>(components));
                     }

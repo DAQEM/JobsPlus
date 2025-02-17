@@ -4,8 +4,6 @@
     "id": "jobsplus:miner"
   },
   "type": "arc:on_break_block",
-  "short_description": "Break other blocks",
-  "description": "Earn job experience for breaking blocks that are neither common nor ores. This includes materials like sandstone and concrete. These blocks may not be as valuable as ores, but they are still useful in various crafting recipes. As a miner, it's important to be able to efficiently collect all types of materials.",
   "rewards": [
     {
       "type": "jobsplus:job_exp",

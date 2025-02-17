@@ -89,19 +89,4 @@ public class JobsScreen extends AbstractScreen {
             super.onClose();
         }
     }
-
-    public static void open(Screen screen) {
-        if (Minecraft.getInstance().player != null) {
-            JobsClientPlayer player = (JobsClientPlayer) Minecraft.getInstance().player;
-            List<Job> jobs = Stream.concat(player.jobsplus$getJobs().stream(), player.jobsplus$getInactiveJobs().stream())
-                    .sorted(Comparator.comparingInt((Job job) -> -job.getLevel())
-                            .thenComparing(job -> job.getJobInstance().getName().getString()))
-                    .toList();
-
-            Minecraft.getInstance().setScreen(new JobsScreen(new JobsScreenOptions(
-                    jobs,
-                    player.jobsplus$getCoins()
-            ), screen));
-        }
-    }
 }

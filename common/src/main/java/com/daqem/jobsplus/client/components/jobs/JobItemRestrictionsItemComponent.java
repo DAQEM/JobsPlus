@@ -65,4 +65,8 @@ public class JobItemRestrictionsItemComponent extends NineSlicedTextureComponent
 
         return tooltips;
     }
+
+    public int getRequiredLevel() {
+        return requiredLevel;
+    }
 }

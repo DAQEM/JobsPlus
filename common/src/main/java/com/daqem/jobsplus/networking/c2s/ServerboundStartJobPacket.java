@@ -14,6 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.stream.Stream;
+
 public class ServerboundStartJobPacket implements CustomPacketPayload {
 
     private final ResourceLocation jobLocation;
@@ -65,7 +67,10 @@ public class ServerboundStartJobPacket implements CustomPacketPayload {
             }
 
             serverPlayer.jobsplus$addNewJob(jobInstance);
-            NetworkManager.sendToPlayer((ServerPlayer) serverPlayer, new ClientboundOpenJobsScreenPacket());
+            NetworkManager.sendToPlayer((ServerPlayer) serverPlayer, new ClientboundOpenJobsScreenPacket(
+                    Stream.concat(serverPlayer.jobsplus$getJobs().stream(), serverPlayer.jobsplus$getInactiveJobs().stream()).toList(),
+                    serverPlayer.jobsplus$getCoins()
+            ));
         }
     }
 }

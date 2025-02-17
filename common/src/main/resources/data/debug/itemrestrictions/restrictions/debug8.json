@@ -33,7 +33,7 @@
     {
       "type": "jobsplus:job_level",
       "job": "jobsplus:miner",
-      "level": 11
+      "level": 16
     }
   ]
 }

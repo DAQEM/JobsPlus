@@ -1,6 +1,7 @@
 package com.daqem.jobsplus.networking.c2s;
 
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
+import com.daqem.jobsplus.networking.sync.coin.ClientBoundUpdateCoinsPacket;
 import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobsPacket;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import dev.architectury.networking.NetworkManager;
@@ -36,6 +37,7 @@ public class ServerboundRequestJobsPacket implements CustomPacketPayload {
     public static void handleServerSide(ServerboundRequestJobsPacket packet, NetworkManager.PacketContext context) {
         if (context.getPlayer() instanceof JobsServerPlayer jobsServerPlayer) {
             NetworkManager.sendToPlayer(jobsServerPlayer.jobsplus$getServerPlayer(), new ClientboundUpdateJobsPacket(jobsServerPlayer.jobsplus$getJobs()));
+            NetworkManager.sendToPlayer(jobsServerPlayer.jobsplus$getServerPlayer(), new ClientBoundUpdateCoinsPacket(jobsServerPlayer.jobsplus$getCoins()));
         }
     }
 }
