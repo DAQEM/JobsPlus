@@ -1,7 +1,9 @@
 package com.daqem.jobsplus.networking.s2c;
 
+import com.daqem.jobsplus.client.options.JobsScreenOptions;
 import com.daqem.jobsplus.client.screen.job.JobsScreen;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
+import com.daqem.jobsplus.player.job.Job;
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -11,7 +13,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class ClientboundOpenJobsScreenPacket implements CustomPacketPayload {
+
+    private final List<Job> jobs;
+    private final int coins;
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundOpenJobsScreenPacket> STREAM_CODEC = new StreamCodec<>() {
         @Override
@@ -21,13 +28,19 @@ public class ClientboundOpenJobsScreenPacket implements CustomPacketPayload {
 
         @Override
         public void encode(RegistryFriendlyByteBuf buf, ClientboundOpenJobsScreenPacket packet) {
+            buf.writeCollection(packet.jobs, Job.Serializer::toNetwork);
+            buf.writeInt(packet.coins);
         }
     };
 
-    public ClientboundOpenJobsScreenPacket() {
+    public ClientboundOpenJobsScreenPacket(List<Job> jobs, int coins) {
+        this.jobs = jobs;
+        this.coins = coins;
     }
 
     public ClientboundOpenJobsScreenPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
+        this.jobs = friendlyByteBuf.readList(friendlyByteBuf1 -> Job.Serializer.fromNetwork(friendlyByteBuf1, null));
+        this.coins = friendlyByteBuf.readInt();
     }
 
     @Override
@@ -40,6 +53,9 @@ public class ClientboundOpenJobsScreenPacket implements CustomPacketPayload {
         if (Minecraft.getInstance().screen instanceof JobsScreen jobsScreen) {
             previousScreen = jobsScreen.getPreviousScreen();
         }
-        JobsScreen.open(previousScreen);
+        Minecraft.getInstance().setScreen(new JobsScreen(new JobsScreenOptions(
+                packet.jobs,
+                packet.coins
+        ), previousScreen));
     }
 }

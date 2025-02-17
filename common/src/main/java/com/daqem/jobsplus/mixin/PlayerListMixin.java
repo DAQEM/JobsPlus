@@ -27,6 +27,7 @@ public class PlayerListMixin {
         for (ServerPlayer player : this.players) {
             if (player instanceof JobsPlayer jobsPlayer) {
                 NetworkManager.sendToPlayer(player, new ClientboundUpdateJobsPacket(jobsPlayer.jobsplus$getJobs()));
+                NetworkManager.sendToPlayer(player, new ClientBoundUpdateCoinsPacket(jobsPlayer.jobsplus$getCoins()));
             }
         }
     }

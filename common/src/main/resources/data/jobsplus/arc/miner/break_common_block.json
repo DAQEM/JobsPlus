@@ -4,8 +4,6 @@
     "id": "jobsplus:miner"
   },
   "type": "arc:on_break_block",
-  "short_description": "Break common blocks",
-  "description": "Earn job experience for breaking blocks that are commonly found underground, such as stone, granite, and diorite. As a miner, it's important to be able to collect these resources efficiently to progress in the game.",
   "rewards": [
     {
       "type": "jobsplus:job_exp",
