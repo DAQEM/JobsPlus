@@ -167,7 +167,7 @@ public class PowerupIconComponent extends SpriteComponent {
     @Override
     public boolean preformOnClickEvent(double mouseX, double mouseY, int button) {
         if (options.getSelectedRightTab() == RightTab.POWER_UPS) {
-            return super.preformOnMouseReleaseEvent(mouseX, mouseY, button);
+            return super.preformOnClickEvent(mouseX, mouseY, button);
         } else {
             return false;
         }
