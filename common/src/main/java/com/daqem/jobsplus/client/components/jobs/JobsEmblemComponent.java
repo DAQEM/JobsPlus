@@ -28,6 +28,10 @@ public class JobsEmblemComponent extends AbstractSpriteComponent<JobsEmblemCompo
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         int levelPercentage = job.getLevel() * 100 / job.getJobInstance().getMaxLevel();
-        graphics.blitSprite(getSprite(levelPercentage / 25), 0, 0, getWidth(), getHeight());
+        int index = levelPercentage / 25;
+        if (index >= getSprites().size()) {
+            index = getSprites().size() - 1;
+        }
+        graphics.blitSprite(getSprite(index), 0, 0, getWidth(), getHeight());
     }
 }

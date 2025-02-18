@@ -42,7 +42,7 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 
-    modImplementation "curse.maven:supermartijn642s-config-lib-438332:${project.config_library_file_fabric}"
+    modImplementation "curse.maven:yaml-config-1128669:${project.config_library_file_fabric}"
     modImplementation "curse.maven:arc-883593:${project.arc_file_fabric}"
     modImplementation "curse.maven:item-restrictions-887774:${project.item_restrictions_file_fabric}"
     modImplementation "curse.maven:ui-933200:${project.ui_library_file_fabric}"

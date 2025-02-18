@@ -104,22 +104,6 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     }
 
     @Override
-    public void jobsplus$refundJob(@NotNull JobInstance jobInstance) {
-        int refund = jobInstance.getStopRefund();
-        if (jobsplus$getJobs().size() > JobsPlusConfig.amountOfFreeJobs.get()) {
-            if (refund > 0) {
-                jobsplus$addCoins(refund);
-            }
-        }
-    }
-
-    @Override
-    public void jobsplus$removeAndRefundJob(@NotNull JobInstance jobInstance) {
-        jobsplus$removeJob(jobInstance);
-        jobsplus$refundJob(jobInstance);
-    }
-
-    @Override
     public @Nullable Job jobsplus$getJob(@Nullable JobInstance jobLocation) {
         if (jobLocation == null) return null;
         return this.jobsplus$jobs.stream()
@@ -175,12 +159,6 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     @Override
     public String jobsplus$getName() {
         return super.getName().getString();
-    }
-
-    public ListTag jobsplus$inactiveJobsToNBT() {
-        ListTag jobsListTag = new ListTag();
-        jobsplus$getInactiveJobs().forEach(job -> jobsListTag.add(job.toNBT()));
-        return jobsListTag;
     }
 
     @Override

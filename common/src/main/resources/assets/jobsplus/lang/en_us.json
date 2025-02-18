@@ -459,5 +459,15 @@
   "arc.condition.powerup_not_active": "Powerup Not Active",
   "arc.condition.description.powerup_not_active": "If the powerup %s is not active.",
   "arc.condition.has_job": "Has Job",
-  "arc.condition.description.has_job": "If the player has the job %s."
+  "arc.condition.description.has_job": "If the player has the job %s.",
+  "yamlconfig.jobsplus": "Jobs+",
+  "yamlconfig.jobsplus.jobsplus-common": "Common",
+  "yamlconfig.jobsplus.jobsplus-common.debug": "Debug",
+  "yamlconfig.jobsplus.jobsplus-common.debug.is_debug": "Debug Enabled",
+  "yamlconfig.jobsplus.jobsplus-common.jobs": "Jobs",
+  "yamlconfig.jobsplus.jobsplus-common.jobs.enable_default_jobs": "Enable Default Jobs",
+  "yamlconfig.jobsplus.jobsplus-common.jobs.amount_of_free_jobs": "Amount of Free Jobs",
+  "yamlconfig.jobsplus.jobsplus-common.jobs.max_jobs": "Max Jobs",
+  "yamlconfig.jobsplus.jobsplus-common.jobs.coins": "Coins",
+  "yamlconfig.jobsplus.jobsplus-common.jobs.coins.coins_per_level_up": "Coins Per Level Up"
 }

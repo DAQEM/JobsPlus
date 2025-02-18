@@ -1,39 +1,36 @@
 package com.daqem.jobsplus.config;
 
 import com.daqem.jobsplus.JobsPlus;
-import com.supermartijn642.configlib.api.ConfigBuilders;
-import com.supermartijn642.configlib.api.IConfigBuilder;
-
-import java.util.function.Supplier;
+import com.daqem.yamlconfig.api.config.ConfigExtension;
+import com.daqem.yamlconfig.api.config.ConfigType;
+import com.daqem.yamlconfig.api.config.IConfigBuilder;
+import com.daqem.yamlconfig.api.config.entry.IConfigEntry;
+import com.daqem.yamlconfig.impl.config.ConfigBuilder;
 
 public class JobsPlusConfig {
 
-    public static final Supplier<Boolean> enableDefaultJobs;
-    public static final Supplier<Integer> amountOfFreeJobs;
-    public static final Supplier<Integer> maxJobs;
-    public static final Supplier<Integer> jobStopRefundPercentage;
-    public static final Supplier<Boolean> allowJobStopRefund;
+    public static final IConfigEntry<Boolean> enableDefaultJobs;
+    public static final IConfigEntry<Integer> amountOfFreeJobs;
+    public static final IConfigEntry<Integer> maxJobs;
 
-    public static final Supplier<Integer> coinsPerLevelUp;
+    public static final IConfigEntry<Integer> coinsPerLevelUp;
 
-    public static final Supplier<Boolean> isDebug;
+    public static final IConfigEntry<Boolean> isDebug;
 
     static {
-        IConfigBuilder config = ConfigBuilders.newTomlConfig(JobsPlus.MOD_ID, null, false);
+        IConfigBuilder config = new ConfigBuilder(JobsPlus.MOD_ID, "jobsplus-common", ConfigExtension.YAML, ConfigType.COMMON);
 
         config.push("jobs");
-        enableDefaultJobs = config.comment("if true, the default jobs are enabled. WARNING: setting this to false will erase all the stats for these jobs").define("enable_default_jobs", true);
-        amountOfFreeJobs = config.comment("the amount of free jobs a player can have").define("amount_of_free_jobs", 2, 0, Integer.MAX_VALUE);
-        maxJobs = config.comment("the maximum amount of jobs a player can have").define("max_jobs", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
-        jobStopRefundPercentage = config.comment("the percentage of the job cost that is refunded when a player stops a job").define("job_stop_refund_percentage", 50, 0, 100);
-        allowJobStopRefund = config.comment("if true, players can stop a job and get a refund").define("allow_job_stop_refund", false);
+        enableDefaultJobs = config.defineBoolean("enable_default_jobs", true).withComments("if true, the default jobs are enabled. WARNING: setting this to false will erase all the stats for these jobs");
+        amountOfFreeJobs = config.defineInteger("amount_of_free_jobs", 2, 0, Integer.MAX_VALUE).withComments("the amount of free jobs a player can have");
+        maxJobs = config.defineInteger("max_jobs", Integer.MAX_VALUE, 0, Integer.MAX_VALUE).withComments("the maximum amount of jobs a player can have");
         config.push("coins");
-        coinsPerLevelUp = config.comment("the amount of coins a player gets when they level up a job").define("coins_per_level_up", 1, 0, Integer.MAX_VALUE);
+        coinsPerLevelUp = config.defineInteger("coins_per_level_up", 1, 0, Integer.MAX_VALUE).withComments("the amount of coins a player gets when they level up a job");
         config.pop();
         config.pop();
 
         config.push("debug");
-        isDebug = config.comment("if true, debug mode is enabled").define("is_debug", false);
+        isDebug = config.defineBoolean("is_debug", false).withComments("if true, debug mode is enabled");
         config.pop();
 
         config.build();

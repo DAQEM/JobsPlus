@@ -27,6 +27,9 @@
           ]
         }
       ]
+    },
+    {
+      "type": "arc:not_in_block_pos_cache"
     }
   ]
 }
