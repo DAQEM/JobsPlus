@@ -5,6 +5,9 @@ import com.daqem.jobsplus.client.screen.job.JobsScreen;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
 import com.daqem.jobsplus.player.job.Job;
 import dev.architectury.networking.NetworkManager;
+import dev.architectury.utils.Env;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -48,6 +51,7 @@ public class ClientboundOpenJobsScreenPacket implements CustomPacketPayload {
         return JobsPlusNetworking.CLIENTBOUND_OPEN_JOBS_SCREEN;
     }
 
+    @Environment(EnvType.CLIENT)
     public static void handleClientSide(ClientboundOpenJobsScreenPacket packet, NetworkManager.PacketContext context) {
         @Nullable Screen previousScreen = null;
         if (Minecraft.getInstance().screen instanceof JobsScreen jobsScreen) {
