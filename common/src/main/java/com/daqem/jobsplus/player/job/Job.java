@@ -75,29 +75,32 @@ public class Job {
         return experience;
     }
 
-    public void setExperience(int experience) {
-        JobEvents.onJobExperience(player, this, experience - this.experience);
-        expCollector.addExp(experience - this.experience);
+    public void setExperience(int experience, boolean triggerEvent) {
+        int change = experience - this.experience;
+        expCollector.addExp(change);
         this.experience = experience;
         checkForLevelUp();
         syncWithClient();
+        if (triggerEvent) {
+            JobEvents.onJobExperience(player, this, change);
+        }
     }
 
     public void addExperience(int experience) {
         JobsPlus.debug("Adding {} experience to {}'s {} job.", experience, player.jobsplus$getName(), jobInstance.getName().getString());
-        setExperience(getExperience() + experience);
+        setExperience(getExperience() + experience, true);
     }
 
     public void addExperienceWithoutEvent(int experience) {
         JobsPlus.debug("Adding {} experience to {}'s {} job without event.", experience, player.jobsplus$getName(), jobInstance.getName().getString());
-        setExperience(getExperience() + experience);
+        setExperience(getExperience() + experience, false);
     }
 
     private void checkForLevelUp() {
         int experienceToLevelUp = getExperienceToLevelUp(level);
         if (experience >= experienceToLevelUp) {
             setLevel(level + 1);
-            setExperience(experience - experienceToLevelUp);
+            setExperience(experience - experienceToLevelUp, false);
             JobEvents.onJobLevelUp(player, this);
             if (this.player instanceof JobsServerPlayer serverPlayer) {
                 serverPlayer.jobsplus$updateJobOnClient(this);

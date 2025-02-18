@@ -18,6 +18,25 @@
     },
     {
       "type": "arc:ready_for_shearing"
+    },
+    {
+      "type": "arc:or",
+      "conditions": [
+        {
+          "type": "arc:item_in_hand",
+          "hand": "MAIN_HAND",
+          "item": {
+            "id": "minecraft:shears"
+          }
+        },
+        {
+          "type": "arc:item_in_hand",
+          "hand": "OFF_HAND",
+          "item": {
+            "id": "minecraft:shears"
+          }
+        }
+      ]
     }
   ]
 }

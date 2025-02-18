@@ -189,7 +189,7 @@ public class JobCommand {
                     source.sendFailure(JobsPlus.translatable(
                             "command.set.experience.already_max_level"));
                 }
-                job.setExperience(experience);
+                job.setExperience(experience, false);
                 source.sendSuccess(() -> JobsPlus.translatable(
                         "command.set.experience.success", jobInstance.getName(), experience, jobsServerPlayer.jobsplus$getPlayer().getDisplayName()), false);
             } else {

@@ -23,14 +23,13 @@
     ]
   },
   "mixins": [
-    "jobsplus.mixins.json",
     "jobsplus-common.mixins.json"
   ],
   "depends": {
     "fabric": ">=${fabric_api_version}",
     "minecraft": ">=${minecraft_version}",
     "architectury": ">=${architectury_version}",
-    "supermartijn642configlib": ">=${config_library_version}",
+    "yamlconfig": ">=${config_library_version}",
     "arc": ">=${arc_version}",
     "itemrestrictions": ">=${item_restrictions_version}",
     "uilib": ">=${ui_library_version}"
