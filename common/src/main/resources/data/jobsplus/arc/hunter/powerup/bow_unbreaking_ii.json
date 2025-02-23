@@ -14,7 +14,7 @@
     {
       "type": "arc:items",
       "items": [
-        "#forge:tools/bows",
+        "#neoforge:tools/bows",
         "#c:bows"
       ]
     },

@@ -1,12 +1,12 @@
-package com.daqem.jobsplus.forge;
+package com.daqem.jobsplus.neoforge;
 
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.JobsPlusClient;
 import com.daqem.jobsplus.command.arguments.EnumArgument;
 import com.daqem.jobsplus.command.arguments.JobArgument;
 import com.daqem.jobsplus.command.arguments.PowerupArgument;
-import com.daqem.jobsplus.forge.data.JobManagerNeoForge;
-import com.daqem.jobsplus.forge.data.PowerupManagerNeoForge;
+import com.daqem.jobsplus.neoforge.data.JobManagerNeoForge;
+import com.daqem.jobsplus.neoforge.data.PowerupManagerNeoForge;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
