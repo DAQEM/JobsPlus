@@ -1,4 +1,4 @@
-package com.daqem.jobsplus.forge;
+package com.daqem.jobsplus.neoforge;
 
 import com.daqem.jobsplus.JobsPlus;
 import dev.architectury.utils.EnvExecutor;

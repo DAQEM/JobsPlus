@@ -1,7 +1,7 @@
-package com.daqem.jobsplus.forge;
+package com.daqem.jobsplus.neoforge;
 
-import com.daqem.jobsplus.forge.data.JobManagerNeoForge;
-import com.daqem.jobsplus.forge.data.PowerupManagerNeoForge;
+import com.daqem.jobsplus.neoforge.data.JobManagerNeoForge;
+import com.daqem.jobsplus.neoforge.data.PowerupManagerNeoForge;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupManager;
 
