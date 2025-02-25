@@ -6,7 +6,7 @@ import com.daqem.jobsplus.client.screen.job.tab.SideTab;
 import com.daqem.jobsplus.player.job.Job;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class JobsScreenOptions {
@@ -25,7 +25,10 @@ public class JobsScreenOptions {
     }
 
     public JobsScreenOptions(List<Job> jobs, int coins, Job selectedJob, LeftTab selectedLeftTab, RightTab selectedRightTab, @Nullable SideTab selectedSideTab) {
-        this.jobs = jobs;
+        this.jobs = jobs.stream()
+                .sorted(Comparator.comparing(Job::getLevel).reversed()
+                        .thenComparing(job -> job.getJobInstance().getName().getString()))
+                .toList();
         this.preformingJobs = this.jobs.stream().filter(job -> job.getLevel() > 0).toList();
         this.notPreformingJobs = this.jobs.stream().filter(job -> job.getLevel() <= 0).toList();
         this.coins = coins;

@@ -166,6 +166,8 @@
   "key.jobsplus.open_menu": "Open Jobs+ GUI",
   "jobsplus.job.exp.gain": "+%s %s",
   "jobsplus.job.level_up": "%s has reached level %s as a %s!",
+  "jobsplus.job.level_up.toast": "Level %s achieved!",
+  "jobsplus.job.item_unlocked.toast": "New item unlocked!",
   "jobsplus.job.jobsplus.alchemist.name": "Alchemist",
   "jobsplus.job.jobsplus.alchemist.description": "The alchemist is a master of potions and brewing. Use the Alchemist's powerups to make your potions even stronger!",
   "jobsplus.job.jobsplus.builder.name": "Builder",
