@@ -1,27 +1,20 @@
 package com.daqem.jobsplus.client.components.jobs;
 
-import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.options.JobsScreenOptions;
 import com.daqem.jobsplus.client.screen.job.tab.LeftTab;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.uilib.api.client.gui.component.IComponent;
-import com.daqem.uilib.api.client.gui.component.event.OnClickEvent;
 import com.daqem.uilib.api.client.gui.component.scroll.ScrollOrientation;
 import com.daqem.uilib.client.gui.component.scroll.ScrollBarComponent;
 import com.daqem.uilib.client.gui.component.scroll.ScrollContentComponent;
 import com.daqem.uilib.client.gui.component.scroll.ScrollPanelComponent;
 import com.daqem.uilib.client.gui.component.scroll.ScrollWheelComponent;
-import com.daqem.uilib.client.gui.component.texture.NineSlicedTextureComponent;
 import com.daqem.uilib.client.gui.texture.Textures;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class JobsScrollComponent extends ScrollPanelComponent {
 
@@ -55,6 +48,7 @@ public class JobsScrollComponent extends ScrollPanelComponent {
                 notPreformingJobs.add(item);
             }
         }
+
 
         setScrollBar(scrollBar);
         setScrollContentComponent(scrollContent);
