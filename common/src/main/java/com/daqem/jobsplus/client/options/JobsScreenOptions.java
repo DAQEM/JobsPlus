@@ -4,6 +4,7 @@ import com.daqem.jobsplus.client.screen.job.tab.LeftTab;
 import com.daqem.jobsplus.client.screen.job.tab.RightTab;
 import com.daqem.jobsplus.client.screen.job.tab.SideTab;
 import com.daqem.jobsplus.player.job.Job;
+import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;

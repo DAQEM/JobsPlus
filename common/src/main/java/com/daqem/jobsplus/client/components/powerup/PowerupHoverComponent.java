@@ -14,6 +14,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -72,14 +73,14 @@ public class PowerupHoverComponent extends AbstractComponent<PowerupHoverCompone
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         if (!hasStaticHeight) {
             setHeight(32 + getDescriptionHeight());
         }
         this.requiredLevelComponent.setY(getHeight() + 1);
         this.priceComponent.setY(getHeight() + 11);
 
-        graphics.blitSprite(JobsPlusTextures.Powerup.POWERUP_TEXT_BOX, -4, 16, getWidth(), getHeight() + 10);
+        graphics.blitSprite(RenderType::guiTextured, JobsPlusTextures.Powerup.POWERUP_TEXT_BOX, -4, 16, getWidth(), getHeight() + 10);
         graphics.fill(-2, getHeight() - 3, getWidth(), getHeight() - 2, 0x33FFFFFF);
     }
 

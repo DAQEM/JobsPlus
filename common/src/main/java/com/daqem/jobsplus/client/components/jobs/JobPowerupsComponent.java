@@ -44,7 +44,7 @@ public class JobPowerupsComponent extends AbstractComponent<JobPowerupsComponent
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         if (isVisible()) {
             if (cachedJob != options.getSelectedJob()) {
                 this.removeChild(powerupTreeContainerComponents.get(cachedJob));

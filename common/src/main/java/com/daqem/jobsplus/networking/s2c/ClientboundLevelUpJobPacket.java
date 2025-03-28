@@ -49,6 +49,6 @@ public class ClientboundLevelUpJobPacket implements CustomPacketPayload {
 
     @Environment(EnvType.CLIENT)
     public static void handleClientSide(ClientboundLevelUpJobPacket packet, NetworkManager.PacketContext context) {
-        LevelUpJobToast.add(Minecraft.getInstance().getToasts(), JobInstance.of(packet.jobLocation), packet.level);
+        LevelUpJobToast.addOrUpdate(Minecraft.getInstance().getToastManager(), JobInstance.of(packet.jobLocation), packet.level);
     }
 }

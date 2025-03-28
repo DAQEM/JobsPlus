@@ -49,7 +49,7 @@ public class JobsScreen extends AbstractScreen {
         });
 
         this.addComponent(modalClickPasserComponent);
-        this.addComponent(new JobsComponent(getTitle(), options, modalComponent));
+        this.addComponent(new JobsComponent(getTitle(), options, modalComponent, this));
         this.addComponent(discordIconComponent);
         this.addComponent(modalComponent);
     }
@@ -64,7 +64,7 @@ public class JobsScreen extends AbstractScreen {
 
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        this.renderBlurredBackground(delta);
+        this.renderBlurredBackground();
     }
 
     @Override

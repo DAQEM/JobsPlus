@@ -3,9 +3,12 @@ package com.daqem.jobsplus.client.components.jobs;
 import com.daqem.arc.api.action.IAction;
 import com.daqem.arc.client.gui.action.ActionScreen;
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.reward.rewards.job.JobExpReward;
 import com.daqem.jobsplus.player.job.Job;
+import com.daqem.uilib.api.client.gui.component.IComponent;
 import com.daqem.uilib.client.gui.component.TextComponent;
+import com.daqem.uilib.client.gui.component.scroll.ScrollContentComponent;
 import com.daqem.uilib.client.gui.component.texture.NineSlicedTextureComponent;
 import com.daqem.uilib.client.gui.text.multiline.MultiLineText;
 import com.daqem.uilib.client.gui.texture.Textures;
@@ -15,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
 
 import java.util.List;
 
@@ -43,7 +47,14 @@ public class JobExperienceItemComponent extends NineSlicedTextureComponent {
         setOnClickEvent((clickedObject, screen, mouseX, mouseY, button) -> {
             //noinspection DataFlowIssue
             if (getParent().getParent().getParent().isVisible()) {
-                Minecraft.getInstance().setScreen(new ActionScreen(actions, action));
+                Minecraft.getInstance().setScreen(new ActionScreen(actions, action) {
+                    @Override
+                    public void onClose() {
+                        super.onClose();
+                        JobsComponent jobsComponent = (JobsComponent) getParent().getParent().getParent().getParent();
+                        Minecraft.getInstance().setScreen(jobsComponent.getScreen());
+                    }
+                });
                 return false;
             }
             return false;
@@ -51,11 +62,10 @@ public class JobExperienceItemComponent extends NineSlicedTextureComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         if (isTotalHovered(mouseX, mouseY)) {
-            RenderSystem.setShaderColor(0.85F, 0.85F, 0.85F, 1.0F);
+            color = ARGB.colorFromFloat(.9F, .9F, .9F, 1F);
         }
-        super.render(graphics, mouseX, mouseY, delta);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        super.render(graphics, mouseX, mouseY, delta, color);
     }
 }

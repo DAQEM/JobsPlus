@@ -9,6 +9,7 @@ import com.daqem.uilib.client.gui.component.AbstractComponent;
 import com.daqem.uilib.client.util.SoundManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 public class TabComponent extends AbstractComponent<TabComponent> {
@@ -39,12 +40,12 @@ public class TabComponent extends AbstractComponent<TabComponent> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         ResourceLocation selectedSprite = isSelected() ?
                 tabOptions.tabType().getSelectedSprite(tabOptions.tabPosition()) :
                 tabOptions.tabType().getSprite(tabOptions.tabPosition());
-        graphics.blitSprite(selectedSprite, 0, 0, getWidth(), getHeight());
-        graphics.blitSprite(tabOptions.tabIconOptions().icon(), tabOptions.tabIconOptions().x(), tabOptions.tabIconOptions().y(), tabOptions.tabIconOptions().width(), tabOptions.tabIconOptions().height());
+        graphics.blitSprite(RenderType::guiTextured, selectedSprite, 0, 0, getWidth(), getHeight());
+        graphics.blitSprite(RenderType::guiTextured, tabOptions.tabIconOptions().icon(), tabOptions.tabIconOptions().x(), tabOptions.tabIconOptions().y(), tabOptions.tabIconOptions().width(), tabOptions.tabIconOptions().height());
     }
 
     @Override

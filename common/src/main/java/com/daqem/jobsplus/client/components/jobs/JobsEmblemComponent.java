@@ -4,6 +4,7 @@ import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.uilib.client.gui.component.AbstractSpriteComponent;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.LinkedList;
@@ -26,12 +27,12 @@ public class JobsEmblemComponent extends AbstractSpriteComponent<JobsEmblemCompo
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         int levelPercentage = job.getLevel() * 100 / job.getJobInstance().getMaxLevel();
         int index = levelPercentage / 25;
         if (index >= getSprites().size()) {
             index = getSprites().size() - 1;
         }
-        graphics.blitSprite(getSprite(index), 0, 0, getWidth(), getHeight());
+        graphics.blitSprite(RenderType::guiTextured, getSprite(index), 0, 0, getWidth(), getHeight());
     }
 }

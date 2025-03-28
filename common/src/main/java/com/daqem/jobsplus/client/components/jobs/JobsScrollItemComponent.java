@@ -15,6 +15,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.ARGB;
 
 import java.text.DecimalFormat;
 import java.util.Objects;
@@ -67,14 +68,13 @@ public class JobsScrollItemComponent extends NineSlicedTextureComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         if (options.getSelectedJob() == job) {
-            RenderSystem.setShaderColor(.75F, .75F, .75F, 1F);
+            color = ARGB.colorFromFloat(.75F, .75F, .75F, 1F);
         } else if (isTotalHovered(mouseX, mouseY)) {
-            RenderSystem.setShaderColor(.85F, .85F, .85F, 1F);
+            color = ARGB.colorFromFloat(.9F, .9F, .9F, 1F);
         }
-        super.render(graphics, mouseX, mouseY, delta);
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        super.render(graphics, mouseX, mouseY, delta, color);
     }
 
     public Job getJob() {

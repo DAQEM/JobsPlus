@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Job {
 
@@ -147,23 +148,24 @@ public class Job {
     }
 
     public static Job fromNBT(JobsPlayer player, CompoundTag tag) {
-
-        ResourceLocation jobInstanceLocation = ResourceLocation.parse(tag.getString(Constants.JOB_INSTANCE_LOCATION));
-        int level = tag.getInt(Constants.LEVEL);
-        int exp = tag.getInt(Constants.EXPERIENCE);
-        ListTag powerupsTag = tag.getList(Constants.POWERUPS, Tag.TAG_COMPOUND);
-
-        List<Powerup> powerups = new ArrayList<>();
-
-        for (int i = 0; i < powerupsTag.size(); i++) {
-            CompoundTag powerupTag = powerupsTag.getCompound(i);
-            ResourceLocation powerupLocation = ResourceLocation.parse(powerupTag.getString(Constants.POWERUP_LOCATION));
-            PowerupState state = PowerupState.valueOf(powerupTag.getString(Constants.POWERUP_STATE));
-
-            powerups.add(new Powerup(PowerupInstance.of(powerupLocation), state));
-        }
-
-        return new Job(player, jobInstanceLocation, level, exp, powerups);
+        AtomicReference<Job> job = new AtomicReference<>();
+        tag.getString(Constants.JOB_INSTANCE_LOCATION).ifPresent(jobLocation -> {
+            tag.getInt(Constants.LEVEL).ifPresent(level -> {
+                tag.getInt(Constants.EXPERIENCE).ifPresent(exp -> {
+                    List<Powerup> powerups = new ArrayList<>();
+                    tag.getList(Constants.POWERUPS).ifPresent(powerupsTag -> {
+                        for (Tag powerupTag : powerupsTag) {
+                            CompoundTag powerupNBT = (CompoundTag) powerupTag;
+                            powerupNBT.getString(Constants.POWERUP_LOCATION).ifPresent(powerupLocation ->
+                                    powerupNBT.getString(Constants.POWERUP_STATE).ifPresent(powerupState ->
+                                            powerups.add(new Powerup(PowerupInstance.of(ResourceLocation.parse(powerupLocation)), PowerupState.valueOf(powerupState)))));
+                        }
+                    });
+                    job.set(new Job(player, ResourceLocation.parse(jobLocation), level, exp, powerups));
+                });
+            });
+        });
+        return job.get();
     }
 
     public double getExperiencePercentage() {
@@ -202,13 +204,17 @@ public class Job {
         }
 
         public static List<Job> fromNBT(JobsServerPlayer player, CompoundTag compoundTag) {
-            ListTag listTag = compoundTag.getList(Constants.JOBS, Tag.TAG_COMPOUND);
             List<Job> jobs = new ArrayList<>();
 
-            for (Tag jobTag : listTag) {
-                CompoundTag jobNBT = (CompoundTag) jobTag;
-                jobs.add(Job.fromNBT(player, jobNBT));
-            }
+            compoundTag.getList(Constants.JOBS).ifPresent(list -> {
+                for (Tag jobTag : list) {
+                    CompoundTag jobNBT = (CompoundTag) jobTag;
+                    Job job = Job.fromNBT(player, jobNBT);
+                    if (job != null) {
+                        jobs.add(job);
+                    }
+                }
+            });
 
             return jobs;
         }

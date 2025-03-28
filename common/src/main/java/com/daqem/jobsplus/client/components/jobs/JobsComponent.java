@@ -21,6 +21,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.Objects;
@@ -46,13 +47,15 @@ public class JobsComponent extends AbstractComponent<JobsComponent> {
     private final ModalComponent modalComponent;
     private Job cachedJob;
     private int cachedCoins;
+    private Screen screen;
 
-    public JobsComponent(Component title, JobsScreenOptions options, ModalComponent modalComponent) {
+    public JobsComponent(Component title, JobsScreenOptions options, ModalComponent modalComponent, Screen screen) {
         super(null, 0, 0, WIDTH, HEIGHT);
         this.options = options;
         this.modalComponent = modalComponent;
         this.cachedJob = options.getSelectedJob();
         this.cachedCoins = options.getCoins();
+        this.screen = screen;
 
         center();
 
@@ -75,7 +78,7 @@ public class JobsComponent extends AbstractComponent<JobsComponent> {
         this.jobItemRestrictionsComponent = new JobItemRestrictionsComponent(LEFT + GAP, 6, RIGHT, 140, options);
         this.jobPowerupsComponent = new JobPowerupsComponent(LEFT + GAP, 6, RIGHT, 140, options);
         this.jobExperienceComponent = new JobExperienceComponent(LEFT + GAP, 6, RIGHT, 140, options);
-        this.startJobButtonComponent = new JobsButtonComponent(0, HEIGHT + GAP, WIDTH, 20, JobsPlus.translatable("gui.job.start"), (clickedObject, screen, mouseX, mouseY, button) -> {
+        this.startJobButtonComponent = new JobsButtonComponent(0, HEIGHT + GAP, WIDTH, 20, JobsPlus.translatable("gui.job.start"), (clickedObject, theScreen, mouseX, mouseY, button) -> {
             JobInstance jobInstance = options.getSelectedJob().getJobInstance();
 
             if (JobsPlusConfig.amountOfFreeJobs.get() <= options.getPreformingJobs().size() && jobInstance.getPrice() > options.getCoins()) {
@@ -141,7 +144,7 @@ public class JobsComponent extends AbstractComponent<JobsComponent> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         this.coinsComponent.setX(-this.coinsComponent.getWidth() - 7);
         jobInfoComponent.setVisible(options.getSelectedRightTab() == RightTab.INFO);
         jobItemRestrictionsComponent.setVisible(options.getSelectedRightTab() == RightTab.CRAFTING);
@@ -186,5 +189,9 @@ public class JobsComponent extends AbstractComponent<JobsComponent> {
 
     public ModalComponent getModalComponent() {
         return modalComponent;
+    }
+
+    public Screen getScreen() {
+        return screen;
     }
 }

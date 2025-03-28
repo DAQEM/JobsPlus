@@ -27,8 +27,8 @@ public class JobsButtonComponent extends ButtonComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        super.render(graphics, mouseX, mouseY, delta);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
+        super.render(graphics, mouseX, mouseY, delta, color);
         if (this.isEnabled()) Objects.requireNonNull(getText()).setTextColor(ChatFormatting.DARK_GRAY);
     }
 }

@@ -158,7 +158,7 @@ public class PowerupComponent extends AbstractComponent<PowerupComponent> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         for (PowerupComponent powerupChild : this.getPowerupChildren()) {
             this.drawConnectivity(graphics,
                     1,
