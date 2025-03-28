@@ -62,15 +62,15 @@ public class ServerboundStartPowerupPacket implements CustomPacketPayload {
             Job job = serverPlayer.jobsplus$getJob(packet.jobInstance);
 
             if (job == null) {
-                context.getPlayer().sendSystemMessage(JobsPlus.translatable("error.job_not_found", packet.jobInstance.getLocation().toString()));
+                serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.job_not_found", packet.jobInstance.getLocation().toString()));
                 return;
             }
             if (serverPlayer.jobsplus$getCoins() < packet.powerupInstance.getPrice()) {
-                context.getPlayer().sendSystemMessage(JobsPlus.translatable("error.not_enough_coins"));
+                serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.not_enough_coins"));
                 return;
             }
             if (job.getLevel() < packet.powerupInstance.getRequiredLevel()) {
-                context.getPlayer().sendSystemMessage(JobsPlus.translatable("error.not_high_enough_level"));
+                serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.not_high_enough_level"));
                 return;
             }
 

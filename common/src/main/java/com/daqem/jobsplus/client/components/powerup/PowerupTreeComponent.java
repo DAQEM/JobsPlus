@@ -55,7 +55,7 @@ public class PowerupTreeComponent extends AbstractComponent<PowerupTreeComponent
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
     }
 
     public void run() {

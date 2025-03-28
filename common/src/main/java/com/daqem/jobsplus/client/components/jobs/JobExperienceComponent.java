@@ -64,7 +64,7 @@ public class JobExperienceComponent extends AbstractComponent<JobExperienceCompo
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         if (isVisible()) {
             if (!this.options.getSelectedJob().equals(this.cachedJob)) {
                 this.noExperienceComponent.setVisible(false);

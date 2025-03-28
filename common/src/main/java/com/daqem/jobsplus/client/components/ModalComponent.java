@@ -65,8 +65,8 @@ public class ModalComponent extends AbstractComponent<ModalComponent> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        renderBlurredBackground(delta);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
+        renderBlurredBackground();
         this.background.setHeight(getBackgroundHeight());
         this.cancelButton.setY(getBackgroundHeight() + GAP);
         this.confirmButton.setY(getBackgroundHeight() + GAP);
@@ -97,9 +97,8 @@ public class ModalComponent extends AbstractComponent<ModalComponent> {
         return false;
     }
 
-    private void renderBlurredBackground(float delta) {
-        Minecraft.getInstance().gameRenderer.processBlurEffect(delta);
-        Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
+    private void renderBlurredBackground() {
+        Minecraft.getInstance().gameRenderer.processBlurEffect();
     }
 
     public TextComponent getTitle() {

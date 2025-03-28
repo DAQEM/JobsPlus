@@ -18,6 +18,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 
 public class PowerupIconComponent extends SpriteComponent {
@@ -147,12 +148,11 @@ public class PowerupIconComponent extends SpriteComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         if (state != PowerupState.LOCKED && isTotalHovered(mouseX, mouseY)) {
-            RenderSystem.setShaderColor(0.85F, 0.85F, 0.85F, 1.0F);
+            color = ARGB.colorFromFloat(0.85F, 0.85F, 0.85F, 1.0F);
         }
-        super.render(graphics, mouseX, mouseY, delta);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        super.render(graphics, mouseX, mouseY, delta, color);
     }
 
     public PowerupState getState() {

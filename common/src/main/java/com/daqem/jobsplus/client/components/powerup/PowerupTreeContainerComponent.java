@@ -8,12 +8,10 @@ import net.minecraft.client.gui.GuiGraphics;
 
 public class PowerupTreeContainerComponent extends AbstractComponent<PowerupTreeContainerComponent> {
 
-    private final PowerupTreeComponent treeComponent;
-
     public PowerupTreeContainerComponent(int x, int y, int width, int height, JobsScreenOptions options) {
         super(null, x, y, width, height);
 
-        this.treeComponent = new PowerupTreeComponent(0, 0, width, height, options);
+        PowerupTreeComponent treeComponent = new PowerupTreeComponent(0, 0, width, height, options);
         RepeatingTextureComponent background = new RepeatingTextureComponent(new Texture(options.getSelectedJob().getJobInstance().getPowerupBackground(), 0, 0, 16, 16), 0, 0, width, height);
 
         this.addChild(background);
@@ -25,13 +23,13 @@ public class PowerupTreeContainerComponent extends AbstractComponent<PowerupTree
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
     }
 
     @Override
     public void renderBase(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         guiGraphics.pose().pushPose();
-        guiGraphics.enableScissor(getTotalX(), getTotalY(), getTotalX() + getWidth(), getTotalY() + getHeight());
+        guiGraphics.enableScissor(getX(), getY(), getX() + getWidth(), getY() + getHeight());
         super.renderBase(guiGraphics, mouseX, mouseY, delta);
         guiGraphics.disableScissor();
         guiGraphics.pose().popPose();

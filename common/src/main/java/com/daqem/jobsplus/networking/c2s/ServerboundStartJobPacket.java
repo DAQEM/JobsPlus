@@ -50,17 +50,17 @@ public class ServerboundStartJobPacket implements CustomPacketPayload {
             JobInstance jobInstance = JobInstance.of(packet.jobLocation);
 
             if (jobInstance == null) {
-                context.getPlayer().sendSystemMessage(JobsPlus.translatable("error.job_not_found", packet.jobLocation.toString()));
+                serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.job_not_found", packet.jobLocation.toString()));
                 return;
             }
             if (serverPlayer.jobsplus$getJobs().size() >= JobsPlusConfig.maxJobs.get()) {
-                context.getPlayer().sendSystemMessage(JobsPlus.translatable("error.max_jobs_reached"));
+                serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.max_jobs_reached"));
                 return;
             }
 
             if (serverPlayer.jobsplus$getJobs().size() >= JobsPlusConfig.amountOfFreeJobs.get()) {
                 if (serverPlayer.jobsplus$getCoins() < jobInstance.getPrice()) {
-                    context.getPlayer().sendSystemMessage(JobsPlus.translatable("error.not_enough_coins"));
+                    serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.not_enough_coins"));
                     return;
                 }
                 serverPlayer.jobsplus$setCoins(serverPlayer.jobsplus$getCoins() - jobInstance.getPrice());

@@ -55,7 +55,7 @@ public class JobsScrollComponent extends ScrollPanelComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         if (options.getSelectedLeftTab() != selectedLeftTab) {
             selectedLeftTab = options.getSelectedLeftTab();
             switch (options.getSelectedLeftTab()) {
@@ -66,6 +66,6 @@ public class JobsScrollComponent extends ScrollPanelComponent {
             getScrollBar().ifPresent(s -> s.scroll(this, getTotalX(), getTotalY()));
             getScrollContentComponent().ifPresent(s -> s.scroll(this, getTotalX(), getTotalY()));
         }
-        super.render(graphics, mouseX, mouseY, delta);
+        super.render(graphics, mouseX, mouseY, delta, color);
     }
 }

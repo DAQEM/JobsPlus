@@ -215,16 +215,17 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
 
     @Inject(at = @At("TAIL"), method = "readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V")
     public void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
-        CompoundTag jobsTag = compoundTag.getCompound(Constants.JOBS_DATA);
-        this.jobsplus$jobs = Job.Serializer.fromNBT(this, jobsTag).stream()
-                .filter(job -> job.getJobInstance() != null)
-                .collect(Collectors.toCollection(ArrayList::new));
-        this.jobsplus$coins = jobsTag.getInt(Constants.COINS);
+        compoundTag.getCompound(Constants.JOBS_DATA).ifPresent(jobsTag -> {
+            this.jobsplus$jobs = Job.Serializer.fromNBT(this, jobsTag).stream()
+                    .filter(job -> job.getJobInstance() != null)
+                    .collect(Collectors.toCollection(ArrayList::new));
+            jobsTag.getInt(Constants.COINS).ifPresent(coins -> this.jobsplus$coins = coins);
 
-        if (jobsplus$getServerPlayer() instanceof ArcServerPlayer arcServerPlayer) {
-            List<IActionHolder> iActionHolders = this.jobsplus$getActionHolders();
-            arcServerPlayer.arc$addActionHolders(new ArrayList<>(iActionHolders));
-        }
+            if (jobsplus$getServerPlayer() instanceof ArcServerPlayer arcServerPlayer) {
+                List<IActionHolder> iActionHolders = this.jobsplus$getActionHolders();
+                arcServerPlayer.arc$addActionHolders(new ArrayList<>(iActionHolders));
+            }
+        });
     }
 
     @Inject(at = @At("TAIL"), method = "tick()V")

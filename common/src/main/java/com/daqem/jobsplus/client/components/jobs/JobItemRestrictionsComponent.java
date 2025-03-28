@@ -62,7 +62,7 @@ public class JobItemRestrictionsComponent extends AbstractComponent<JobItemRestr
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
         if (isVisible()) {
             if (!this.options.getSelectedJob().equals(this.cachedJob)) {
                 this.noRestrictionsComponent.setVisible(false);
