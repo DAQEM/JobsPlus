@@ -87,9 +87,15 @@ public class PowerupInstance extends AbstractActionHolder {
     public boolean passedHolderCondition(ActionData actionData) {
         ArcPlayer arcPlayer = actionData.getPlayer();
         if (arcPlayer instanceof JobsPlayer jobsPlayer) {
-            Job job = jobsPlayer.jobsplus$getJobs().stream().filter(job1 -> job1.getJobInstance().getLocation().equals(this.getJobLocation())).findFirst().orElse(null);
+            Job job = jobsPlayer.jobsplus$getJobs().stream()
+                    .filter(job1 -> job1.getJobInstance() != null && job1.getJobInstance().getLocation().equals(this.getJobLocation()))
+                    .findFirst()
+                    .orElse(null);
             if (job != null) {
-                Powerup powerup = job.getPowerupManager().getAllPowerups().stream().filter(powerup1 -> powerup1.getPowerupInstance().getLocation().equals(this.getLocation())).findFirst().orElse(null);
+                Powerup powerup = job.getPowerupManager().getAllPowerups().stream()
+                        .filter(powerup1 -> powerup1.getPowerupInstance() != null && powerup1.getPowerupInstance().getLocation().equals(this.getLocation()))
+                        .findFirst()
+                        .orElse(null);
                 if (powerup != null) {
                     return powerup.getPowerupState() == PowerupState.ACTIVE;
                 }
