@@ -69,7 +69,7 @@ public class JobEvents {
             } else {
                 serverPlayer.sendSystemMessage(
                         JobsPlus.translatable("job.level_up",
-                                JobsPlus.literal(jobInstance.getName().getString())
+                                serverPlayer.getName().copy()
                                         .withStyle(style -> style
                                                 .withColor(jobInstance.getColorDecimal())
                                         ),
