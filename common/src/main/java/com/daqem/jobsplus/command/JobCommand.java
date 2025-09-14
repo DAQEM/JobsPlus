@@ -12,6 +12,7 @@ import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -51,12 +52,12 @@ public class JobCommand {
                         .then(Commands.literal("experience")
                                 .then(Commands.argument("target_player", EntityArgument.player())
                                         .then(Commands.argument("job", JobArgument.job())
-                                                .then(Commands.argument("experience", IntegerArgumentType.integer(0, Integer.MAX_VALUE))
+                                                .then(Commands.argument("experience", FloatArgumentType.floatArg(0, Float.MAX_VALUE))
                                                         .executes(context -> setExperience(
                                                                 context.getSource(),
                                                                 EntityArgument.getPlayer(context, "target_player"),
                                                                 JobArgument.getJob(context, "job"),
-                                                                IntegerArgumentType.getInteger(context, "experience"))
+                                                                FloatArgumentType.getFloat(context, "experience"))
                                                         )
                                                 )
                                         )
@@ -64,11 +65,11 @@ public class JobCommand {
                         )
                         .then(Commands.literal("coins")
                                 .then(Commands.argument("target_player", EntityArgument.player())
-                                        .then(Commands.argument("coins", IntegerArgumentType.integer(0, Integer.MAX_VALUE))
+                                        .then(Commands.argument("coins", FloatArgumentType.floatArg(0, Float.MAX_VALUE))
                                                 .executes(context -> setCoins(
                                                         context.getSource(),
                                                         EntityArgument.getPlayer(context, "target_player"),
-                                                        IntegerArgumentType.getInteger(context, "coins"))
+                                                        FloatArgumentType.getFloat(context, "coins"))
                                                 )
                                         )
                                 )
@@ -166,17 +167,17 @@ public class JobCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int setCoins(CommandSourceStack source, ServerPlayer target, int coins) {
+    private static int setCoins(CommandSourceStack source, ServerPlayer target, double coins) {
         if (target instanceof JobsServerPlayer jobsServerPlayer) {
             jobsServerPlayer.jobsplus$setCoins(coins);
             source.sendSuccess(() -> JobsPlus.translatable(
-                    "command.set.coins.success", coins, jobsServerPlayer.jobsplus$getName()), false);
+                    "command.set.coins.success", JobsPlus.formatNumber(coins), jobsServerPlayer.jobsplus$getName()), false);
         }
         return 0;
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int setExperience(CommandSourceStack source, ServerPlayer target, JobInstance jobInstance, int experience) {
+    private static int setExperience(CommandSourceStack source, ServerPlayer target, JobInstance jobInstance, double experience) {
         if (target instanceof JobsServerPlayer jobsServerPlayer) {
             Job job = jobsServerPlayer.jobsplus$getJob(jobInstance);
             if (job != null) {
@@ -184,14 +185,14 @@ public class JobCommand {
                 if (experience >= maxExperienceForLevel) {
                     source.sendFailure(JobsPlus.translatable(
                             "command.set.experience.experience_too_high", maxExperienceForLevel));
-                    return experience;
+                    return 0;
                 } else if (job.getLevel() >= jobInstance.getMaxLevel()) {
                     source.sendFailure(JobsPlus.translatable(
                             "command.set.experience.already_max_level"));
                 }
                 job.setExperience(experience, false);
                 source.sendSuccess(() -> JobsPlus.translatable(
-                        "command.set.experience.success", jobInstance.getName(), experience, jobsServerPlayer.jobsplus$getPlayer().getDisplayName()), false);
+                        "command.set.experience.success", jobInstance.getName(), JobsPlus.formatNumber(experience), jobsServerPlayer.jobsplus$getPlayer().getDisplayName()), false);
             } else {
                 source.sendFailure(JobsPlus.translatable(
                         "command.does_not_have_job", jobsServerPlayer.jobsplus$getPlayer().getDisplayName(), jobInstance.getName()));

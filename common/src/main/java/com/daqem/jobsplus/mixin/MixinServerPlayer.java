@@ -219,7 +219,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         this.jobsplus$jobs = Job.Serializer.fromNBT(this, jobsTag).stream()
                 .filter(job -> job.getJobInstance() != null)
                 .collect(Collectors.toCollection(ArrayList::new));
-        this.jobsplus$coins = jobsTag.getInt(Constants.COINS);
+        this.jobsplus$coins = jobsTag.getDouble(Constants.COINS);
 
         if (jobsplus$getServerPlayer() instanceof ArcServerPlayer arcServerPlayer) {
             List<IActionHolder> iActionHolders = this.jobsplus$getActionHolders();
@@ -235,7 +235,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
             if (exp > 0) {
                 if (JobsPlusConfig.showXPInActionBar.get()) {
                     JobInstance jobInstance = job.getJobInstance();
-                    MutableComponent component = JobsPlus.translatable("job.exp.gain", String.format("%.2f", exp), jobInstance.getName().getString()).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(jobInstance.getColorDecimal()))).withStyle(ChatFormatting.BOLD);
+                    MutableComponent component = JobsPlus.translatable("job.exp.gain", JobsPlus.formatNumber(exp), jobInstance.getName().getString()).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(jobInstance.getColorDecimal()))).withStyle(ChatFormatting.BOLD);
                     jobsplus$getServerPlayer().sendSystemMessage(component, true);
                 }
             }

@@ -59,7 +59,7 @@ public class JobExpMultiplierReward extends AbstractReward {
                 Double exp = actionData.getData(JobsPlusActionDataType.JOB_EXP);
                 if (exp != null) {
                     double experience = (int) (exp * this.multiplier) - exp;
-                    job.addExperienceWithoutEvent(experience * JobsPlusConfig.xpMultiplier.get());
+                    job.addExperienceWithoutEvent(experience);
                 }
             }
         }

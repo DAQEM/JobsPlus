@@ -2,6 +2,7 @@ package com.daqem.jobsplus.player.job;
 
 import com.daqem.jobsplus.Constants;
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.event.triggers.JobEvents;
 import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
@@ -77,6 +78,10 @@ public class Job {
 
     public void setExperience(double experience, boolean triggerEvent) {
         double change = experience - this.experience;
+        if (!JobsPlusConfig.useDecimalValuesForXP.get()) {
+            change = Math.floor(change);
+            experience = Math.floor(experience);
+        }
         expCollector.addExp(change);
         this.experience = experience;
         checkForLevelUp();
@@ -88,12 +93,12 @@ public class Job {
 
     public void addExperience(double experience) {
         JobsPlus.debug("Adding {} experience to {}'s {} job.", experience, player.jobsplus$getName(), jobInstance.getName().getString());
-        setExperience(getExperience() + experience, true);
+        setExperience(getExperience() + (experience * JobsPlusConfig.xpMultiplier.get()), true);
     }
 
     public void addExperienceWithoutEvent(double experience) {
         JobsPlus.debug("Adding {} experience to {}'s {} job without event.", experience, player.jobsplus$getName(), jobInstance.getName().getString());
-        setExperience(getExperience() + experience, false);
+        setExperience(getExperience() + (experience * JobsPlusConfig.xpMultiplier.get()), false);
     }
 
     private void checkForLevelUp() {

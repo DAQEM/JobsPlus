@@ -44,7 +44,7 @@ public class JobExpReward extends AbstractReward {
                 Job job = jobsServerPlayer.jobsplus$getJob(jobInstance);
                 if (job != null) {
                     double exp = min + actionData.getPlayer().arc$getPlayer().getRandom().nextDouble() * (max - min);
-                    job.addExperience(exp * JobsPlusConfig.xpMultiplier.get());
+                    job.addExperience(exp);
                 }
             }
         }

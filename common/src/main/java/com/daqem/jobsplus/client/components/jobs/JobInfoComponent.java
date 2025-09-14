@@ -85,7 +85,7 @@ public class JobInfoComponent extends AbstractComponent<JobInfoComponent> {
 
     private Component getExperienceText() {
         if (getJob().getLevel() <= 0) return JobsPlus.literal("");
-        return JobsPlus.translatable("gui.exp", JobsPlus.literal(Math.floor(getJob().getExperience()*100)/100 + "/" + Job.getExperienceToLevelUp(getJob().getLevel())).withStyle(ChatFormatting.WHITE));
+        return JobsPlus.translatable("gui.exp", JobsPlus.literal(JobsPlus.formatNumber(getJob().getExperience()) + "/" + Job.getExperienceToLevelUp(getJob().getLevel())).withStyle(ChatFormatting.WHITE));
     }
 
     private Component getDescriptionText() {
