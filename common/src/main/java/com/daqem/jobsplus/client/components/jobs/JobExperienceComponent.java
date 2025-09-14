@@ -82,9 +82,9 @@ public class JobExperienceComponent extends AbstractComponent<JobExperienceCompo
                             .filter(action1 -> action1.getRewards().stream().anyMatch(reward -> reward instanceof JobExpReward))
                             .toList();
                     List<JobExperienceItemComponent> components = new ArrayList<>();
-                    for (IAction action : actions) {
-                        components.add(new JobExperienceItemComponent(0, 0, this.scrollPanelWidth, this.cachedJob, actions, action));
-                    }
+//                    for (IAction action : actions) {
+//                        components.add(new JobExperienceItemComponent(0, 0, this.scrollPanelWidth, this.cachedJob, actions, action));
+//                    }
                     if (components.isEmpty()) {
                         this.noExperienceComponent.setVisible(true);
                     } else {

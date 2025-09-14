@@ -52,23 +52,39 @@ public class JobEvents {
             player.jobsplus$addCoins(JobsPlusConfig.coinsPerLevelUp.get());
             JobInstance jobInstance = job.getJobInstance();
             if (serverPlayer.getServer() == null) return;
-            serverPlayer.getServer().getPlayerList()
-                    .broadcastSystemMessage(
-                            JobsPlus.translatable("job.level_up",
-                                    serverPlayer.getName().copy()
-                                            .withStyle(style -> style
-                                                    .withColor(jobInstance.getColorDecimal())
-                                            ),
-                                    JobsPlus.literal(String.valueOf(job.getLevel()))
-                                            .withStyle(style -> style
-                                                    .withColor(jobInstance.getColorDecimal())
-                                            ),
-                                    jobInstance.getName().getString()
-                            ), false);
+            if (JobsPlusConfig.broadcastLevelUpMessage.get()) {
+                serverPlayer.getServer().getPlayerList()
+                        .broadcastSystemMessage(
+                                JobsPlus.translatable("job.level_up",
+                                        serverPlayer.getName().copy()
+                                                .withStyle(style -> style
+                                                        .withColor(jobInstance.getColorDecimal())
+                                                ),
+                                        JobsPlus.literal(String.valueOf(job.getLevel()))
+                                                .withStyle(style -> style
+                                                        .withColor(jobInstance.getColorDecimal())
+                                                ),
+                                        jobInstance.getName().getString()
+                                ), false);
+            } else {
+                serverPlayer.sendSystemMessage(
+                        JobsPlus.translatable("job.level_up",
+                                JobsPlus.literal(jobInstance.getName().getString())
+                                        .withStyle(style -> style
+                                                .withColor(jobInstance.getColorDecimal())
+                                        ),
+                                JobsPlus.literal(String.valueOf(job.getLevel()))
+                                        .withStyle(style -> style
+                                                .withColor(jobInstance.getColorDecimal())
+                                        ),
+                                jobInstance.getName().getString()
+                        )
+                );
+            }
         }
     }
 
-    public static void onJobExperience(JobsPlayer player, Job job, int experience) {
+    public static void onJobExperience(JobsPlayer player, Job job, double experience) {
         if (player instanceof ArcPlayer arcPlayer) {
             new ActionDataBuilder(arcPlayer, JobsPlusActionType.JOB_EXP)
                     .withData(JobsPlusActionDataType.JOB_EXP, experience)

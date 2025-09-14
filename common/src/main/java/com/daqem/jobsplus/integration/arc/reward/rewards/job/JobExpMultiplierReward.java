@@ -8,6 +8,7 @@ import com.daqem.arc.api.reward.AbstractReward;
 import com.daqem.arc.api.reward.serializer.IRewardSerializer;
 import com.daqem.arc.api.reward.type.IRewardType;
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.data.type.JobsPlusActionDataType;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
@@ -55,10 +56,10 @@ public class JobExpMultiplierReward extends AbstractReward {
                 if (!job.getJobInstance().getLocation().equals(jobLocation)) return new ActionResult();
             }
             if (job != null) {
-                Integer exp = actionData.getData(JobsPlusActionDataType.JOB_EXP);
+                Double exp = actionData.getData(JobsPlusActionDataType.JOB_EXP);
                 if (exp != null) {
-                    int experience = (int) (exp * this.multiplier) - exp;
-                    job.addExperienceWithoutEvent(experience);
+                    double experience = (int) (exp * this.multiplier) - exp;
+                    job.addExperienceWithoutEvent(experience * JobsPlusConfig.xpMultiplier.get());
                 }
             }
         }

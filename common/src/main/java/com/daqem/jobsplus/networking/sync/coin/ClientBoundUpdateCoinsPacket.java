@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ClientBoundUpdateCoinsPacket implements CustomPacketPayload {
 
-    private final int coins;
+    private final double coins;
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientBoundUpdateCoinsPacket> STREAM_CODEC = new StreamCodec<>() {
         @Override
@@ -22,16 +22,16 @@ public class ClientBoundUpdateCoinsPacket implements CustomPacketPayload {
 
         @Override
         public void encode(RegistryFriendlyByteBuf buf, ClientBoundUpdateCoinsPacket packet) {
-            buf.writeInt(packet.coins);
+            buf.writeDouble(packet.coins);
         }
     };
 
-    public ClientBoundUpdateCoinsPacket(int coins) {
+    public ClientBoundUpdateCoinsPacket(double coins) {
         this.coins = coins;
     }
 
     public ClientBoundUpdateCoinsPacket(RegistryFriendlyByteBuf buf) {
-        this.coins = buf.readInt();
+        this.coins = buf.readDouble();
     }
 
     @Override

@@ -45,7 +45,7 @@ public class JobsComponent extends AbstractComponent<JobsComponent> {
     private final JobsButtonComponent startJobButtonComponent;
     private final ModalComponent modalComponent;
     private Job cachedJob;
-    private int cachedCoins;
+    private double cachedCoins;
 
     public JobsComponent(Component title, JobsScreenOptions options, ModalComponent modalComponent) {
         super(null, 0, 0, WIDTH, HEIGHT);
