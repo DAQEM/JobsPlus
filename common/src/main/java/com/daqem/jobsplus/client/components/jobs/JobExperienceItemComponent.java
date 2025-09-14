@@ -20,7 +20,7 @@ import java.util.List;
 
 public class JobExperienceItemComponent extends NineSlicedTextureComponent {
 
-    public JobExperienceItemComponent(int x, int y, int width, Job job, List<IAction> actions, IAction action) {
+    public JobExperienceItemComponent(int x, int y, int width, List<IAction> actions, IAction action) {
         super(Textures.SCROLL_BAR_BACKGROUND, x, y, width, 0);
 
         Component title = action.getName();

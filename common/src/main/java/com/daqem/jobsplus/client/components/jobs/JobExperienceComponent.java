@@ -83,7 +83,7 @@ public class JobExperienceComponent extends AbstractComponent<JobExperienceCompo
                             .toList();
                     List<JobExperienceItemComponent> components = new ArrayList<>();
                     for (IAction action : actions) {
-                        components.add(new JobExperienceItemComponent(0, 0, this.scrollPanelWidth, this.cachedJob, actions, action));
+                        components.add(new JobExperienceItemComponent(0, 0, this.scrollPanelWidth, actions, action));
                     }
                     if (components.isEmpty()) {
                         this.noExperienceComponent.setVisible(true);

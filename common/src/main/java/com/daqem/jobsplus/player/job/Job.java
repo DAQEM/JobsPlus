@@ -2,6 +2,7 @@ package com.daqem.jobsplus.player.job;
 
 import com.daqem.jobsplus.Constants;
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.event.triggers.JobEvents;
 import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
@@ -31,22 +32,22 @@ public class Job {
     private final JobPowerupManager powerupManager;
     private JobsPlayer player;
     private int level;
-    private int experience;
+    private double experience;
     private final ExpCollector expCollector = new ExpCollector();
 
     public Job(JobsPlayer player, JobInstance jobInstance) {
         this(player, jobInstance, 0, 0, new ArrayList<>());
     }
 
-    public Job(JobsPlayer player, JobInstance jobInstance, int level, int experience) {
+    public Job(JobsPlayer player, JobInstance jobInstance, int level, double experience) {
         this(player, jobInstance, level, experience, new ArrayList<>());
     }
 
-    public Job(JobsPlayer player, ResourceLocation jobInstanceLocation, int level, int experience, @NotNull List<Powerup> powerups) {
+    public Job(JobsPlayer player, ResourceLocation jobInstanceLocation, int level, double experience, @NotNull List<Powerup> powerups) {
         this(player, JobManager.getInstance().getJobs().get(jobInstanceLocation), level, experience, powerups);
     }
 
-    public Job(JobsPlayer player, JobInstance jobInstance, int level, int experience, @NotNull List<Powerup> powerups) {
+    public Job(JobsPlayer player, JobInstance jobInstance, int level, double experience, @NotNull List<Powerup> powerups) {
         this.player = player;
         this.jobInstance = jobInstance;
         this.powerupManager = new JobPowerupManager(powerups);
@@ -71,12 +72,16 @@ public class Job {
         syncWithClient();
     }
 
-    public int getExperience() {
+    public double getExperience() {
         return experience;
     }
 
-    public void setExperience(int experience, boolean triggerEvent) {
-        int change = experience - this.experience;
+    public void setExperience(double experience, boolean triggerEvent) {
+        double change = experience - this.experience;
+        if (!JobsPlusConfig.useDecimalValuesForXP.get()) {
+            change = Math.floor(change);
+            experience = Math.floor(experience);
+        }
         expCollector.addExp(change);
         this.experience = experience;
         checkForLevelUp();
@@ -86,14 +91,14 @@ public class Job {
         }
     }
 
-    public void addExperience(int experience) {
+    public void addExperience(double experience) {
         JobsPlus.debug("Adding {} experience to {}'s {} job.", experience, player.jobsplus$getName(), jobInstance.getName().getString());
-        setExperience(getExperience() + experience, true);
+        setExperience(getExperience() + (experience * JobsPlusConfig.xpMultiplier.get()), true);
     }
 
-    public void addExperienceWithoutEvent(int experience) {
+    public void addExperienceWithoutEvent(double experience) {
         JobsPlus.debug("Adding {} experience to {}'s {} job without event.", experience, player.jobsplus$getName(), jobInstance.getName().getString());
-        setExperience(getExperience() + experience, false);
+        setExperience(getExperience() + (experience * JobsPlusConfig.xpMultiplier.get()), false);
     }
 
     private void checkForLevelUp() {
@@ -128,7 +133,7 @@ public class Job {
 
         jobTag.putString(Constants.JOB_INSTANCE_LOCATION, getJobInstance().getLocation().toString());
         jobTag.putInt(Constants.LEVEL, getLevel());
-        jobTag.putInt(Constants.EXPERIENCE, getExperience());
+        jobTag.putDouble(Constants.EXPERIENCE, getExperience());
 
         ListTag powerupsTag = new ListTag();
 
@@ -150,7 +155,7 @@ public class Job {
 
         ResourceLocation jobInstanceLocation = ResourceLocation.parse(tag.getString(Constants.JOB_INSTANCE_LOCATION));
         int level = tag.getInt(Constants.LEVEL);
-        int exp = tag.getInt(Constants.EXPERIENCE);
+        double exp = tag.getDouble(Constants.EXPERIENCE);
         ListTag powerupsTag = tag.getList(Constants.POWERUPS, Tag.TAG_COMPOUND);
 
         List<Powerup> powerups = new ArrayList<>();
@@ -167,7 +172,7 @@ public class Job {
     }
 
     public double getExperiencePercentage() {
-        return (double) experience / (double) getExperienceToLevelUp(level) * 100;
+        return experience / (double) getExperienceToLevelUp(level) * 100;
     }
 
     public ExpCollector getExpCollector() {
@@ -179,7 +184,7 @@ public class Job {
         public static Job fromNetwork(FriendlyByteBuf friendlyByteBuf, JobsPlayer player) {
             ResourceLocation jobInstanceLocation = friendlyByteBuf.readResourceLocation();
             int level = friendlyByteBuf.readInt();
-            int experience = friendlyByteBuf.readInt();
+            double experience = friendlyByteBuf.readDouble();
             int powerupCount = friendlyByteBuf.readVarInt();
             List<Powerup> powerups = new ArrayList<>();
             for (int i = 0; i < powerupCount; i++) {
@@ -193,7 +198,7 @@ public class Job {
         public static void toNetwork(FriendlyByteBuf friendlyByteBuf, Job job) {
             friendlyByteBuf.writeResourceLocation(job.getJobInstance().getLocation());
             friendlyByteBuf.writeInt(job.getLevel());
-            friendlyByteBuf.writeInt(job.getExperience());
+            friendlyByteBuf.writeDouble(job.getExperience());
             friendlyByteBuf.writeVarInt(job.getPowerupManager().getAllPowerups().size());
             for (Powerup powerup : job.getPowerupManager().getAllPowerups()) {
                 friendlyByteBuf.writeResourceLocation(powerup.getPowerupInstance().getLocation());

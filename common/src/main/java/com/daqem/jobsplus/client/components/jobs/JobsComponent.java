@@ -23,6 +23,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -45,7 +46,7 @@ public class JobsComponent extends AbstractComponent<JobsComponent> {
     private final JobsButtonComponent startJobButtonComponent;
     private final ModalComponent modalComponent;
     private Job cachedJob;
-    private int cachedCoins;
+    private double cachedCoins;
 
     public JobsComponent(Component title, JobsScreenOptions options, ModalComponent modalComponent) {
         super(null, 0, 0, WIDTH, HEIGHT);
@@ -57,7 +58,7 @@ public class JobsComponent extends AbstractComponent<JobsComponent> {
         center();
 
         Text titleText = new Text(font, title, 7, 6);
-        Text coinsText = new Text(font, JobsPlus.translatable("gui.coins.top", options.getCoins()), LEFT, 6);
+        Text coinsText = new Text(font, JobsPlus.translatable("gui.coins.top", JobsPlus.formatNumber(options.getCoins())), LEFT, 6);
 
         JobsBackgroundComponent jobsBackgroundComponent = new JobsBackgroundComponent(WIDTH, HEIGHT, LEFT, RIGHT);
         TextComponent titleComponent = new TextComponent(titleText);
@@ -155,7 +156,7 @@ public class JobsComponent extends AbstractComponent<JobsComponent> {
         if (cachedCoins != options.getCoins()) {
             cachedCoins = options.getCoins();
             if (coinsComponent.getText() != null) {
-                Component component = JobsPlus.translatable("gui.coins.top", options.getCoins());
+                Component component = JobsPlus.translatable("gui.coins.top", JobsPlus.formatNumber(options.getCoins()));
                 int width = font.width(component);
                 coinsComponent.getText().setText(component);
                 coinsComponent.getText().setWidth(width);

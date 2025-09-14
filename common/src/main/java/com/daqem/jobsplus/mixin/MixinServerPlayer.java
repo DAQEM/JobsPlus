@@ -48,7 +48,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     @Unique
     private List<Job> jobsplus$jobs = new ArrayList<>();
     @Unique
-    private int jobsplus$coins = 0;
+    private double jobsplus$coins = 0;
 
     public MixinServerPlayer(Level level, BlockPos blockPos, float yaw, GameProfile gameProfile) {
         super(level, blockPos, yaw, gameProfile);
@@ -123,17 +123,17 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     }
 
     @Override
-    public int jobsplus$getCoins() {
+    public double jobsplus$getCoins() {
         return jobsplus$coins;
     }
 
     @Override
-    public void jobsplus$addCoins(int coins) {
+    public void jobsplus$addCoins(double coins) {
         this.jobsplus$setCoins(Mth.clamp(this.jobsplus$coins + coins, 0, Integer.MAX_VALUE));
     }
 
     @Override
-    public void jobsplus$setCoins(int coins) {
+    public void jobsplus$setCoins(double coins) {
         this.jobsplus$coins = coins;
         NetworkManager.sendToPlayer(jobsplus$getServerPlayer(), new ClientBoundUpdateCoinsPacket(coins));
     }
@@ -208,7 +208,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     public void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
         CompoundTag jobsTag = new CompoundTag();
         jobsTag.put(Constants.JOBS, Job.Serializer.toNBT(this.jobsplus$jobs));
-        jobsTag.putInt(Constants.COINS, this.jobsplus$coins);
+        jobsTag.putDouble(Constants.COINS, this.jobsplus$coins);
 
         compoundTag.put(Constants.JOBS_DATA, jobsTag);
     }
@@ -219,7 +219,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         this.jobsplus$jobs = Job.Serializer.fromNBT(this, jobsTag).stream()
                 .filter(job -> job.getJobInstance() != null)
                 .collect(Collectors.toCollection(ArrayList::new));
-        this.jobsplus$coins = jobsTag.getInt(Constants.COINS);
+        this.jobsplus$coins = jobsTag.getDouble(Constants.COINS);
 
         if (jobsplus$getServerPlayer() instanceof ArcServerPlayer arcServerPlayer) {
             List<IActionHolder> iActionHolders = this.jobsplus$getActionHolders();
@@ -231,11 +231,13 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     public void tickTail(CallbackInfo ci) {
         jobsplus$jobs.forEach((job) -> {
             ExpCollector expCollector = job.getExpCollector();
-            int exp = expCollector.getExp();
+            double exp = expCollector.getExp();
             if (exp > 0) {
-                JobInstance jobInstance = job.getJobInstance();
-                MutableComponent component = JobsPlus.translatable("job.exp.gain", exp, jobInstance.getName().getString()).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(jobInstance.getColorDecimal()))).withStyle(ChatFormatting.BOLD);
-                jobsplus$getServerPlayer().sendSystemMessage(component, true);
+                if (JobsPlusConfig.showXPInActionBar.get()) {
+                    JobInstance jobInstance = job.getJobInstance();
+                    MutableComponent component = JobsPlus.translatable("job.exp.gain", JobsPlus.formatNumber(exp), jobInstance.getName().getString()).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(jobInstance.getColorDecimal()))).withStyle(ChatFormatting.BOLD);
+                    jobsplus$getServerPlayer().sendSystemMessage(component, true);
+                }
             }
             expCollector.clear();
         });
