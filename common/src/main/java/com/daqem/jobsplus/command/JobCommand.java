@@ -185,9 +185,6 @@ public class JobCommand {
                     source.sendFailure(JobsPlus.translatable(
                             "command.set.experience.experience_too_high", maxExperienceForLevel));
                     return experience;
-                } else if (job.getLevel() >= jobInstance.getMaxLevel()) {
-                    source.sendFailure(JobsPlus.translatable(
-                            "command.set.experience.already_max_level"));
                 }
                 job.setExperience(experience, false);
                 source.sendSuccess(() -> JobsPlus.translatable(
@@ -213,10 +210,6 @@ public class JobCommand {
                     source.sendFailure(JobsPlus.translatable(
                             "command.set.level.does_not_have_job"));
                 }
-                return 0;
-            } else if (level > jobInstance.getMaxLevel()) {
-                source.sendFailure(JobsPlus.translatable(
-                        "command.set.level.cannot_be_higher_than_max", jobInstance.getMaxLevel()));
                 return 0;
             }
 

@@ -1,7 +1,5 @@
 {
   "job": "jobsplus:hunter",
-  "name": "Bow Unbreaking I",
-  "description": "Bows are 10% less likely to take damage when used.",
   "icon": {
     "id": "minecraft:bow"
   },

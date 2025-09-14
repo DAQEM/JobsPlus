@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:hunter",
   "parent": "jobsplus:hunter/attack_speed_i",
-  "name": "Attack Speed II",
-  "description": "20% faster attack speed.",
   "icon": {
     "id": "minecraft:golden_sword",
     "count": 2

@@ -1,7 +1,5 @@
 {
   "job": "jobsplus:fisherman",
-  "name": "Grappling Hook I",
-  "description": "Turns your fishing rod into a grappling hook that can be used to pull you to a location.",
   "icon": {
     "id": "minecraft:fishing_rod"
   },

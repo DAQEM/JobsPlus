@@ -1,10 +1,13 @@
 package com.daqem.jobsplus.player.job.powerup;
 
+import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Enum representing the state of a Powerup in the game.
  * Each state represents a different condition a Powerup can be in.
  */
-public enum PowerupState {
+public enum PowerupState implements StringRepresentable {
     /**
      * The Powerup is currently active and in use.
      */
@@ -23,5 +26,12 @@ public enum PowerupState {
     /**
      * The Powerup is not yet available for purchase by the player.
      */
-    LOCKED
+    LOCKED;
+
+    public static final StringRepresentable.EnumCodec<PowerupState> CODEC = StringRepresentable.fromEnum(PowerupState::values);
+
+    @Override
+    public @NotNull String getSerializedName() {
+        return this.name();
+    }
 }

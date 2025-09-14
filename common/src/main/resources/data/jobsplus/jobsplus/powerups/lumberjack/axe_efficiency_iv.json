@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:lumberjack",
   "parent": "jobsplus:lumberjack/axe_efficiency_iii",
-  "name": "Axe Efficiency IV",
-  "description": "Axes chop 40% faster.",
   "icon": {
     "id": "minecraft:golden_axe",
     "count": 4

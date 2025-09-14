@@ -21,4 +21,4 @@ include("fabric")
 //noinspection GroovyAssignabilityCheck
 include("neoforge")
 
-rootProject.name = "JobsPlus 1.21.5"
+rootProject.name = "JobsPlus 1.21.6"

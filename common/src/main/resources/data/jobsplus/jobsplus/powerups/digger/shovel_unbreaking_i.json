@@ -1,7 +1,5 @@
 {
   "job": "jobsplus:digger",
-  "name": "Shovel Unbreaking I",
-  "description": "Shovels are 10% less likely to take damage when used.",
   "icon": {
     "id": "minecraft:diamond_shovel"
   },

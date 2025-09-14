@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:digger",
   "parent": "jobsplus:digger/gold_digger_iii",
-  "name": "Gold Digger IV",
-  "description": "Grants a 0.5% chance to find a gold block when digging.",
   "icon": {
     "id": "minecraft:gold_block",
     "count": 4

@@ -1,7 +1,5 @@
 {
   "job": "jobsplus:hunter",
-  "name": "Sword Unbreaking I",
-  "description": "Swords are 10% less likely to take damage when used.",
   "icon": {
     "id": "minecraft:diamond_sword"
   },

@@ -1,12 +1,10 @@
 {
   "name": "Alchemist",
   "price": 10,
-  "max_level": 100,
   "color": "#00AEFF",
   "icon": {
     "id": "minecraft:brewing_stand"
   },
-  "description": "",
   "background": "minecraft:textures/block/nether_bricks.png",
   "is_default": true
 }

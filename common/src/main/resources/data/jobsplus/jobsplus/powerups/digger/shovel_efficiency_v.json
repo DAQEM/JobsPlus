@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:digger",
   "parent": "jobsplus:digger/shovel_efficiency_iv",
-  "name": "Shovel Efficiency V",
-  "description": "Shovels dig 50% faster.",
   "icon": {
     "id": "minecraft:golden_shovel",
     "count": 5

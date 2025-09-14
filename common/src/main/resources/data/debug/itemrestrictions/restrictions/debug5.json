@@ -16,8 +16,6 @@
     "enchant",
     "repair",
     "use_item",
-    "break_block",
-    "item_break_block",
     "place_block",
     "hurt_entity"
   ],
@@ -25,7 +23,7 @@
     {
       "type": "arc:items",
       "items": [
-        "minecraft:stone",
+        "minecraft:dirt",
         "minecraft:stone_bricks",
         "minecraft:egg",
         "minecraft:diamond_sword"
@@ -34,7 +32,8 @@
     {
       "type": "jobsplus:job_level",
       "job": "jobsplus:miner",
-      "level": 1
+      "level": 1,
+      "inverted": true
     }
   ]
 }

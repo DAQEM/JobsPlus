@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:digger",
   "parent": "jobsplus:digger/shovel_unbreaking_iv",
-  "name": "Shovel Unbreaking V",
-  "description": "Shovels are 50% less likely to take damage when used.",
   "icon": {
     "id": "minecraft:diamond_shovel",
     "count": 5

@@ -1,7 +1,5 @@
 {
   "job": "jobsplus:lumberjack",
-  "name": "Axe Unbreaking I",
-  "description": "Axes are 10% less likely to take damage when used.",
   "icon": {
     "id": "minecraft:diamond_axe"
   },

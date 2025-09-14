@@ -12,28 +12,20 @@
     "craft",
     "smelt",
     "brew",
-    "enchant",
-    "repair",
-    "use_item",
-    "break_block",
-    "item_break_block",
-    "place_block",
-    "hurt_entity"
+    "enchant"
   ],
   "conditions": [
     {
       "type": "arc:items",
       "items": [
-        "minecraft:stone",
-        "minecraft:stone_bricks",
-        "minecraft:egg",
-        "minecraft:diamond_sword"
+        "#minecraft:pickaxes"
       ]
     },
     {
       "type": "jobsplus:job_level",
       "job": "jobsplus:miner",
-      "level": 41
+      "level": 41,
+      "inverted": true
     }
   ]
 }

@@ -1,11 +1,13 @@
 {
   "job": "jobsplus:alchemist",
   "parent": "jobsplus:alchemist/stronger_potions_iii",
-  "name": "Stronger potions IV",
-  "description": "Potions have a 80% change to become stronger.",
   "icon": {
     "id": "minecraft:potion",
-    "tag": "{Potion:\"minecraft:strength\"}",
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strength"
+      }
+    },
     "count": 4
   },
   "price": 16,

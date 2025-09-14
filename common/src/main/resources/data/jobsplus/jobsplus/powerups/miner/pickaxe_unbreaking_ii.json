@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:miner",
   "parent": "jobsplus:miner/pickaxe_unbreaking_i",
-  "name": "Pickaxe Unbreaking II",
-  "description": "Pickaxes are 20% less likely to take damage when used.",
   "icon": {
     "id": "minecraft:diamond_pickaxe",
     "count": 2

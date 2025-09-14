@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:enchanter",
   "parent": "jobsplus:enchanter/exp_boost_ii",
-  "name": "Experience Boost III",
-  "description": "Multiply your experience from blocks and mobs by 2.5x",
   "icon": {
     "id": "minecraft:enchanting_table",
     "count": 3

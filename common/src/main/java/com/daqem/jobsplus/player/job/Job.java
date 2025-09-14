@@ -3,7 +3,6 @@ package com.daqem.jobsplus.player.job;
 import com.daqem.jobsplus.Constants;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.event.triggers.JobEvents;
-import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.exp.ExpCollector;
@@ -13,13 +12,13 @@ import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
-import dev.architectury.networking.NetworkManager;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -27,6 +26,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Job {
+
+    public static final Codec<Job> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("job_instance").forGetter(job -> job.getJobInstance().getLocation()),
+            Codec.INT.fieldOf("level").forGetter(Job::getLevel),
+            Codec.INT.fieldOf("experience").forGetter(Job::getExperience),
+            Codec.list(Powerup.CODEC).fieldOf("powerups").forGetter(job -> job.getPowerupManager().getAllPowerups())
+    ).apply(instance, (jobInstanceLocation, level, experience, powerups) -> new Job(null, jobInstanceLocation, level, experience, new ArrayList<>(powerups))));
 
     private final JobInstance jobInstance;
     private final JobPowerupManager powerupManager;
@@ -69,7 +75,6 @@ public class Job {
 
     public void setLevel(int level) {
         this.level = level;
-        syncWithClient();
     }
 
     public int getExperience() {
@@ -81,7 +86,6 @@ public class Job {
         expCollector.addExp(change);
         this.experience = experience;
         checkForLevelUp();
-        syncWithClient();
         if (triggerEvent) {
             JobEvents.onJobExperience(player, this, change);
         }
@@ -103,15 +107,6 @@ public class Job {
             setLevel(level + 1);
             setExperience(experience - experienceToLevelUp, false);
             JobEvents.onJobLevelUp(player, this);
-            if (this.player instanceof JobsServerPlayer serverPlayer) {
-                serverPlayer.jobsplus$updateJobOnClient(this);
-            }
-        }
-    }
-
-    private void syncWithClient() {
-        if (player instanceof ServerPlayer serverPlayer) {
-            NetworkManager.sendToPlayer(serverPlayer, new ClientboundUpdateJobPacket(this));
         }
     }
 
@@ -174,6 +169,10 @@ public class Job {
 
     public ExpCollector getExpCollector() {
         return expCollector;
+    }
+
+    public int getExperienceForNextLevel() {
+        return getExperienceToLevelUp(level);
     }
 
     public static class Serializer {

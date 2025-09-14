@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:hunter",
   "parent": "jobsplus:hunter/fire_arrows_ii",
-  "name": "Fire Arrows III",
-  "description": "Arrows have a 100% chance to ignite.",
   "icon": {
     "id": "minecraft:fire_charge",
     "count": 3

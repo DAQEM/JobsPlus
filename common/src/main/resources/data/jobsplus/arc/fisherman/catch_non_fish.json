@@ -13,14 +13,14 @@
   ],
   "conditions": [
     {
-      "type": "arc:not",
-      "conditions": [
-        {
-          "type": "arc:items",
-          "items": [
-            "#minecraft:fishes"
-          ]
-        }
+      "type": "arc:items",
+      "items": [
+        "minecraft:name_tag",
+        "minecraft:saddle",
+        "minecraft:bow",
+        "minecraft:fishing_rod",
+        "minecraft:book",
+        "minecraft:nautilus_shell"
       ]
     }
   ]

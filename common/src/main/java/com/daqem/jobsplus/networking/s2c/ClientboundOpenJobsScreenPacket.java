@@ -1,11 +1,10 @@
 package com.daqem.jobsplus.networking.s2c;
 
-import com.daqem.jobsplus.client.options.JobsScreenOptions;
-import com.daqem.jobsplus.client.screen.job.JobsScreen;
+import com.daqem.jobsplus.client.gui.jobs.JobsScreen;
+import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
 import com.daqem.jobsplus.player.job.Job;
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.utils.Env;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -57,7 +56,7 @@ public class ClientboundOpenJobsScreenPacket implements CustomPacketPayload {
         if (Minecraft.getInstance().screen instanceof JobsScreen jobsScreen) {
             previousScreen = jobsScreen.getPreviousScreen();
         }
-        Minecraft.getInstance().setScreen(new JobsScreen(new JobsScreenOptions(
+        Minecraft.getInstance().setScreen(new JobsScreen(new JobsScreenState(
                 packet.jobs,
                 packet.coins
         ), previousScreen));

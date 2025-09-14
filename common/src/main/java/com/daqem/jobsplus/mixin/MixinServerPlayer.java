@@ -3,33 +3,28 @@ package com.daqem.jobsplus.mixin;
 import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.arc.api.player.ArcPlayer;
 import com.daqem.arc.api.player.ArcServerPlayer;
-import com.daqem.jobsplus.Constants;
 import com.daqem.jobsplus.JobsPlus;
-import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
-import com.daqem.jobsplus.networking.sync.coin.ClientBoundUpdateCoinsPacket;
-import com.daqem.jobsplus.networking.sync.job.ClientboundRemoveJobPacket;
-import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobPacket;
 import com.daqem.jobsplus.player.JobsServerPlayer;
+import com.daqem.jobsplus.player.ServerPlayerData;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.jobsplus.player.job.exp.ExpCollector;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.mojang.authlib.GameProfile;
-import dev.architectury.networking.NetworkManager;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -50,9 +45,10 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     @Unique
     private int jobsplus$coins = 0;
 
-    public MixinServerPlayer(Level level, BlockPos blockPos, float yaw, GameProfile gameProfile) {
-        super(level, blockPos, yaw, gameProfile);
+    public MixinServerPlayer(Level level, GameProfile gameProfile) {
+        super(level, gameProfile);
     }
+
 
     @Override
     public List<Job> jobsplus$getJobs() {
@@ -91,7 +87,6 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         if (job != null) {
             jobsplus$jobs.remove(job);
             jobsplus$removeActionHolders(job);
-            jobsplus$removeJobOnClient(job);
         }
     }
 
@@ -108,6 +103,14 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         if (jobLocation == null) return null;
         return this.jobsplus$jobs.stream()
                 .filter(job -> job.getJobInstance().getLocation().equals(jobLocation.getLocation()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public Job jobsplus$getJob(ResourceLocation jobLocation) {
+        return this.jobsplus$jobs.stream()
+                .filter(job -> job.getJobInstance().getLocation().equals(jobLocation))
                 .findFirst()
                 .orElse(null);
     }
@@ -135,7 +138,6 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     @Override
     public void jobsplus$setCoins(int coins) {
         this.jobsplus$coins = coins;
-        NetworkManager.sendToPlayer(jobsplus$getServerPlayer(), new ClientBoundUpdateCoinsPacket(coins));
     }
 
     @Override
@@ -164,7 +166,6 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     @Override
     public void jobsplus$updateJob(Job job) {
         this.jobsplus$updateActionHolders(job);
-        this.jobsplus$updateJobOnClient(job);
     }
 
     @Override
@@ -177,16 +178,6 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
                     .filter(powerup -> powerup.getState() == PowerupState.ACTIVE)
                     .forEach(powerup -> arcPlayer.arc$addActionHolder(powerup.getPowerupInstance()));
         }
-    }
-
-    @Override
-    public void jobsplus$updateJobOnClient(Job job) {
-        NetworkManager.sendToPlayer(jobsplus$getServerPlayer(), new ClientboundUpdateJobPacket(job));
-    }
-
-    @Override
-    public void jobsplus$removeJobOnClient(Job job) {
-        NetworkManager.sendToPlayer(jobsplus$getServerPlayer(), new ClientboundRemoveJobPacket(job.getJobInstance()));
     }
 
     @Override
@@ -204,22 +195,22 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         }
     }
 
-    @Inject(at = @At("TAIL"), method = "addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V")
-    public void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
-        CompoundTag jobsTag = new CompoundTag();
-        jobsTag.put(Constants.JOBS, Job.Serializer.toNBT(this.jobsplus$jobs));
-        jobsTag.putInt(Constants.COINS, this.jobsplus$coins);
-
-        compoundTag.put(Constants.JOBS_DATA, jobsTag);
+    @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
+    public void addAdditionalSaveData(ValueOutput valueOutput, CallbackInfo ci) {
+        valueOutput.store("JobsPlus", ServerPlayerData.CODEC, new ServerPlayerData(
+                this.jobsplus$jobs,
+                this.jobsplus$coins)
+        );
     }
 
-    @Inject(at = @At("TAIL"), method = "readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V")
-    public void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
-        compoundTag.getCompound(Constants.JOBS_DATA).ifPresent(jobsTag -> {
-            this.jobsplus$jobs = Job.Serializer.fromNBT(this, jobsTag).stream()
+    @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
+    public void readAdditionalSaveData(ValueInput valueInput, CallbackInfo ci) {
+        valueInput.read("JobsPlus", ServerPlayerData.CODEC).ifPresent(serverPlayerData -> {
+            this.jobsplus$jobs = serverPlayerData.jobs().stream()
                     .filter(job -> job.getJobInstance() != null)
+                    .peek(job -> job.setPlayer(this))
                     .collect(Collectors.toCollection(ArrayList::new));
-            jobsTag.getInt(Constants.COINS).ifPresent(coins -> this.jobsplus$coins = coins);
+            this.jobsplus$coins = serverPlayerData.coins();
 
             if (jobsplus$getServerPlayer() instanceof ArcServerPlayer arcServerPlayer) {
                 List<IActionHolder> iActionHolders = this.jobsplus$getActionHolders();

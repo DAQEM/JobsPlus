@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:hunter",
   "parent": "jobsplus:hunter/multiple_arrows_iii",
-  "name": "Multiple Arrows IV",
-  "description": "Bows have a 50% chance to shoot 5 arrows.",
   "icon": {
     "id": "minecraft:arrow",
     "count": 4

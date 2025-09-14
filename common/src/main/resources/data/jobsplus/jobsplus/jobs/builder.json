@@ -1,12 +1,9 @@
 {
   "name": "Builder",
   "price": 10,
-  "max_level": 100,
   "color": "#FFC107",
   "icon": {
     "id": "minecraft:scaffolding"
   },
-  "description": "Builds structures.",
-  "background": "minecraft:textures/block/stone_bricks.png",
   "is_default": true
 }

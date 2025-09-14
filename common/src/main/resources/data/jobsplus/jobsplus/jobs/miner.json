@@ -1,12 +1,9 @@
 {
   "name": "Miner",
   "price": 10,
-  "max_level": 100,
   "color": "#FFA500",
   "icon": {
     "id": "minecraft:diamond_pickaxe"
   },
-  "description": "A Miner is a player who has mined 1000 blocks.",
-  "background": "minecraft:textures/block/stone.png",
   "is_default": true
 }

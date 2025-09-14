@@ -8,6 +8,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.context.ContextMap;
@@ -54,7 +55,7 @@ public class LevelUpJobToast implements Toast {
     @Override
     public void render(GuiGraphics guiGraphics, Font font, long l) {
         Entry entry = this.jobInstances.get(this.displayedJobInstanceIndex);
-        guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
         guiGraphics.drawString(font, entry.jobInstance.getName(), 30, 7, -11534256, false);
         guiGraphics.drawString(font, JobsPlus.translatable("job.level_up.toast", entry.level), 30, 18, -16777216, false);
         guiGraphics.renderFakeItem(entry.jobInstance.getIconItem(), 8, 8);

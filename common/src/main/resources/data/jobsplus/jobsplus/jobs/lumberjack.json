@@ -1,12 +1,9 @@
 {
   "name": "Lumberjack",
   "price": 10,
-  "max_level": 100,
   "color": "#228B22",
   "icon": {
     "id": "minecraft:golden_axe"
   },
-  "description": "You have a 1% chance to get a log when you break a log.",
-  "background": "minecraft:textures/block/oak_planks.png",
   "is_default": true
 }

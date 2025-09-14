@@ -1,15 +1,12 @@
 package com.daqem.jobsplus.client.event;
 
 import com.daqem.jobsplus.client.JobsPlusClient;
-import com.daqem.jobsplus.client.screen.job.JobsScreen;
-import com.daqem.jobsplus.config.JobsPlusConfig;
+import com.daqem.jobsplus.client.gui.jobs.JobsScreen;
 import com.daqem.jobsplus.networking.c2s.ServerboundOpenJobsScreenPacket;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.networking.NetworkManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import org.lwjgl.glfw.GLFW;
 
 public class EventKeyPressed {
 

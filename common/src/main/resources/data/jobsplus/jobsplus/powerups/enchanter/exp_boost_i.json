@@ -1,7 +1,5 @@
 {
   "job": "jobsplus:enchanter",
-  "name": "Experience Boost I",
-  "description": "Multiply your experience from blocks and mobs by 1.5x",
   "icon": {
     "id": "minecraft:enchanting_table"
   },

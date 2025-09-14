@@ -55,6 +55,14 @@ public class JobExpReward extends AbstractReward {
         return this.getDescription(this.min, this.max);
     }
 
+    public int getMin() {
+        return min;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
     public static class Serializer implements IRewardSerializer<JobExpReward> {
         @Override
         public JobExpReward fromJson(JsonObject jsonObject, double chance, int priority) {

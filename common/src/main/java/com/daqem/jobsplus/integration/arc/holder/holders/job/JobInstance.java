@@ -27,32 +27,20 @@ import java.util.stream.Collectors;
 public class JobInstance extends AbstractActionHolder {
 
     private final int price;
-    private final int maxLevel;
     private final String color;
     private final ItemStack iconItem;
-    private final ResourceLocation powerupBackground;
     private final boolean isDefault;
 
-    public JobInstance(ResourceLocation location, int price, int maxLevel, String color, ItemStack iconItem, ResourceLocation powerupBackground, boolean isDefault) {
-        this(location, price, maxLevel, color, iconItem, powerupBackground, isDefault, new ArrayList<>());
-    }
-
-    public JobInstance(ResourceLocation location, int price, int maxLevel, String color, ItemStack iconItem, ResourceLocation powerupBackground, boolean isDefault, List<PowerupInstance> powerupInstances) {
+    public JobInstance(ResourceLocation location, int price, String color, ItemStack iconItem, boolean isDefault) {
         super(location);
         this.price = price;
-        this.maxLevel = maxLevel;
         this.color = color;
         this.iconItem = iconItem;
-        this.powerupBackground = powerupBackground;
         this.isDefault = isDefault;
     }
 
     public int getPrice() {
         return price;
-    }
-
-    public int getMaxLevel() {
-        return maxLevel;
     }
 
     public MutableComponent getName() {
@@ -78,10 +66,6 @@ public class JobInstance extends AbstractActionHolder {
         return iconItem;
     }
 
-    public ResourceLocation getPowerupBackground() {
-        return powerupBackground;
-    }
-
     public boolean isDefault() {
         return isDefault;
     }
@@ -94,7 +78,12 @@ public class JobInstance extends AbstractActionHolder {
                 .filter(itemRestriction -> itemRestriction.getConditions().stream()
                         .anyMatch(condition -> condition instanceof IJobCondition jobCondition && jobCondition.getJobLocation().equals(location)))
                 .collect(Collectors.toMap(
-                        itemRestriction -> itemRestriction,
+                        itemRestriction -> new ItemRestriction(
+                                itemRestriction.getLocation(),
+                                itemRestriction.getIcon().copy(),
+                                new ArrayList<>(itemRestriction.getRestrictionTypes()),
+                                new ArrayList<>(itemRestriction.getConditions())
+                        ),
                         itemRestriction -> itemRestriction.getConditions().stream()
                                 .filter(condition -> condition instanceof IJobCondition)
                                 .map(iCondition -> ((IJobCondition) iCondition).getRequiredLevel())
@@ -131,10 +120,8 @@ public class JobInstance extends AbstractActionHolder {
             return new JobInstance(
                     resourceLocation,
                     GsonHelper.getAsInt(jsonObject, "price"),
-                    GsonHelper.getAsInt(jsonObject, "max_level"),
                     GsonHelper.getAsString(jsonObject, "color"),
                     getItemStack(GsonHelper.getAsJsonObject(jsonObject, "icon")),
-                    ResourceLocation.parse(GsonHelper.getAsString(jsonObject, "background", "minecraft:textures/block/stone.png")),
                     GsonHelper.getAsBoolean(jsonObject, "is_default", false));
         }
 
@@ -142,10 +129,8 @@ public class JobInstance extends AbstractActionHolder {
             return new JobInstance(
                     friendlyByteBuf.readResourceLocation(),
                     friendlyByteBuf.readVarInt(),
-                    friendlyByteBuf.readVarInt(),
                     friendlyByteBuf.readUtf(),
                     ItemStack.STREAM_CODEC.decode(friendlyByteBuf),
-                    friendlyByteBuf.readResourceLocation(),
                     friendlyByteBuf.readBoolean()
             );
         }
@@ -153,10 +138,8 @@ public class JobInstance extends AbstractActionHolder {
         public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobInstance jobInstance) {
             friendlyByteBuf.writeResourceLocation(jobInstance.location);
             friendlyByteBuf.writeVarInt(jobInstance.price);
-            friendlyByteBuf.writeVarInt(jobInstance.maxLevel);
             friendlyByteBuf.writeUtf(jobInstance.color);
             ItemStack.STREAM_CODEC.encode(friendlyByteBuf, jobInstance.iconItem);
-            friendlyByteBuf.writeResourceLocation(jobInstance.powerupBackground);
             friendlyByteBuf.writeBoolean(jobInstance.isDefault);
             IActionHolderSerializer.super.toNetwork(friendlyByteBuf, jobInstance);
         }

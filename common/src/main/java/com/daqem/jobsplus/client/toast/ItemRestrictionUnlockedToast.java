@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.RecipeToast;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.context.ContextMap;
@@ -55,7 +56,7 @@ public class ItemRestrictionUnlockedToast implements Toast {
     @Override
     public void render(GuiGraphics guiGraphics, Font font, long l) {
         ItemRestriction entry = this.itemRestrictions.get(this.displayedItemRestrictionIndex);
-        guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
         guiGraphics.drawString(font, entry.getIcon().getHoverName(), 30, 7, -11534256, false);
         guiGraphics.drawString(font, JobsPlus.translatable("job.item_unlocked.toast"), 30, 18, -16777216, false);
         guiGraphics.renderFakeItem(entry.getIcon(), 8, 8);

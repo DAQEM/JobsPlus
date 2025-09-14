@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:digger",
   "parent": "jobsplus:digger/gold_digger_ii",
-  "name": "Gold Digger III",
-  "description": "Grants a 5% chance to find a gold ingot when digging.",
   "icon": {
     "id": "minecraft:gold_ingot",
     "count": 3

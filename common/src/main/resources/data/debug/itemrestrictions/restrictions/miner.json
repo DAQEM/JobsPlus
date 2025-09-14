@@ -14,7 +14,8 @@
     {
       "type": "jobsplus:job_level",
       "job": "jobsplus:miner",
-      "level": 10
+      "level": 10,
+      "inverted": true
     },
     {
       "type": "arc:item",

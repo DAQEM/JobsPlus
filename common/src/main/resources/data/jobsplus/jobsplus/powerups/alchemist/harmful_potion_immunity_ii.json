@@ -1,11 +1,13 @@
 {
   "job": "jobsplus:alchemist",
   "parent": "jobsplus:alchemist/harmful_potion_immunity_i",
-  "name": "Harmful Potion Immunity II",
-  "description": "Become 40% immune to harmful potions.",
   "icon": {
     "id": "minecraft:potion",
-    "tag": "{Potion:\"minecraft:poison\"}",
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:poison"
+      }
+    },
     "count": 2
   },
   "price": 12,

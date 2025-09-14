@@ -1,7 +1,5 @@
 {
   "job": "jobsplus:digger",
-  "name": "Gold Digger I",
-  "description": "Grants a 1% chance to find a gold ingot when digging.",
   "icon": {
     "id": "minecraft:gold_ingot"
   },

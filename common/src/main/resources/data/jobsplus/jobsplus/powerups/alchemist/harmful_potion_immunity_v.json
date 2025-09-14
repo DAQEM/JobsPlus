@@ -1,11 +1,13 @@
 {
   "job": "jobsplus:alchemist",
   "parent": "jobsplus:alchemist/harmful_potion_immunity_iv",
-  "name": "Harmful Potion Immunity V",
-  "description": "Become completely immune to harmful potions.",
   "icon": {
     "id": "minecraft:potion",
-    "tag": "{Potion:\"minecraft:poison\"}",
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:poison"
+      }
+    },
     "count": 5
   },
   "price": 18,

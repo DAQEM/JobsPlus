@@ -1,7 +1,5 @@
 {
   "job": "jobsplus:miner",
-  "name": "Pickaxe Efficiency I",
-  "description": "Pickaxes dig 10% faster.",
   "icon": {
     "id": "minecraft:golden_pickaxe"
   },

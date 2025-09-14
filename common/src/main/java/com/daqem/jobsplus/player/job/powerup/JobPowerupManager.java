@@ -4,6 +4,7 @@ import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,6 +21,12 @@ public class JobPowerupManager {
     public Optional<Powerup> getPowerup(PowerupInstance powerupInstance) {
         return powerups.stream()
                 .filter(powerup -> powerup.getPowerupInstance().getLocation().equals(powerupInstance.getLocation()))
+                .findFirst();
+    }
+
+    public Optional<Powerup> getPowerup(ResourceLocation powerupLocation) {
+        return powerups.stream()
+                .filter(powerup -> powerup.getPowerupInstance().getLocation().equals(powerupLocation))
                 .findFirst();
     }
 

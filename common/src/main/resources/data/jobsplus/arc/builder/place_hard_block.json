@@ -14,7 +14,8 @@
   "conditions": [
     {
       "type": "arc:block_hardness",
-      "min": 10
+      "min": 10,
+      "max": 100
     }
   ]
 }

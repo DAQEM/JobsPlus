@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:fisherman",
   "parent": "jobsplus:fisherman/grappling_hook_i",
-  "name": "Grappling Hook II",
-  "description": "Make your grappling hook pull you further.",
   "icon": {
     "id": "minecraft:fishing_rod",
     "count": 2

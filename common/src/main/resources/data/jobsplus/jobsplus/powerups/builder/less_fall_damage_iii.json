@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:builder",
   "parent": "jobsplus:builder/less_fall_damage_ii",
-  "name": "Less Fall Damage III",
-  "description": "Take 60% less fall damage.",
   "icon": {
     "id": "minecraft:diamond_boots"
   },

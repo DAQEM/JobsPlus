@@ -1,7 +1,5 @@
 {
   "job": "jobsplus:hunter",
-  "name": "Attack Speed I",
-  "description": "10% faster attack speed.",
   "icon": {
     "id": "minecraft:golden_sword"
   },

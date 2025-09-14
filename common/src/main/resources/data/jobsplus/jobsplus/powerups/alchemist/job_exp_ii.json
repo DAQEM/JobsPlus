@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:alchemist",
   "parent": "jobsplus:alchemist/stronger_potions_iii",
-  "name": "Job Experience II",
-  "description": "Multiply your job experience by 2x",
   "icon": {
     "id": "minecraft:experience_bottle",
     "count": 2

@@ -10,13 +10,14 @@ import dev.architectury.networking.NetworkManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ServerboundStartPowerupPacket implements CustomPacketPayload {
 
-    private final @Nullable JobInstance jobInstance;
-    private final @Nullable PowerupInstance powerupInstance;
+    private final ResourceLocation jobLocation;
+    private final ResourceLocation powerupLocation;
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundStartPowerupPacket> STREAM_CODEC = new StreamCodec<>() {
         @Override
@@ -26,29 +27,19 @@ public class ServerboundStartPowerupPacket implements CustomPacketPayload {
 
         @Override
         public void encode(RegistryFriendlyByteBuf buf, ServerboundStartPowerupPacket packet) {
-            boolean jobInstanceIsNotNull = packet.jobInstance != null;
-            buf.writeBoolean(jobInstanceIsNotNull);
-            if (jobInstanceIsNotNull) {
-                buf.writeResourceLocation(packet.jobInstance.getLocation());
-            }
-            boolean powerupInstanceIsNotNull = packet.powerupInstance != null;
-            buf.writeBoolean(powerupInstanceIsNotNull);
-            if (powerupInstanceIsNotNull) {
-                buf.writeResourceLocation(packet.powerupInstance.getLocation());
-            }
+            buf.writeResourceLocation(packet.jobLocation);
+            buf.writeResourceLocation(packet.powerupLocation);
         }
     };
 
-    public ServerboundStartPowerupPacket(@Nullable JobInstance jobInstance, @Nullable PowerupInstance powerupInstance) {
-        this.jobInstance = jobInstance;
-        this.powerupInstance = powerupInstance;
+    public ServerboundStartPowerupPacket(ResourceLocation jobLocation, ResourceLocation powerupLocation) {
+        this.jobLocation = jobLocation;
+        this.powerupLocation = powerupLocation;
     }
 
     public ServerboundStartPowerupPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
-        boolean jobInstanceIsNotNull = friendlyByteBuf.readBoolean();
-        this.jobInstance = jobInstanceIsNotNull ? JobInstance.of(friendlyByteBuf.readResourceLocation()) : null;
-        boolean powerupInstanceIsNotNull = friendlyByteBuf.readBoolean();
-        this.powerupInstance = powerupInstanceIsNotNull ? PowerupInstance.of(friendlyByteBuf.readResourceLocation()) : null;
+        this.jobLocation = friendlyByteBuf.readResourceLocation();
+        this.powerupLocation = friendlyByteBuf.readResourceLocation();
     }
 
     @Override
@@ -57,25 +48,36 @@ public class ServerboundStartPowerupPacket implements CustomPacketPayload {
     }
 
     public static void handleServerSide(ServerboundStartPowerupPacket packet, NetworkManager.PacketContext context) {
-        if (packet.jobInstance == null || packet.powerupInstance == null) return;
         if (context.getPlayer() instanceof JobsServerPlayer serverPlayer) {
-            Job job = serverPlayer.jobsplus$getJob(packet.jobInstance);
+            Job job = serverPlayer.jobsplus$getJob(packet.jobLocation);
+            PowerupInstance powerupInstance = PowerupInstance.of(packet.powerupLocation);
 
             if (job == null) {
-                serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.job_not_found", packet.jobInstance.getLocation().toString()));
+                serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.job_not_found", packet.jobLocation.toString()));
                 return;
             }
-            if (serverPlayer.jobsplus$getCoins() < packet.powerupInstance.getPrice()) {
+            if (powerupInstance == null) {
+                serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.powerup_not_found", packet.powerupLocation.toString()));
+                return;
+            }
+            if (serverPlayer.jobsplus$getCoins() < powerupInstance.getPrice()) {
                 serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.not_enough_coins"));
                 return;
             }
-            if (job.getLevel() < packet.powerupInstance.getRequiredLevel()) {
+            if (job.getLevel() < powerupInstance.getRequiredLevel()) {
                 serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.not_high_enough_level"));
                 return;
             }
+            if (job.getPowerupManager().getPowerup(powerupInstance).isPresent()) {
+                serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.powerup_already_owned", powerupInstance.getName()));
+                return;
+            }
 
-            serverPlayer.jobsplus$setCoins(serverPlayer.jobsplus$getCoins() - packet.powerupInstance.getPrice());
-            job.getPowerupManager().addPowerup(serverPlayer, job, packet.powerupInstance);
+            if (job.getPowerupManager().addPowerup(serverPlayer, job, powerupInstance)) {
+                serverPlayer.jobsplus$setCoins(serverPlayer.jobsplus$getCoins() - powerupInstance.getPrice());
+            } else {
+                serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.could_not_add_powerup", powerupInstance.getName()));
+            }
         }
     }
 }

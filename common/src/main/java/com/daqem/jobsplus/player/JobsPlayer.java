@@ -3,6 +3,7 @@ package com.daqem.jobsplus.player;
 import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.player.job.Job;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +24,9 @@ public interface JobsPlayer {
 
     void jobsplus$removeActionHolders(Job job);
 
-    Job jobsplus$getJob(@Nullable JobInstance jobLocation);
+    Job jobsplus$getJob(@Nullable JobInstance jobInstance);
+
+    Job jobsplus$getJob(ResourceLocation jobLocation);
 
     int jobsplus$getCoins();
 

@@ -1,8 +1,6 @@
 {
   "job": "jobsplus:smith",
   "parent": "jobsplus:smith/armor_unbreaking_i",
-  "name": "Armor Unbreaking II",
-  "description": "Armor is 20% less likely to take damage when attacked.",
   "icon": {
     "id": "minecraft:diamond_chestplate",
     "count": 2
