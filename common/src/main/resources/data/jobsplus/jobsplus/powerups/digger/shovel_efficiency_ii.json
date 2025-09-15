@@ -1,6 +1,7 @@
 {
   "job": "jobsplus:digger",
   "parent": "jobsplus:digger/shovel_efficiency_i",
+  "icon": {
     "id": "minecraft:golden_shovel",
     "count": 2
   },
