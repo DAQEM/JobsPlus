@@ -16,16 +16,7 @@
     {
       "type": "arc:items",
       "items": [
-        "#minecraft:tools",
-        "#neoforge:tools",
         "#c:tools",
-        "#c:swords",
-        "#c:axes",
-        "#c:pickaxes",
-        "#c:shovels",
-        "#c:hoes",
-        "#c:shears",
-        "#neoforge:armors",
         "#c:armor"
       ]
     }
