@@ -25,11 +25,11 @@ public interface JobsPlayer {
 
     Job jobsplus$getJob(@Nullable JobInstance jobLocation);
 
-    int jobsplus$getCoins();
+    double jobsplus$getCoins();
 
-    void jobsplus$addCoins(int coins);
+    void jobsplus$addCoins(double coins);
 
-    void jobsplus$setCoins(int coins);
+    void jobsplus$setCoins(double coins);
 
     String jobsplus$getName();
 

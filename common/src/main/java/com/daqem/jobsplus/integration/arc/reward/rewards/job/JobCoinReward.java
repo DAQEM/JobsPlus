@@ -17,9 +17,9 @@ import net.minecraft.util.GsonHelper;
 
 public class JobCoinReward extends AbstractReward {
 
-    private final int amount;
+    private final double amount;
 
-    public JobCoinReward(double chance, int priority, int amount) {
+    public JobCoinReward(double chance, int priority, double amount) {
         super(chance, priority);
         this.amount = amount;
     }
@@ -50,7 +50,7 @@ public class JobCoinReward extends AbstractReward {
             return new JobCoinReward(
                     chance,
                     priority,
-                    GsonHelper.getAsInt(jsonObject, "amount"));
+                    GsonHelper.getAsDouble(jsonObject, "amount"));
         }
 
         @Override
@@ -58,13 +58,13 @@ public class JobCoinReward extends AbstractReward {
             return new JobCoinReward(
                     chance,
                     priority,
-                    friendlyByteBuf.readInt());
+                    friendlyByteBuf.readDouble());
         }
 
         @Override
         public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobCoinReward type) {
             IRewardSerializer.super.toNetwork(friendlyByteBuf, type);
-            friendlyByteBuf.writeInt(type.amount);
+            friendlyByteBuf.writeDouble(type.amount);
         }
     }
 }

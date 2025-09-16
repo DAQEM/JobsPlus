@@ -14,6 +14,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 
+import java.text.DecimalFormat;
+
 public class JobsPlus {
     public static final String MOD_ID = "jobsplus";
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -63,5 +65,11 @@ public class JobsPlus {
         if (JobsPlusConfig.isDebug.get()) {
             LOGGER.warn("DEBUG MESSAGE: " + message, objects);
         }
+    }
+
+    public static String formatNumber(double number) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setMinimumFractionDigits(0);
+        return df.format(number);
     }
 }

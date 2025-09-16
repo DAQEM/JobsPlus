@@ -470,6 +470,11 @@
   "yamlconfig.jobsplus.jobsplus-common.jobs.enable_default_jobs": "Enable Default Jobs",
   "yamlconfig.jobsplus.jobsplus-common.jobs.amount_of_free_jobs": "Amount of Free Jobs",
   "yamlconfig.jobsplus.jobsplus-common.jobs.max_jobs": "Max Jobs",
+  "yamlconfig.jobsplus.jobsplus-common.jobs.broadcast_level_up_messages": "Broadcast Level Up Messages",
   "yamlconfig.jobsplus.jobsplus-common.jobs.coins": "Coins",
-  "yamlconfig.jobsplus.jobsplus-common.jobs.coins.coins_per_level_up": "Coins Per Level Up"
+  "yamlconfig.jobsplus.jobsplus-common.jobs.coins.coins_per_level_up": "Coins Per Level Up",
+  "yamlconfig.jobsplus.jobsplus-common.jobs.experience": "Experience",
+  "yamlconfig.jobsplus.jobsplus-common.jobs.experience.show_xp_in_action_bar": "Show XP in Action Bar",
+  "yamlconfig.jobsplus.jobsplus-common.jobs.experience.xp_multiplier": "XP Multiplier",
+  "yamlconfig.jobsplus.jobsplus-common.jobs.experience.use_decimal_values_for_xp": "Use Decimal Values for XP"
 }

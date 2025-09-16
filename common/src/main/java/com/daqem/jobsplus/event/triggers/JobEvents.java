@@ -13,6 +13,7 @@ import com.daqem.jobsplus.networking.s2c.ClientboundUnlockItemRestrictionPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import dev.architectury.networking.NetworkManager;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -52,23 +53,26 @@ public class JobEvents {
             player.jobsplus$addCoins(JobsPlusConfig.coinsPerLevelUp.get());
             JobInstance jobInstance = job.getJobInstance();
             if (serverPlayer.getServer() == null) return;
-            serverPlayer.getServer().getPlayerList()
-                    .broadcastSystemMessage(
-                            JobsPlus.translatable("job.level_up",
-                                    serverPlayer.getName().copy()
-                                            .withStyle(style -> style
-                                                    .withColor(jobInstance.getColorDecimal())
-                                            ),
-                                    JobsPlus.literal(String.valueOf(job.getLevel()))
-                                            .withStyle(style -> style
-                                                    .withColor(jobInstance.getColorDecimal())
-                                            ),
-                                    jobInstance.getName().getString()
-                            ), false);
+            MutableComponent message = JobsPlus.translatable("job.level_up",
+                    serverPlayer.getName().copy()
+                            .withStyle(style -> style
+                                    .withColor(jobInstance.getColorDecimal())
+                            ),
+                    JobsPlus.literal(String.valueOf(job.getLevel()))
+                            .withStyle(style -> style
+                                    .withColor(jobInstance.getColorDecimal())
+                            ),
+                    jobInstance.getName()
+            );
+            if (JobsPlusConfig.broadcastLevelUpMessages.get()) {
+                serverPlayer.getServer().getPlayerList().broadcastSystemMessage(message, false);
+            } else {
+                serverPlayer.sendSystemMessage(message);
+            }
         }
     }
 
-    public static void onJobExperience(JobsPlayer player, Job job, int experience) {
+    public static void onJobExperience(JobsPlayer player, Job job, double experience) {
         if (player instanceof ArcPlayer arcPlayer) {
             new ActionDataBuilder(arcPlayer, JobsPlusActionType.JOB_EXP)
                     .withData(JobsPlusActionDataType.JOB_EXP, experience)

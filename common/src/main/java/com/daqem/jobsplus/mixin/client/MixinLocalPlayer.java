@@ -35,7 +35,7 @@ public abstract class MixinLocalPlayer extends AbstractClientPlayer implements J
     @Unique
     private final List<Job> jobsplus$jobs = new ArrayList<>();
     @Unique
-    private int jobsplus$coins = 0;
+    private double jobsplus$coins = 0;
 
     public MixinLocalPlayer(ClientLevel clientLevel, GameProfile gameProfile) {
         super(clientLevel, gameProfile);
@@ -95,17 +95,17 @@ public abstract class MixinLocalPlayer extends AbstractClientPlayer implements J
     }
 
     @Override
-    public int jobsplus$getCoins() {
+    public double jobsplus$getCoins() {
         return this.jobsplus$coins;
     }
 
     @Override
-    public void jobsplus$addCoins(int coins) {
+    public void jobsplus$addCoins(double coins) {
         this.jobsplus$coins = Mth.clamp(this.jobsplus$coins + coins, 0, Integer.MAX_VALUE);
     }
 
     @Override
-    public void jobsplus$setCoins(int coins) {
+    public void jobsplus$setCoins(double coins) {
         this.jobsplus$coins = coins;
     }
 
