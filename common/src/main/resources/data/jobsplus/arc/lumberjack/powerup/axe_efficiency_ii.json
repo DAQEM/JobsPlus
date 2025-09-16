@@ -14,8 +14,7 @@
     {
       "type": "arc:items",
       "items": [
-        "#neoforge:tools/axes",
-        "#c:axes"
+        "#minecraft:axes"
       ]
     },
     {
