@@ -14,8 +14,7 @@
     {
       "type": "arc:items",
       "items": [
-        "#neoforge:tools/shovels",
-        "#c:shovels"
+        "#minecraft:shovels"
       ]
     }
   ]

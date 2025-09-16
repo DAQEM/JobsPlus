@@ -14,8 +14,7 @@
     {
       "type": "arc:items",
       "items": [
-        "#neoforge:tools/pickaxes",
-        "#c:pickaxes"
+        "#mincraft:pickaxes"
       ]
     }
   ]

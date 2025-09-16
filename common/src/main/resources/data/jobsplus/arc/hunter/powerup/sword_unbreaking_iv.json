@@ -14,8 +14,7 @@
     {
       "type": "arc:items",
       "items": [
-        "#neoforge:tools/swords",
-        "#c:swords"
+        "#mincraft:swords"
       ]
     },
     {
