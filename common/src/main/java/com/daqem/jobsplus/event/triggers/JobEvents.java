@@ -51,8 +51,7 @@ public class JobEvents {
 
             player.jobsplus$addCoins(JobsPlusConfig.coinsPerLevelUp.get());
             JobInstance jobInstance = job.getJobInstance();
-            if (serverPlayer.getServer() == null) return;
-            serverPlayer.getServer().getPlayerList()
+            serverPlayer.level().getServer().getPlayerList()
                     .broadcastSystemMessage(
                             JobsPlus.translatable("job.level_up",
                                     serverPlayer.getName().copy()

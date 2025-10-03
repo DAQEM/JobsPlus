@@ -3,7 +3,9 @@ package com.daqem.jobsplus.client.gui.jobs.widgets;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.mixin.client.AbstractScrollAreaAccessor;
 import com.daqem.uilib.gui.widget.ScrollContainerWidget;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.Mth;
 
@@ -24,14 +26,15 @@ public abstract class AbstractScrollWidget extends ScrollContainerWidget {
         return SCROLL_HANDLE_HEIGHT;
     }
 
-    public boolean updateScrolling(double mouseX, double mouseY, int button) {
-        ((AbstractScrollAreaAccessor) this).setScrolling(this.scrollbarVisible()
-                && this.isValidClickButton(button)
-                && mouseX >= this.scrollBarX()
-                && mouseX <= this.scrollBarX() + SCROLL_HANDLE_WIDTH
-                && mouseY >= this.getY()
-                && mouseY < this.getBottom());
-        return ((AbstractScrollAreaAccessor) this).getScrolling();
+    @Override
+    public boolean updateScrolling(MouseButtonEvent event) {
+        ((AbstractScrollAreaAccessor) this).jobsplus$setScrolling(this.scrollbarVisible()
+                && this.isValidClickButton(event.buttonInfo())
+                && event.x() >= this.scrollBarX()
+                && event.x() <= this.scrollBarX() + SCROLL_HANDLE_WIDTH
+                && event.y() >= this.getY()
+                && event.y() < this.getBottom());
+        return ((AbstractScrollAreaAccessor) this).jobsplus$getScrolling();
     }
 
     protected int scrollBarX() {
@@ -45,7 +48,7 @@ public abstract class AbstractScrollWidget extends ScrollContainerWidget {
     }
 
     @Override
-    protected void renderScrollbar(GuiGraphics guiGraphics) {
+    protected void renderScrollbar(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (this.scrollbarVisible()) {
             int scrollBarX = this.scrollBarX();
             int scrollerHeight = this.scrollerHeight();
@@ -70,6 +73,9 @@ public abstract class AbstractScrollWidget extends ScrollContainerWidget {
                     14,
                     scrollerHeight
             );
+            if (this.isOverScrollbar(mouseX, mouseY)) {
+                guiGraphics.requestCursor(((AbstractScrollAreaAccessor) this).jobsplus$getScrolling() ? CursorTypes.RESIZE_NS : CursorTypes.POINTING_HAND);
+            }
         }
     }
 

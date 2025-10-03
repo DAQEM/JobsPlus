@@ -19,6 +19,7 @@ import com.daqem.uilib.gui.widget.CustomButtonWidget;
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -270,7 +271,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
     }
 
     @Override
-    protected boolean isValidClickButton(int i) {
+    protected boolean isValidClickButton(MouseButtonInfo mouseButtonInfo) {
         if (hasPowerup()) return true;
 
         boolean isCorrectPowerupState = this.powerup != null && this.powerup.getState() != PowerupState.LOCKED;
@@ -279,7 +280,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
 
     @Override
     public boolean isActive() {
-        return isValidClickButton(1);
+        return isValidClickButton(new MouseButtonInfo(0, 0));
     }
 
     private boolean hasEnoughCoins() {

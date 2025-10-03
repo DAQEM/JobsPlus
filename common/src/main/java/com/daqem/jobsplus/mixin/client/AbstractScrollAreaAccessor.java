@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface AbstractScrollAreaAccessor {
 
     @Accessor("scrolling")
-    boolean getScrolling();
+    boolean jobsplus$getScrolling();
 
     @Accessor("scrolling")
-    void setScrolling(boolean scrolling);
+    void jobsplus$setScrolling(boolean scrolling);
 }
