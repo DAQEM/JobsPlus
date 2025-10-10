@@ -1,6 +1,10 @@
 package com.daqem.jobsplus.networking;
 
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.client.networking.ClientboundLevelUpJobPacketHandler;
+import com.daqem.jobsplus.client.networking.ClientboundOpenJobsScreenPacketHandler;
+import com.daqem.jobsplus.client.networking.ClientboundOpenPowerupsScreenPacketHandler;
+import com.daqem.jobsplus.client.networking.ClientboundUnlockItemRestrictionPacketHandler;
 import com.daqem.jobsplus.networking.c2s.*;
 import com.daqem.jobsplus.networking.s2c.*;
 import dev.architectury.networking.NetworkManager;
@@ -31,10 +35,10 @@ public interface JobsPlusNetworking {
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_open_powerups_screen"));
 
     static void initClient() {
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC, ClientboundOpenJobsScreenPacket::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_LEVEL_UP_JOB, ClientboundLevelUpJobPacket.STREAM_CODEC, ClientboundLevelUpJobPacket::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_UNLOCK_ITEM_RESTRICTION, ClientboundUnlockItemRestrictionPacket.STREAM_CODEC, ClientboundUnlockItemRestrictionPacket::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_POWERUPS_SCREEN, ClientboundOpenPowerupsScreenPacket.STREAM_CODEC, ClientboundOpenPowerupsScreenPacket::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC, ClientboundOpenJobsScreenPacketHandler::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_LEVEL_UP_JOB, ClientboundLevelUpJobPacket.STREAM_CODEC, ClientboundLevelUpJobPacketHandler::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_UNLOCK_ITEM_RESTRICTION, ClientboundUnlockItemRestrictionPacket.STREAM_CODEC, ClientboundUnlockItemRestrictionPacketHandler::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_POWERUPS_SCREEN, ClientboundOpenPowerupsScreenPacket.STREAM_CODEC, ClientboundOpenPowerupsScreenPacketHandler::handleClientSide);
     }
 
     static void initCommon() {

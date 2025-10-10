@@ -58,21 +58,15 @@ public class ClientboundOpenPowerupsScreenPacket implements CustomPacketPayload 
         return JobsPlusNetworking.CLIENTBOUND_OPEN_POWERUPS_SCREEN;
     }
 
-    @Environment(EnvType.CLIENT)
-    public static void handleClientSide(ClientboundOpenPowerupsScreenPacket packet, NetworkManager.PacketContext context) {
-        @Nullable Screen previousScreen = null;
-        if (Minecraft.getInstance().screen instanceof JobsScreen jobsScreen) {
-            previousScreen = jobsScreen.getPreviousScreen();
-        }
-        Job job = packet.jobs.stream().filter(j -> j.getJobInstance().getLocation().equals(packet.jobLocation)).findFirst().orElse(null);
-        JobsScreen jobsScreen = new JobsScreen(new JobsScreenState(
-                packet.jobs,
-                packet.coins,
-                job,
-                RightTab.EXPERIENCE
-        ), previousScreen);
-        if (job != null) {
-            Minecraft.getInstance().setScreen(new PowerupsScreen(new PowerupsScreenState(job, packet.coins), jobsScreen));
-        }
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public int getCoins() {
+        return coins;
+    }
+
+    public ResourceLocation getJobLocation() {
+        return jobLocation;
     }
 }
