@@ -43,8 +43,7 @@ public class ClientboundUnlockItemRestrictionPacket implements CustomPacketPaylo
         return JobsPlusNetworking.CLIENTBOUND_UNLOCK_ITEM_RESTRICTION;
     }
 
-    @Environment(EnvType.CLIENT)
-    public static void handleClientSide(ClientboundUnlockItemRestrictionPacket packet, NetworkManager.PacketContext context) {
-        ItemRestrictionUnlockedToast.addOrUpdate(Minecraft.getInstance().getToastManager(), ItemRestrictionManager.getInstance().getItemRestriction(packet.itemRestrictionLocation));
+    public ResourceLocation getItemRestrictionLocation() {
+        return itemRestrictionLocation;
     }
 }

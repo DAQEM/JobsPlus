@@ -50,15 +50,11 @@ public class ClientboundOpenJobsScreenPacket implements CustomPacketPayload {
         return JobsPlusNetworking.CLIENTBOUND_OPEN_JOBS_SCREEN;
     }
 
-    @Environment(EnvType.CLIENT)
-    public static void handleClientSide(ClientboundOpenJobsScreenPacket packet, NetworkManager.PacketContext context) {
-        @Nullable Screen previousScreen = null;
-        if (Minecraft.getInstance().screen instanceof JobsScreen jobsScreen) {
-            previousScreen = jobsScreen.getPreviousScreen();
-        }
-        Minecraft.getInstance().setScreen(new JobsScreen(new JobsScreenState(
-                packet.jobs,
-                packet.coins
-        ), previousScreen));
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public int getCoins() {
+        return coins;
     }
 }
