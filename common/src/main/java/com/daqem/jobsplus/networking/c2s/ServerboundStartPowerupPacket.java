@@ -1,7 +1,6 @@
 package com.daqem.jobsplus.networking.c2s;
 
 import com.daqem.jobsplus.JobsPlus;
-import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
 import com.daqem.jobsplus.player.JobsServerPlayer;
@@ -12,7 +11,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ServerboundStartPowerupPacket implements CustomPacketPayload {
 

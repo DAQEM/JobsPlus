@@ -1,7 +1,6 @@
 package com.daqem.jobsplus.networking.c2s;
 
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
-import com.daqem.jobsplus.networking.s2c.ClientboundOpenJobsScreenPacket;
 import com.daqem.jobsplus.networking.s2c.ClientboundOpenPowerupsScreenPacket;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import dev.architectury.networking.NetworkManager;

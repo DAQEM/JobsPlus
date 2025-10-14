@@ -1,6 +1,7 @@
 package com.daqem.jobsplus.client.gui.jobs.components;
 
 import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
+import com.daqem.jobsplus.client.gui.jobs.components.leaderboard.LeaderboardComponent;
 import com.daqem.jobsplus.client.gui.jobs.tab.RightTab;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.uilib.gui.component.EmptyComponent;
@@ -24,6 +25,7 @@ public class RightPageContentComponent extends EmptyComponent {
         switch (this.cachedTab) {
             case EXPERIENCE -> this.addComponent(new ExperienceComponent(state));
             case RECIPES -> this.addComponent(new RecipesComponent(state));
+            case LEADERBOARD -> this.addComponent(new LeaderboardComponent(state));
         }
     }
 

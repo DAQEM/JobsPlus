@@ -40,4 +40,8 @@ public class JobsScreen extends AbstractScreen {
     public boolean isPauseScreen() {
         return false;
     }
+
+    public JobsScreenState getState() {
+        return state;
+    }
 }

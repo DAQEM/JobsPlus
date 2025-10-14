@@ -37,12 +37,8 @@ subprojects {
     }
 
     repositories {
-        maven {
-            url "https://cursemaven.com"
-            content {
-                includeGroup "curse.maven"
-            }
-        }
+        maven { url "https://maven.daqem.com/snapshots/" }
+        maven { url "https://maven.neoforged.net/releases/" }
     }
 
     dependencies {

@@ -1,0 +1,17 @@
+loom {
+    accessWidenerPath = project(':common').file("src/main/resources/jobsplus.accessWidener")
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    implementation project(path: ":common", configuration: "namedElements")
+
+    modImplementation "com.daqem.uilib:uilib-common:${project.ui_library_version}"
+    modImplementation "com.daqem.yamlconfig:yamlconfig-common:${project.config_library_version}"
+    modImplementation "com.daqem.arc:arc-common:${project.arc_version}"
+    modImplementation "com.daqem.itemrestrictions:itemrestrictions-common:${project.item_restrictions_version}"
+}
+
+architectury {
+    common(rootProject.enabled_platforms.split(","))
+}

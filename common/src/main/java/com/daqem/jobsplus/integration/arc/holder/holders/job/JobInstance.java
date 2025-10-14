@@ -1,9 +1,9 @@
 package com.daqem.jobsplus.integration.arc.holder.holders.job;
 
 import com.daqem.arc.api.action.holder.AbstractActionHolder;
-import com.daqem.arc.api.action.holder.ActionHolderManager;
-import com.daqem.arc.api.action.holder.serializer.IActionHolderSerializer;
-import com.daqem.arc.api.action.holder.type.IActionHolderType;
+import com.daqem.arc.api.action.holder.IActionHolderSerializer;
+import com.daqem.arc.api.action.holder.IActionHolderType;
+import com.daqem.arc.data.ActionHolderManager;
 import com.daqem.itemrestrictions.data.ItemRestriction;
 import com.daqem.itemrestrictions.data.ItemRestrictionManager;
 import com.daqem.jobsplus.JobsPlus;
@@ -121,7 +121,7 @@ public class JobInstance extends AbstractActionHolder {
                     resourceLocation,
                     GsonHelper.getAsInt(jsonObject, "price"),
                     GsonHelper.getAsString(jsonObject, "color"),
-                    getItemStack(GsonHelper.getAsJsonObject(jsonObject, "icon")),
+                    getItemStack(jsonObject, "icon"),
                     GsonHelper.getAsBoolean(jsonObject, "is_default", false));
         }
 

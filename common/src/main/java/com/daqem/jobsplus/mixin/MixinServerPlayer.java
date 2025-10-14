@@ -7,6 +7,8 @@ import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
+import com.daqem.jobsplus.level.JobsPlusLevelData;
+import com.daqem.jobsplus.level.JobsPlusServerLevel;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.ServerPlayerData;
 import com.daqem.jobsplus.player.job.Job;
@@ -35,6 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Mixin(ServerPlayer.class)
@@ -76,6 +79,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
             job = new Job(this, jobInstance, 1, 0);
             jobsplus$jobs.add(job);
             jobsplus$updateJob(job);
+            jobsplus$getLevelData().jobsplus$updatePlayerEntry(this, job);
             return job;
         }
         return null;
@@ -87,6 +91,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         if (job != null) {
             jobsplus$jobs.remove(job);
             jobsplus$removeActionHolders(job);
+            jobsplus$getLevelData().jobsplus$removePlayerEntry(this, job);
         }
     }
 
@@ -123,6 +128,11 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
                 .filter(powerup -> powerup.getPowerupInstance().getLocation().equals(powerupInstance.getLocation()))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public JobsPlusLevelData jobsplus$getLevelData() {
+        return ((JobsPlusServerLevel) Objects.requireNonNull(Objects.requireNonNull(this.level().getServer()).getLevel(Level.OVERWORLD))).jobsplus$getLevelData();
     }
 
     @Override
@@ -208,7 +218,10 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         valueInput.read("JobsPlus", ServerPlayerData.CODEC).ifPresent(serverPlayerData -> {
             this.jobsplus$jobs = serverPlayerData.jobs().stream()
                     .filter(job -> job.getJobInstance() != null)
-                    .peek(job -> job.setPlayer(this))
+                    .peek(job -> {
+                        job.setPlayer(this);
+                        jobsplus$getLevelData().jobsplus$updatePlayerEntry(this, job);
+                    })
                     .collect(Collectors.toCollection(ArrayList::new));
             this.jobsplus$coins = serverPlayerData.coins();
 

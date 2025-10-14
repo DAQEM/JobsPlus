@@ -19,29 +19,21 @@
       ]
     },
     {
-      "type": "arc:not",
-      "conditions": [
-        {
-          "type": "arc:is_ore"
-        }
-      ]
+      "type": "arc:is_ore",
+      "inverted": true
     },
     {
-      "type": "arc:not",
-      "conditions": [
-        {
-          "type": "arc:blocks",
-          "blocks": [
-            "minecraft:stone",
-            "minecraft:cobblestone",
-            "minecraft:granite",
-            "minecraft:andesite",
-            "minecraft:diorite",
-            "minecraft:deepslate",
-            "minecraft:netherrack",
-            "minecraft:end_stone"
-          ]
-        }
+      "type": "arc:blocks",
+      "inverted": true,
+      "blocks": [
+        "minecraft:stone",
+        "minecraft:cobblestone",
+        "minecraft:granite",
+        "minecraft:andesite",
+        "minecraft:diorite",
+        "minecraft:deepslate",
+        "minecraft:netherrack",
+        "minecraft:end_stone"
       ]
     }
   ]

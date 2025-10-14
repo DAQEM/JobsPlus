@@ -1,0 +1,13 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "Apache-2.0"
+
+[[mods]]
+modId = "jobsplus_test"
+version = "${file.jarVersion}"
+displayName = "JobsPlus Test Mod"
+authors = "DAQEM"
+description = '''
+This is a test mod for JobsPlus.
+'''
+license = "Apache-2.0"

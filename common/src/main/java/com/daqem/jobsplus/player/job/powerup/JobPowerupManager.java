@@ -1,14 +1,14 @@
 package com.daqem.jobsplus.player.job.powerup;
 
+import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
-import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 public class JobPowerupManager {
 

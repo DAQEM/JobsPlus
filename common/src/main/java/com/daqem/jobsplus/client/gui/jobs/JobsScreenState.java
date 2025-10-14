@@ -2,9 +2,13 @@ package com.daqem.jobsplus.client.gui.jobs;
 
 import com.daqem.arc.api.action.IAction;
 import com.daqem.jobsplus.client.gui.jobs.tab.RightTab;
+import com.daqem.jobsplus.networking.c2s.ServerboundRequestLeaderboardPacket;
+import com.daqem.jobsplus.player.LeaderboardPlayer;
 import com.daqem.jobsplus.player.job.Job;
+import dev.architectury.networking.NetworkManager;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -17,6 +21,8 @@ public class JobsScreenState {
     private Job selectedJob;
     private RightTab selectedRightTab;
     private @Nullable IAction activeAction;
+    private List<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>();
+    private boolean isLoadingLeaderboard = false;
 
     public JobsScreenState(List<Job> jobs, int coins) {
         this(jobs, coins, null, RightTab.EXPERIENCE);
@@ -82,5 +88,27 @@ public class JobsScreenState {
 
     public int getActiveJobCount() {
         return (int) jobs.stream().filter(job -> job.getLevel() > 0).count();
+    }
+
+    public List<LeaderboardPlayer> getLeaderboardPlayers() {
+        return leaderboardPlayers;
+    }
+
+    public void setLeaderboardPlayers(List<LeaderboardPlayer> leaderboardPlayers) {
+        this.leaderboardPlayers = leaderboardPlayers;
+        this.isLoadingLeaderboard = false;
+    }
+
+    public boolean isLoadingLeaderboard() {
+        return isLoadingLeaderboard;
+    }
+
+    public void fetchInitialLeaderboardPlayers() {
+        this.isLoadingLeaderboard = true;
+        fetchLeaderboardPlayers();
+    }
+
+    public void fetchLeaderboardPlayers() {
+        NetworkManager.sendToServer(new ServerboundRequestLeaderboardPacket(getSelectedJob().getJobInstance().getLocation()));
     }
 }

@@ -1,21 +1,18 @@
 package com.daqem.jobsplus.client.gui.jobs.components;
 
+import com.daqem.arc.api.action.IActionType;
 import com.daqem.arc.api.action.data.ActionDataBuilder;
-import com.daqem.arc.api.action.data.type.ActionDataType;
-import com.daqem.arc.api.action.type.ActionType;
+import com.daqem.arc.api.action.data.IActionDataType;
 import com.daqem.arc.api.condition.ICondition;
 import com.daqem.arc.api.player.ArcPlayer;
-import com.daqem.arc.data.condition.NotCondition;
 import com.daqem.arc.data.condition.OrCondition;
-import com.daqem.arc.data.condition.block.BlockCondition;
-import com.daqem.arc.data.condition.block.BlocksCondition;
-import com.daqem.arc.data.condition.block.NotInBlockPosCacheCondition;
-import com.daqem.arc.data.condition.block.ore.IsOreCondition;
-import com.daqem.arc.data.condition.block.properties.BlockHardnessCondition;
+import com.daqem.arc.data.condition.block.*;
 import com.daqem.arc.data.condition.item.ItemCondition;
 import com.daqem.arc.data.condition.item.ItemsCondition;
 import com.daqem.jobsplus.JobsPlus;
-import com.daqem.jobsplus.client.gui.jobs.components.conditions.*;
+import com.daqem.jobsplus.client.gui.jobs.components.conditions.BlockConditionComponent;
+import com.daqem.jobsplus.client.gui.jobs.components.conditions.DefaultConditionComponent;
+import com.daqem.jobsplus.client.gui.jobs.components.conditions.ItemConditionComponent;
 import com.daqem.uilib.gui.component.EmptyComponent;
 import com.daqem.uilib.gui.component.text.TruncatedTextComponent;
 import net.minecraft.client.Minecraft;
@@ -48,201 +45,112 @@ public class ConditionsComponent extends EmptyComponent {
             this.addComponent(title);
 
             int yOffset = title.getHeight() + 4;
-            Set<ICondition> parsedConditions = new HashSet<>();
-            List<NotCondition> notConditions = getNotConditions(conditions);
-            conditions = conditions.stream()
-                    .sorted(Comparator.comparing(x -> {
-                        if (x instanceof NotCondition) return 3;
-                        if (x instanceof OrCondition) return 2;
-                        if (x instanceof BlockCondition
-                                || x instanceof BlocksCondition
-                                || x instanceof ItemCondition
-                                || x instanceof ItemsCondition
-                        )
-                            return 0;
-                        return 1;
-                    })).toList();
-            for (ICondition condition : conditions) {
-                if (parsedConditions.contains(condition)) continue;
+            Set<ICondition> processedConditions = new HashSet<>();
 
-                if (condition instanceof NotInBlockPosCacheCondition || condition instanceof OrCondition) {
-                    parsedConditions.add(condition);
-                    continue;
+            List<ICondition> blockConditions = conditions.stream().filter(c -> c instanceof BlockCondition || c instanceof BlocksCondition || c instanceof IsOreCondition || c instanceof BlockHardnessCondition).toList();
+            List<ICondition> itemConditions = conditions.stream().filter(c -> c instanceof ItemCondition || c instanceof ItemsCondition).toList();
+
+            if (!blockConditions.isEmpty()) {
+                processedConditions.addAll(blockConditions);
+                Set<Block> allowedBlocks = new HashSet<>();
+                Set<Block> deniedBlocks = new HashSet<>();
+
+                blockConditions.stream()
+                        .filter(c -> !c.isInverted() && (c instanceof BlockCondition || c instanceof BlocksCondition))
+                        .forEach(c -> {
+                            if (c instanceof BlockCondition bc) allowedBlocks.add(bc.getBlock());
+                            else allowedBlocks.addAll(((BlocksCondition) c).getAllBlocks(level.registryAccess()));
+                        });
+
+                if (allowedBlocks.isEmpty()) {
+                    blockConditions.stream()
+                            .filter(c -> !c.isInverted() && (c instanceof IsOreCondition || c instanceof BlockHardnessCondition))
+                            .findFirst().ifPresent(c -> {
+                                if (c instanceof IsOreCondition) {
+                                    allowedBlocks.addAll(getOreBlocks());
+                                } else {
+                                    BlockHardnessCondition bhc = (BlockHardnessCondition) c;
+                                    level.registryAccess().lookupOrThrow(Registries.BLOCK).forEach(blockHolder -> {
+                                        float hardness = blockHolder.defaultBlockState().getDestroySpeed(level, BlockPos.ZERO);
+                                        if (hardness >= bhc.getMin() && hardness <= bhc.getMax()) {
+                                            allowedBlocks.add(blockHolder);
+                                        }
+                                    });
+                                }
+                            });
                 }
 
-                if (condition instanceof NotCondition) continue;
+                blockConditions.stream()
+                        .filter(c -> c.isInverted() && (c instanceof BlockCondition || c instanceof BlocksCondition))
+                        .forEach(c -> {
+                            if (c instanceof BlockCondition bc) deniedBlocks.add(bc.getBlock());
+                            else deniedBlocks.addAll(((BlocksCondition) c).getAllBlocks(level.registryAccess()));
+                        });
 
-                if (condition instanceof BlockCondition || condition instanceof BlocksCondition) {
-                    List<ICondition> blockConditions = conditions.stream()
-                            .filter(c -> c instanceof BlockCondition
-                                    || c instanceof BlocksCondition
-                                    || c instanceof BlockHardnessCondition
-                            ).toList();
-                    List<ICondition> notBlockConditions = notConditions.stream()
-                            .map(NotCondition::getConditions)
-                            .flatMap(List::stream)
-                            .filter(c -> c instanceof BlockCondition
-                                    || c instanceof BlocksCondition
-                                    || c instanceof BlockHardnessCondition
-                                    || c instanceof IsOreCondition
-                            ).toList();
-                    Set<Block> allowedBlocks = new HashSet<>();
-                    Set<Block> deniedBlocks = new HashSet<>();
-                    for (ICondition blockCondition : blockConditions) {
-                        if (blockCondition instanceof BlockCondition bc) {
-                            allowedBlocks.add(bc.getBlock());
-                            parsedConditions.add(blockCondition);
-                        } else if (blockCondition instanceof BlocksCondition bcs) {
-                            allowedBlocks.addAll(bcs.getAllBlocks(level.registryAccess()));
-                            parsedConditions.add(blockCondition);
-                        }
-                    }
-                    for (ICondition blockCondition : blockConditions) {
-                        if (blockCondition instanceof BlockHardnessCondition bhc) {
-                            for (Block allowedBlock : allowedBlocks) {
-                                float hardness = allowedBlock.defaultBlockState().getDestroySpeed(Objects.requireNonNull(level), BlockPos.ZERO);
-                                if (bhc.getMin() > hardness) {
-                                    deniedBlocks.add(allowedBlock);
-                                }
-                                if (bhc.getMax() < hardness) {
-                                    deniedBlocks.add(allowedBlock);
-                                }
-                            }
-                            parsedConditions.add(blockCondition);
-                        }
-                    }
-                    for (ICondition notBlockCondition : notBlockConditions) {
-                        if (notBlockCondition instanceof BlockCondition nbc) {
-                            deniedBlocks.add(nbc.getBlock());
-                            parsedConditions.add(notBlockCondition);
-                        } else if (notBlockCondition instanceof BlocksCondition nbcs) {
-                            deniedBlocks.addAll(nbcs.getAllBlocks(level.registryAccess()));
-                            parsedConditions.add(notBlockCondition);
-                        } else if (notBlockCondition instanceof BlockHardnessCondition bhc) {
-                            for (Block allowedBlock : allowedBlocks) {
-                                float hardness = allowedBlock.defaultBlockState().getDestroySpeed(Objects.requireNonNull(level), BlockPos.ZERO);
-                                if (bhc.getMin() > hardness) {
-                                    deniedBlocks.add(allowedBlock);
-                                }
-                                if (bhc.getMax() < hardness) {
-                                    deniedBlocks.add(allowedBlock);
-                                }
-                            }
-                            parsedConditions.add(notBlockCondition);
-                        } else if (notBlockCondition instanceof IsOreCondition) {
-                            for (Block allowedBlock : allowedBlocks) {
-                                if (getOreBlocks().contains(allowedBlock)) {
-                                    deniedBlocks.add(allowedBlock);
-                                }
-                            }
-                            parsedConditions.add(notBlockCondition);
-                        }
-                    }
+                List<ICondition> refiningConditions = blockConditions.stream()
+                        .filter(c -> c instanceof IsOreCondition || c instanceof BlockHardnessCondition)
+                        .toList();
 
-                    BlockConditionComponent blockConditionComponent = new BlockConditionComponent(allowedBlocks, deniedBlocks, parentBounds);
+                Set<Block> toRemove = new HashSet<>();
+                for (Block block : allowedBlocks) {
+                    for (ICondition refiner : refiningConditions) {
+                        boolean isMet = false;
+                        if (refiner instanceof IsOreCondition) {
+                            isMet = new IsOreCondition(false).isMet(
+                                    new ActionDataBuilder((ArcPlayer) Minecraft.getInstance().player, IActionType.BREAK_BLOCK)
+                                            .withData(IActionDataType.BLOCK_STATE, block.defaultBlockState())
+                                            .build()
+                            );
+                        } else if (refiner instanceof BlockHardnessCondition bhc) {
+                            float hardness = block.defaultBlockState().getDestroySpeed(level, BlockPos.ZERO);
+                            isMet = hardness >= bhc.getMin() && hardness <= bhc.getMax();
+                        }
+
+                        if ((!refiner.isInverted() && !isMet) || (refiner.isInverted() && isMet)) {
+                            toRemove.add(block);
+                            break;
+                        }
+                    }
+                }
+                allowedBlocks.removeAll(toRemove);
+                deniedBlocks.addAll(toRemove);
+
+                BlockConditionComponent blockConditionComponent = new BlockConditionComponent(allowedBlocks, deniedBlocks, parentBounds);
+                if (blockConditionComponent.getHeight() > 0) {
                     blockConditionComponent.setY(yOffset);
                     this.addComponent(blockConditionComponent);
                     yOffset += blockConditionComponent.getHeight();
-
-                    continue;
                 }
+            }
 
-                if (condition instanceof BlockHardnessCondition hardnessCondition) {
-                    if (parsedConditions.contains(hardnessCondition)) continue;
-                    if (conditions.stream().noneMatch(b -> b instanceof BlockCondition || b instanceof BlocksCondition)) {
-                        Set<Block> allowedBlocks = level.registryAccess().lookupOrThrow(Registries.BLOCK).stream()
-                                .filter(block -> {
-                                    float hardness = block.defaultBlockState().getDestroySpeed(Objects.requireNonNull(level), BlockPos.ZERO);
-                                    return hardnessCondition.getMin() <= hardness && hardness <= hardnessCondition.getMax();
-                                })
-                                .collect(HashSet::new, HashSet::add, HashSet::addAll);
-                        BlockConditionComponent hardnessConditionComponent = new BlockConditionComponent(allowedBlocks, new HashSet<>(), parentBounds);
-                        hardnessConditionComponent.setY(yOffset);
-                        this.addComponent(hardnessConditionComponent);
-                        yOffset += hardnessConditionComponent.getHeight();
-                        parsedConditions.add(hardnessCondition);
-                        continue;
-                    }
-                }
+            if (!itemConditions.isEmpty()) {
+                processedConditions.addAll(itemConditions);
+                Set<ItemStack> allowedItems = new HashSet<>();
+                Set<ItemStack> deniedItems = new HashSet<>();
 
-                if (condition instanceof IsOreCondition isOreCondition) {
-                    if (parsedConditions.contains(isOreCondition)) continue;
-                    if (conditions.stream().noneMatch(b -> b instanceof BlockCondition || b instanceof BlocksCondition)) {
-                        List<ICondition> notBlockConditions = notConditions.stream()
-                                .map(NotCondition::getConditions)
-                                .flatMap(List::stream)
-                                .filter(c -> c instanceof BlockCondition
-                                        || c instanceof BlocksCondition
-                                        || c instanceof BlockHardnessCondition
-                                ).toList();
-                        Set<Block> allowedBlocks = new HashSet<>(getOreBlocks());
-                        Set<Block> deniedBlocks = new HashSet<>();
-                        for (ICondition notBlockCondition : notBlockConditions) {
-                            if (notBlockCondition instanceof BlockCondition nbc) {
-                                deniedBlocks.add(nbc.getBlock());
-                            } else if (notBlockCondition instanceof BlocksCondition nbcs) {
-                                deniedBlocks.addAll(nbcs.getBlocks());
-                            } else if (notBlockCondition instanceof BlockHardnessCondition bhc) {
-                                for (Block allowedBlock : allowedBlocks) {
-                                    float hardness = allowedBlock.defaultBlockState().getDestroySpeed(Objects.requireNonNull(level), BlockPos.ZERO);
-                                    if (bhc.getMin() > hardness) {
-                                        deniedBlocks.add(allowedBlock);
-                                    }
-                                    if (bhc.getMax() < hardness) {
-                                        deniedBlocks.add(allowedBlock);
-                                    }
-                                }
-                            }
-                            parsedConditions.add(notBlockCondition);
-                        }
-                        BlockConditionComponent blockConditionComponent = new BlockConditionComponent(allowedBlocks, deniedBlocks, parentBounds);
-                        blockConditionComponent.setY(yOffset);
-                        this.addComponent(blockConditionComponent);
-                        yOffset += blockConditionComponent.getHeight();
-                        parsedConditions.add(isOreCondition);
-                        continue;
+                for (ICondition condition : itemConditions) {
+                    Set<ItemStack> stacks = new HashSet<>();
+                    if (condition instanceof ItemCondition ic) stacks.add(ic.getItemStack());
+                    else if (condition instanceof ItemsCondition ics) stacks.addAll(ics.getItemStacks(level.registryAccess()));
+
+                    if (condition.isInverted()) {
+                        deniedItems.addAll(stacks);
+                    } else {
+                        allowedItems.addAll(stacks);
                     }
                 }
 
-                if (condition instanceof ItemCondition || condition instanceof ItemsCondition) {
-                    List<ICondition> itemConditions = conditions.stream()
-                            .filter(c -> c instanceof ItemCondition
-                                    || c instanceof ItemsCondition
-                            ).toList();
-                    List<ICondition> notItemConditions = notConditions.stream()
-                            .map(NotCondition::getConditions)
-                            .flatMap(List::stream)
-                            .filter(c -> c instanceof ItemCondition
-                                    || c instanceof ItemsCondition
-                            ).toList();
-                    Set<ItemStack> allowedItems = new HashSet<>();
-                    Set<ItemStack> deniedItems = new HashSet<>();
-                    for (ICondition itemCondition : itemConditions) {
-                        if (itemCondition instanceof ItemCondition bc) {
-                            allowedItems.add(bc.getItemStack());
-                            parsedConditions.add(itemCondition);
-                        } else if (itemCondition instanceof ItemsCondition bcs) {
-                            allowedItems.addAll(bcs.getItemStacks(level.registryAccess()));
-                            parsedConditions.add(itemCondition);
-                        }
-                    }
-                    for (ICondition notItemCondition : notItemConditions) {
-                        if (notItemCondition instanceof ItemCondition nbc) {
-                            deniedItems.add(nbc.getItemStack());
-                            parsedConditions.add(notItemCondition);
-                        } else if (notItemCondition instanceof ItemsCondition nbcs) {
-                            deniedItems.addAll(nbcs.getItemStacks(level.registryAccess()));
-                            parsedConditions.add(notItemCondition);
-                        }
-                    }
-
-                    ItemConditionComponent itemConditionComponent = new ItemConditionComponent(allowedItems, deniedItems, parentBounds);
+                ItemConditionComponent itemConditionComponent = new ItemConditionComponent(allowedItems, deniedItems, parentBounds);
+                if (itemConditionComponent.getHeight() > 0) {
                     itemConditionComponent.setY(yOffset);
                     this.addComponent(itemConditionComponent);
                     yOffset += itemConditionComponent.getHeight();
-
-                    continue;
                 }
+            }
+
+            for (ICondition condition : conditions) {
+                if (processedConditions.contains(condition)) continue;
+                if (condition instanceof NotInBlockPosCacheCondition || condition instanceof OrCondition) continue;
 
                 DefaultConditionComponent conditionComponent = new DefaultConditionComponent(condition);
                 conditionComponent.setY(yOffset);
@@ -250,32 +158,8 @@ public class ConditionsComponent extends EmptyComponent {
                 yOffset += conditionComponent.getHeight();
             }
 
-            for (NotCondition notCondition : notConditions) {
-                if (parsedConditions.contains(notCondition)) continue;
-
-                for (ICondition innerCondition : notCondition.getConditions()) {
-                    if (parsedConditions.contains(innerCondition)) continue;
-
-                    NotConditionComponent notConditionComponent = new NotConditionComponent(notCondition, innerCondition);
-                    notConditionComponent.setY(yOffset);
-                    this.addComponent(notConditionComponent);
-                    yOffset += notConditionComponent.getHeight();
-
-                    parsedConditions.add(innerCondition);
-                }
-
-                parsedConditions.add(notCondition);
-            }
-
             this.setHeight(yOffset);
         }
-    }
-
-    private List<NotCondition> getNotConditions(List<ICondition> conditions) {
-        return conditions.stream()
-                .filter(c -> c instanceof NotCondition)
-                .map(c -> (NotCondition) c)
-                .toList();
     }
 
     private List<Block> getOreBlocks() {
@@ -284,8 +168,8 @@ public class ConditionsComponent extends EmptyComponent {
             if (level == null) return List.of();
             List<Block> oreBlocks = level.registryAccess().lookupOrThrow(Registries.BLOCK).stream()
                     .filter(block -> new IsOreCondition(false).isMet(
-                            new ActionDataBuilder((ArcPlayer) Minecraft.getInstance().player, ActionType.BREAK_BLOCK)
-                                    .withData(ActionDataType.BLOCK_STATE, block.defaultBlockState())
+                            new ActionDataBuilder((ArcPlayer) Minecraft.getInstance().player, IActionType.BREAK_BLOCK)
+                                    .withData(IActionDataType.BLOCK_STATE, block.defaultBlockState())
                                     .build()
                     ))
                     .toList();

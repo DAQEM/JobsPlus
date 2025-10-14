@@ -9,21 +9,38 @@ loom {
 }
 
 dependencies {
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
     modApi "dev.architectury:architectury:${project.architectury_version}"
-
-    modImplementation "curse.maven:yaml-config-1128669:${project.config_library_file_fabric}-sources-${project.config_library_file_fabric_sources}"
-    modImplementation "curse.maven:arc-883593:${project.arc_file_fabric}-sources-${project.arc_file_fabric_sources}"
-    modImplementation "curse.maven:item-restrictions-887774:${project.item_restrictions_file_fabric}-sources-${project.item_restrictions_file_fabric_sources}"
-    modImplementation "curse.maven:ui-933200:${project.ui_library_file_fabric}-sources-${project.ui_library_file_fabric_sources}"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${project.jUnitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.jUnitVersion}"
 
+    modImplementation "com.daqem.uilib:uilib-common:${project.ui_library_version}"
+    modImplementation "com.daqem.yamlconfig:yamlconfig-common:${project.config_library_version}"
+    modImplementation "com.daqem.arc:arc-common:${project.arc_version}"
+    modImplementation "com.daqem.itemrestrictions:itemrestrictions-common:${project.item_restrictions_version}"
 }
 
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            groupId = rootProject.maven_group
+            artifactId = rootProject.archives_base_name + "-common"
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url = project.version.contains('-PR') ? 'https://maven.daqem.com/snapshots' : 'https://maven.daqem.com/releases'
+            credentials {
+                username = System.getenv("MAVEN_USER")
+                password = System.getenv("MAVEN_PASS")
+            }
+        }
+    }
 }

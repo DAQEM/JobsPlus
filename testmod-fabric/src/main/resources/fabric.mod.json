@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "jobsplus_test",
+  "version": "${version}",
+  "name": "JobsPlus Test Mod",
+  "description": "A test mod for JobsPlus.",
+  "authors": [
+    "DAQEM"
+  ],
+  "license": "Apache-2.0",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.daqem.jobsplus.test.TestMod::init"
+    ]
+  }
+}

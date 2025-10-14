@@ -3,15 +3,15 @@ package com.daqem.jobsplus.player.job;
 import com.daqem.jobsplus.Constants;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.event.triggers.JobEvents;
+import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
+import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
+import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.exp.ExpCollector;
 import com.daqem.jobsplus.player.job.powerup.JobPowerupManager;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
-import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
-import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
-import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
@@ -75,6 +75,9 @@ public class Job {
 
     public void setLevel(int level) {
         this.level = level;
+        if (player instanceof JobsServerPlayer serverPlayer) {
+            serverPlayer.jobsplus$getLevelData().jobsplus$updatePlayerEntry(serverPlayer.jobsplus$getPlayer(), this);
+        }
     }
 
     public int getExperience() {
@@ -88,6 +91,9 @@ public class Job {
         checkForLevelUp();
         if (triggerEvent) {
             JobEvents.onJobExperience(player, this, change);
+        }
+        if (player instanceof JobsServerPlayer serverPlayer) {
+            serverPlayer.jobsplus$getLevelData().jobsplus$updatePlayerEntry(serverPlayer.jobsplus$getPlayer(), this);
         }
     }
 

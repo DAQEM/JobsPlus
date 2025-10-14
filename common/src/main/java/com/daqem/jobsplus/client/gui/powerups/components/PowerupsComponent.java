@@ -13,7 +13,10 @@ import com.daqem.uilib.gui.component.text.TextComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PowerupsComponent extends SpriteComponent {

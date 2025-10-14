@@ -14,11 +14,12 @@ pluginManagement {
     }
 }
 
-//noinspection GroovyAssignabilityCheck
 include("common")
-//noinspection GroovyAssignabilityCheck
 include("fabric")
-//noinspection GroovyAssignabilityCheck
 include("neoforge")
+
+include("testmod-common")
+include("testmod-fabric")
+include("testmod-neoforge")
 
 rootProject.name = "JobsPlus 1.21.9"

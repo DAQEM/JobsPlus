@@ -10,7 +10,7 @@ public class RecipesComponent extends EmptyComponent {
     public RecipesComponent(JobsScreenState state) {
         super(0, 0, 117, 167);
 
-        SpriteComponent bannerComponent = new SpriteComponent(9, 0, 98, 33, JobsPlus.getId("jobs/recipes_banner"));
+        SpriteComponent bannerComponent = new SpriteComponent(0, 0, 117, 33, JobsPlus.getId("jobs/recipes_banner"));
         RecipesScrollComponent recipesScrollComponent = new RecipesScrollComponent(state);
 
         this.addComponent(bannerComponent);

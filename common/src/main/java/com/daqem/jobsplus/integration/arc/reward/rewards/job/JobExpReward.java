@@ -1,17 +1,15 @@
 package com.daqem.jobsplus.integration.arc.reward.rewards.job;
 
-import com.daqem.arc.api.action.data.ActionData;
 import com.daqem.arc.api.action.result.ActionResult;
 import com.daqem.arc.api.reward.AbstractReward;
-import com.daqem.arc.api.reward.IReward;
-import com.daqem.arc.api.reward.serializer.IRewardSerializer;
-import com.daqem.arc.api.reward.type.IRewardType;
+import com.daqem.arc.api.reward.IRewardSerializer;
+import com.daqem.arc.api.reward.IRewardType;
+import com.daqem.arc.data.ActionData;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.reward.type.JobsPlusRewardType;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
-import com.google.gson.*;
-import net.minecraft.network.FriendlyByteBuf;
+import com.google.gson.JsonObject;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;

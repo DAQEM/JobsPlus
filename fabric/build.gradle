@@ -42,10 +42,10 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 
-    modImplementation "curse.maven:yaml-config-1128669:${project.config_library_file_fabric}"
-    modImplementation "curse.maven:arc-883593:${project.arc_file_fabric}"
-    modImplementation "curse.maven:item-restrictions-887774:${project.item_restrictions_file_fabric}"
-    modImplementation "curse.maven:ui-933200:${project.ui_library_file_fabric}"
+    modImplementation "com.daqem.uilib:uilib-fabric:${project.ui_library_version}"
+    modImplementation "com.daqem.yamlconfig:yamlconfig-fabric:${project.config_library_version}"
+    modImplementation "com.daqem.arc:arc-fabric:${project.arc_version}"
+    modImplementation "com.daqem.itemrestrictions:itemrestrictions-fabric:${project.item_restrictions_version}"
 }
 
 processResources {
@@ -76,17 +76,64 @@ processResources {
 }
 
 shadowJar {
+    exclude "architectury.common.json"
+
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = "fabric-dev-shadow"
 }
 
 remapJar {
+    injectAccessWidener = true
     input.set shadowJar.archiveFile
-    archiveClassifier = "fabric"
+    dependsOn shadowJar
+    archiveClassifier = null
+}
+
+task renameJarForPublication(type: Zip, dependsOn: remapJar) {
+    from remapJar.archiveFile.map { zipTree(it) }
+    archiveExtension = "jar"
+    metadataCharset "UTF-8"
+    destinationDirectory = base.libsDirectory
+    archiveClassifier = project.name
+}
+
+
+assemble.dependsOn renameJarForPublication
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
 }
 
 remapSourcesJar {
     archiveClassifier = "fabric-sources"
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            groupId = rootProject.maven_group
+            artifactId = rootProject.archives_base_name + "-fabric"
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url = project.version.contains('-PR') ? 'https://maven.daqem.com/snapshots' : 'https://maven.daqem.com/releases'
+            credentials {
+                username = System.getenv("MAVEN_USER")
+                password = System.getenv("MAVEN_PASS")
+            }
+        }
+    }
 }
 
 curseforge {

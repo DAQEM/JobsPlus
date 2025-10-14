@@ -1,12 +1,6 @@
 package com.daqem.jobsplus.networking.s2c;
 
-import com.daqem.jobsplus.client.toast.LevelUpJobToast;
-import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
-import dev.architectury.networking.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

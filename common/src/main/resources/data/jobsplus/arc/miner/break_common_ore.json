@@ -16,18 +16,14 @@
       "type": "arc:is_ore"
     },
     {
-      "type": "arc:not",
-      "conditions": [
-        {
-          "type": "arc:blocks",
-          "blocks": [
-            "minecraft:diamond_ore",
-            "minecraft:deepslate_diamond_ore",
-            "minecraft:emerald_ore",
-            "minecraft:deepslate_emerald_ore",
-            "minecraft:ancient_debris"
-          ]
-        }
+      "type": "arc:blocks",
+      "inverted": true,
+      "blocks": [
+        "minecraft:diamond_ore",
+        "minecraft:deepslate_diamond_ore",
+        "minecraft:emerald_ore",
+        "minecraft:deepslate_emerald_ore",
+        "minecraft:ancient_debris"
       ]
     },
     {

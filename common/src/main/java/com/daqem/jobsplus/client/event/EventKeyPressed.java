@@ -6,9 +6,7 @@ import com.daqem.jobsplus.networking.c2s.ServerboundOpenJobsScreenPacket;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.networking.NetworkManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.KeyEvent;
 
 public class EventKeyPressed {
 

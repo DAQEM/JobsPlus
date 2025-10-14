@@ -7,7 +7,9 @@
     "client.AbstractScrollAreaAccessor"
   ],
   "mixins": [
-    "MixinServerPlayer"
+    "MixinServerPlayer",
+    "PrimaryLevelDataMixin",
+    "ServerLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

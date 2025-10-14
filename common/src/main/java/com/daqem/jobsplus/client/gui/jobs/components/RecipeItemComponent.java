@@ -1,6 +1,5 @@
 package com.daqem.jobsplus.client.gui.jobs.components;
 
-import com.daqem.itemrestrictions.ItemRestrictions;
 import com.daqem.itemrestrictions.data.RestrictionType;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.uilib.gui.component.item.ItemComponent;
@@ -9,11 +8,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
-import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;

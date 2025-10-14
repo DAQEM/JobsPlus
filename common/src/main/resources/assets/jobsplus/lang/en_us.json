@@ -26,6 +26,7 @@
   "jobsplus.gui.confirmation.purchase_powerup": "Are you sure you want to buy the power-up %s for %s coins?",
   "jobsplus.gui.confirmation.yes": "Yes",
   "jobsplus.gui.confirmation.cancel": "Cancel",
+  "jobsplus.gui.jobs.leaderboard.no_players": "No players have started this job yet.",
 
   "jobsplus.command.does_not_have_job": "%s does not have job %s.",
   "jobsplus.command.arguments.enum.invalid": "Enum constant must be one of %s, found %s",
@@ -342,6 +343,14 @@
   "arc.condition.description.powerup_not_active": "If the powerup %s is not active.",
   "arc.condition.has_job": "Has Job",
   "arc.condition.description.has_job": "If the player has the job %s.",
+  "arc.condition.job_experience_percentage.inverted": "Job Experience Percentage",
+  "arc.condition.description.job_experience_percentage.inverted": "If the job experience percentage is not higher than %s.",
+  "arc.condition.job_level.inverted": "Job Level",
+  "arc.condition.description.job_level.inverted": "If the job level for job %s is not higher than %s.",
+  "arc.condition.powerup_not_active.inverted": "Powerup Not Active",
+  "arc.condition.description.powerup_not_active.inverted": "If the powerup %s is active.",
+  "arc.condition.has_job.inverted": "Has Job",
+  "arc.condition.description.has_job.inverted": "If the player does not have the job %s.",
 
   "yamlconfig.jobsplus": "Jobs+",
   "yamlconfig.jobsplus.jobsplus-common": "Common",

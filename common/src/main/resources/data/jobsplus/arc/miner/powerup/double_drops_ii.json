@@ -22,14 +22,10 @@
       "type": "arc:not_in_block_pos_cache"
     },
     {
-      "type": "arc:not",
-      "conditions": [
-        {
-          "type": "arc:blocks",
-          "blocks": [
-            "#minecraft:beacon_base_blocks"
-          ]
-        }
+      "type": "arc:blocks",
+      "inverted": true,
+      "blocks": [
+        "#minecraft:beacon_base_blocks"
       ]
     },
     {

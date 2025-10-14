@@ -1,6 +1,5 @@
 package com.daqem.jobsplus.client.gui.jobs.components.conditions;
 
-import com.daqem.arc.Arc;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.gui.jobs.components.SlottedItemComponent;
 import com.daqem.uilib.gui.component.EmptyComponent;
@@ -10,7 +9,10 @@ import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 

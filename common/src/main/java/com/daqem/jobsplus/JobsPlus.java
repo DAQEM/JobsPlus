@@ -1,14 +1,13 @@
 package com.daqem.jobsplus;
 
 import com.daqem.arc.registry.ArcRegistry;
-import com.daqem.itemrestrictions.data.ItemRestrictionManager;
 import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.event.command.EventRegisterCommands;
+import com.daqem.jobsplus.integration.arc.action.type.JobsPlusActionType;
+import com.daqem.jobsplus.integration.arc.condition.type.JobsPlusConditionType;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupManager;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
-import com.daqem.jobsplus.integration.arc.action.type.JobsPlusActionType;
-import com.daqem.jobsplus.integration.arc.condition.type.JobsPlusConditionType;
 import com.daqem.jobsplus.integration.arc.reward.type.JobsPlusRewardType;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
 import com.mojang.logging.LogUtils;

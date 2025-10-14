@@ -1,14 +1,13 @@
 package com.daqem.jobsplus.integration.arc.action.actions.job;
 
 import com.daqem.arc.api.action.AbstractAction;
-import com.daqem.arc.api.action.holder.type.IActionHolderType;
-import com.daqem.arc.api.action.serializer.IActionSerializer;
-import com.daqem.arc.api.action.type.IActionType;
+import com.daqem.arc.api.action.IActionSerializer;
+import com.daqem.arc.api.action.IActionType;
+import com.daqem.arc.api.action.holder.IActionHolderType;
 import com.daqem.arc.api.condition.ICondition;
 import com.daqem.arc.api.reward.IReward;
 import com.daqem.jobsplus.integration.arc.action.type.JobsPlusActionType;
-import com.google.gson.*;
-import net.minecraft.network.FriendlyByteBuf;
+import com.google.gson.JsonObject;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -16,8 +15,8 @@ import java.util.List;
 
 public class JobLevelUpAction extends AbstractAction {
 
-    public JobLevelUpAction(ResourceLocation location, ResourceLocation actionHolderLocation, IActionHolderType<?> actionHolderType, boolean performOnClient, List<IReward> rewards, List<ICondition> conditions) {
-        super(location, actionHolderLocation, actionHolderType, performOnClient, rewards, conditions);
+    public JobLevelUpAction(ResourceLocation location, ResourceLocation actionHolderLocation, IActionHolderType<?> actionHolderType, List<IReward> rewards, List<ICondition> conditions) {
+        super(location, actionHolderLocation, actionHolderType, rewards, conditions);
     }
 
     @Override
@@ -28,13 +27,13 @@ public class JobLevelUpAction extends AbstractAction {
     public static class Serializer implements IActionSerializer<JobLevelUpAction> {
 
         @Override
-        public JobLevelUpAction fromJson(ResourceLocation location, JsonObject jsonObject, ResourceLocation actionHolderLocation, IActionHolderType<?> actionHolderType, boolean performOnClient, List<IReward> rewards, List<ICondition> conditions) {
-            return new JobLevelUpAction(location, actionHolderLocation, actionHolderType, performOnClient, rewards, conditions);
+        public JobLevelUpAction fromJson(ResourceLocation location, JsonObject jsonObject, ResourceLocation actionHolderLocation, IActionHolderType<?> actionHolderType, List<IReward> rewards, List<ICondition> conditions) {
+            return new JobLevelUpAction(location, actionHolderLocation, actionHolderType, rewards, conditions);
         }
 
         @Override
-        public JobLevelUpAction fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, ResourceLocation actionHolderLocation, IActionHolderType<?> actionHolderType, boolean performOnClient, List<IReward> rewards, List<ICondition> conditions) {
-            return new JobLevelUpAction(location, actionHolderLocation, actionHolderType, performOnClient, rewards, conditions);
+        public JobLevelUpAction fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, ResourceLocation actionHolderLocation, IActionHolderType<?> actionHolderType, List<IReward> rewards, List<ICondition> conditions) {
+            return new JobLevelUpAction(location, actionHolderLocation, actionHolderType, rewards, conditions);
         }
 
         @Override

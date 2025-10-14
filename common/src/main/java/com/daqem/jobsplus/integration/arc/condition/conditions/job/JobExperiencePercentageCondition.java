@@ -1,16 +1,15 @@
 package com.daqem.jobsplus.integration.arc.condition.conditions.job;
 
-import com.daqem.arc.api.action.data.ActionData;
 import com.daqem.arc.api.condition.AbstractCondition;
 import com.daqem.arc.api.condition.ICondition;
-import com.daqem.arc.api.condition.serializer.IConditionSerializer;
-import com.daqem.arc.api.condition.type.IConditionType;
-import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
+import com.daqem.arc.api.condition.IConditionSerializer;
+import com.daqem.arc.api.condition.IConditionType;
+import com.daqem.arc.data.ActionData;
 import com.daqem.jobsplus.integration.arc.condition.type.JobsPlusConditionType;
+import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
-import com.google.gson.*;
-import net.minecraft.network.FriendlyByteBuf;
+import com.google.gson.JsonObject;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

@@ -1,6 +1,5 @@
 package com.daqem.jobsplus.client.gui.jobs.components.conditions;
 
-import com.daqem.arc.Arc;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.gui.jobs.components.SlottedItemComponent;
 import com.daqem.uilib.gui.component.EmptyComponent;

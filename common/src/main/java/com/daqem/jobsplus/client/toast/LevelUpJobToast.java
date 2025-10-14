@@ -2,14 +2,11 @@ package com.daqem.jobsplus.client.toast;
 
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
@@ -19,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Environment(EnvType.CLIENT)
 public class LevelUpJobToast implements Toast {
     private static final ResourceLocation BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("toast/recipe");
     private static final long DISPLAY_TIME = 5000L;
@@ -77,7 +73,6 @@ public class LevelUpJobToast implements Toast {
         levelUpJobToast.addItem(jobInstance, level);
     }
 
-    @Environment(EnvType.CLIENT)
     record Entry(JobInstance jobInstance, int level) {
     }
 }

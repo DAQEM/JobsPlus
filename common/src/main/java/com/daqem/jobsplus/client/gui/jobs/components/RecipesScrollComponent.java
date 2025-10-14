@@ -13,16 +13,15 @@ public class RecipesScrollComponent extends EmptyComponent {
         super(0, 43, 117, 124);
 
         RecipesScrollWidget recipesScrollWidget = new RecipesScrollWidget(getWidth(), getHeight(), state);
-
         IComponent scrollContentComponent = recipesScrollWidget.getComponents().getFirst();
-        if (scrollContentComponent.getHeight() <= getHeight()) {
-            this.setWidth(scrollContentComponent.getWidth());
-            this.centerHorizontally();
-        }
-
         if (scrollContentComponent.getComponents().isEmpty()) {
             MultiLineTextComponent noRecipesText = new MultiLineTextComponent(0, 0, getWidth(), JobsPlus.translatable("gui.jobs.no_recipes"), 0xFFD8BF96);
             this.addComponent(noRecipesText);
+        } else {
+            if (scrollContentComponent.getHeight() <= getHeight()) {
+                this.setWidth(scrollContentComponent.getWidth());
+                this.centerHorizontally();
+            }
         }
 
         this.addWidget(recipesScrollWidget);

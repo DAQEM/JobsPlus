@@ -6,7 +6,8 @@ import net.minecraft.resources.ResourceLocation;
 
 public enum RightTab implements ITab {
     EXPERIENCE(JobsPlus.translatable("gui.jobs.tab.experience"), JobsPlus.getId("jobs/tab_1_active"), JobsPlus.getId("jobs/tab_1_inactive")),
-    RECIPES(JobsPlus.translatable("gui.jobs.tab.recipes"), JobsPlus.getId("jobs/tab_2_active"), JobsPlus.getId("jobs/tab_2_inactive"));
+    RECIPES(JobsPlus.translatable("gui.jobs.tab.recipes"), JobsPlus.getId("jobs/tab_2_active"), JobsPlus.getId("jobs/tab_2_inactive")),
+    LEADERBOARD(JobsPlus.translatable("gui.jobs.tab.leaderboard"), JobsPlus.getId("jobs/tab_3_active"), JobsPlus.getId("jobs/tab_3_inactive"));
 
     private final Component name;
     private final ResourceLocation activeSprite;

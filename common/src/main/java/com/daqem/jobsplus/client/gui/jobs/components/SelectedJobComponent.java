@@ -10,7 +10,6 @@ import com.daqem.uilib.gui.component.EmptyComponent;
 import com.daqem.uilib.gui.component.item.ItemComponent;
 import com.daqem.uilib.gui.component.sprite.SpriteComponent;
 import com.daqem.uilib.gui.component.text.TruncatedTextComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;

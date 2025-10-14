@@ -3,7 +3,7 @@
     "type": "jobsplus:powerup",
     "id": "jobsplus:alchemist/longer_potions_ii"
   },
-  "type": "arc:on_effect_added",
+  "type": "arc:on_add_effect",
   "rewards": [
     {
       "type": "arc:effect_duration_multiplier",

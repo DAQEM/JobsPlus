@@ -1,7 +1,7 @@
 package com.daqem.jobsplus.integration.arc.holder.holders.job;
 
-import com.daqem.arc.api.action.holder.ActionHolderManager;
 import com.daqem.arc.api.action.holder.IActionHolder;
+import com.daqem.arc.data.ActionHolderManager;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.JobsPlusExpectPlatform;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;

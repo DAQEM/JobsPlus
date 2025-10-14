@@ -1,10 +1,7 @@
 package com.daqem.jobsplus.networking;
 
 import com.daqem.jobsplus.JobsPlus;
-import com.daqem.jobsplus.client.networking.ClientboundLevelUpJobPacketHandler;
-import com.daqem.jobsplus.client.networking.ClientboundOpenJobsScreenPacketHandler;
-import com.daqem.jobsplus.client.networking.ClientboundOpenPowerupsScreenPacketHandler;
-import com.daqem.jobsplus.client.networking.ClientboundUnlockItemRestrictionPacketHandler;
+import com.daqem.jobsplus.client.networking.*;
 import com.daqem.jobsplus.networking.c2s.*;
 import com.daqem.jobsplus.networking.s2c.*;
 import dev.architectury.networking.NetworkManager;
@@ -24,6 +21,8 @@ public interface JobsPlusNetworking {
             new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_open_jobs_screen"));
     CustomPacketPayload.Type<ServerboundOpenPowerupsScreenPacket> SERVERBOUND_OPEN_POWERUPS_SCREEN =
             new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_open_powerups_screen"));
+    CustomPacketPayload.Type<ServerboundRequestLeaderboardPacket> SERVERBOUND_REQUEST_LEADERBOARD =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_request_leaderboard"));
 
     CustomPacketPayload.Type<ClientboundUnlockItemRestrictionPacket> CLIENTBOUND_UNLOCK_ITEM_RESTRICTION =
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_unlock_item_restriction"));
@@ -33,12 +32,15 @@ public interface JobsPlusNetworking {
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_level_up_job"));
     CustomPacketPayload.Type<ClientboundOpenPowerupsScreenPacket> CLIENTBOUND_OPEN_POWERUPS_SCREEN =
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_open_powerups_screen"));
+    CustomPacketPayload.Type<ClientboundLeaderboardPacket> CLIENTBOUND_LEADERBOARD =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_leaderboard"));
 
     static void initClient() {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC, ClientboundOpenJobsScreenPacketHandler::handleClientSide);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_LEVEL_UP_JOB, ClientboundLevelUpJobPacket.STREAM_CODEC, ClientboundLevelUpJobPacketHandler::handleClientSide);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_UNLOCK_ITEM_RESTRICTION, ClientboundUnlockItemRestrictionPacket.STREAM_CODEC, ClientboundUnlockItemRestrictionPacketHandler::handleClientSide);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_POWERUPS_SCREEN, ClientboundOpenPowerupsScreenPacket.STREAM_CODEC, ClientboundOpenPowerupsScreenPacketHandler::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_LEADERBOARD, ClientboundLeaderboardPacket.STREAM_CODEC, ClientboundLeaderboardPacketHandler::handleClientSide);
     }
 
     static void initCommon() {
@@ -47,6 +49,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_START_POWERUP, ServerboundStartPowerupPacket.STREAM_CODEC, ServerboundStartPowerupPacket::handleServerSide);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_OPEN_JOBS_SCREEN, ServerboundOpenJobsScreenPacket.STREAM_CODEC, ServerboundOpenJobsScreenPacket::handleServerSide);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_OPEN_POWERUPS_SCREEN, ServerboundOpenPowerupsScreenPacket.STREAM_CODEC, ServerboundOpenPowerupsScreenPacket::handleServerSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_REQUEST_LEADERBOARD, ServerboundRequestLeaderboardPacket.STREAM_CODEC, ServerboundRequestLeaderboardPacket::handleServerSide);
     }
 
     static void initServer() {
@@ -54,6 +57,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_LEVEL_UP_JOB, ClientboundLevelUpJobPacket.STREAM_CODEC);
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_UNLOCK_ITEM_RESTRICTION, ClientboundUnlockItemRestrictionPacket.STREAM_CODEC);
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_OPEN_POWERUPS_SCREEN, ClientboundOpenPowerupsScreenPacket.STREAM_CODEC);
+        NetworkManager.registerS2CPayloadType(CLIENTBOUND_LEADERBOARD, ClientboundLeaderboardPacket.STREAM_CODEC);
     }
 
     static void init() {

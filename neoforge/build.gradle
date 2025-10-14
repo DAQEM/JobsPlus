@@ -47,10 +47,10 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
 
-    modImplementation "curse.maven:yaml-config-1128669:${project.config_library_file_neoforge}"
-    modImplementation "curse.maven:arc-883593:${project.arc_file_neoforge}"
-    modImplementation "curse.maven:item-restrictions-887774:${project.item_restrictions_file_neoforge}"
-    modImplementation "curse.maven:ui-933200:${project.ui_library_file_neoforge}"
+    modImplementation "com.daqem.uilib:uilib-neoforge:${project.ui_library_version}"
+    modImplementation "com.daqem.yamlconfig:yamlconfig-neoforge:${project.config_library_version}"
+    modImplementation "com.daqem.arc:arc-neoforge:${project.arc_version}"
+    modImplementation "com.daqem.itemrestrictions:itemrestrictions-neoforge:${project.item_restrictions_version}"
 }
 
 processResources {
@@ -88,11 +88,54 @@ shadowJar {
 
 remapJar {
     inputFile.set shadowJar.archiveFile
-    archiveClassifier = "neoforge"
+    atAccessWideners.add loom.accessWidenerPath.get().asFile.name
+    archiveClassifier = null
+}
+
+task renameJarForPublication(type: Zip, dependsOn: remapJar) {
+    from remapJar.archiveFile.map { zipTree(it) }
+    archiveExtension = "jar"
+    metadataCharset "UTF-8"
+    destinationDirectory = base.libsDirectory
+    archiveClassifier = project.name
+}
+
+assemble.dependsOn renameJarForPublication
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
 }
 
 remapSourcesJar {
     archiveClassifier = "neoforge-sources"
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+publishing {
+    publications {
+        mavenNeoForge(MavenPublication) {
+            groupId = rootProject.maven_group
+            artifactId = rootProject.archives_base_name + "-neoforge"
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url = project.version.contains('-PR') ? 'https://maven.daqem.com/snapshots' : 'https://maven.daqem.com/releases'
+            credentials {
+                username = System.getenv("MAVEN_USER")
+                password = System.getenv("MAVEN_PASS")
+            }
+        }
+    }
 }
 
 curseforge {

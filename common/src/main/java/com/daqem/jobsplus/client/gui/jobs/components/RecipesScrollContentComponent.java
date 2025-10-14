@@ -8,9 +8,6 @@ import com.daqem.itemrestrictions.data.RestrictionType;
 import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
 import com.daqem.uilib.gui.component.EmptyComponent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.*;

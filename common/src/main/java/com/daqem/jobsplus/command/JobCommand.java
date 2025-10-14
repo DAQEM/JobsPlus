@@ -5,12 +5,11 @@ import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.command.arguments.EnumArgument;
 import com.daqem.jobsplus.command.arguments.JobArgument;
 import com.daqem.jobsplus.command.arguments.PowerupArgument;
-
+import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
+import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
-import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
-import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.minecraft.commands.CommandSourceStack;

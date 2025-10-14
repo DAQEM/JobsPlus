@@ -1,10 +1,10 @@
 package com.daqem.jobsplus.integration.arc.condition.conditions.powerup;
 
-import com.daqem.arc.api.action.data.ActionData;
 import com.daqem.arc.api.condition.AbstractCondition;
 import com.daqem.arc.api.condition.ICondition;
-import com.daqem.arc.api.condition.serializer.IConditionSerializer;
-import com.daqem.arc.api.condition.type.IConditionType;
+import com.daqem.arc.api.condition.IConditionSerializer;
+import com.daqem.arc.api.condition.IConditionType;
+import com.daqem.arc.data.ActionData;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.integration.arc.condition.type.JobsPlusConditionType;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;

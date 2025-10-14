@@ -3,7 +3,7 @@
     "type": "jobsplus:powerup",
     "id": "jobsplus:alchemist/harmful_potion_immunity_ii"
   },
-  "type": "arc:on_effect_added",
+  "type": "arc:on_add_effect",
   "rewards": [
     {
       "type": "arc:remove_effect",
