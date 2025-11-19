@@ -33,7 +33,7 @@ public class RecipeItemComponent extends SpriteComponent {
     public RecipeItemComponent(int x, int y, int index, List<RestrictionType> restrictionTypes, int requiredLevel, ItemStack itemStack) {
         super(x, y, 24, 24, JobsPlus.getId("jobs/item_slot_" + SPRITE_IDS[index % SPRITE_IDS.length]));
         this.tooltip = restrictionTypes.stream()
-                .map(restrictionType -> (Component) JobsPlus.translatable(restrictionType.getTranslationKey()))
+                .map(restrictionType -> (Component) ItemRestrictions.translatable(restrictionType.getTranslationKey()))
                 .sorted((c1, c2) -> String.CASE_INSENSITIVE_ORDER.compare(c1.getString(), c2.getString()))
                 .collect(Collectors.toList());
         MutableComponent title = JobsPlus.translatable("gui.jobs.restriction_types", requiredLevel);
