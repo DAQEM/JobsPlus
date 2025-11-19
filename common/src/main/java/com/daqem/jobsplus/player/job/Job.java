@@ -4,6 +4,9 @@ import com.daqem.jobsplus.Constants;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.event.triggers.JobEvents;
+import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
+import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
+import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.JobsServerPlayer;
@@ -11,9 +14,6 @@ import com.daqem.jobsplus.player.job.exp.ExpCollector;
 import com.daqem.jobsplus.player.job.powerup.JobPowerupManager;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
-import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
-import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
-import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -201,9 +201,12 @@ public class Job {
             friendlyByteBuf.writeResourceLocation(job.getJobInstance().getLocation());
             friendlyByteBuf.writeInt(job.getLevel());
             friendlyByteBuf.writeDouble(job.getExperience());
-            friendlyByteBuf.writeVarInt(job.getPowerupManager().getAllPowerups().size());
-            for (Powerup powerup : job.getPowerupManager().getAllPowerups()) {
-                if (powerup == null || powerup.getPowerupInstance() == null) continue;
+            List<Powerup> allPowerups = job.getPowerupManager().getAllPowerups()
+                    .stream()
+                    .filter(powerup -> powerup != null && powerup.getPowerupInstance() != null)
+                    .toList();
+            friendlyByteBuf.writeVarInt(allPowerups.size());
+            for (Powerup powerup : allPowerups) {
                 friendlyByteBuf.writeResourceLocation(powerup.getPowerupInstance().getLocation());
                 friendlyByteBuf.writeEnum(powerup.getState());
             }
