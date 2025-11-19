@@ -138,6 +138,8 @@ public class Job {
         ListTag powerupsTag = new ListTag();
 
         for (Powerup powerup : powerupManager.getAllPowerups()) {
+            if (powerup == null || powerup.getPowerupInstance() == null) continue;
+
             CompoundTag powerupTag = new CompoundTag();
 
             powerupTag.putString(Constants.POWERUP_LOCATION, powerup.getPowerupInstance().getLocation().toString());
@@ -201,6 +203,7 @@ public class Job {
             friendlyByteBuf.writeDouble(job.getExperience());
             friendlyByteBuf.writeVarInt(job.getPowerupManager().getAllPowerups().size());
             for (Powerup powerup : job.getPowerupManager().getAllPowerups()) {
+                if (powerup == null || powerup.getPowerupInstance() == null) continue;
                 friendlyByteBuf.writeResourceLocation(powerup.getPowerupInstance().getLocation());
                 friendlyByteBuf.writeEnum(powerup.getState());
             }
