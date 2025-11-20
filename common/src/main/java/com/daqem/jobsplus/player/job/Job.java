@@ -127,8 +127,7 @@ public class Job {
     }
 
     public static int getExperienceToLevelUp(int level) {
-        if (level == 0) return 0;
-        return (int) (100 + level * level * 0.5791);
+        return JobLevelCalculator.getExperienceForLevel(level);
     }
 
     public void setPlayer(JobsPlayer player) {
