@@ -5,6 +5,7 @@ import com.daqem.jobsplus.player.job.Job;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -13,4 +14,5 @@ public interface JobsPlusLevelData {
     void jobsplus$setPlayerJobEntries(Map<UUID, Map<ResourceLocation, LeaderboardPlayer>> entries);
     void jobsplus$updatePlayerEntry(Player player, Job job);
     void jobsplus$removePlayerEntry(Player player, Job job);
+    List<LeaderboardPlayer> jobsplus$getSortedLeaderboard(ResourceLocation jobLocation);
 }

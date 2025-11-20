@@ -22,16 +22,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Mixin(PrimaryLevelData.class)
 public class PrimaryLevelDataMixin implements JobsPlusLevelData {
 
     @Unique
     private Map<UUID, Map<ResourceLocation, LeaderboardPlayer>> jobsplus$playerJobEntries = new HashMap<>();
+    @Unique
+    private final Map<ResourceLocation, List<LeaderboardPlayer>> jobsplus$leaderboardCache = new HashMap<>();
+    @Unique
+    private final Map<ResourceLocation, Long> jobsplus$leaderboardCacheTime = new HashMap<>();
 
     @Override
     public Map<UUID, Map<ResourceLocation, LeaderboardPlayer>> jobsplus$getPlayerJobEntries() {
@@ -68,6 +70,28 @@ public class PrimaryLevelDataMixin implements JobsPlusLevelData {
                 this.jobsplus$playerJobEntries.remove(player.getUUID());
             }
         }
+    }
+
+    @Override
+    public List<LeaderboardPlayer> jobsplus$getSortedLeaderboard(ResourceLocation jobLocation) {
+        long now = System.currentTimeMillis();
+        if (jobsplus$leaderboardCache.containsKey(jobLocation) && now - jobsplus$leaderboardCacheTime.getOrDefault(jobLocation, 0L) < 30000) {
+            return jobsplus$leaderboardCache.get(jobLocation);
+        }
+
+        AtomicInteger rank = new AtomicInteger(1);
+        List<LeaderboardPlayer> sorted = this.jobsplus$playerJobEntries.values()
+                .stream()
+                .filter(entry -> entry.containsKey(jobLocation))
+                .map(entry -> entry.get(jobLocation))
+                .sorted(Comparator.comparing(LeaderboardPlayer::getLevel).thenComparing(LeaderboardPlayer::getExperience).reversed())
+                .limit(100)
+                .peek(player -> player.setRank(rank.getAndIncrement()))
+                .toList();
+
+        jobsplus$leaderboardCache.put(jobLocation, sorted);
+        jobsplus$leaderboardCacheTime.put(jobLocation, now);
+        return sorted;
     }
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/LevelSettings;Lnet/minecraft/world/level/levelgen/WorldOptions;Lnet/minecraft/world/level/storage/PrimaryLevelData$SpecialWorldProperty;Lcom/mojang/serialization/Lifecycle;)V", at = @At("RETURN"))

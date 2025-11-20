@@ -1,6 +1,7 @@
 package com.daqem.jobsplus.command.arguments;
 
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -65,11 +66,16 @@ public class EnumArgument<T extends Enum<T>> implements ArgumentType<T> {
         public @NotNull Template deserializeFromNetwork(FriendlyByteBuf buffer) {
             try {
                 String name = buffer.readUtf();
-                return new Template((Class<T>) Class.forName(name));
-            } catch (ClassNotFoundException e) {
-                //noinspection DataFlowIssue
-                return null;
+                Class<?> clazz = Class.forName(name);
+                if (clazz.isEnum()) {
+                    return new Template((Class<T>) clazz);
+                }
+            } catch (ClassNotFoundException | ClassCastException e) {
+                // Fallback to a safe default enum to prevent NPE crash.
+                // Here we default to PowerupState as a fallback context.
+                return new Template((Class<T>) PowerupState.class);
             }
+            return new Template((Class<T>) PowerupState.class);
         }
 
         @Override

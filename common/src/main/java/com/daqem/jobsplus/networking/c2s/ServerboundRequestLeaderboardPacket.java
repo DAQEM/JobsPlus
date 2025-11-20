@@ -13,7 +13,6 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerboundRequestLeaderboardPacket implements CustomPacketPayload {
 
@@ -42,16 +41,7 @@ public class ServerboundRequestLeaderboardPacket implements CustomPacketPayload 
 
     public static void handleServerSide(ServerboundRequestLeaderboardPacket packet, NetworkManager.PacketContext context) {
         if (context.getPlayer() instanceof JobsServerPlayer sender) {
-            AtomicInteger rank = new AtomicInteger(1);
-            List<LeaderboardPlayer> leaderboard = sender.jobsplus$getLevelData().jobsplus$getPlayerJobEntries().values()
-                    .stream()
-                    .filter(entry -> entry.containsKey(packet.jobLocation))
-                    .map(entry -> entry.get(packet.jobLocation))
-                    .sorted(Comparator.comparing(LeaderboardPlayer::getLevel).thenComparing(LeaderboardPlayer::getExperience).reversed())
-                    .limit(100)
-                    .peek(player -> player.setRank(rank.getAndIncrement()))
-                    .toList();
-
+            List<LeaderboardPlayer> leaderboard = sender.jobsplus$getLevelData().jobsplus$getSortedLeaderboard(packet.jobLocation);
             NetworkManager.sendToPlayer((ServerPlayer) sender, new ClientboundLeaderboardPacket(leaderboard));
         }
     }

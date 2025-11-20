@@ -84,11 +84,21 @@ public class Job {
         return experience;
     }
 
+    public void setExperience(int experience) {
+        setExperience(experience, true);
+    }
+
     public void setExperience(int experience, boolean triggerEvent) {
+        setExperience(experience, triggerEvent, true);
+    }
+
+    public void setExperience(int experience, boolean triggerEvent, boolean triggerLevelUpCheck) {
         int change = experience - this.experience;
         expCollector.addExp(change);
         this.experience = experience;
-        checkForLevelUp();
+        if (triggerLevelUpCheck) {
+            checkForLevelUp();
+        }
         if (triggerEvent) {
             JobEvents.onJobExperience(player, this, change);
         }
@@ -111,7 +121,7 @@ public class Job {
         int experienceToLevelUp = getExperienceToLevelUp(level);
         if (experience >= experienceToLevelUp) {
             setLevel(level + 1);
-            setExperience(experience - experienceToLevelUp, false);
+            setExperience(experience - experienceToLevelUp, false, false);
             JobEvents.onJobLevelUp(player, this);
         }
     }
@@ -134,7 +144,11 @@ public class Job {
 
         ListTag powerupsTag = new ListTag();
 
-        for (Powerup powerup : powerupManager.getAllPowerups()) {
+        for (Powerup powerup : powerupManager.getAllPowerups()
+                .stream()
+                .filter(powerup -> powerup != null && powerup.getPowerupInstance() != null)
+                .toList()
+        ) {
             CompoundTag powerupTag = new CompoundTag();
 
             powerupTag.putString(Constants.POWERUP_LOCATION, powerup.getPowerupInstance().getLocation().toString());
@@ -157,9 +171,15 @@ public class Job {
                     tag.getList(Constants.POWERUPS).ifPresent(powerupsTag -> {
                         for (Tag powerupTag : powerupsTag) {
                             CompoundTag powerupNBT = (CompoundTag) powerupTag;
-                            powerupNBT.getString(Constants.POWERUP_LOCATION).ifPresent(powerupLocation ->
-                                    powerupNBT.getString(Constants.POWERUP_STATE).ifPresent(powerupState ->
-                                            powerups.add(new Powerup(PowerupInstance.of(ResourceLocation.parse(powerupLocation)), PowerupState.valueOf(powerupState)))));
+                            powerupNBT.getString(Constants.POWERUP_LOCATION).ifPresent(powerupLocationString -> {
+                                powerupNBT.getString(Constants.POWERUP_STATE).ifPresent(powerupState -> {
+                                    ResourceLocation powerupLocation = ResourceLocation.tryParse(powerupLocationString);
+                                    if (powerupLocation == null) return;
+                                    PowerupInstance powerupInstance = PowerupInstance.of(powerupLocation);
+                                    if (powerupInstance == null) return;
+                                    powerups.add(new Powerup(powerupInstance, PowerupState.valueOf(powerupState)));
+                                });
+                            });
                         }
                     });
                     job.set(new Job(player, ResourceLocation.parse(jobLocation), level, exp, powerups));
@@ -170,7 +190,9 @@ public class Job {
     }
 
     public double getExperiencePercentage() {
-        return (double) experience / (double) getExperienceToLevelUp(level) * 100;
+        int expToLevel = getExperienceToLevelUp(level);
+        if (expToLevel == 0) return 0.0D;
+        return (double) experience / (double) expToLevel * 100;
     }
 
     public ExpCollector getExpCollector() {
@@ -201,8 +223,12 @@ public class Job {
             friendlyByteBuf.writeResourceLocation(job.getJobInstance().getLocation());
             friendlyByteBuf.writeInt(job.getLevel());
             friendlyByteBuf.writeInt(job.getExperience());
-            friendlyByteBuf.writeVarInt(job.getPowerupManager().getAllPowerups().size());
-            for (Powerup powerup : job.getPowerupManager().getAllPowerups()) {
+            List<Powerup> allPowerups = job.getPowerupManager().getAllPowerups()
+                    .stream()
+                    .filter(powerup -> powerup != null && powerup.getPowerupInstance() != null)
+                    .toList();
+            friendlyByteBuf.writeVarInt(allPowerups.size());
+            for (Powerup powerup : allPowerups) {
                 friendlyByteBuf.writeResourceLocation(powerup.getPowerupInstance().getLocation());
                 friendlyByteBuf.writeEnum(powerup.getState());
             }
