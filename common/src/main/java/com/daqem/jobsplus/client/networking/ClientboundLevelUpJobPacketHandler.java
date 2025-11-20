@@ -9,6 +9,8 @@ import net.minecraft.client.Minecraft;
 public class ClientboundLevelUpJobPacketHandler {
 
     public static void handleClientSide(ClientboundLevelUpJobPacket packet, NetworkManager.PacketContext context) {
-        LevelUpJobToast.addOrUpdate(Minecraft.getInstance().getToastManager(), JobInstance.of(packet.getJobLocation()), packet.getLevel());
+        JobInstance jobInstance = JobInstance.of(packet.getJobLocation());
+        if (jobInstance == null) return;
+        LevelUpJobToast.addOrUpdate(Minecraft.getInstance().getToastManager(), jobInstance, packet.getLevel());
     }
 }

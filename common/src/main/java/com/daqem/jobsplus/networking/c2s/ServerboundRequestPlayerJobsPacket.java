@@ -3,7 +3,6 @@ package com.daqem.jobsplus.networking.c2s;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
-import com.daqem.jobsplus.networking.s2c.ClientboundLeaderboardPacket;
 import com.daqem.jobsplus.networking.s2c.ClientboundPlayerJobsPacket;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.LeaderboardPlayer;
@@ -52,12 +51,19 @@ public class ServerboundRequestPlayerJobsPacket implements CustomPacketPayload {
             );
 
             List<Job> jobs = jobsMap.entrySet().stream()
-                    .map(entry -> new Job(
-                            null,
-                            JobInstance.of(entry.getKey()),
-                            entry.getValue().getLevel(),
-                            entry.getValue().getExperience())
+                    .map(entry -> {
+                                JobInstance jobInstance = JobInstance.of(entry.getKey());
+                                if (jobInstance == null) {
+                                    return null;
+                                }
+                                return new Job(
+                                        null,
+                                        jobInstance,
+                                        entry.getValue().getLevel(),
+                                        entry.getValue().getExperience());
+                            }
                     )
+                    .filter(Objects::nonNull)
                     .sorted(Comparator.comparingInt(Job::getLevel).thenComparingInt(Job::getExperience).reversed())
                     .toList();
 

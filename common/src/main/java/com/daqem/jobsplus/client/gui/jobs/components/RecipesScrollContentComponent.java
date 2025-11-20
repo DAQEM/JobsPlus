@@ -8,6 +8,7 @@ import com.daqem.itemrestrictions.data.RestrictionType;
 import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
 import com.daqem.uilib.gui.component.EmptyComponent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
@@ -79,7 +80,8 @@ public class RecipesScrollContentComponent extends EmptyComponent {
 
     private List<DisplayEntry> getDisplayEntries() {
         Map<ItemRestriction, Integer> itemRestrictions = this.state.getSelectedJob().getJobInstance().getItemRestrictions();
-        if (Minecraft.getInstance().player != null) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null) {
             return itemRestrictions.entrySet().stream().flatMap(entry -> {
                 ItemRestriction itemRestriction = entry.getKey();
                 int requiredLevel = entry.getValue();
@@ -89,7 +91,7 @@ public class RecipesScrollContentComponent extends EmptyComponent {
                         return Stream.of(new DisplayEntry(itemCondition.getItemStack(), requiredLevel, itemRestriction.getRestrictionTypes()));
                     } else if (condition instanceof ItemsCondition itemsCondition) {
                         List<DisplayEntry> entries = new ArrayList<>();
-                        for (ItemStack item : itemsCondition.getItemStacks(Minecraft.getInstance().player.registryAccess())) {
+                        for (ItemStack item : itemsCondition.getItemStacks(player.registryAccess())) {
                             entries.add(new DisplayEntry(item, requiredLevel, itemRestriction.getRestrictionTypes()));
                         }
                         return entries.stream();

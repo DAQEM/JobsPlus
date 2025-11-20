@@ -3,6 +3,7 @@ package com.daqem.jobsplus;
 import com.daqem.arc.registry.ArcRegistry;
 import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.event.command.EventRegisterCommands;
+import com.daqem.jobsplus.event.triggers.JobEvents;
 import com.daqem.jobsplus.integration.arc.action.type.JobsPlusActionType;
 import com.daqem.jobsplus.integration.arc.condition.type.JobsPlusConditionType;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
@@ -11,6 +12,7 @@ import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
 import com.daqem.jobsplus.integration.arc.reward.type.JobsPlusRewardType;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
 import com.mojang.logging.LogUtils;
+import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.registry.ReloadListenerRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -30,7 +32,6 @@ public class JobsPlus {
         initRegistry();
         ReloadListenerRegistry.register(PackType.SERVER_DATA, new JobManager(), getId("jobs"));
         ReloadListenerRegistry.register(PackType.SERVER_DATA, new PowerupManager(), getId("powerups"));
-
     }
 
     private static void initRegistry() {

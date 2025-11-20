@@ -31,6 +31,9 @@ public class PowerupNotActiveCondition extends AbstractCondition {
     public boolean isMet(ActionData actionData) {
         if (actionData.getPlayer() instanceof JobsPlayer player) {
             PowerupInstance powerupInstance = PowerupInstance.of(powerupThatShouldNotBeActiveLocation);
+            if (powerupInstance == null) {
+                return false;
+            }
             Optional<Powerup> powerup = player.jobsplus$getJobs().stream()
                     .map(job -> job.getPowerupManager().getPowerup(powerupInstance))
                     .filter(Optional::isPresent)

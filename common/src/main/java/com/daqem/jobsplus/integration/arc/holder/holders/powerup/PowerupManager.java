@@ -18,6 +18,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,8 +52,8 @@ public class PowerupManager extends SimplePreparableReloadListener<List<IActionH
         Map<ResourceLocation, JsonObject> map = new HashMap<>();
         for (Map.Entry<ResourceLocation, Resource> entry : resourceMap.entrySet()) {
             ResourceLocation location = entry.getKey();
-            try {
-                JsonObject jsonElement = GsonHelper.parse(entry.getValue().openAsReader());
+            try (BufferedReader reader = entry.getValue().openAsReader()) {
+                JsonObject jsonElement = GsonHelper.parse(reader);
                 map.put(location, jsonElement);
             }
             catch (Exception runtimeException) {

@@ -37,7 +37,7 @@ public class HasJobCondition extends AbstractCondition implements IJobCondition 
                 }
             }
         } else {
-            JobsPlus.LOGGER.error("Job " + jobLocation + " does not exist! Trying to use it in the condition has_job.");
+            JobsPlus.LOGGER.error("Job {} does not exist! Trying to use it in the condition has_job.", jobLocation);
         }
         return false;
     }

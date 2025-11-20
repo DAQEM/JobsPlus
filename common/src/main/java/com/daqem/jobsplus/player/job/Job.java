@@ -214,7 +214,9 @@ public class Job {
             for (int i = 0; i < powerupCount; i++) {
                 ResourceLocation powerupLocation = friendlyByteBuf.readResourceLocation();
                 PowerupState state = friendlyByteBuf.readEnum(PowerupState.class);
-                powerups.add(new Powerup(PowerupInstance.of(powerupLocation), state));
+                PowerupInstance powerupInstance = PowerupInstance.of(powerupLocation);
+                if (powerupInstance == null) continue;
+                powerups.add(new Powerup(powerupInstance, state));
             }
             return new Job(player, jobInstanceLocation, level, experience, powerups);
         }

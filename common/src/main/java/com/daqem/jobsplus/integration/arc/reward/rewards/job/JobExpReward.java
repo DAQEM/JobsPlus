@@ -24,6 +24,9 @@ public class JobExpReward extends AbstractReward {
         this.min = min;
         this.max = max;
 
+        if (min < 0 || max < 0) {
+            throw new IllegalArgumentException("min and max must be non-negative for JobExpActionReward.");
+        }
         if (min > max) {
             throw new IllegalArgumentException("min cannot be greater than max for JobExpActionReward.");
         }

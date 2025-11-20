@@ -107,6 +107,12 @@ public class JobInstance extends AbstractActionHolder {
         return obj instanceof JobInstance jobInstance && jobInstance.location.equals(location);
     }
 
+    @Override
+    public int hashCode() {
+        return location.hashCode();
+    }
+
+
     public static class Serializer implements JsonDeserializer<JobInstance>, IActionHolderSerializer<JobInstance> {
 
         @Override

@@ -25,7 +25,12 @@ import java.util.concurrent.TimeUnit;
 
 public class JobEvents {
 
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1, r -> {
+        Thread thread = new Thread(r);
+        thread.setDaemon(true);
+        thread.setName("JobsPlus-JobEvents-Scheduler");
+        return thread;
+    });
 
     public static void onJobLevelUp(JobsPlayer player, Job job) {
         if (player instanceof ArcPlayer arcPlayer) {
@@ -82,7 +87,6 @@ public class JobEvents {
     }
 
     public static void triggerLevelUpEffects(ServerPlayer player) {
-
         // Play first sound after 250 ms (5 ticks)
         schedule(() -> {
             playLevelUpSound(player, 0.5F, 2F);
