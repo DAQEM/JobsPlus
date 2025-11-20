@@ -18,6 +18,8 @@ public class JobsScreen extends AbstractScreen {
 
     @Override
     protected void init() {
+        this.state.stopViewingPlayer();
+
         JobsComponent jobsComponent = new JobsComponent(this.state);
         jobsComponent.center();
 

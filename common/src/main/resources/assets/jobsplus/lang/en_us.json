@@ -27,6 +27,7 @@
   "jobsplus.gui.confirmation.yes": "Yes",
   "jobsplus.gui.confirmation.cancel": "Cancel",
   "jobsplus.gui.jobs.leaderboard.no_players": "No players have started this job yet.",
+  "jobsplus.gui.jobs.back": "Back",
 
   "jobsplus.command.does_not_have_job": "%s does not have job %s.",
   "jobsplus.command.arguments.enum.invalid": "Enum constant must be one of %s, found %s",

@@ -1,6 +1,5 @@
 package com.daqem.jobsplus.networking.c2s;
 
-import com.daqem.jobsplus.level.JobsPlusLevelData;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
 import com.daqem.jobsplus.networking.s2c.ClientboundLeaderboardPacket;
 import com.daqem.jobsplus.player.JobsServerPlayer;

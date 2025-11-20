@@ -3,6 +3,7 @@ package com.daqem.jobsplus.client.gui.jobs;
 import com.daqem.arc.api.action.IAction;
 import com.daqem.jobsplus.client.gui.jobs.tab.RightTab;
 import com.daqem.jobsplus.networking.c2s.ServerboundRequestLeaderboardPacket;
+import com.daqem.jobsplus.networking.c2s.ServerboundRequestPlayerJobsPacket;
 import com.daqem.jobsplus.player.LeaderboardPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import dev.architectury.networking.NetworkManager;
@@ -11,18 +12,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 public class JobsScreenState {
 
     private final List<Job> jobs;
     private final List<Job> preformingJobs;
     private final List<Job> notPreformingJobs;
-    private int coins;
+    private final int coins;
     private Job selectedJob;
     private RightTab selectedRightTab;
     private @Nullable IAction activeAction;
     private List<LeaderboardPlayer> leaderboardPlayers = new ArrayList<>();
     private boolean isLoadingLeaderboard = false;
+    private LeaderboardPlayer viewingPlayer = null;
+    private List<Job> viewingPlayerJobs = new ArrayList<>();
 
     public JobsScreenState(List<Job> jobs, int coins) {
         this(jobs, coins, null, RightTab.EXPERIENCE);
@@ -43,7 +47,7 @@ public class JobsScreenState {
     }
 
     public List<Job> getJobs() {
-        return jobs;
+        return viewingPlayer == null ? jobs : viewingPlayerJobs;
     }
 
     public List<Job> getPreformingJobs() {
@@ -66,15 +70,13 @@ public class JobsScreenState {
         return selectedRightTab;
     }
 
-    public void setCoins(int coins) {
-        this.coins = coins;
-    }
-
     public void setSelectedJob(Job selectedJob) {
+        stopViewingPlayer();
         this.selectedJob = selectedJob;
     }
 
     public void setSelectedRightTab(RightTab selectedRightTab) {
+        stopViewingPlayer();
         this.selectedRightTab = selectedRightTab;
     }
 
@@ -83,6 +85,7 @@ public class JobsScreenState {
     }
 
     public void setActiveAction(@Nullable IAction activeAction) {
+        stopViewingPlayer();
         this.activeAction = activeAction;
     }
 
@@ -105,10 +108,34 @@ public class JobsScreenState {
 
     public void fetchInitialLeaderboardPlayers() {
         this.isLoadingLeaderboard = true;
+        this.leaderboardPlayers = new ArrayList<>();
         fetchLeaderboardPlayers();
     }
 
     public void fetchLeaderboardPlayers() {
         NetworkManager.sendToServer(new ServerboundRequestLeaderboardPacket(getSelectedJob().getJobInstance().getLocation()));
+    }
+
+    public LeaderboardPlayer getViewingPlayer() {
+        return viewingPlayer;
+    }
+
+    public List<Job> getViewingPlayerJobs() {
+        return viewingPlayerJobs;
+    }
+
+    public void setViewingPlayerJobs(List<Job> viewingPlayerJobs) {
+        this.viewingPlayerJobs = viewingPlayerJobs;
+    }
+
+    public void fetchViewingPlayerJobs(LeaderboardPlayer viewingPlayer) {
+        this.viewingPlayer = viewingPlayer;
+        this.viewingPlayerJobs = new ArrayList<>();
+        NetworkManager.sendToServer(new ServerboundRequestPlayerJobsPacket(viewingPlayer.getUuid()));
+    }
+
+    public void stopViewingPlayer() {
+        this.viewingPlayer = null;
+        this.viewingPlayerJobs = new ArrayList<>();
     }
 }

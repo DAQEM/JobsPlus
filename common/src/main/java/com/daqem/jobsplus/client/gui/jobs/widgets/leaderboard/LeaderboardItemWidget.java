@@ -25,13 +25,13 @@ public class LeaderboardItemWidget extends CustomButtonWidget {
     );
 
     private final LeaderboardPlayer player;
-    private final JobsScreenState state;
     private final TruncatedTextComponent nameComponent;
 
     public LeaderboardItemWidget(LeaderboardPlayer player, JobsScreenState state) {
-        super(0, 0, 99, 19, JobsPlus.literal(player.getPlayerName()), SPRITES, button -> {});
+        super(0, 0, 99, 19, JobsPlus.literal(player.getPlayerName()), SPRITES, button -> {
+            state.fetchViewingPlayerJobs(player);
+        });
         this.player = player;
-        this.state = state;
 
         this.nameComponent = new TruncatedTextComponent(0, 0, 0, JobsPlus.literal(player.getPlayerName()), 0);
     }

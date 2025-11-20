@@ -9,14 +9,24 @@ import net.minecraft.client.renderer.RenderPipelines;
 
 public class JobsComponent extends AbstractComponent {
 
+    private final JobsScreenState state;
+    private final JobSelectionComponent jobSelectionComponent;
+    private final SelectedJobComponent selectedJobComponent;
+    private final CoinsComponent coinsComponent;
+    private final PowerupsButtonWidget powerupsButtonWidget;
+    private final PlayerProfileComponent playerProfileComponent;
+    private boolean wasViewingPlayer = false;
+
     public JobsComponent(JobsScreenState state) {
         super(0, 0, 302, 204 + 2);
+        this.state = state;
 
-        JobSelectionComponent jobSelectionComponent = new JobSelectionComponent(state);
-        SelectedJobComponent selectedJobComponent = new SelectedJobComponent(state);
-        CoinsComponent coinsComponent = new CoinsComponent(state);
+        this.jobSelectionComponent = new JobSelectionComponent(state);
+        this.selectedJobComponent = new SelectedJobComponent(state);
+        this.coinsComponent = new CoinsComponent(state);
+        this.powerupsButtonWidget = new PowerupsButtonWidget(state);
+        this.playerProfileComponent = new PlayerProfileComponent(state);
         TabSwitcherComponent tabSwitcherComponent = new TabSwitcherComponent(state);
-        PowerupsButtonWidget powerupsButtonWidget = new PowerupsButtonWidget(state);
 
         this.addComponent(jobSelectionComponent);
         this.addComponent(selectedJobComponent);
@@ -36,5 +46,22 @@ public class JobsComponent extends AbstractComponent {
                 this.getWidth(),
                 this.getHeight() - 2
         );
+
+        if (!wasViewingPlayer && state.getViewingPlayer() != null && !state.getViewingPlayerJobs().isEmpty()) {
+            this.removeComponent(jobSelectionComponent);
+            this.removeComponent(selectedJobComponent);
+            this.removeComponent(coinsComponent);
+            this.removeWidget(powerupsButtonWidget);
+            this.addComponent(playerProfileComponent);
+            wasViewingPlayer = true;
+            this.updateParentPosition(getParentX(), getParentY(), parentWidth, parentHeight);
+        } else if (wasViewingPlayer && state.getViewingPlayer() == null) {
+            this.addComponent(jobSelectionComponent);
+            this.addComponent(selectedJobComponent);
+            this.addComponent(coinsComponent);
+            this.addWidget(powerupsButtonWidget);
+            this.removeComponent(playerProfileComponent);
+            wasViewingPlayer = false;
+        }
     }
 }
