@@ -1,18 +1,22 @@
 package com.daqem.jobsplus.integration.arc.holder.holders.job;
 
 import java.io.BufferedReader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.daqem.yamlconfig.YamlConfigExpectPlatform;
+import dev.architectury.platform.Platform;
 import org.jetbrains.annotations.NotNull;
 
 import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.arc.data.ActionHolderManager;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.JobsPlusExpectPlatform;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,7 +66,7 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
         }
 
         try {
-            java.nio.file.Path configDir = dev.architectury.platform.Platform.getConfigFolder().resolve("jobsplus/jobs");
+            Path configDir = YamlConfigExpectPlatform.getConfigDirectory().resolve("jobsplus/jobs");
             if (!java.nio.file.Files.exists(configDir)) {
                 java.nio.file.Files.createDirectories(configDir);
             }
@@ -85,9 +89,13 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
             JobsPlus.LOGGER.error("Error loading jobs from config", e);
         }
         List<IActionHolder> jobs = new ArrayList<>();
+        List<String> excludedJobs = JobsPlusConfig.excludedJobs.get();
 
         for (Map.Entry<ResourceLocation, JsonObject> entry : map.entrySet()) {
             ResourceLocation location = entry.getKey();
+            if (excludedJobs.contains(location.toString())) {
+                continue;
+            }
             JsonObject jsonObject = entry.getValue();
             jsonObject.addProperty("location", location.toString());
             try {

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.daqem.yamlconfig.YamlConfigExpectPlatform;
 import org.jetbrains.annotations.NotNull;
 
 import com.daqem.arc.api.action.holder.IActionHolder;
@@ -64,7 +65,7 @@ public class PowerupManager extends SimplePreparableReloadListener<List<IActionH
         }
 
         try {
-            java.nio.file.Path configDir = dev.architectury.platform.Platform.getConfigFolder().resolve("jobsplus/powerups");
+            java.nio.file.Path configDir = YamlConfigExpectPlatform.getConfigDirectory().resolve("jobsplus/powerups");
             if (!java.nio.file.Files.exists(configDir)) {
                 java.nio.file.Files.createDirectories(configDir);
             }

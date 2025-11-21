@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "client.AbstractScrollAreaAccessor",
+    "client.MixinClientLanguage",
     "client.MixinClientPacketListener",
     "client.MixinLocalPlayer"
   ],

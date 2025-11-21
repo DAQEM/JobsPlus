@@ -278,11 +278,6 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
         return isCorrectPowerupState && hasEnoughCoins() && hasRequiredLevel();
     }
 
-    @Override
-    public boolean isActive() {
-        return isValidClickButton(new MouseButtonInfo(0, 0));
-    }
-
     private boolean hasEnoughCoins() {
         return this.powerup != null && this.state.getCoins() >= this.powerup.getPowerupInstance().getPrice();
     }
