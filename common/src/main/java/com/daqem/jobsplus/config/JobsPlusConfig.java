@@ -2,6 +2,7 @@ package com.daqem.jobsplus.config;
 
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.player.job.JobLevelCalculator;
+import com.daqem.yamlconfig.YamlConfigExpectPlatform;
 import com.daqem.yamlconfig.api.config.ConfigExtension;
 import com.daqem.yamlconfig.api.config.ConfigType;
 import com.daqem.yamlconfig.api.config.IConfig;
@@ -9,6 +10,9 @@ import com.daqem.yamlconfig.api.config.IConfigBuilder;
 import com.daqem.yamlconfig.api.config.entry.IConfigEntry;
 import com.daqem.yamlconfig.event.ConfigEvent;
 import com.daqem.yamlconfig.impl.config.ConfigBuilder;
+import com.ibm.icu.impl.ICULocaleService;
+
+import java.nio.file.Path;
 
 public class JobsPlusConfig {
 
@@ -19,10 +23,12 @@ public class JobsPlusConfig {
 
     public static final IConfigEntry<Integer> coinsPerLevelUp;
 
-    public static final IConfigEntry<Boolean> isDebug;
+    public static final IConfigEntry<String> coinFormat;
+    public static final IConfigEntry<String> expFormat;
+
 
     static {
-        IConfigBuilder builder = new ConfigBuilder(JobsPlus.MOD_ID, "jobsplus-common", ConfigExtension.YAML, ConfigType.COMMON);
+        IConfigBuilder builder = new ConfigBuilder(JobsPlus.MOD_ID, "jobsplus-common", ConfigExtension.YAML, ConfigType.COMMON, YamlConfigExpectPlatform.getConfigDirectory().resolve("jobsplus"));
 
         builder.push("jobs");
         enableDefaultJobs = builder.defineBoolean("enable_default_jobs", true).withComments("if true, the default jobs are enabled. WARNING: setting this to false will erase all the stats for these jobs");
@@ -38,8 +44,9 @@ public class JobsPlusConfig {
         builder.pop();
         builder.pop();
 
-        builder.push("debug");
-        isDebug = builder.defineBoolean("is_debug", false).withComments("if true, debug mode is enabled");
+        builder.push("display");
+        coinFormat = builder.defineString("coin_format", "#,###.#", 1, 32).withComments("The format used to display coins.", "Uses DecimalFormat patterns.", "Examples: '#,##0.00', '0.0a', '##0‰'").dontSync();
+        expFormat = builder.defineString("exp_format", "#,###.#", 1, 32).withComments("The format used to display experience.", "Uses DecimalFormat patterns.", "Examples: '#,##0.00', '0.0a', '##0‰'").dontSync();
         builder.pop();
 
         builder.build();

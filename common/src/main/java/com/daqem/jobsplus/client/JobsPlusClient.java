@@ -1,10 +1,15 @@
 package com.daqem.jobsplus.client;
 
+import com.daqem.jobsplus.client.event.EventPlayerJoin;
+import com.daqem.jobsplus.client.event.EventRenderHud;
+import org.lwjgl.glfw.GLFW;
+
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.event.EventKeyPressed;
+import com.daqem.jobsplus.config.JobsPlusClientConfig;
 import com.mojang.blaze3d.platform.InputConstants;
+
 import net.minecraft.client.KeyMapping;
-import org.lwjgl.glfw.GLFW;
 
 public class JobsPlusClient {
 
@@ -12,10 +17,13 @@ public class JobsPlusClient {
     public static final KeyMapping OPEN_MENU = new KeyMapping("key.jobsplus.open_menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, JOBSPLUS_CATEGORY);
 
     public static void init() {
+        JobsPlusClientConfig.init();
         registerEvents();
     }
 
     private static void registerEvents() {
         EventKeyPressed.registerEvent();
+        EventRenderHud.registerEvent();
+        EventPlayerJoin.registerEvent();
     }
 }

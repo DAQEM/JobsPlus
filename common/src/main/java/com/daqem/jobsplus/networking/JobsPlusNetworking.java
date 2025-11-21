@@ -25,6 +25,8 @@ public interface JobsPlusNetworking {
             new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_request_leaderboard"));
     CustomPacketPayload.Type<ServerboundRequestPlayerJobsPacket> SERVERBOUND_REQUEST_PLAYER_JOBS =
             new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_request_player_jobs"));
+    CustomPacketPayload.Type<ServerboundSyncPlayerJobsPacket> SERVERBOUND_SYNC_PLAYER_JOBS =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_sync_player_jobs"));
 
     CustomPacketPayload.Type<ClientboundUnlockItemRestrictionPacket> CLIENTBOUND_UNLOCK_ITEM_RESTRICTION =
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_unlock_item_restriction"));
@@ -38,6 +40,8 @@ public interface JobsPlusNetworking {
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_leaderboard"));
     CustomPacketPayload.Type<ClientboundPlayerJobsPacket> CLIENTBOUND_PLAYER_JOBS =
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_player_jobs"));
+    CustomPacketPayload.Type<ClientboundSyncJobPacket> CLIENTBOUND_SYNC_JOB =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_sync_job"));
 
     static void initClient() {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC, ClientboundOpenJobsScreenPacketHandler::handleClientSide);
@@ -46,6 +50,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_POWERUPS_SCREEN, ClientboundOpenPowerupsScreenPacket.STREAM_CODEC, ClientboundOpenPowerupsScreenPacketHandler::handleClientSide);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_LEADERBOARD, ClientboundLeaderboardPacket.STREAM_CODEC, ClientboundLeaderboardPacketHandler::handleClientSide);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_PLAYER_JOBS, ClientboundPlayerJobsPacket.STREAM_CODEC, ClientboundPlayerJobsPacketHandler::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_SYNC_JOB, ClientboundSyncJobPacket.STREAM_CODEC, ClientboundSyncJobPacketHandler::handleClientSide);
     }
 
     static void initCommon() {
@@ -56,6 +61,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_OPEN_POWERUPS_SCREEN, ServerboundOpenPowerupsScreenPacket.STREAM_CODEC, ServerboundOpenPowerupsScreenPacket::handleServerSide);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_REQUEST_LEADERBOARD, ServerboundRequestLeaderboardPacket.STREAM_CODEC, ServerboundRequestLeaderboardPacket::handleServerSide);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_REQUEST_PLAYER_JOBS, ServerboundRequestPlayerJobsPacket.STREAM_CODEC, ServerboundRequestPlayerJobsPacket::handleServerSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_SYNC_PLAYER_JOBS, ServerboundSyncPlayerJobsPacket.STREAM_CODEC, ServerboundSyncPlayerJobsPacket::handleServerSide);
     }
 
     static void initServer() {
@@ -65,6 +71,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_OPEN_POWERUPS_SCREEN, ClientboundOpenPowerupsScreenPacket.STREAM_CODEC);
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_LEADERBOARD, ClientboundLeaderboardPacket.STREAM_CODEC);
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_PLAYER_JOBS, ClientboundPlayerJobsPacket.STREAM_CODEC);
+        NetworkManager.registerS2CPayloadType(CLIENTBOUND_SYNC_JOB, ClientboundSyncJobPacket.STREAM_CODEC);
     }
 
     static void init() {

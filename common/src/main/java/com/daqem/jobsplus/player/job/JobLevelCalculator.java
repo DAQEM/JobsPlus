@@ -7,21 +7,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class JobLevelCalculator {
 
-    private static final Map<Integer, Integer> CACHE = new ConcurrentHashMap<>();
+    private static final Map<Integer, Double> CACHE = new ConcurrentHashMap<>();
 
     public static void resetCache() {
         CACHE.clear();
     }
 
-    public static int getExperienceForLevel(int level) {
+    public static double getExperienceForLevel(int level) {
         if (level == 0) return 0;
         return CACHE.computeIfAbsent(level, JobLevelCalculator::calculate);
     }
 
-    private static int calculate(int level) {
+    private static double calculate(int level) {
         String formula = JobsPlusConfig.experienceFormula.get();
         try {
-            double result = new Object() {
+            return new Object() {
                 int pos = -1, ch;
 
                 void nextChar() {
@@ -91,8 +91,6 @@ public class JobLevelCalculator {
                     return x;
                 }
             }.parse();
-
-            return (int) result;
 
         } catch (Exception e) {
             JobsPlus.LOGGER.error("Failed to parse experience formula '{}': {}. Using default backup.", formula, e.getMessage());

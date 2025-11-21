@@ -1,25 +1,26 @@
 package com.daqem.jobsplus.client.gui.jobs;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.daqem.arc.api.action.IAction;
 import com.daqem.jobsplus.client.gui.jobs.tab.RightTab;
 import com.daqem.jobsplus.networking.c2s.ServerboundRequestLeaderboardPacket;
 import com.daqem.jobsplus.networking.c2s.ServerboundRequestPlayerJobsPacket;
 import com.daqem.jobsplus.player.LeaderboardPlayer;
 import com.daqem.jobsplus.player.job.Job;
-import dev.architectury.networking.NetworkManager;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import dev.architectury.networking.NetworkManager;
 
 public class JobsScreenState {
 
     private final List<Job> jobs;
     private final List<Job> preformingJobs;
     private final List<Job> notPreformingJobs;
-    private final int coins;
+    private final double coins;
     private Job selectedJob;
     private RightTab selectedRightTab;
     private @Nullable IAction activeAction;
@@ -28,14 +29,14 @@ public class JobsScreenState {
     private LeaderboardPlayer viewingPlayer = null;
     private List<Job> viewingPlayerJobs = new ArrayList<>();
 
-    public JobsScreenState(List<Job> jobs, int coins) {
+    public JobsScreenState(List<Job> jobs, double coins) {
         this(jobs, coins, null, RightTab.EXPERIENCE);
     }
 
-    public JobsScreenState(List<Job> jobs, int coins, Job selectedJob, RightTab selectedRightTab) {
+    public JobsScreenState(List<Job> jobs, double coins, Job selectedJob, RightTab selectedRightTab) {
         this.jobs = jobs.stream()
                 .sorted(Comparator.comparing(Job::getLevel).reversed()
-                        .thenComparingInt(job -> -job.getExperience())
+                        .thenComparingDouble(job -> -job.getExperience())
                         .thenComparing(job -> job.getJobInstance().getName().getString()))
                 .toList();
         this.preformingJobs = this.jobs.stream().filter(job -> job.getLevel() > 0).toList();
@@ -58,7 +59,7 @@ public class JobsScreenState {
         return notPreformingJobs;
     }
 
-    public int getCoins() {
+    public double getCoins() {
         return coins;
     }
 

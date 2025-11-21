@@ -1,5 +1,11 @@
 package com.daqem.jobsplus.event.triggers;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import com.daqem.arc.api.action.data.ActionDataBuilder;
 import com.daqem.arc.api.player.ArcPlayer;
 import com.daqem.itemrestrictions.data.ItemRestriction;
@@ -12,16 +18,11 @@ import com.daqem.jobsplus.networking.s2c.ClientboundLevelUpJobPacket;
 import com.daqem.jobsplus.networking.s2c.ClientboundUnlockItemRestrictionPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
+
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class JobEvents {
 
@@ -72,7 +73,7 @@ public class JobEvents {
         }
     }
 
-    public static void onJobExperience(JobsPlayer player, Job job, int experience) {
+    public static void onJobExperience(JobsPlayer player, Job job, double experience) {
         if (player instanceof ArcPlayer arcPlayer) {
             new ActionDataBuilder(arcPlayer, JobsPlusActionType.JOB_EXP)
                     .withData(JobsPlusActionDataType.JOB_EXP, experience)

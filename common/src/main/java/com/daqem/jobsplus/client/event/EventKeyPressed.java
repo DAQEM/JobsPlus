@@ -3,8 +3,11 @@ package com.daqem.jobsplus.client.event;
 import com.daqem.jobsplus.client.JobsPlusClient;
 import com.daqem.jobsplus.client.gui.jobs.JobsScreen;
 import com.daqem.jobsplus.networking.c2s.ServerboundOpenJobsScreenPacket;
+import com.daqem.yamlconfig.event.PlayerJoinEvent;
 import dev.architectury.event.EventResult;
+import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
+import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.client.gui.screens.Screen;
 

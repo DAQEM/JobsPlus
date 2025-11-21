@@ -3,6 +3,7 @@ package com.daqem.jobsplus.client.gui.jobs.components;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
 import com.daqem.jobsplus.client.gui.jobs.widgets.StartJobButtonWidget;
+import com.daqem.jobsplus.client.gui.jobs.widgets.ToggleJobStatusBarWidget;
 import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.player.job.Job;
@@ -22,6 +23,7 @@ public class SelectedJobComponent extends EmptyComponent {
     private final TruncatedTextComponent jobTitleComponent;
     private final ItemComponent jobIconComponent;
     private final StartJobButtonWidget startJobButtonWidget;
+    private final ToggleJobStatusBarWidget toggleJobStatusBarWidget;
 
     public SelectedJobComponent(JobsScreenState state) {
         super(21, 20, 117, 34);
@@ -29,6 +31,7 @@ public class SelectedJobComponent extends EmptyComponent {
         this.jobTitleComponent = new TruncatedTextComponent(26, 0, 90, Component.empty(), 0);
         this.jobIconComponent = new ItemComponent(4, 4, ItemStack.EMPTY);
         this.startJobButtonWidget = new StartJobButtonWidget(this.state);
+        this.toggleJobStatusBarWidget = new ToggleJobStatusBarWidget(this.state);
 
         SpriteComponent jobIconSlotComponent = new SpriteComponent(0, 0, 24, 24, JobsPlus.getId("jobs/job_icon_slot"));
         SpriteComponent separatorComponent = new SpriteComponent(0, 27, 113, 7, JobsPlus.getId("jobs/separator_line"));
@@ -39,6 +42,9 @@ public class SelectedJobComponent extends EmptyComponent {
         this.addComponent(this.jobIconComponent);
         if (this.state.getSelectedJob().getLevel() == 0 && canStartNewJob()) {
             this.addWidget(this.startJobButtonWidget);
+        }
+        if (this.state.getSelectedJob().getLevel() > 0) {
+            this.addWidget(this.toggleJobStatusBarWidget);
         }
     }
 
@@ -56,16 +62,20 @@ public class SelectedJobComponent extends EmptyComponent {
             guiGraphics.pose().translate(getTotalX() + 26, getTotalY() + Minecraft.getInstance().font.lineHeight);
             guiGraphics.pose().scale(0.75f, 0.75f);
             guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.level", selectedJob.getLevel()), 0, 0, 0xFF1E1410, false);
-            guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.experience", selectedJob.getExperience(), selectedJob.getExperienceForNextLevel()), 0, Minecraft.getInstance().font.lineHeight, 0xFF1E1410, false);
+            guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.experience", JobsPlus.formatExp(selectedJob.getExperience()), JobsPlus.formatExp(selectedJob.getExperienceForNextLevel())), 0, Minecraft.getInstance().font.lineHeight, 0xFF1E1410, false);
             guiGraphics.pose().popMatrix();
 
             this.removeWidget(this.startJobButtonWidget);
+            if (!this.getWidgets().contains(this.toggleJobStatusBarWidget)) {
+                this.addWidget(this.toggleJobStatusBarWidget);
+                this.updateParentPosition(getParentX(), getParentY(), parentWidth, parentHeight);
+            }
         } else {
             guiGraphics.pose().pushMatrix();
             guiGraphics.pose().translate(getTotalX() + 26, getTotalY() + Minecraft.getInstance().font.lineHeight);
             guiGraphics.pose().scale(0.75f, 0.75f);
             if (canStartNewJob()) {
-                guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.price", jobInstance.getPrice()), 0, 0, 0xFF1E1410, false);
+                guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.price", JobsPlus.formatCoin(jobInstance.getPrice())), 0, 0, 0xFF1E1410, false);
             } else {
                 guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.max_jobs", JobsPlusConfig.maxJobs.get()), 0, 0, 0xFFFF5555, false);
             }
@@ -78,6 +88,7 @@ public class SelectedJobComponent extends EmptyComponent {
                     this.updateParentPosition(getParentX(), getParentY(), parentWidth, parentHeight);
                 }
             }
+            this.removeWidget(this.toggleJobStatusBarWidget);
         }
 
         super.render(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);

@@ -1,11 +1,12 @@
 package com.daqem.jobsplus.player;
 
+import java.util.UUID;
+
 import com.mojang.serialization.Dynamic;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-
-import java.util.UUID;
 
 public class LeaderboardPlayer {
 
@@ -13,7 +14,7 @@ public class LeaderboardPlayer {
     private final ResourceLocation jobLocation;
     private String playerName;
     private int level;
-    private int experience;
+    private double experience;
 
     private int rank;
 
@@ -26,7 +27,7 @@ public class LeaderboardPlayer {
         this.rank = -1;
     }
 
-    public LeaderboardPlayer(UUID uuid, ResourceLocation jobLocation, String playerName, int level, int experience) {
+    public LeaderboardPlayer(UUID uuid, ResourceLocation jobLocation, String playerName, int level, double experience) {
         this.uuid = uuid;
         this.jobLocation = jobLocation;
         this.playerName = playerName;
@@ -63,11 +64,11 @@ public class LeaderboardPlayer {
         this.level = level;
     }
 
-    public int getExperience() {
+    public double getExperience() {
         return experience;
     }
 
-    public void setExperience(int experience) {
+    public void setExperience(double experience) {
         this.experience = experience;
     }
 
@@ -81,7 +82,7 @@ public class LeaderboardPlayer {
         tag.putString("name", this.playerName);
         tag.putString("job", this.jobLocation.toString());
         tag.putInt("level", this.level);
-        tag.putInt("experience", this.experience);
+        tag.putDouble("experience", this.experience);
         return tag;
     }
 
@@ -91,7 +92,7 @@ public class LeaderboardPlayer {
                 dynamic.get("job").asString().map(ResourceLocation::parse).getOrThrow(),
                 dynamic.get("name").asString().getOrThrow(),
                 dynamic.get("level").asInt(0),
-                dynamic.get("experience").asInt(0)
+                dynamic.get("experience").asDouble(0)
         );
     }
 
@@ -101,7 +102,7 @@ public class LeaderboardPlayer {
                 friendlyByteBuf.readResourceLocation(),
                 friendlyByteBuf.readUtf(),
                 friendlyByteBuf.readVarInt(),
-                friendlyByteBuf.readVarInt()
+                friendlyByteBuf.readDouble()
         );
         player.setRank(friendlyByteBuf.readVarInt());
         return player;
@@ -112,7 +113,7 @@ public class LeaderboardPlayer {
         buf.writeResourceLocation(this.jobLocation);
         buf.writeUtf(this.playerName);
         buf.writeVarInt(this.level);
-        buf.writeVarInt(this.experience);
+        buf.writeDouble(this.experience);
         buf.writeVarInt(this.rank);
     }
 }

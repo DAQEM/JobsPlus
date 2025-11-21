@@ -1,5 +1,18 @@
 package com.daqem.jobsplus.mixin;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.arc.api.player.ArcPlayer;
 import com.daqem.arc.api.player.ArcServerPlayer;
@@ -16,6 +29,7 @@ import com.daqem.jobsplus.player.job.exp.ExpCollector;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.mojang.authlib.GameProfile;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -27,18 +41,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Mixin(ServerPlayer.class)
 public abstract class MixinServerPlayer extends Player implements JobsServerPlayer {
@@ -46,7 +48,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     @Unique
     private List<Job> jobsplus$jobs = new ArrayList<>();
     @Unique
-    private int jobsplus$coins = 0;
+    private double jobsplus$coins = 0;
 
     public MixinServerPlayer(Level level, GameProfile gameProfile) {
         super(level, gameProfile);
@@ -136,17 +138,17 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     }
 
     @Override
-    public int jobsplus$getCoins() {
+    public double jobsplus$getCoins() {
         return jobsplus$coins;
     }
 
     @Override
-    public void jobsplus$addCoins(int coins) {
-        this.jobsplus$setCoins(Mth.clamp(this.jobsplus$coins + coins, 0, Integer.MAX_VALUE));
+    public void jobsplus$addCoins(double coins) {
+        this.jobsplus$setCoins(Mth.clamp(this.jobsplus$coins + coins, 0, Double.MAX_VALUE));
     }
 
     @Override
-    public void jobsplus$setCoins(int coins) {
+    public void jobsplus$setCoins(double coins) {
         this.jobsplus$coins = coins;
     }
 
@@ -236,10 +238,10 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     public void tickTail(CallbackInfo ci) {
         jobsplus$jobs.forEach((job) -> {
             ExpCollector expCollector = job.getExpCollector();
-            int exp = expCollector.getExp();
+            double exp = expCollector.getExp();
             if (exp > 0) {
                 JobInstance jobInstance = job.getJobInstance();
-                MutableComponent component = JobsPlus.translatable("job.exp.gain", exp, jobInstance.getName().getString()).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(jobInstance.getColorDecimal()))).withStyle(ChatFormatting.BOLD);
+                MutableComponent component = JobsPlus.translatable("job.exp.gain", JobsPlus.formatExp(exp), jobInstance.getName().getString()).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(jobInstance.getColorDecimal()))).withStyle(ChatFormatting.BOLD);
                 jobsplus$getServerPlayer().sendSystemMessage(component, true);
             }
             expCollector.clear();

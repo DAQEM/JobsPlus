@@ -13,7 +13,7 @@ public class CoinsComponent extends SpriteComponent {
     public CoinsComponent(JobsScreenState state) {
         super(0, 27, 0, 16, JobsPlus.getId("jobs/tab_coins"));
 
-        MutableComponent coinsText = JobsPlus.literal(state.getCoins() + "");
+        MutableComponent coinsText = JobsPlus.literal(JobsPlus.formatCoin(state.getCoins()));
         int coinsTextWidth = Minecraft.getInstance().font.width(coinsText);
 
         this.setX(-coinsTextWidth + 2);

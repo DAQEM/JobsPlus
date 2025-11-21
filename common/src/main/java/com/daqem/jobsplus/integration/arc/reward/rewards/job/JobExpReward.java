@@ -16,10 +16,10 @@ import net.minecraft.util.GsonHelper;
 
 public class JobExpReward extends AbstractReward {
 
-    private final int min;
-    private final int max;
+    private final double min;
+    private final double max;
 
-    public JobExpReward(double chance, int priority, int min, int max) {
+    public JobExpReward(double chance, int priority, double min, double max) {
         super(chance, priority);
         this.min = min;
         this.max = max;
@@ -43,7 +43,7 @@ public class JobExpReward extends AbstractReward {
             if (actionData.getPlayer() instanceof JobsServerPlayer jobsServerPlayer) {
                 Job job = jobsServerPlayer.jobsplus$getJob(jobInstance);
                 if (job != null) {
-                    int exp = actionData.getPlayer().arc$getPlayer().getRandom().nextInt(min, max + 1);
+                    double exp = min + (max - min) * actionData.getPlayer().arc$getPlayer().getRandom().nextDouble();
                     job.addExperience(exp);
                 }
             }
@@ -56,11 +56,11 @@ public class JobExpReward extends AbstractReward {
         return this.getDescription(this.min, this.max);
     }
 
-    public int getMin() {
+    public double getMin() {
         return min;
     }
 
-    public int getMax() {
+    public double getMax() {
         return max;
     }
 
@@ -70,8 +70,8 @@ public class JobExpReward extends AbstractReward {
             return new JobExpReward(
                     chance,
                     priority,
-                    GsonHelper.getAsInt(jsonObject, "min"),
-                    GsonHelper.getAsInt(jsonObject, "max"));
+                    GsonHelper.getAsDouble(jsonObject, "min"),
+                    GsonHelper.getAsDouble(jsonObject, "max"));
         }
 
         @Override
@@ -79,15 +79,15 @@ public class JobExpReward extends AbstractReward {
             return new JobExpReward(
                     chance,
                     priority,
-                    friendlyByteBuf.readInt(),
-                    friendlyByteBuf.readInt());
+                    friendlyByteBuf.readDouble(),
+                    friendlyByteBuf.readDouble());
         }
 
         @Override
         public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobExpReward type) {
             IRewardSerializer.super.toNetwork(friendlyByteBuf, type);
-            friendlyByteBuf.writeInt(type.min);
-            friendlyByteBuf.writeInt(type.max);
+            friendlyByteBuf.writeDouble(type.min);
+            friendlyByteBuf.writeDouble(type.max);
         }
     }
 }

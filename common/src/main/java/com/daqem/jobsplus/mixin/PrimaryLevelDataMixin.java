@@ -1,19 +1,12 @@
 package com.daqem.jobsplus.mixin;
 
-import com.daqem.jobsplus.level.JobsPlusLevelData;
-import com.daqem.jobsplus.player.LeaderboardPlayer;
-import com.daqem.jobsplus.player.job.Job;
-import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.Lifecycle;
-import com.mojang.serialization.OptionalDynamic;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.LevelSettings;
-import net.minecraft.world.level.levelgen.WorldOptions;
-import net.minecraft.world.level.storage.PrimaryLevelData;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,8 +15,21 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.daqem.jobsplus.level.JobsPlusLevelData;
+import com.daqem.jobsplus.player.LeaderboardPlayer;
+import com.daqem.jobsplus.player.job.Job;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.Lifecycle;
+import com.mojang.serialization.OptionalDynamic;
+
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.LevelSettings;
+import net.minecraft.world.level.levelgen.WorldOptions;
+import net.minecraft.world.level.storage.PrimaryLevelData;
 
 @Mixin(PrimaryLevelData.class)
 public class PrimaryLevelDataMixin implements JobsPlusLevelData {
@@ -84,7 +90,7 @@ public class PrimaryLevelDataMixin implements JobsPlusLevelData {
                 .stream()
                 .filter(entry -> entry.containsKey(jobLocation))
                 .map(entry -> entry.get(jobLocation))
-                .sorted(Comparator.comparing(LeaderboardPlayer::getLevel).thenComparing(LeaderboardPlayer::getExperience).reversed())
+                .sorted(Comparator.comparingInt(LeaderboardPlayer::getLevel).thenComparingDouble(LeaderboardPlayer::getExperience).reversed())
                 .limit(100)
                 .peek(player -> player.setRank(rank.getAndIncrement()))
                 .toList();

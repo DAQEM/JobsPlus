@@ -7,18 +7,20 @@ import com.daqem.arc.api.reward.AbstractReward;
 import com.daqem.arc.api.reward.IRewardSerializer;
 import com.daqem.arc.api.reward.IRewardType;
 import com.daqem.arc.data.ActionData;
+import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.integration.arc.reward.type.JobsPlusRewardType;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.google.gson.JsonObject;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
 
 public class JobCoinReward extends AbstractReward {
 
-    private final int amount;
+    private final double amount;
 
-    public JobCoinReward(double chance, int priority, int amount) {
+    public JobCoinReward(double chance, int priority, double amount) {
         super(chance, priority);
         this.amount = amount;
     }
@@ -39,7 +41,7 @@ public class JobCoinReward extends AbstractReward {
 
     @Override
     public Component getDescription() {
-        return this.getDescription(this.amount);
+        return this.getDescription(JobsPlus.formatCoin(this.amount));
     }
 
     public static class Serializer implements IRewardSerializer<JobCoinReward> {
@@ -49,7 +51,7 @@ public class JobCoinReward extends AbstractReward {
             return new JobCoinReward(
                     chance,
                     priority,
-                    GsonHelper.getAsInt(jsonObject, "amount"));
+                    GsonHelper.getAsDouble(jsonObject, "amount"));
         }
 
         @Override
@@ -57,13 +59,13 @@ public class JobCoinReward extends AbstractReward {
             return new JobCoinReward(
                     chance,
                     priority,
-                    friendlyByteBuf.readInt());
+                    friendlyByteBuf.readDouble());
         }
 
         @Override
         public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobCoinReward type) {
             IRewardSerializer.super.toNetwork(friendlyByteBuf, type);
-            friendlyByteBuf.writeInt(type.amount);
+            friendlyByteBuf.writeDouble(type.amount);
         }
     }
 }

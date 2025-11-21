@@ -2,9 +2,9 @@ package com.daqem.jobsplus.client.gui.jobs.components.leaderboard;
 
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
-import com.daqem.jobsplus.player.job.Job;
 import com.daqem.uilib.gui.component.AbstractComponent;
 import com.daqem.uilib.gui.component.sprite.SpriteComponent;
+
 import net.minecraft.client.gui.GuiGraphics;
 
 public class LeaderboardComponent extends AbstractComponent {

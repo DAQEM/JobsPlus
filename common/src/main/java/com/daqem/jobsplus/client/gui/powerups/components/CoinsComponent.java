@@ -4,6 +4,7 @@ import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.gui.powerups.PowerupsScreenState;
 import com.daqem.uilib.gui.component.sprite.SpriteComponent;
 import com.daqem.uilib.gui.component.text.TextComponent;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.MutableComponent;
@@ -11,14 +12,14 @@ import net.minecraft.network.chat.MutableComponent;
 public class CoinsComponent extends SpriteComponent {
 
     private final PowerupsScreenState state;
-    private int cachedCoins;
+    private double cachedCoins;
 
     public CoinsComponent(PowerupsScreenState state) {
         super(0, 24, 0, 15, JobsPlus.getId("powerups/coins_background"));
         this.state = state;
         this.cachedCoins = state.getCoins();
 
-        MutableComponent coinsText = JobsPlus.literal(this.cachedCoins + "");
+        MutableComponent coinsText = JobsPlus.literal(JobsPlus.formatCoin(this.cachedCoins));
         int coinsTextWidth = Minecraft.getInstance().font.width(coinsText);
         TextComponent coinsTextComponent = new TextComponent(6, 4, coinsText, 0xFFEAF0FF);
         SpriteComponent coinIcon = new SpriteComponent(6 + coinsTextWidth + 2, 4, 7, 8, JobsPlus.getId("jobs/coins"));

@@ -5,9 +5,9 @@ import com.daqem.jobsplus.player.job.Job;
 public class PowerupsScreenState {
 
     private final Job job;
-    private int coins;
+    private double coins;
 
-    public PowerupsScreenState(Job job, int coins) {
+    public PowerupsScreenState(Job job, double coins) {
         this.job = job;
         this.coins = coins;
     }
@@ -16,11 +16,11 @@ public class PowerupsScreenState {
         return job;
     }
 
-    public int getCoins() {
+    public double getCoins() {
         return coins;
     }
 
-    public void setCoins(int coins) {
+    public void setCoins(double coins) {
         this.coins = coins;
     }
 }

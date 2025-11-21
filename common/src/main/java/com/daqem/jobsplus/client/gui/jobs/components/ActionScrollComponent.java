@@ -61,7 +61,7 @@ public class ActionScrollComponent extends EmptyComponent {
     private List<IAction> getSortedActions(JobsScreenState state) {
         return state.getSelectedJob().getJobInstance().getActions().stream()
                 .filter(action -> action.getRewards().stream().anyMatch(reward -> reward instanceof JobExpReward))
-                .sorted(Comparator.comparing(o -> {
+                .sorted(Comparator.comparingDouble(o -> {
                     JobExpReward jobExpReward = o.getRewards().stream()
                             .filter(reward -> reward instanceof JobExpReward)
                             .map(reward -> (JobExpReward) reward)

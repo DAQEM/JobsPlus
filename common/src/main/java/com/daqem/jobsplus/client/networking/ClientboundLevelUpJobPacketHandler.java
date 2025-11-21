@@ -1,6 +1,7 @@
 package com.daqem.jobsplus.client.networking;
 
 import com.daqem.jobsplus.client.toast.LevelUpJobToast;
+import com.daqem.jobsplus.config.JobsPlusClientConfig;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.networking.s2c.ClientboundLevelUpJobPacket;
 import dev.architectury.networking.NetworkManager;
@@ -11,6 +12,8 @@ public class ClientboundLevelUpJobPacketHandler {
     public static void handleClientSide(ClientboundLevelUpJobPacket packet, NetworkManager.PacketContext context) {
         JobInstance jobInstance = JobInstance.of(packet.getJobLocation());
         if (jobInstance == null) return;
-        LevelUpJobToast.addOrUpdate(Minecraft.getInstance().getToastManager(), jobInstance, packet.getLevel());
+        if (JobsPlusClientConfig.showYourLevelUpChatMessages.get()) {
+            LevelUpJobToast.addOrUpdate(Minecraft.getInstance().getToastManager(), jobInstance, packet.getLevel());
+        }
     }
 }

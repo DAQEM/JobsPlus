@@ -1,13 +1,15 @@
 package com.daqem.jobsplus.player;
 
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.player.job.Job;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public interface JobsPlayer {
 
@@ -28,11 +30,11 @@ public interface JobsPlayer {
 
     Job jobsplus$getJob(ResourceLocation jobLocation);
 
-    int jobsplus$getCoins();
+    double jobsplus$getCoins();
 
-    void jobsplus$addCoins(int coins);
+    void jobsplus$addCoins(double coins);
 
-    void jobsplus$setCoins(int coins);
+    void jobsplus$setCoins(double coins);
 
     String jobsplus$getName();
 

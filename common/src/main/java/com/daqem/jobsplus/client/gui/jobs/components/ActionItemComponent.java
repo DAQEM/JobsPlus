@@ -24,8 +24,8 @@ public class ActionItemComponent extends EmptyComponent {
                 .orElse(null);
         if (jobExpReward == null) return;
         Component experienceText = jobExpReward.getMin() == jobExpReward.getMax() ?
-                JobsPlus.translatable("gui.jobs.experience.reward", jobExpReward.getMin()) :
-                JobsPlus.translatable("gui.jobs.experience.reward.range", jobExpReward.getMin(), jobExpReward.getMax());
+                JobsPlus.translatable("gui.jobs.experience.reward", JobsPlus.formatExp(jobExpReward.getMin())) :
+                JobsPlus.translatable("gui.jobs.experience.reward.range", JobsPlus.formatExp(jobExpReward.getMin()), JobsPlus.formatExp(jobExpReward.getMax()));
         TruncatedTextComponent experienceComponent = new TruncatedTextComponent(0, nameComponent.getHeight(), getWidth(), experienceText, 0xFF1E1410);
 
         ConditionsComponent conditionsComponent = new ConditionsComponent(action.getConditions(), parentBounds);

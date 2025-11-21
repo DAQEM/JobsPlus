@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 
 public class JobInstance extends AbstractActionHolder {
 
-    private final int price;
+    private final double price;
     private final String color;
     private final ItemStack iconItem;
     private final boolean isDefault;
 
-    public JobInstance(ResourceLocation location, int price, String color, ItemStack iconItem, boolean isDefault) {
+    public JobInstance(ResourceLocation location, double price, String color, ItemStack iconItem, boolean isDefault) {
         super(location);
         this.price = price;
         this.color = color;
@@ -39,7 +39,7 @@ public class JobInstance extends AbstractActionHolder {
         this.isDefault = isDefault;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -125,7 +125,7 @@ public class JobInstance extends AbstractActionHolder {
         public JobInstance fromJson(JsonObject jsonObject, ResourceLocation resourceLocation) {
             return new JobInstance(
                     resourceLocation,
-                    GsonHelper.getAsInt(jsonObject, "price"),
+                    GsonHelper.getAsDouble(jsonObject, "price"),
                     GsonHelper.getAsString(jsonObject, "color"),
                     getItemStack(jsonObject, "icon"),
                     GsonHelper.getAsBoolean(jsonObject, "is_default", false));
@@ -134,7 +134,7 @@ public class JobInstance extends AbstractActionHolder {
         public JobInstance fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, ResourceLocation resourceLocation) {
             return new JobInstance(
                     friendlyByteBuf.readResourceLocation(),
-                    friendlyByteBuf.readVarInt(),
+                    friendlyByteBuf.readDouble(),
                     friendlyByteBuf.readUtf(),
                     ItemStack.STREAM_CODEC.decode(friendlyByteBuf),
                     friendlyByteBuf.readBoolean()
@@ -143,7 +143,7 @@ public class JobInstance extends AbstractActionHolder {
 
         public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobInstance jobInstance) {
             friendlyByteBuf.writeResourceLocation(jobInstance.location);
-            friendlyByteBuf.writeVarInt(jobInstance.price);
+            friendlyByteBuf.writeDouble(jobInstance.price);
             friendlyByteBuf.writeUtf(jobInstance.color);
             ItemStack.STREAM_CODEC.encode(friendlyByteBuf, jobInstance.iconItem);
             friendlyByteBuf.writeBoolean(jobInstance.isDefault);

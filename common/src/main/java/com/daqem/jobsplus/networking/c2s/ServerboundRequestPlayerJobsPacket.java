@@ -1,5 +1,14 @@
 package com.daqem.jobsplus.networking.c2s;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
@@ -7,15 +16,13 @@ import com.daqem.jobsplus.networking.s2c.ClientboundPlayerJobsPacket;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.LeaderboardPlayer;
 import com.daqem.jobsplus.player.job.Job;
+
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
 
 public class ServerboundRequestPlayerJobsPacket implements CustomPacketPayload {
 
@@ -64,7 +71,7 @@ public class ServerboundRequestPlayerJobsPacket implements CustomPacketPayload {
                             }
                     )
                     .filter(Objects::nonNull)
-                    .sorted(Comparator.comparingInt(Job::getLevel).thenComparingInt(Job::getExperience).reversed())
+                    .sorted(Comparator.comparingInt(Job::getLevel).thenComparingDouble(Job::getExperience).reversed())
                     .toList();
 
             NetworkManager.sendToPlayer((ServerPlayer) sender, new ClientboundPlayerJobsPacket(packet.playerUUID, jobs));

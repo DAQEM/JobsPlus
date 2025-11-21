@@ -1,17 +1,14 @@
 package com.daqem.jobsplus.player.job.exp;
 
-import com.daqem.jobsplus.JobsPlus;
-
 public class ExpCollector {
 
-    private int jobExp = 0;
+    private double jobExp = 0;
 
-    public void addExp(int exp) {
-        JobsPlus.debug("Adding {} experience to the job.", exp);
+    public void addExp(double exp) {
         jobExp += exp;
     }
 
-    public int getExp() {
+    public double getExp() {
         return jobExp;
     }
 

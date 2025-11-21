@@ -15,6 +15,7 @@ import com.daqem.jobsplus.integration.arc.reward.type.JobsPlusRewardType;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.JsonObject;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -54,9 +55,9 @@ public class JobExpMultiplierReward extends AbstractReward {
                 if (!job.getJobInstance().getLocation().equals(jobLocation)) return new ActionResult();
             }
             if (job != null) {
-                Integer exp = actionData.getData(JobsPlusActionDataType.JOB_EXP);
+                Double exp = actionData.getData(JobsPlusActionDataType.JOB_EXP);
                 if (exp != null) {
-                    int experience = (int) (exp * this.multiplier) - exp;
+                    double experience = (exp * this.multiplier) - exp;
                     job.addExperienceWithoutEvent(experience);
                 }
             }
