@@ -42,6 +42,8 @@ public interface JobsPlusNetworking {
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_player_jobs"));
     CustomPacketPayload.Type<ClientboundSyncJobPacket> CLIENTBOUND_SYNC_JOB =
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_sync_job"));
+    CustomPacketPayload.Type<ClientboundOpenHudEditorPacket> CLIENTBOUND_OPEN_HUD_EDITOR =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_open_hud_editor"));
 
     static void initClient() {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC, ClientboundOpenJobsScreenPacketHandler::handleClientSide);
@@ -51,6 +53,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_LEADERBOARD, ClientboundLeaderboardPacket.STREAM_CODEC, ClientboundLeaderboardPacketHandler::handleClientSide);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_PLAYER_JOBS, ClientboundPlayerJobsPacket.STREAM_CODEC, ClientboundPlayerJobsPacketHandler::handleClientSide);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_SYNC_JOB, ClientboundSyncJobPacket.STREAM_CODEC, ClientboundSyncJobPacketHandler::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_HUD_EDITOR, ClientboundOpenHudEditorPacket.STREAM_CODEC, ClientboundOpenHudEditorPacketHandler::handleClientSide);
     }
 
     static void initCommon() {
@@ -72,6 +75,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_LEADERBOARD, ClientboundLeaderboardPacket.STREAM_CODEC);
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_PLAYER_JOBS, ClientboundPlayerJobsPacket.STREAM_CODEC);
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_SYNC_JOB, ClientboundSyncJobPacket.STREAM_CODEC);
+        NetworkManager.registerS2CPayloadType(CLIENTBOUND_OPEN_HUD_EDITOR, ClientboundOpenHudEditorPacket.STREAM_CODEC);
     }
 
     static void init() {

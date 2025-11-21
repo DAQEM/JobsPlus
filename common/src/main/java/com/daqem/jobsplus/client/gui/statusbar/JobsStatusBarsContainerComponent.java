@@ -45,13 +45,13 @@ public class JobsStatusBarsContainerComponent extends EmptyComponent {
             // Update position based on alignment settings
             int x = switch (horizontalAlignment) {
                 case LEFT -> offsetX;
-                case CENTER -> (windowWidth - jobsStatusBarsComponent.getWidth()) / 2;
+                case CENTER -> (windowWidth - jobsStatusBarsComponent.getWidth()) / 2 + offsetX;
                 case RIGHT -> windowWidth - jobsStatusBarsComponent.getWidth() - offsetX;
             };
 
             int y = switch (verticalAlignment) {
                 case TOP -> offsetY;
-                case CENTER -> (windowHeight - jobsStatusBarsComponent.getHeight()) / 2;
+                case CENTER -> (windowHeight - jobsStatusBarsComponent.getHeight()) / 2 + offsetY;
                 case BOTTOM -> windowHeight - jobsStatusBarsComponent.getHeight() - 1 - offsetY;
             };
 
