@@ -30,6 +30,9 @@
   "jobsplus.gui.jobs.back": "Back",
   "jobsplus.gui.hud_editor.title": "HUD Editor",
   "jobsplus.gui.hud_editor.instructions": "Drag the box to move it. Press ESC to save and exit.",
+  "jobsplus.gui.jobs.job_status_bar.toggle.enabled": "Disable Job Status Bar",
+  "jobsplus.gui.jobs.job_status_bar.toggle.disabled": "Enable Job Status Bar",
+  "jobsplus.gui.jobs.job_status_bar.toggle.command": "Use '/jobsplus hub' to move it's position.",
 
   "jobsplus.command.does_not_have_job": "%s does not have job %s.",
   "jobsplus.command.arguments.enum.invalid": "Enum constant must be one of %s, found %s",

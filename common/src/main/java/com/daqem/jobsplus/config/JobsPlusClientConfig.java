@@ -40,18 +40,18 @@ public class JobsPlusClientConfig {
 
         builder.push("status_bar");
         jobStatusBarJobs = builder.defineStringList("jobs", List.of()).withComments("The job status bars to display. Use job IDs.");
-        jobStatusBarXOffset = builder.defineInteger("x_offset", 0).withComments("The x offset of the job status bars.");
-        jobStatusBarYOffset = builder.defineInteger("y_offset", 0).withComments("The y offset of the job status bars.");
+        jobStatusBarXOffset = builder.defineInteger("x_offset", 3).withComments("The x offset of the job status bars.");
+        jobStatusBarYOffset = builder.defineInteger("y_offset", 3).withComments("The y offset of the job status bars.");
         jobStatusBarHorizontalAlignment = builder.defineEnum("horizontal_alignment", JobStatusBarAlignmentHorizontal.RIGHT, JobStatusBarAlignmentHorizontal.class).withComments("The x alignment of the job status bars. Options: LEFT, CENTER, RIGHT");
         jobStatusBarVerticalAlignment = builder.defineEnum("vertical_alignment", JobStatusBarAlignmentVertical.BOTTOM, JobStatusBarAlignmentVertical.class).withComments("The y alignment of the job status bars. Options: TOP, CENTER, BOTTOM");
-        jobStatusBarColor = builder.defineLong("color", 0xFFE9CEADL, 0x00000000, 0xFFFFFFFFL).withComments("The color of the job status bars in decimal ARGB format.");
-        jobStatusBarEmptyColor = builder.defineLong("empty_color", 0xFFD8BF96L, 0x00000000, 0xFFFFFFFFL).withComments("The empty color of the job status bars in decimal ARGB format.");
-        jobStatusBarWidth = builder.defineInteger("width", 100).withComments("The width of the job status bars.");
-        jobStatusBarDetailed = builder.defineBoolean("detailed", false).withComments("If true, the job status bars will show detailed information.");
+        jobStatusBarColor = builder.defineLong("color", 0xaaffffffL, 0x00000000, 0xFFFFFFFFL).withComments("The color of the job status bars in decimal ARGB format.");
+        jobStatusBarEmptyColor = builder.defineLong("empty_color", 0xaaffffffL, 0x00000000, 0xFFFFFFFFL).withComments("The empty color of the job status bars in decimal ARGB format.");
+        jobStatusBarWidth = builder.defineInteger("width", 120).withComments("The width of the job status bars.");
+        jobStatusBarDetailed = builder.defineBoolean("detailed", true).withComments("If true, the job status bars will show detailed information.");
         builder.push("background");
         jobStatusBarBackgroundEnabled = builder.defineBoolean("enabled", true).withComments("If true, the job status bar background will be rendered.");
-        jobStatusBarBackgroundColor = builder.defineLong("color", 0x80000000L, 0x00000000, 0xFFFFFFFFL).withComments("The color of the job status bar background in decimal ARGB format.");
-        jobStatusBarBackgroundBorderColor = builder.defineLong("border_color", 0xFFFFFFFFL, 0x00000000, 0xFFFFFFFFL).withComments("The border color of the job status bar background in decimal ARGB format.");
+        jobStatusBarBackgroundColor = builder.defineLong("color", 0xaaaaaaaaL, 0x00000000, 0xFFFFFFFFL).withComments("The color of the job status bar background in decimal ARGB format.");
+        jobStatusBarBackgroundBorderColor = builder.defineLong("border_color", 0xaaffffffL, 0x00000000, 0xFFFFFFFFL).withComments("The border color of the job status bar background in decimal ARGB format.");
         builder.pop();
 
         builder.push("chat");

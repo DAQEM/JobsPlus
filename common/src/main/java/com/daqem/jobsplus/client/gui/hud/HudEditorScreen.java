@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
@@ -124,19 +125,17 @@ public class HudEditorScreen extends Screen {
         guiGraphics.hLine(0, this.width, centerY, snappedY ? 0xFF00FF00 : 0x40FFFFFF);
 
         // Instructions
-        guiGraphics.drawCenteredString(this.font, JobsPlus.translatable("gui.hud_editor.instructions"), centerX, 20, 0xFFFFFF);
+        MutableComponent instructions = JobsPlus.translatable("gui.hud_editor.instructions");
+        guiGraphics.drawString(this.font, instructions, centerX - font.width(instructions) / 2, 20, 0xFFFFFFFF, false);
 
-        // Debug Coords
-        int compCenterX = this.componentX + (this.statusBarsComponent != null ? this.statusBarsComponent.getWidth() / 2 : 0);
-        int compCenterY = this.componentY + (this.statusBarsComponent != null ? this.statusBarsComponent.getHeight() / 2 : 0);
-
-        // Optional: Show "Centered" text if snapped
+        // Show "Centered" text if snapped
         String statusText = "X: " + this.componentX + ", Y: " + this.componentY;
         if (snappedX && snappedY) statusText = "CENTERED";
         else if (snappedX) statusText += " (Centered X)";
         else if (snappedY) statusText += " (Centered Y)";
 
-        guiGraphics.drawCenteredString(this.font, Component.literal(statusText), centerX, 35, 0xAAAAAA);
+        MutableComponent status = Component.literal(statusText);
+        guiGraphics.drawString(this.font, status, centerX - font.width(status) / 2, 35, 0xFFAAAAAA, false);
 
         if (this.statusBarsComponent != null) {
             // Force position for rendering
