@@ -1,13 +1,16 @@
 package com.daqem.jobsplus.integration.arc.holder.holders.job;
 
 import java.io.BufferedReader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import com.daqem.arc.Arc;
 import com.daqem.yamlconfig.YamlConfigExpectPlatform;
 import dev.architectury.platform.Platform;
 import org.jetbrains.annotations.NotNull;
@@ -66,19 +69,29 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
         }
 
         try {
-            Path configDir = YamlConfigExpectPlatform.getConfigDirectory().resolve("jobsplus/jobs");
-            if (!java.nio.file.Files.exists(configDir)) {
-                java.nio.file.Files.createDirectories(configDir);
+            Path configDir = YamlConfigExpectPlatform.getConfigDirectory().resolve(JobsPlus.MOD_ID).resolve("jobs");
+            if (!Files.exists(configDir)) {
+                Files.createDirectories(configDir);
             }
-            try (java.util.stream.Stream<java.nio.file.Path> paths = java.nio.file.Files.walk(configDir)) {
+            try (Stream<Path> paths = Files.walk(configDir)) {
                 paths.filter(path -> path.toString().endsWith(".json"))
                         .forEach(path -> {
-                            try (BufferedReader reader = java.nio.file.Files.newBufferedReader(path)) {
+                            try (BufferedReader reader = Files.newBufferedReader(path)) {
                                 JsonObject jsonElement = GsonHelper.parse(reader);
                                 String relativePath = configDir.relativize(path).toString();
                                 relativePath = relativePath.replace("\\", "/");
                                 relativePath = relativePath.substring(0, relativePath.length() - ".json".length());
-                                ResourceLocation location = ResourceLocation.fromNamespaceAndPath(JobsPlus.MOD_ID, relativePath);
+                                String namespace;
+                                String resourcePath;
+                                int firstSlashIndex = relativePath.indexOf('/');
+                                if (firstSlashIndex > 0) {
+                                    namespace = relativePath.substring(0, firstSlashIndex);
+                                    resourcePath = relativePath.substring(firstSlashIndex + 1);
+                                } else {
+                                    namespace = JobsPlus.MOD_ID;
+                                    resourcePath = relativePath;
+                                }
+                                ResourceLocation location = ResourceLocation.fromNamespaceAndPath(namespace, resourcePath);
                                 map.put(location, jsonElement);
                             } catch (Exception e) {
                                 JobsPlus.LOGGER.error("Parsing error loading job from config {}", path, e);

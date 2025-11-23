@@ -5,14 +5,11 @@ import com.daqem.jobsplus.player.job.JobLevelCalculator;
 import com.daqem.yamlconfig.YamlConfigExpectPlatform;
 import com.daqem.yamlconfig.api.config.ConfigExtension;
 import com.daqem.yamlconfig.api.config.ConfigType;
-import com.daqem.yamlconfig.api.config.IConfig;
 import com.daqem.yamlconfig.api.config.IConfigBuilder;
 import com.daqem.yamlconfig.api.config.entry.IConfigEntry;
 import com.daqem.yamlconfig.event.ConfigEvent;
 import com.daqem.yamlconfig.impl.config.ConfigBuilder;
-import com.ibm.icu.impl.ICULocaleService;
 
-import java.nio.file.Path;
 import java.util.List;
 
 public class JobsPlusConfig {
@@ -22,6 +19,8 @@ public class JobsPlusConfig {
     public static final IConfigEntry<Integer> maxJobs;
     public static final IConfigEntry<List<String>> excludedJobs;
     public static final IConfigEntry<String> experienceFormula;
+
+    public static final IConfigEntry<List<String>> excludedPowerups;
 
     public static final IConfigEntry<Integer> coinsPerLevelUp;
 
@@ -42,6 +41,9 @@ public class JobsPlusConfig {
                         "Available variables: 'level'",
                         "Supported operators: +, -, *, /, ^, (, )"
                 );
+        builder.push("powerups");
+        excludedPowerups = builder.defineStringList("excluded_powerups", List.of()).withComments("A list of powerup IDs to exclude from the game. Example: ['jobsplus:miner/double_drops_iii', 'jobsplus:digger/shovel_efficiency_v']");
+        builder.pop();
         builder.push("coins");
         coinsPerLevelUp = builder.defineInteger("coins_per_level_up", 1, 0, 1000).withComments("the amount of coins a player gets when they level up a job");
         builder.pop();
