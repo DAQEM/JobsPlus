@@ -84,6 +84,5 @@ public class JobsPlusConfig {
     }
 
     public static void init() {
-        JobLevelCalculator.resetCache();
     }
 }
