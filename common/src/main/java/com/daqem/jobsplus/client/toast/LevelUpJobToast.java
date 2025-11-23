@@ -68,8 +68,6 @@ public class LevelUpJobToast implements Toast {
             levelUpJobToast = new LevelUpJobToast();
             toastManager.addToast(levelUpJobToast);
         }
-
-        ContextMap contextMap = SlotDisplayContext.fromLevel(Objects.requireNonNull(toastManager.getMinecraft().level));
         levelUpJobToast.addItem(jobInstance, level);
     }
 

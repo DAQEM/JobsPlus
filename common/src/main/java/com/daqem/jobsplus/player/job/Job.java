@@ -1,6 +1,7 @@
 package com.daqem.jobsplus.player.job;
 
 import com.daqem.jobsplus.Constants;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.event.triggers.JobEvents;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
@@ -75,7 +76,7 @@ public class Job {
     }
 
     public void setLevel(int level) {
-        this.level = level;
+        this.level = Math.clamp(level, 0, JobsPlusConfig.maxLevel.get());
         if (player instanceof JobsServerPlayer serverPlayer) {
             serverPlayer.jobsplus$getLevelData().jobsplus$updatePlayerEntry(serverPlayer.jobsplus$getPlayer(), this);
             NetworkManager.sendToPlayer(serverPlayer.jobsplus$getServerPlayer(), new ClientboundSyncJobPacket(
@@ -99,6 +100,11 @@ public class Job {
     }
 
     public void setExperience(double experience, boolean triggerEvent, boolean triggerLevelUpCheck) {
+        if (level >= JobsPlusConfig.maxLevel.get()) {
+            this.experience = 0;
+            return;
+        }
+        experience *= JobsPlusConfig.experienceMultiplier.get();
         double change = experience - this.experience;
         expCollector.addExp(change);
         this.experience = experience;

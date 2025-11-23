@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.daqem.jobsplus.config.JobsPlusConfig;
+import net.minecraft.world.damagesource.DamageSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -246,5 +248,13 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
             }
             expCollector.clear();
         });
+    }
+
+    @Inject(at = @At("HEAD"), method = "die")
+    public void dieHead(DamageSource damageSource, CallbackInfo ci) {
+        if (JobsPlusConfig.loseExpOnDeath.get()) {
+            Double percentLoss = JobsPlusConfig.expLossPercentage.get();
+            jobsplus$jobs.forEach(job -> job.setExperience(job.getExperience() * (1.0 - percentLoss)));
+        }
     }
 }

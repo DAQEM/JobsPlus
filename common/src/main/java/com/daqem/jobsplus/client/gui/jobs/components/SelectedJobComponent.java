@@ -57,12 +57,17 @@ public class SelectedJobComponent extends EmptyComponent {
         this.jobTitleComponent.setColor(jobInstance.getColorDecimal() | 0xFF000000);
         this.jobIconComponent.setItemStack(jobInstance.getIconItem());
 
-        if (selectedJob.getLevel() > 0) {
+        int level = selectedJob.getLevel();
+        if (level > 0) {
             guiGraphics.pose().pushMatrix();
             guiGraphics.pose().translate(getTotalX() + 26, getTotalY() + Minecraft.getInstance().font.lineHeight);
             guiGraphics.pose().scale(0.75f, 0.75f);
-            guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.level", selectedJob.getLevel()), 0, 0, 0xFF1E1410, false);
-            guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.experience", JobsPlus.formatExp(selectedJob.getExperience()), JobsPlus.formatExp(selectedJob.getExperienceForNextLevel())), 0, Minecraft.getInstance().font.lineHeight, 0xFF1E1410, false);
+            guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.level", level), 0, 0, 0xFF1E1410, false);
+            if (level < JobsPlusConfig.maxLevel.get()) {
+                guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.experience", JobsPlus.formatExp(selectedJob.getExperience()), JobsPlus.formatExp(selectedJob.getExperienceForNextLevel())), 0, Minecraft.getInstance().font.lineHeight, 0xFF1E1410, false);
+            } else {
+                guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.max_level").withColor(jobInstance.getColorDecimal() | 0xFF000000), 0, Minecraft.getInstance().font.lineHeight, 0xFF1E1410, false);
+            }
             guiGraphics.pose().popMatrix();
 
             this.removeWidget(this.startJobButtonWidget);

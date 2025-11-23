@@ -5,6 +5,7 @@ import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.command.arguments.EnumArgument;
 import com.daqem.jobsplus.command.arguments.JobArgument;
 import com.daqem.jobsplus.command.arguments.PowerupArgument;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.player.JobsServerPlayer;
@@ -183,6 +184,12 @@ public class JobCommand {
                     source.sendFailure(JobsPlus.translatable(
                             "command.set.level.does_not_have_job"));
                 }
+                return 0;
+            }
+
+            if (level > JobsPlusConfig.maxLevel.get()) {
+                source.sendFailure(JobsPlus.translatable(
+                        "command.set.level.exceeds_max_level", JobsPlusConfig.maxLevel.get()));
                 return 0;
             }
 

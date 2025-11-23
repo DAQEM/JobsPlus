@@ -1,5 +1,6 @@
 package com.daqem.jobsplus.client;
 
+import com.daqem.jobsplus.client.event.EventItemTooltip;
 import com.daqem.jobsplus.client.event.EventPlayerJoin;
 import com.daqem.jobsplus.client.event.EventRenderHud;
 import org.lwjgl.glfw.GLFW;
@@ -25,5 +26,6 @@ public class JobsPlusClient {
         EventKeyPressed.registerEvent();
         EventRenderHud.registerEvent();
         EventPlayerJoin.registerEvent();
+        EventItemTooltip.registerEvent();
     }
 }

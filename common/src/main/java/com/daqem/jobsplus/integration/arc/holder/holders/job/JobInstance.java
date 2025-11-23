@@ -7,6 +7,7 @@ import com.daqem.arc.data.ActionHolderManager;
 import com.daqem.itemrestrictions.data.ItemRestriction;
 import com.daqem.itemrestrictions.data.ItemRestrictionManager;
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.condition.conditions.job.IJobCondition;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
@@ -15,6 +16,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,18 +31,16 @@ public class JobInstance extends AbstractActionHolder {
     private final double price;
     private final String color;
     private final ItemStack iconItem;
-    private final boolean isDefault;
 
-    public JobInstance(ResourceLocation location, double price, String color, ItemStack iconItem, boolean isDefault) {
+    public JobInstance(ResourceLocation location, double price, String color, ItemStack iconItem) {
         super(location);
         this.price = price;
         this.color = color;
         this.iconItem = iconItem;
-        this.isDefault = isDefault;
     }
 
     public double getPrice() {
-        return price;
+        return Mth.floor(price * JobsPlusConfig.jobPriceMultiplier.get());
     }
 
     public MutableComponent getName() {
@@ -64,10 +64,6 @@ public class JobInstance extends AbstractActionHolder {
 
     public ItemStack getIconItem() {
         return iconItem;
-    }
-
-    public boolean isDefault() {
-        return isDefault;
     }
 
     /**
@@ -127,8 +123,7 @@ public class JobInstance extends AbstractActionHolder {
                     resourceLocation,
                     GsonHelper.getAsDouble(jsonObject, "price"),
                     GsonHelper.getAsString(jsonObject, "color"),
-                    getItemStack(jsonObject, "icon"),
-                    GsonHelper.getAsBoolean(jsonObject, "is_default", false));
+                    getItemStack(jsonObject, "icon"));
         }
 
         public JobInstance fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, ResourceLocation resourceLocation) {
@@ -136,8 +131,7 @@ public class JobInstance extends AbstractActionHolder {
                     friendlyByteBuf.readResourceLocation(),
                     friendlyByteBuf.readDouble(),
                     friendlyByteBuf.readUtf(),
-                    ItemStack.STREAM_CODEC.decode(friendlyByteBuf),
-                    friendlyByteBuf.readBoolean()
+                    ItemStack.STREAM_CODEC.decode(friendlyByteBuf)
             );
         }
 
@@ -146,7 +140,6 @@ public class JobInstance extends AbstractActionHolder {
             friendlyByteBuf.writeDouble(jobInstance.price);
             friendlyByteBuf.writeUtf(jobInstance.color);
             ItemStack.STREAM_CODEC.encode(friendlyByteBuf, jobInstance.iconItem);
-            friendlyByteBuf.writeBoolean(jobInstance.isDefault);
             IActionHolderSerializer.super.toNetwork(friendlyByteBuf, jobInstance);
         }
     }

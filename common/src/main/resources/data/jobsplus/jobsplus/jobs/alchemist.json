@@ -4,6 +4,5 @@
   "color": "#00AEFF",
   "icon": {
     "id": "minecraft:brewing_stand"
-  },
-  "is_default": true
+  }
 }

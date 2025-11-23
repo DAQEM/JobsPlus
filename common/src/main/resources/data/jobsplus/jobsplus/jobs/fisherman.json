@@ -4,6 +4,5 @@
   "color": "#007FFF",
   "icon": {
     "id": "minecraft:fishing_rod"
-  },
-  "is_default": true
+  }
 }

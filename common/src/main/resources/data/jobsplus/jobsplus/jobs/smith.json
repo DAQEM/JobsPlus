@@ -4,6 +4,5 @@
   "color": "#B22222",
   "icon": {
     "id": "minecraft:anvil"
-  },
-  "is_default": true
+  }
 }

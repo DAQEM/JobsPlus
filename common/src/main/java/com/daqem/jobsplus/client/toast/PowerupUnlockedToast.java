@@ -2,6 +2,7 @@ package com.daqem.jobsplus.client.toast;
 
 import com.daqem.itemrestrictions.data.ItemRestriction;
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
@@ -16,14 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ItemRestrictionUnlockedToast implements Toast {
+public class PowerupUnlockedToast implements Toast {
     private static final ResourceLocation BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("toast/recipe");
     private static final long DISPLAY_TIME = 5000L;
-    private final List<ItemRestriction> itemRestrictions = new ArrayList<>();
+    private final List<PowerupInstance> powerups = new ArrayList<>();
     private long lastChanged;
     private boolean changed;
-    private Toast.Visibility wantedVisibility = Visibility.HIDE;
-    private int displayedItemRestrictionIndex;
+    private Visibility wantedVisibility = Visibility.HIDE;
+    private int displayedPowerupIndex;
 
     @Override
     public @NotNull Visibility getWantedVisibility() {
@@ -37,37 +38,37 @@ public class ItemRestrictionUnlockedToast implements Toast {
             this.changed = false;
         }
 
-        if (this.itemRestrictions.isEmpty()) {
+        if (this.powerups.isEmpty()) {
             this.wantedVisibility = Visibility.HIDE;
         } else {
             this.wantedVisibility = (double)(l - this.lastChanged) >= DISPLAY_TIME * toastManager.getNotificationDisplayTimeMultiplier() ? Visibility.HIDE : Visibility.SHOW;
         }
 
-        this.displayedItemRestrictionIndex = (int)(
-                l / Math.max(1.0, DISPLAY_TIME * toastManager.getNotificationDisplayTimeMultiplier() / this.itemRestrictions.size()) % this.itemRestrictions.size()
+        this.displayedPowerupIndex = (int)(
+                l / Math.max(1.0, DISPLAY_TIME * toastManager.getNotificationDisplayTimeMultiplier() / this.powerups.size()) % this.powerups.size()
         );
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, Font font, long l) {
-        ItemRestriction entry = this.itemRestrictions.get(this.displayedItemRestrictionIndex);
+        PowerupInstance entry = this.powerups.get(this.displayedPowerupIndex);
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
-        guiGraphics.drawString(font, entry.getIcon().getHoverName(), 30, 7, -11534256, false);
-        guiGraphics.drawString(font, JobsPlus.translatable("job.item_unlocked.toast"), 30, 18, -16777216, false);
+        guiGraphics.drawString(font, entry.getName(), 30, 7, -11534256, false);
+        guiGraphics.drawString(font, JobsPlus.translatable("job.powerup_unlocked.toast"), 30, 18, -16777216, false);
         guiGraphics.renderFakeItem(entry.getIcon(), 8, 8);
     }
 
-    private void addItem(ItemRestriction itemRestriction) {
-        this.itemRestrictions.add(itemRestriction);
+    private void addItem(PowerupInstance powerup) {
+        this.powerups.add(powerup);
         this.changed = true;
     }
 
-    public static void addOrUpdate(ToastManager toastManager, ItemRestriction itemRestriction) {
-        ItemRestrictionUnlockedToast itemRestrictionUnlockedToast = toastManager.getToast(ItemRestrictionUnlockedToast.class, NO_TOKEN);
-        if (itemRestrictionUnlockedToast == null) {
-            itemRestrictionUnlockedToast = new ItemRestrictionUnlockedToast();
-            toastManager.addToast(itemRestrictionUnlockedToast);
+    public static void addOrUpdate(ToastManager toastManager, PowerupInstance powerup) {
+        PowerupUnlockedToast powerupUnlockedToast = toastManager.getToast(PowerupUnlockedToast.class, NO_TOKEN);
+        if (powerupUnlockedToast == null) {
+            powerupUnlockedToast = new PowerupUnlockedToast();
+            toastManager.addToast(powerupUnlockedToast);
         }
-        itemRestrictionUnlockedToast.addItem(itemRestriction);
+        powerupUnlockedToast.addItem(powerup);
     }
 }

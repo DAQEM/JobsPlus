@@ -6,6 +6,7 @@ import com.daqem.arc.api.action.holder.IActionHolderType;
 import com.daqem.arc.api.player.ArcPlayer;
 import com.daqem.arc.data.ActionData;
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
@@ -17,6 +18,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,7 +65,7 @@ public class PowerupInstance extends AbstractActionHolder {
     }
 
     public int getPrice() {
-        return price;
+        return Mth.floor(price * JobsPlusConfig.powerupPriceMultiplier.get());
     }
 
     public int getRequiredLevel() {

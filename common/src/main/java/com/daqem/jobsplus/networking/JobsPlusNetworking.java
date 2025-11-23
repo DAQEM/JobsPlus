@@ -44,6 +44,8 @@ public interface JobsPlusNetworking {
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_sync_job"));
     CustomPacketPayload.Type<ClientboundOpenHudEditorPacket> CLIENTBOUND_OPEN_HUD_EDITOR =
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_open_hud_editor"));
+    CustomPacketPayload.Type<ClientboundUnlockPowerupPacket> CLIENTBOUND_UNLOCK_POWERUP =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_unlock_powerup"));
 
     static void initClient() {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC, ClientboundOpenJobsScreenPacketHandler::handleClientSide);
@@ -54,6 +56,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_PLAYER_JOBS, ClientboundPlayerJobsPacket.STREAM_CODEC, ClientboundPlayerJobsPacketHandler::handleClientSide);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_SYNC_JOB, ClientboundSyncJobPacket.STREAM_CODEC, ClientboundSyncJobPacketHandler::handleClientSide);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_HUD_EDITOR, ClientboundOpenHudEditorPacket.STREAM_CODEC, ClientboundOpenHudEditorPacketHandler::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_UNLOCK_POWERUP, ClientboundUnlockPowerupPacket.STREAM_CODEC, ClientboundUnlockPowerupPacketHandler::handleClientSide);
     }
 
     static void initCommon() {
@@ -76,6 +79,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_PLAYER_JOBS, ClientboundPlayerJobsPacket.STREAM_CODEC);
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_SYNC_JOB, ClientboundSyncJobPacket.STREAM_CODEC);
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_OPEN_HUD_EDITOR, ClientboundOpenHudEditorPacket.STREAM_CODEC);
+        NetworkManager.registerS2CPayloadType(CLIENTBOUND_UNLOCK_POWERUP, ClientboundUnlockPowerupPacket.STREAM_CODEC);
     }
 
     static void init() {

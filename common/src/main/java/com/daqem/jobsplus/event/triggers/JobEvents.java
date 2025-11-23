@@ -2,9 +2,6 @@ package com.daqem.jobsplus.event.triggers;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import com.daqem.arc.api.action.data.ActionDataBuilder;
 import com.daqem.arc.api.player.ArcPlayer;
@@ -14,24 +11,17 @@ import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.action.type.JobsPlusActionType;
 import com.daqem.jobsplus.integration.arc.data.type.JobsPlusActionDataType;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
+import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.networking.s2c.ClientboundLevelUpJobPacket;
 import com.daqem.jobsplus.networking.s2c.ClientboundUnlockItemRestrictionPacket;
+import com.daqem.jobsplus.networking.s2c.ClientboundUnlockPowerupPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
 
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 
 public class JobEvents {
-
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1, r -> {
-        Thread thread = new Thread(r);
-        thread.setDaemon(true);
-        thread.setName("JobsPlus-JobEvents-Scheduler");
-        return thread;
-    });
 
     public static void onJobLevelUp(JobsPlayer player, Job job) {
         if (player instanceof ArcPlayer arcPlayer) {
@@ -50,10 +40,21 @@ public class JobEvents {
                     .toList();
 
             for (ItemRestriction itemRestriction : itemRestrictions) {
-                NetworkManager.sendToPlayer(serverPlayer, new ClientboundUnlockItemRestrictionPacket(itemRestriction.getLocation()));
+                if (itemRestriction.getIcon() != null && !itemRestriction.getIcon().isEmpty()) {
+                    NetworkManager.sendToPlayer(serverPlayer, new ClientboundUnlockItemRestrictionPacket(itemRestriction.getLocation()));
+                }
             }
 
-            triggerLevelUpEffects(serverPlayer);
+            List<PowerupInstance> powerupInstances = job.getJobInstance().getPowerups()
+                    .stream()
+                    .filter(entry -> entry.getRequiredLevel() == job.getLevel())
+                    .toList();
+
+            for (PowerupInstance powerupInstance : powerupInstances) {
+                if (powerupInstance.getIcon() != null && !powerupInstance.getIcon().isEmpty()) {
+                    NetworkManager.sendToPlayer(serverPlayer, new ClientboundUnlockPowerupPacket(powerupInstance.getLocation()));
+                }
+            }
 
             player.jobsplus$addCoins(JobsPlusConfig.coinsPerLevelUp.get());
             JobInstance jobInstance = job.getJobInstance();
@@ -81,37 +82,5 @@ public class JobEvents {
                     .build()
                     .sendToAction();
         }
-    }
-
-    private static void schedule(Runnable task, long delayInMillis) {
-        scheduler.schedule(task, delayInMillis, TimeUnit.MILLISECONDS);
-    }
-
-    public static void triggerLevelUpEffects(ServerPlayer player) {
-        // Play first sound after 250 ms (5 ticks)
-        schedule(() -> {
-            playLevelUpSound(player, 0.5F, 2F);
-            playEXPOrbPickupSound(player);
-        }, 250);
-
-        // Play second sound after 450 ms (9 ticks)
-        schedule(() -> {
-            playLevelUpSound(player, 1F, 2F);
-            playEXPOrbPickupSound(player);
-        }, 450);
-
-        // Play final sound after 550 ms (11 ticks)
-        schedule(() -> {
-            playLevelUpSound(player, 0.5F, 1.5F);
-            playEXPOrbPickupSound(player);
-        }, 550);
-    }
-
-    public static void playLevelUpSound(ServerPlayer player, float volume, float pitch) {
-        player.level().playSound(null, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.AMBIENT, volume, pitch);
-    }
-
-    public static void playEXPOrbPickupSound(ServerPlayer player) {
-        player.level().playSound(null, player.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.AMBIENT, 1F, 1F);
     }
 }

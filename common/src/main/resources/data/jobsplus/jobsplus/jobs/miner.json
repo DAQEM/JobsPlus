@@ -4,6 +4,5 @@
   "color": "#FFA500",
   "icon": {
     "id": "minecraft:diamond_pickaxe"
-  },
-  "is_default": true
+  }
 }

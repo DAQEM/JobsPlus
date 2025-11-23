@@ -5,7 +5,6 @@ import com.daqem.yamlconfig.YamlConfigExpectPlatform;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dev.architectury.platform.Platform;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -18,7 +17,7 @@ public class ConfigTranslator {
     private static final Gson GSON = new Gson();
 
     public static void load(List<String> languages, Map<String, String> translations) {
-        Path configDir = YamlConfigExpectPlatform.getConfigDirectory().resolve("jobsplus/lang");
+        Path configDir = YamlConfigExpectPlatform.getConfigDirectory().resolve(JobsPlus.MOD_ID).resolve("lang");
         if (!Files.exists(configDir)) {
             try {
                 Files.createDirectories(configDir);

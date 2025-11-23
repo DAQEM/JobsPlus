@@ -1,6 +1,5 @@
 package com.daqem.jobsplus.test;
 
-import com.daqem.itemrestrictions.config.ItemRestrictionsConfig;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -28,9 +27,5 @@ public class TestMod {
 
     public static MutableComponent literal(String str) {
         return Component.literal(str);
-    }
-
-    public static boolean isDebugEnvironment() {
-        return ItemRestrictionsConfig.isDebug.get();
     }
 }
