@@ -76,7 +76,7 @@ public class JobsPlusConfig {
 
         builder.build();
 
-        ConfigEvent.ON_UPDATE.register((config, level) -> {
+        ConfigEvent.register((config, level) -> {
             if (config.getModId().equals(JobsPlus.MOD_ID) && config.getType().equals(ConfigType.COMMON)) {
                 JobLevelCalculator.resetCache();
             }
