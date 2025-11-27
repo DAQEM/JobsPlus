@@ -7,6 +7,7 @@ import com.daqem.arc.api.condition.IConditionType;
 import com.daqem.arc.data.ActionData;
 import com.daqem.jobsplus.integration.arc.condition.type.JobsPlusConditionType;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
+import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.JsonObject;
@@ -27,8 +28,8 @@ public class JobExperiencePercentageCondition extends AbstractCondition {
     @Override
     public boolean isMet(ActionData actionData) {
         if (actionData.getSourceActionHolder() instanceof JobInstance jobInstance) {
-            if (actionData.getPlayer() instanceof JobsServerPlayer jobsServerPlayer) {
-                Job job = jobsServerPlayer.jobsplus$getJob(jobInstance);
+            if (actionData.getPlayer() instanceof JobsPlayer player) {
+                Job job = player.jobsplus$getJob(jobInstance);
                 if (job != null) {
                     return job.getExperiencePercentage() >= percentage;
                 }

@@ -8,6 +8,7 @@ import com.daqem.arc.data.ActionData;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.integration.arc.condition.type.JobsPlusConditionType;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
+import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.JsonObject;
@@ -29,8 +30,8 @@ public class HasJobCondition extends AbstractCondition implements IJobCondition 
         JobInstance jobInstance = JobInstance.of(jobLocation);
         if (jobInstance != null) {
             if (jobInstance.getLocation().equals(jobLocation)) {
-                if (actionData.getPlayer() instanceof JobsServerPlayer jobsServerPlayer) {
-                    Job job = jobsServerPlayer.jobsplus$getJob(jobInstance);
+                if (actionData.getPlayer() instanceof JobsPlayer player) {
+                    Job job = player.jobsplus$getJob(jobInstance);
                     if (job != null) {
                         return job.getLevel() > 0;
                     }
