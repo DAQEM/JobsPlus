@@ -78,7 +78,8 @@ public class JobInstance extends AbstractActionHolder {
                                 itemRestriction.getLocation(),
                                 itemRestriction.getIcon().copy(),
                                 new ArrayList<>(itemRestriction.getRestrictionTypes()),
-                                new ArrayList<>(itemRestriction.getConditions())
+                                new ArrayList<>(itemRestriction.getConditions()),
+                                itemRestriction.isClientSide()
                         ),
                         itemRestriction -> itemRestriction.getConditions().stream()
                                 .filter(condition -> condition instanceof IJobCondition)
