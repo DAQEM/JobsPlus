@@ -3,15 +3,9 @@ package com.daqem.jobsplus.integration.arc.holder.holders.powerup;
 import com.daqem.arc.api.action.holder.AbstractActionHolder;
 import com.daqem.arc.api.action.holder.IActionHolderSerializer;
 import com.daqem.arc.api.action.holder.IActionHolderType;
-import com.daqem.arc.api.player.ArcPlayer;
-import com.daqem.arc.data.ActionData;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
-import com.daqem.jobsplus.player.JobsPlayer;
-import com.daqem.jobsplus.player.job.Job;
-import com.daqem.jobsplus.player.job.powerup.Powerup;
-import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.daqem.jobsplus.player.job.powerup.PowerupType;
 import com.google.gson.*;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -84,22 +78,6 @@ public class PowerupInstance extends AbstractActionHolder {
     @Nullable
     public static PowerupInstance of(ResourceLocation location) {
         return PowerupManager.getInstance().getAllPowerups().get(location);
-    }
-
-    @Override
-    public boolean passedHolderCondition(ActionData actionData) {
-        ArcPlayer arcPlayer = actionData.getPlayer();
-        if (arcPlayer instanceof JobsPlayer jobsPlayer) {
-            Job job = jobsPlayer.jobsplus$getJobs().stream()
-                    .filter(job1 -> job1 != null && job1.getJobInstance() != null && job1.getJobInstance().getLocation().equals(this.getJobLocation())).findFirst().orElse(null);
-            if (job != null) {
-                Powerup powerup = job.getPowerupManager().getAllPowerups().stream().filter(powerup1 -> powerup1.getPowerupInstance().getLocation().equals(this.getLocation())).findFirst().orElse(null);
-                if (powerup != null) {
-                    return powerup.getState() == PowerupState.ACTIVE;
-                }
-            }
-        }
-        return false;
     }
 
     public PowerupInstance getParent() {
