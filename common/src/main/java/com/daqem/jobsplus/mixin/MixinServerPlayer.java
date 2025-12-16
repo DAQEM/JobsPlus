@@ -17,13 +17,11 @@ import com.daqem.jobsplus.player.job.exp.ExpCollector;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -37,9 +35,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Mixin(ServerPlayer.class)
@@ -255,7 +251,11 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
             ExpCollector expCollector = job.getExpCollector();
             int exp = expCollector.getExp();
             if (exp > 0) {
-                MutableComponent component = JobsPlus.translatable("job.exp.gain", exp, jobInstance.getName().getString()).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(jobInstance.getColorDecimal()))).withStyle(ChatFormatting.BOLD);
+                MutableComponent component = JobsPlus.translatable(
+                        "job.exp.gain",
+                        exp,
+                        jobInstance.getName()
+                ).withStyle(Style.EMPTY.withColor(jobInstance.getColorDecimal()).withBold(true));
                 jobsplus$getServerPlayer().sendSystemMessage(component, true);
             }
             expCollector.clear();
