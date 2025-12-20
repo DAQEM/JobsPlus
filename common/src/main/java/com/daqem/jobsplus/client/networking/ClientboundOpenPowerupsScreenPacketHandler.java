@@ -19,7 +19,7 @@ public class ClientboundOpenPowerupsScreenPacketHandler {
         if (Minecraft.getInstance().screen instanceof JobsScreen jobsScreen) {
             previousScreen = jobsScreen.getPreviousScreen();
         }
-        Job job = packet.getJobs().stream().filter(j -> j.getJobInstance().getLocation().equals(packet.getJobLocation())).findFirst().orElse(null);
+        Job job = packet.getJobs().stream().filter(j -> j.getJobInstance().getIdentifier().equals(packet.getJobLocation())).findFirst().orElse(null);
         JobsScreen jobsScreen = new JobsScreen(new JobsScreenState(
                 packet.getJobs(),
                 packet.getCoins(),

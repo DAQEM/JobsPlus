@@ -42,7 +42,7 @@ public class ServerboundSyncPlayerJobsPacket implements CustomPacketPayload {
             jobs.forEach(job -> NetworkManager.sendToPlayer(
                     serverPlayer.jobsplus$getServerPlayer(),
                     new ClientboundSyncJobPacket(
-                            job.getJobInstance().getLocation(),
+                            job.getJobInstance().getIdentifier(),
                             job.getLevel(),
                             job.getExperience()
                     )

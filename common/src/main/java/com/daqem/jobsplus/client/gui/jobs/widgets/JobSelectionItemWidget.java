@@ -27,7 +27,7 @@ public class JobSelectionItemWidget extends CustomButtonWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(this.active, this.isHovered() || this.job == this.state.getSelectedJob()), this.getX(), this.getY(), this.getWidth(), this.getHeight());
         guiGraphics.pose().pushMatrix();

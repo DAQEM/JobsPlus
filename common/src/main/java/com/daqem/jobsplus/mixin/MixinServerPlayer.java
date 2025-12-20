@@ -36,7 +36,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -77,7 +77,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
 
     @Override
     public @Nullable Job jobsplus$addNewJob(@NotNull JobInstance jobInstance) {
-        if (jobInstance.getLocation() == null) return null;
+        if (jobInstance.getIdentifier() == null) return null;
         Job job = jobsplus$getJob(jobInstance);
         if (job == null) {
             job = new Job(this, jobInstance, 1, 0);
@@ -111,15 +111,15 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     public @Nullable Job jobsplus$getJob(@Nullable JobInstance jobLocation) {
         if (jobLocation == null) return null;
         return this.jobsplus$jobs.stream()
-                .filter(job -> job.getJobInstance().getLocation().equals(jobLocation.getLocation()))
+                .filter(job -> job.getJobInstance().getIdentifier().equals(jobLocation.getIdentifier()))
                 .findFirst()
                 .orElse(null);
     }
 
     @Override
-    public Job jobsplus$getJob(ResourceLocation jobLocation) {
+    public Job jobsplus$getJob(Identifier jobLocation) {
         return this.jobsplus$jobs.stream()
-                .filter(job -> job.getJobInstance().getLocation().equals(jobLocation))
+                .filter(job -> job.getJobInstance().getIdentifier().equals(jobLocation))
                 .findFirst()
                 .orElse(null);
     }
@@ -129,7 +129,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         return jobsplus$getJobs().stream()
                 .map(Job::getPowerupManager)
                 .flatMap(powerupManager -> powerupManager.getAllPowerups().stream())
-                .filter(powerup -> powerup.getPowerupInstance().getLocation().equals(powerupInstance.getLocation()))
+                .filter(powerup -> powerup.getPowerupInstance().getIdentifier().equals(powerupInstance.getIdentifier()))
                 .findFirst()
                 .orElse(null);
     }

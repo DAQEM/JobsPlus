@@ -14,13 +14,13 @@ import com.daqem.jobsplus.player.job.Job;
 import com.google.gson.JsonObject;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class HasJobCondition extends AbstractCondition implements IJobCondition {
 
-    private final ResourceLocation jobLocation;
+    private final Identifier jobLocation;
 
-    public HasJobCondition(boolean inverted, ResourceLocation jobLocation) {
+    public HasJobCondition(boolean inverted, Identifier jobLocation) {
         super(inverted);
         this.jobLocation = jobLocation;
     }
@@ -29,7 +29,7 @@ public class HasJobCondition extends AbstractCondition implements IJobCondition 
     public boolean isMet(ActionData actionData) {
         JobInstance jobInstance = JobInstance.of(jobLocation);
         if (jobInstance != null) {
-            if (jobInstance.getLocation().equals(jobLocation)) {
+            if (jobInstance.getIdentifier().equals(jobLocation)) {
                 if (actionData.getPlayer() instanceof JobsPlayer player) {
                     Job job = player.jobsplus$getJob(jobInstance);
                     if (job != null) {
@@ -48,7 +48,7 @@ public class HasJobCondition extends AbstractCondition implements IJobCondition 
         return JobsPlusConditionType.HAS_JOB;
     }
     @Override
-    public ResourceLocation getJobLocation() {
+    public Identifier getJobLocation() {
         return jobLocation;
     }
 
@@ -69,23 +69,23 @@ public class HasJobCondition extends AbstractCondition implements IJobCondition 
     public static class Serializer implements IConditionSerializer<HasJobCondition> {
 
         @Override
-        public HasJobCondition fromJson(ResourceLocation location, JsonObject jsonObject, boolean inverted) {
+        public HasJobCondition fromJson(Identifier location, JsonObject jsonObject, boolean inverted) {
             return new HasJobCondition(
                     inverted,
-                    getResourceLocation(jsonObject, "job"));
+                    getIdentifier(jsonObject, "job"));
         }
 
         @Override
-        public HasJobCondition fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, boolean inverted) {
+        public HasJobCondition fromNetwork(Identifier location, RegistryFriendlyByteBuf friendlyByteBuf, boolean inverted) {
             return new HasJobCondition(
                     inverted,
-                    friendlyByteBuf.readResourceLocation());
+                    friendlyByteBuf.readIdentifier());
         }
 
         @Override
         public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, HasJobCondition type) {
             IConditionSerializer.super.toNetwork(friendlyByteBuf, type);
-            friendlyByteBuf.writeResourceLocation(type.jobLocation);
+            friendlyByteBuf.writeIdentifier(type.jobLocation);
         }
     }
 }

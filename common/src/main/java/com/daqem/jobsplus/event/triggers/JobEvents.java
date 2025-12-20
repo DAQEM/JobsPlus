@@ -31,7 +31,7 @@ public class JobEvents {
                     .sendToAction();
         }
         if (player.jobsplus$getPlayer() instanceof ServerPlayer serverPlayer) {
-            NetworkManager.sendToPlayer(serverPlayer, new ClientboundLevelUpJobPacket(job.getJobInstance().getLocation(), job.getLevel()));
+            NetworkManager.sendToPlayer(serverPlayer, new ClientboundLevelUpJobPacket(job.getJobInstance().getIdentifier(), job.getLevel()));
 
             List<ItemRestriction> itemRestrictions = job.getJobInstance().getItemRestrictions()
                     .entrySet().stream()
@@ -41,7 +41,7 @@ public class JobEvents {
 
             for (ItemRestriction itemRestriction : itemRestrictions) {
                 if (itemRestriction.getIcon() != null && !itemRestriction.getIcon().isEmpty()) {
-                    NetworkManager.sendToPlayer(serverPlayer, new ClientboundUnlockItemRestrictionPacket(itemRestriction.getLocation()));
+                    NetworkManager.sendToPlayer(serverPlayer, new ClientboundUnlockItemRestrictionPacket(itemRestriction.getIdentifier()));
                 }
             }
 
@@ -52,7 +52,7 @@ public class JobEvents {
 
             for (PowerupInstance powerupInstance : powerupInstances) {
                 if (powerupInstance.getIcon() != null && !powerupInstance.getIcon().isEmpty()) {
-                    NetworkManager.sendToPlayer(serverPlayer, new ClientboundUnlockPowerupPacket(powerupInstance.getLocation()));
+                    NetworkManager.sendToPlayer(serverPlayer, new ClientboundUnlockPowerupPacket(powerupInstance.getIdentifier()));
                 }
             }
 

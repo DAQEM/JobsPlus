@@ -6,7 +6,7 @@ import com.daqem.jobsplus.player.job.Job;
 import com.daqem.uilib.gui.component.EmptyComponent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class JobsStatusBarsComponent extends EmptyComponent {
 
-    private final Map<ResourceLocation, JobStatusBarComponent> statusbarComponents = new HashMap<>();
+    private final Map<Identifier, JobStatusBarComponent> statusbarComponents = new HashMap<>();
     private final JobsPlayer jobsPlayer;
 
     public JobsStatusBarsComponent(JobsPlayer jobsPlayer) {
@@ -29,7 +29,7 @@ public class JobsStatusBarsComponent extends EmptyComponent {
 
         // Handle addition and removal of status bar components based on config
         for (String jobLocation : jobs) {
-            ResourceLocation resourceLocation = ResourceLocation.tryParse(jobLocation);
+            Identifier resourceLocation = Identifier.tryParse(jobLocation);
             if (resourceLocation != null && !statusbarComponents.containsKey(resourceLocation)) {
                 Job job = jobsPlayer.jobsplus$getJob(resourceLocation);
                 if (job == null) continue;

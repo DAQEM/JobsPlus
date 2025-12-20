@@ -14,15 +14,15 @@ import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.google.gson.JsonObject;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
 
 public class PowerupNotActiveCondition extends AbstractCondition {
 
-    private final ResourceLocation powerupThatShouldNotBeActiveLocation;
+    private final Identifier powerupThatShouldNotBeActiveLocation;
 
-    public PowerupNotActiveCondition(boolean inverted, ResourceLocation powerupThatShouldNotBeActiveLocation) {
+    public PowerupNotActiveCondition(boolean inverted, Identifier powerupThatShouldNotBeActiveLocation) {
         super(inverted);
         this.powerupThatShouldNotBeActiveLocation = powerupThatShouldNotBeActiveLocation;
     }
@@ -41,7 +41,7 @@ public class PowerupNotActiveCondition extends AbstractCondition {
                     .findFirst();
 
             return powerup.isEmpty() ||
-                    (powerup.get().getPowerupInstance().getLocation().equals(this.powerupThatShouldNotBeActiveLocation)
+                    (powerup.get().getPowerupInstance().getIdentifier().equals(this.powerupThatShouldNotBeActiveLocation)
                             && powerup.get().getState() != PowerupState.ACTIVE);
         }
         return false;
@@ -65,23 +65,23 @@ public class PowerupNotActiveCondition extends AbstractCondition {
 
 
         @Override
-        public PowerupNotActiveCondition fromJson(ResourceLocation location, JsonObject jsonObject, boolean inverted) {
+        public PowerupNotActiveCondition fromJson(Identifier location, JsonObject jsonObject, boolean inverted) {
             return new PowerupNotActiveCondition(
                     inverted,
-                    getResourceLocation(jsonObject, "powerup"));
+                    getIdentifier(jsonObject, "powerup"));
         }
 
         @Override
-        public PowerupNotActiveCondition fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, boolean inverted) {
+        public PowerupNotActiveCondition fromNetwork(Identifier location, RegistryFriendlyByteBuf friendlyByteBuf, boolean inverted) {
             return new PowerupNotActiveCondition(
                     inverted,
-                    friendlyByteBuf.readResourceLocation());
+                    friendlyByteBuf.readIdentifier());
         }
 
         @Override
         public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, PowerupNotActiveCondition type) {
             IConditionSerializer.super.toNetwork(friendlyByteBuf, type);
-            friendlyByteBuf.writeResourceLocation(type.powerupThatShouldNotBeActiveLocation);
+            friendlyByteBuf.writeIdentifier(type.powerupThatShouldNotBeActiveLocation);
         }
     }
 }

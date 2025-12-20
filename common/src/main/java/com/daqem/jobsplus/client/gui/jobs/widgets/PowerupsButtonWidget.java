@@ -28,7 +28,7 @@ public class PowerupsButtonWidget extends CustomButtonWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JobsPlus.getId("jobs/tab_bottom"), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ARGB.white(this.alpha));
         guiGraphics.drawString(
                 Minecraft.getInstance().font,

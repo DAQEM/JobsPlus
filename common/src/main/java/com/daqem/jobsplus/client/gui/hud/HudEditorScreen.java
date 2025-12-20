@@ -13,7 +13,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class HudEditorScreen extends Screen {
         int activeCount = 0;
 
         for (String jobLoc : configJobs) {
-            ResourceLocation loc = ResourceLocation.tryParse(jobLoc);
+            Identifier loc = Identifier.tryParse(jobLoc);
             if (loc != null) {
                 Job job = jobsPlayer.jobsplus$getJob(loc);
                 // Logic matches JobsStatusBarsComponent: only show if job exists
@@ -145,7 +146,7 @@ public class HudEditorScreen extends Screen {
             // Render a bounding box for better visibility
             // Green outline if dragging, White if idle
             int color = this.isDragging ? 0xFF00FF00 : 0xFFFFFFFF;
-            guiGraphics.submitOutline(this.componentX - 1, this.componentY - 1,
+            guiGraphics.renderOutline(this.componentX - 1, this.componentY - 1,
                     this.statusBarsComponent.getWidth() + 2, this.statusBarsComponent.getHeight() + 2,
                     color);
 
@@ -168,7 +169,7 @@ public class HudEditorScreen extends Screen {
     }
 
     @Override
-    public boolean mouseDragged(MouseButtonEvent event, double d, double e) {
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double d, double e) {
         if (this.isDragging && this.statusBarsComponent != null) {
             int newX = (int) event.x() - this.dragOffsetX;
             int newY = (int) event.y() - this.dragOffsetY;
@@ -203,7 +204,7 @@ public class HudEditorScreen extends Screen {
     }
 
     @Override
-    public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
+    public boolean mouseReleased(@NotNull MouseButtonEvent mouseButtonEvent) {
         if (this.isDragging) {
             this.isDragging = false;
             this.snappedX = false;

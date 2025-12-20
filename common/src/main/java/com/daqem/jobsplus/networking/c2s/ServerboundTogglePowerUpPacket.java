@@ -7,13 +7,13 @@ import dev.architectury.networking.NetworkManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class ServerboundTogglePowerUpPacket implements CustomPacketPayload {
 
-    private final ResourceLocation jobLocation;
-    private final ResourceLocation powerupLocation;
+    private final Identifier jobLocation;
+    private final Identifier powerupLocation;
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundTogglePowerUpPacket> STREAM_CODEC = new StreamCodec<>() {
         @Override
@@ -23,19 +23,19 @@ public class ServerboundTogglePowerUpPacket implements CustomPacketPayload {
 
         @Override
         public void encode(RegistryFriendlyByteBuf buf, ServerboundTogglePowerUpPacket packet) {
-            buf.writeResourceLocation(packet.jobLocation);
-            buf.writeResourceLocation(packet.powerupLocation);
+            buf.writeIdentifier(packet.jobLocation);
+            buf.writeIdentifier(packet.powerupLocation);
         }
     };
 
-    public ServerboundTogglePowerUpPacket(ResourceLocation jobLocation, ResourceLocation powerupLocation) {
+    public ServerboundTogglePowerUpPacket(Identifier jobLocation, Identifier powerupLocation) {
         this.jobLocation = jobLocation;
         this.powerupLocation = powerupLocation;
     }
 
     public ServerboundTogglePowerUpPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
-        this.jobLocation = friendlyByteBuf.readResourceLocation();
-        this.powerupLocation = friendlyByteBuf.readResourceLocation();
+        this.jobLocation = friendlyByteBuf.readIdentifier();
+        this.powerupLocation = friendlyByteBuf.readIdentifier();
     }
 
     @Override

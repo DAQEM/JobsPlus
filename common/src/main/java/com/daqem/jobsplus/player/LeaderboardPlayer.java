@@ -6,19 +6,19 @@ import com.mojang.serialization.Dynamic;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class LeaderboardPlayer {
 
     private final UUID uuid;
-    private final ResourceLocation jobLocation;
+    private final Identifier jobLocation;
     private String playerName;
     private int level;
     private double experience;
 
     private int rank;
 
-    public LeaderboardPlayer(UUID uuid, ResourceLocation jobLocation) {
+    public LeaderboardPlayer(UUID uuid, Identifier jobLocation) {
         this.uuid = uuid;
         this.jobLocation = jobLocation;
         this.playerName = "Unknown";
@@ -27,7 +27,7 @@ public class LeaderboardPlayer {
         this.rank = -1;
     }
 
-    public LeaderboardPlayer(UUID uuid, ResourceLocation jobLocation, String playerName, int level, double experience) {
+    public LeaderboardPlayer(UUID uuid, Identifier jobLocation, String playerName, int level, double experience) {
         this.uuid = uuid;
         this.jobLocation = jobLocation;
         this.playerName = playerName;
@@ -40,7 +40,7 @@ public class LeaderboardPlayer {
         return uuid;
     }
 
-    public ResourceLocation getJobLocation() {
+    public Identifier getJobLocation() {
         return jobLocation;
     }
 
@@ -89,7 +89,7 @@ public class LeaderboardPlayer {
     public static <T> LeaderboardPlayer deserialize(Dynamic<T> dynamic) {
         return new LeaderboardPlayer(
                 dynamic.get("uuid").asString().map(UUID::fromString).getOrThrow(),
-                dynamic.get("job").asString().map(ResourceLocation::parse).getOrThrow(),
+                dynamic.get("job").asString().map(Identifier::parse).getOrThrow(),
                 dynamic.get("name").asString().getOrThrow(),
                 dynamic.get("level").asInt(0),
                 dynamic.get("experience").asDouble(0)
@@ -99,7 +99,7 @@ public class LeaderboardPlayer {
     public static LeaderboardPlayer fromNetwork(FriendlyByteBuf friendlyByteBuf) {
         LeaderboardPlayer player = new LeaderboardPlayer(
                 friendlyByteBuf.readUUID(),
-                friendlyByteBuf.readResourceLocation(),
+                friendlyByteBuf.readIdentifier(),
                 friendlyByteBuf.readUtf(),
                 friendlyByteBuf.readVarInt(),
                 friendlyByteBuf.readDouble()
@@ -110,7 +110,7 @@ public class LeaderboardPlayer {
 
     public void toNetwork(FriendlyByteBuf buf) {
         buf.writeUUID(this.uuid);
-        buf.writeResourceLocation(this.jobLocation);
+        buf.writeIdentifier(this.jobLocation);
         buf.writeUtf(this.playerName);
         buf.writeVarInt(this.level);
         buf.writeDouble(this.experience);

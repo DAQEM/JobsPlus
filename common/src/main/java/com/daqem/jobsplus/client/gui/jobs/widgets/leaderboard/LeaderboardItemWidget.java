@@ -14,7 +14,7 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class LeaderboardItemWidget extends CustomButtonWidget {
@@ -37,7 +37,7 @@ public class LeaderboardItemWidget extends CustomButtonWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
         JobInstance jobInstance = JobInstance.of(player.getJobLocation());
         if (jobInstance == null) return;
@@ -50,7 +50,7 @@ public class LeaderboardItemWidget extends CustomButtonWidget {
             playerInfo = minecraft.getConnection() != null ? minecraft.getConnection().getSeenPlayers().get(player.getUuid()) : null;
         }
 
-        ResourceLocation skinLocation;
+        Identifier skinLocation;
         if (playerInfo != null) {
             skinLocation = playerInfo.getSkin().body().texturePath();
         } else {

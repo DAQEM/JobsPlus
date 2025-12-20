@@ -7,14 +7,14 @@ import dev.architectury.networking.NetworkManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
 public class ServerboundOpenPowerupsScreenPacket implements CustomPacketPayload {
 
-    private final ResourceLocation jobLocation;
+    private final Identifier jobLocation;
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundOpenPowerupsScreenPacket> STREAM_CODEC = new StreamCodec<>() {
         @Override
@@ -24,16 +24,16 @@ public class ServerboundOpenPowerupsScreenPacket implements CustomPacketPayload 
 
         @Override
         public void encode(RegistryFriendlyByteBuf buf, ServerboundOpenPowerupsScreenPacket packet) {
-            buf.writeResourceLocation(packet.jobLocation);
+            buf.writeIdentifier(packet.jobLocation);
         }
     };
 
-    public ServerboundOpenPowerupsScreenPacket(ResourceLocation jobLocation) {
+    public ServerboundOpenPowerupsScreenPacket(Identifier jobLocation) {
         this.jobLocation = jobLocation;
     }
 
     public ServerboundOpenPowerupsScreenPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
-        this.jobLocation = friendlyByteBuf.readResourceLocation();
+        this.jobLocation = friendlyByteBuf.readIdentifier();
     }
 
     @Override

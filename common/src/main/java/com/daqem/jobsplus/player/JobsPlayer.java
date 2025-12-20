@@ -8,7 +8,7 @@ import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.player.job.Job;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 public interface JobsPlayer {
@@ -28,7 +28,7 @@ public interface JobsPlayer {
 
     Job jobsplus$getJob(@Nullable JobInstance jobInstance);
 
-    Job jobsplus$getJob(ResourceLocation jobLocation);
+    Job jobsplus$getJob(Identifier jobLocation);
 
     double jobsplus$getCoins();
 

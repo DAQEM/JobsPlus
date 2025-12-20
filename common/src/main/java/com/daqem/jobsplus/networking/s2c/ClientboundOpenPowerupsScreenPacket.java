@@ -10,13 +10,13 @@ import com.daqem.jobsplus.player.job.Job;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ClientboundOpenPowerupsScreenPacket implements CustomPacketPayload {
 
     private final List<Job> jobs;
     private final double coins;
-    private final ResourceLocation jobLocation;
+    private final Identifier jobLocation;
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundOpenPowerupsScreenPacket> STREAM_CODEC = new StreamCodec<>() {
         @Override
@@ -28,11 +28,11 @@ public class ClientboundOpenPowerupsScreenPacket implements CustomPacketPayload 
         public void encode(RegistryFriendlyByteBuf buf, ClientboundOpenPowerupsScreenPacket packet) {
             buf.writeCollection(packet.jobs, Job.Serializer::toNetwork);
             buf.writeDouble(packet.coins);
-            buf.writeResourceLocation(packet.jobLocation);
+            buf.writeIdentifier(packet.jobLocation);
         }
     };
 
-    public ClientboundOpenPowerupsScreenPacket(List<Job> jobs, double coins, ResourceLocation jobLocation) {
+    public ClientboundOpenPowerupsScreenPacket(List<Job> jobs, double coins, Identifier jobLocation) {
         this.jobs = jobs;
         this.coins = coins;
         this.jobLocation = jobLocation;
@@ -41,7 +41,7 @@ public class ClientboundOpenPowerupsScreenPacket implements CustomPacketPayload 
     public ClientboundOpenPowerupsScreenPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
         this.jobs = friendlyByteBuf.readList(friendlyByteBuf1 -> Job.Serializer.fromNetwork(friendlyByteBuf1, null));
         this.coins = friendlyByteBuf.readDouble();
-        this.jobLocation = friendlyByteBuf.readResourceLocation();
+        this.jobLocation = friendlyByteBuf.readIdentifier();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ClientboundOpenPowerupsScreenPacket implements CustomPacketPayload 
         return coins;
     }
 
-    public ResourceLocation getJobLocation() {
+    public Identifier getJobLocation() {
         return jobLocation;
     }
 }

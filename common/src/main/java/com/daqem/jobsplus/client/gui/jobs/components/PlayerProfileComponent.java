@@ -8,13 +8,15 @@ import com.daqem.uilib.gui.component.sprite.SpriteComponent;
 import com.daqem.uilib.gui.component.text.TruncatedTextComponent;
 import com.daqem.uilib.gui.widget.CustomButtonWidget;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ActiveTextCollector;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.PlayerFaceRenderer;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -33,7 +35,7 @@ public class PlayerProfileComponent extends AbstractComponent {
 
         CustomButtonWidget closeButton = new CustomButtonWidget(-2, 27, 20, 16, JobsPlus.translatable("gui.jobs.back"), new WidgetSprites(JobsPlus.getId("jobs/player_back"), JobsPlus.getId("jobs/player_back_hovered")), button -> state.stopViewingPlayer()) {
             @Override
-            public void renderString(GuiGraphics guiGraphics, Font font, int i) {
+            protected void renderDefaultLabel(@NotNull ActiveTextCollector activeTextCollector) {
             }
         };
         this.addWidget(closeButton);
@@ -57,7 +59,7 @@ public class PlayerProfileComponent extends AbstractComponent {
                 playerInfo = minecraft.getConnection() != null ? minecraft.getConnection().getSeenPlayers().get(viewingPlayer.getUuid()) : null;
             }
 
-            ResourceLocation skinLocation;
+            Identifier skinLocation;
             if (playerInfo != null) {
                 skinLocation = playerInfo.getSkin().body().texturePath();
             } else {

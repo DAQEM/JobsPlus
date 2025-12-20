@@ -4,12 +4,12 @@ import com.daqem.jobsplus.networking.JobsPlusNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class ClientboundUnlockItemRestrictionPacket implements CustomPacketPayload {
 
-    private final ResourceLocation itemRestrictionLocation;
+    private final Identifier itemRestrictionLocation;
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUnlockItemRestrictionPacket> STREAM_CODEC = new StreamCodec<>() {
         @Override
@@ -19,17 +19,17 @@ public class ClientboundUnlockItemRestrictionPacket implements CustomPacketPaylo
 
         @Override
         public void encode(RegistryFriendlyByteBuf buf, ClientboundUnlockItemRestrictionPacket packet) {
-            buf.writeResourceLocation(packet.itemRestrictionLocation);
+            buf.writeIdentifier(packet.itemRestrictionLocation);
         }
     };
 
-    public ClientboundUnlockItemRestrictionPacket(ResourceLocation itemRestrictionLocation) {
+    public ClientboundUnlockItemRestrictionPacket(Identifier itemRestrictionLocation) {
         this.itemRestrictionLocation = itemRestrictionLocation;
 
     }
 
     public ClientboundUnlockItemRestrictionPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
-        this.itemRestrictionLocation = friendlyByteBuf.readResourceLocation();
+        this.itemRestrictionLocation = friendlyByteBuf.readIdentifier();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ClientboundUnlockItemRestrictionPacket implements CustomPacketPaylo
         return JobsPlusNetworking.CLIENTBOUND_UNLOCK_ITEM_RESTRICTION;
     }
 
-    public ResourceLocation getItemRestrictionLocation() {
+    public Identifier getItemRestrictionLocation() {
         return itemRestrictionLocation;
     }
 }

@@ -2,7 +2,7 @@ package com.daqem.jobsplus.client.gui.jobs.tab;
 
 import com.daqem.jobsplus.JobsPlus;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public enum RightTab implements ITab {
     EXPERIENCE(JobsPlus.translatable("gui.jobs.tab.experience"), JobsPlus.getId("jobs/tab_1_active"), JobsPlus.getId("jobs/tab_1_inactive")),
@@ -10,10 +10,10 @@ public enum RightTab implements ITab {
     LEADERBOARD(JobsPlus.translatable("gui.jobs.tab.leaderboard"), JobsPlus.getId("jobs/tab_3_active"), JobsPlus.getId("jobs/tab_3_inactive"));
 
     private final Component name;
-    private final ResourceLocation activeSprite;
-    private final ResourceLocation inactiveSprite;
+    private final Identifier activeSprite;
+    private final Identifier inactiveSprite;
 
-    RightTab(Component name, ResourceLocation activeSprite, ResourceLocation inactiveSprite) {
+    RightTab(Component name, Identifier activeSprite, Identifier inactiveSprite) {
         this.name = name;
         this.activeSprite = activeSprite;
         this.inactiveSprite = inactiveSprite;
@@ -25,12 +25,12 @@ public enum RightTab implements ITab {
     }
 
     @Override
-    public ResourceLocation getActiveSprite() {
+    public Identifier getActiveSprite() {
         return activeSprite;
     }
 
     @Override
-    public ResourceLocation getInactiveSprite() {
+    public Identifier getInactiveSprite() {
         return inactiveSprite;
     }
 }

@@ -34,7 +34,7 @@ public class StartJobButtonWidget extends CustomButtonWidget {
                 Minecraft.getInstance().setScreen(new ConfirmationScreen(Minecraft.getInstance().screen, new ConfirmationScreenState(
                         jobAmount >= JobsPlusConfig.amountOfFreeJobs.get() ? paidJobMessage : freeJobMessage,
                         () -> {
-                            NetworkManager.sendToServer(new ServerboundStartJobPacket(selectedJob.getJobInstance().getLocation()));
+                            NetworkManager.sendToServer(new ServerboundStartJobPacket(selectedJob.getJobInstance().getIdentifier()));
                             NetworkManager.sendToServer(new ServerboundOpenJobsScreenPacket());
                         }
                 )));
@@ -44,7 +44,7 @@ public class StartJobButtonWidget extends CustomButtonWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JobsPlus.getId("jobs/tab_bottom"), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ARGB.white(this.alpha));
         guiGraphics.drawString(
                 Minecraft.getInstance().font,

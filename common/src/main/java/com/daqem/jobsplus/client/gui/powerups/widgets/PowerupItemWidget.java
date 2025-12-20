@@ -23,7 +23,7 @@ import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeItemWidget {
@@ -37,9 +37,9 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
             if (btn instanceof PowerupItemWidget button && button.isActive()) {
                 Powerup powerUp = button.getPowerup();
                 PowerupInstance powerupInstance = powerUp.getPowerupInstance();
-                ResourceLocation location = button.getState().getJob().getJobInstance().getLocation();
+                Identifier location = button.getState().getJob().getJobInstance().getIdentifier();
                 if (powerUp.getState() == PowerupState.ACTIVE || powerUp.getState() == PowerupState.INACTIVE) {
-                    NetworkManager.sendToServer(new ServerboundTogglePowerUpPacket(location, powerupInstance.getLocation()));
+                    NetworkManager.sendToServer(new ServerboundTogglePowerUpPacket(location, powerupInstance.getIdentifier()));
                     if (Minecraft.getInstance().screen instanceof PowerupsScreen powerupsScreen) {
                         button.getPowerup().setState(powerUp.getState() == PowerupState.ACTIVE ? PowerupState.INACTIVE : PowerupState.ACTIVE);
                     }
@@ -47,7 +47,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                     Minecraft.getInstance().setScreen(new ConfirmationScreen(Minecraft.getInstance().screen, new ConfirmationScreenState(
                             JobsPlus.translatable("gui.confirmation.purchase_powerup", powerupInstance.getName(), powerupInstance.getPrice()),
                             () -> {
-                                NetworkManager.sendToServer(new ServerboundStartPowerupPacket(location, powerupInstance.getLocation()));
+                                NetworkManager.sendToServer(new ServerboundStartPowerupPacket(location, powerupInstance.getIdentifier()));
                                 NetworkManager.sendToServer(new ServerboundOpenPowerupsScreenPacket(location));
                             }
                     )));
@@ -60,7 +60,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.blitSlot(guiGraphics);
     }
 
@@ -72,10 +72,10 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
         return powerup;
     }
 
-    private ResourceLocation getSprite() {
-        ResourceLocation defaultSprite = JobsPlus.getId("powerups/slot_active");
-        ResourceLocation lockedSprite = JobsPlus.getId("powerups/slot_locked");
-        ResourceLocation notOwnedSprite = JobsPlus.getId("powerups/slot_not_owned");
+    private Identifier getSprite() {
+        Identifier defaultSprite = JobsPlus.getId("powerups/slot_active");
+        Identifier lockedSprite = JobsPlus.getId("powerups/slot_locked");
+        Identifier notOwnedSprite = JobsPlus.getId("powerups/slot_not_owned");
         if (this.powerup == null) {
             Job job = state.getJob();
             if (job.getLevel() > 0) {

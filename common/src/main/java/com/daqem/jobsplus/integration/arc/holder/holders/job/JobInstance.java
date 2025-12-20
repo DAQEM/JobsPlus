@@ -14,7 +14,7 @@ import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
 import com.google.gson.*;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +32,7 @@ public class JobInstance extends AbstractActionHolder {
     private final String color;
     private final ItemStack iconItem;
 
-    public JobInstance(ResourceLocation location, double price, String color, ItemStack iconItem) {
+    public JobInstance(Identifier location, double price, String color, ItemStack iconItem) {
         super(location);
         this.price = price;
         this.color = color;
@@ -75,7 +75,7 @@ public class JobInstance extends AbstractActionHolder {
                         .anyMatch(condition -> condition instanceof IJobCondition jobCondition && jobCondition.getJobLocation().equals(location)))
                 .collect(Collectors.toMap(
                         itemRestriction -> new ItemRestriction(
-                                itemRestriction.getLocation(),
+                                itemRestriction.getIdentifier(),
                                 itemRestriction.getIcon().copy(),
                                 new ArrayList<>(itemRestriction.getRestrictionTypes()),
                                 new ArrayList<>(itemRestriction.getConditions()),
@@ -95,7 +95,7 @@ public class JobInstance extends AbstractActionHolder {
     }
 
     @Nullable
-    public static JobInstance of(ResourceLocation location) {
+    public static JobInstance of(Identifier location) {
         return JobManager.getInstance().getJobs().get(location);
     }
 
@@ -115,11 +115,11 @@ public class JobInstance extends AbstractActionHolder {
         @Override
         public JobInstance deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = element.getAsJsonObject();
-            return fromJson(jsonObject, getResourceLocation(jsonObject, "location"));
+            return fromJson(jsonObject, getIdentifier(jsonObject, "location"));
         }
 
         @Override
-        public JobInstance fromJson(JsonObject jsonObject, ResourceLocation resourceLocation) {
+        public JobInstance fromJson(JsonObject jsonObject, Identifier resourceLocation) {
             return new JobInstance(
                     resourceLocation,
                     GsonHelper.getAsDouble(jsonObject, "price"),
@@ -127,9 +127,9 @@ public class JobInstance extends AbstractActionHolder {
                     getItemStack(jsonObject, "icon"));
         }
 
-        public JobInstance fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, ResourceLocation resourceLocation) {
+        public JobInstance fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, Identifier resourceLocation) {
             return new JobInstance(
-                    friendlyByteBuf.readResourceLocation(),
+                    friendlyByteBuf.readIdentifier(),
                     friendlyByteBuf.readDouble(),
                     friendlyByteBuf.readUtf(),
                     ItemStack.STREAM_CODEC.decode(friendlyByteBuf)
@@ -137,7 +137,7 @@ public class JobInstance extends AbstractActionHolder {
         }
 
         public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobInstance jobInstance) {
-            friendlyByteBuf.writeResourceLocation(jobInstance.location);
+            friendlyByteBuf.writeIdentifier(jobInstance.location);
             friendlyByteBuf.writeDouble(jobInstance.price);
             friendlyByteBuf.writeUtf(jobInstance.color);
             ItemStack.STREAM_CODEC.encode(friendlyByteBuf, jobInstance.iconItem);

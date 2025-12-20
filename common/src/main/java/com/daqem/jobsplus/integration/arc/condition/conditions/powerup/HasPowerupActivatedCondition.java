@@ -13,13 +13,13 @@ import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.google.gson.JsonObject;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class HasPowerupActivatedCondition extends AbstractCondition  {
 
-    private final ResourceLocation powerupLocation;
+    private final Identifier powerupLocation;
 
-    public HasPowerupActivatedCondition(boolean inverted, ResourceLocation powerupLocation) {
+    public HasPowerupActivatedCondition(boolean inverted, Identifier powerupLocation) {
         super(inverted);
         this.powerupLocation = powerupLocation;
     }
@@ -33,7 +33,7 @@ public class HasPowerupActivatedCondition extends AbstractCondition  {
     public boolean isMet(ActionData actionData) {
         PowerupInstance powerupInstance = PowerupInstance.of(powerupLocation);
         if (powerupInstance != null) {
-            if (powerupInstance.getLocation().equals(powerupLocation)) {
+            if (powerupInstance.getIdentifier().equals(powerupLocation)) {
                 if (actionData.getPlayer() instanceof JobsServerPlayer jobsServerPlayer) {
                     Powerup powerup = jobsServerPlayer.jobsplus$getPowerup(powerupInstance);
                     return powerup != null && powerup.getState() == PowerupState.ACTIVE;
@@ -48,23 +48,23 @@ public class HasPowerupActivatedCondition extends AbstractCondition  {
     public static class Serializer implements IConditionSerializer<HasPowerupActivatedCondition> {
 
         @Override
-        public HasPowerupActivatedCondition fromJson(ResourceLocation location, JsonObject jsonObject, boolean inverted) {
+        public HasPowerupActivatedCondition fromJson(Identifier location, JsonObject jsonObject, boolean inverted) {
             return new HasPowerupActivatedCondition(
                     inverted,
-                    getResourceLocation(jsonObject, "powerup"));
+                    getIdentifier(jsonObject, "powerup"));
         }
 
         @Override
-        public HasPowerupActivatedCondition fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, boolean inverted) {
+        public HasPowerupActivatedCondition fromNetwork(Identifier location, RegistryFriendlyByteBuf friendlyByteBuf, boolean inverted) {
             return new HasPowerupActivatedCondition(
                     inverted,
-                    friendlyByteBuf.readResourceLocation());
+                    friendlyByteBuf.readIdentifier());
         }
 
         @Override
         public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, HasPowerupActivatedCondition type) {
             IConditionSerializer.super.toNetwork(friendlyByteBuf, type);
-            friendlyByteBuf.writeResourceLocation(type.powerupLocation);
+            friendlyByteBuf.writeIdentifier(type.powerupLocation);
         }
     }
 }

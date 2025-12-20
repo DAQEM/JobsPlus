@@ -8,7 +8,7 @@ import dev.architectury.networking.NetworkManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,21 +16,21 @@ import java.util.*;
 
 public class ServerboundRequestLeaderboardPacket implements CustomPacketPayload {
 
-    private final ResourceLocation jobLocation;
+    private final Identifier jobLocation;
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundRequestLeaderboardPacket> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public @NotNull ServerboundRequestLeaderboardPacket decode(RegistryFriendlyByteBuf friendlyByteBuf) {
-            return new ServerboundRequestLeaderboardPacket(friendlyByteBuf.readResourceLocation());
+            return new ServerboundRequestLeaderboardPacket(friendlyByteBuf.readIdentifier());
         }
 
         @Override
         public void encode(RegistryFriendlyByteBuf friendlyByteBuf, ServerboundRequestLeaderboardPacket packet) {
-            friendlyByteBuf.writeResourceLocation(packet.jobLocation);
+            friendlyByteBuf.writeIdentifier(packet.jobLocation);
         }
     };
 
-    public ServerboundRequestLeaderboardPacket(ResourceLocation jobLocation) {
+    public ServerboundRequestLeaderboardPacket(Identifier jobLocation) {
         this.jobLocation = jobLocation;
     }
 

@@ -19,6 +19,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
 
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class JobCommand {
     public static void registerCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands
                 .literal("job")
-                .requires(commandSourceStack -> commandSourceStack.hasPermission(2))
+                .requires(commandSourceStack -> commandSourceStack.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                 .then(Commands.literal("debug")
                         .then(Commands.argument("target_player", EntityArgument.player())
                                 .executes(context -> debug(context.getSource(), EntityArgument.getPlayer(context, "target_player")))
@@ -119,7 +120,7 @@ public class JobCommand {
     private static int debug(CommandSourceStack source, ServerPlayer target) {
         if (target instanceof ArcPlayer arcPlayer) {
             arcPlayer.arc$getActionHolders().forEach(actionHolder -> {
-                source.sendSuccess(() -> Component.literal(actionHolder.getLocation().toString()), false);
+                source.sendSuccess(() -> Component.literal(actionHolder.getIdentifier().toString()), false);
                 source.sendSuccess(() -> Component.literal("actions: " + actionHolder.getActions().size()), false);
                 source.sendSuccess(() -> Component.literal(" "), false);
             });

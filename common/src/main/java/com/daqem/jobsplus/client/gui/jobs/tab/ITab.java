@@ -1,10 +1,10 @@
 package com.daqem.jobsplus.client.gui.jobs.tab;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface ITab {
     Component getName();
-    ResourceLocation getActiveSprite();
-    ResourceLocation getInactiveSprite();
+    Identifier getActiveSprite();
+    Identifier getInactiveSprite();
 }

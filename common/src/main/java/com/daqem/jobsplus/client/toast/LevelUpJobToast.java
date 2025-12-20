@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class LevelUpJobToast implements Toast {
-    private static final ResourceLocation BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("toast/recipe");
+    private static final Identifier BACKGROUND_SPRITE = Identifier.withDefaultNamespace("toast/recipe");
     private static final long DISPLAY_TIME = 5000L;
     private final List<Entry> jobInstances = new ArrayList<>();
     private long lastChanged;

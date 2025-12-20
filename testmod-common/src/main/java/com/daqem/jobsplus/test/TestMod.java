@@ -3,7 +3,7 @@ package com.daqem.jobsplus.test;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 
 public class TestMod {
@@ -13,8 +13,8 @@ public class TestMod {
     public static void init() {
     }
 
-    public static ResourceLocation getId(String id) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, id);
+    public static Identifier getId(String id) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, id);
     }
 
     public static MutableComponent translatable(String str) {

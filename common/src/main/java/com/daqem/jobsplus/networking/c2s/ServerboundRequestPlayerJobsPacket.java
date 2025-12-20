@@ -21,7 +21,7 @@ import dev.architectury.networking.NetworkManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 public class ServerboundRequestPlayerJobsPacket implements CustomPacketPayload {
@@ -51,7 +51,7 @@ public class ServerboundRequestPlayerJobsPacket implements CustomPacketPayload {
 
     public static void handleServerSide(ServerboundRequestPlayerJobsPacket packet, NetworkManager.PacketContext context) {
         if (context.getPlayer() instanceof JobsServerPlayer sender) {
-            Map<ResourceLocation, LeaderboardPlayer> jobsMap = new HashMap<>(sender.jobsplus$getLevelData().jobsplus$getPlayerJobEntries().getOrDefault(packet.playerUUID, new HashMap<>()));
+            Map<Identifier, LeaderboardPlayer> jobsMap = new HashMap<>(sender.jobsplus$getLevelData().jobsplus$getPlayerJobEntries().getOrDefault(packet.playerUUID, new HashMap<>()));
 
             JobManager.getInstance().getJobs().forEach((resourceLocation, jobInstance) ->
                     jobsMap.putIfAbsent(resourceLocation, new LeaderboardPlayer(packet.playerUUID, resourceLocation))

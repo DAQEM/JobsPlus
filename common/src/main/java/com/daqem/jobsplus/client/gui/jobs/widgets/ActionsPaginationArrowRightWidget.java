@@ -4,9 +4,11 @@ import com.daqem.arc.api.action.IAction;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
 import com.daqem.uilib.gui.widget.CustomButtonWidget;
+import net.minecraft.client.gui.ActiveTextCollector;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.WidgetSprites;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -26,6 +28,6 @@ public class ActionsPaginationArrowRightWidget extends CustomButtonWidget {
     }
 
     @Override
-    public void renderString(GuiGraphics guiGraphics, Font font, int i) {
+    protected void renderDefaultLabel(@NotNull ActiveTextCollector activeTextCollector) {
     }
 }

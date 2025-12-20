@@ -29,7 +29,7 @@ public class ToggleJobStatusBarWidget extends CustomButtonWidget {
     public ToggleJobStatusBarWidget(JobsScreenState state) {
         super(107, 0, 7, 7, MESSAGE, null, button -> {
             List<String> jobs = new ArrayList<>(JobsPlusClientConfig.jobStatusBarJobs.get());
-            String jobLocation = state.getSelectedJob().getJobInstance().getLocation().toString();
+            String jobLocation = state.getSelectedJob().getJobInstance().getIdentifier().toString();
             if (jobs.contains(jobLocation)) {
                 jobs.remove(jobLocation);
             } else {
@@ -42,10 +42,10 @@ public class ToggleJobStatusBarWidget extends CustomButtonWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         List<String> jobs = JobsPlusClientConfig.jobStatusBarJobs.get();
         JobInstance jobInstance = state.getSelectedJob().getJobInstance();
-        String jobLocation = jobInstance.getLocation().toString();
+        String jobLocation = jobInstance.getIdentifier().toString();
         boolean active = jobs.contains(jobLocation);
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(true, active || this.isHovered()), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ARGB.white(this.alpha));
         guiGraphics.hLine(this.getX() + 2, this.getX() + 4, this.getY() + 3, 0xFF000000 | jobInstance.getColorDecimal());

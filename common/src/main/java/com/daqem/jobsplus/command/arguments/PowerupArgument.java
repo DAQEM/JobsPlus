@@ -11,7 +11,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +25,17 @@ public class PowerupArgument implements ArgumentType<PowerupInstance> {
 
     @Override
     public PowerupInstance parse(StringReader reader) throws CommandSyntaxException {
-        return PowerupManager.getInstance().getAllPowerups().get(ResourceLocation.read(reader));
+        return PowerupManager.getInstance().getAllPowerups().get(Identifier.read(reader));
     }
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        List<ResourceLocation> powerups = new ArrayList<>();
+        List<Identifier> powerups = new ArrayList<>();
         try {
-            powerups = context.getArgument("job", JobInstance.class).getPowerups().stream().map(PowerupInstance::getLocation).toList();
+            powerups = context.getArgument("job", JobInstance.class).getPowerups().stream().map(PowerupInstance::getIdentifier).toList();
         } catch (NullPointerException ignored) {
         }
-        return SharedSuggestionProvider.suggest(powerups.stream().map(ResourceLocation::toString), builder);
+        return SharedSuggestionProvider.suggest(powerups.stream().map(Identifier::toString), builder);
     }
 
     public static PowerupInstance getPowerup(CommandContext<?> context, String name) {

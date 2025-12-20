@@ -114,7 +114,7 @@ public class JobsScreenState {
     }
 
     public void fetchLeaderboardPlayers() {
-        NetworkManager.sendToServer(new ServerboundRequestLeaderboardPacket(getSelectedJob().getJobInstance().getLocation()));
+        NetworkManager.sendToServer(new ServerboundRequestLeaderboardPacket(getSelectedJob().getJobInstance().getIdentifier()));
     }
 
     public LeaderboardPlayer getViewingPlayer() {

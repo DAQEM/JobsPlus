@@ -17,7 +17,7 @@ import com.mojang.logging.LogUtils;
 import dev.architectury.registry.ReloadListenerRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 
 import java.text.DecimalFormat;
@@ -49,8 +49,8 @@ public class JobsPlus {
         EventRegisterCommands.registerEvent();
     }
 
-    public static ResourceLocation getId(String id) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, id);
+    public static Identifier getId(String id) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, id);
     }
 
     public static MutableComponent translatable(String str) {

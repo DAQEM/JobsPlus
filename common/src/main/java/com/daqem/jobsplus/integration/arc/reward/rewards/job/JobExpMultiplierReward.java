@@ -18,15 +18,15 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 
 public class JobExpMultiplierReward extends AbstractReward {
 
-    private final ResourceLocation jobLocation;
+    private final Identifier jobLocation;
     private final double multiplier;
 
-    public JobExpMultiplierReward(double chance, int priority, ResourceLocation jobLocation, double multiplier) {
+    public JobExpMultiplierReward(double chance, int priority, Identifier jobLocation, double multiplier) {
         super(chance, priority);
         this.jobLocation = jobLocation;
         this.multiplier = multiplier;
@@ -45,14 +45,14 @@ public class JobExpMultiplierReward extends AbstractReward {
             Job job = actionData.getData(JobsPlusActionDataType.ONLY_FOR_JOB);
             if (job == null) {
                 if (sourceActionHolder instanceof JobInstance jobInstance) {
-                    if (!jobInstance.getLocation().equals(jobLocation)) return new ActionResult();
+                    if (!jobInstance.getIdentifier().equals(jobLocation)) return new ActionResult();
                     job = jobsServerPlayer.jobsplus$getJob(jobInstance);
                 } else if (sourceActionHolder instanceof PowerupInstance powerupInstance) {
                     if (!powerupInstance.getJobLocation().equals(jobLocation)) return new ActionResult();
                     job = jobsServerPlayer.jobsplus$getJob(JobInstance.of(powerupInstance.getJobLocation()));
                 }
             } else {
-                if (!job.getJobInstance().getLocation().equals(jobLocation)) return new ActionResult();
+                if (!job.getJobInstance().getIdentifier().equals(jobLocation)) return new ActionResult();
             }
             if (job != null) {
                 Double exp = actionData.getData(JobsPlusActionDataType.JOB_EXP);
@@ -81,7 +81,7 @@ public class JobExpMultiplierReward extends AbstractReward {
             return new JobExpMultiplierReward(
                     chance,
                     priority,
-                    getResourceLocation(jsonObject, "job"),
+                    getIdentifier(jsonObject, "job"),
                     GsonHelper.getAsDouble(jsonObject, "multiplier"));
         }
 
@@ -90,14 +90,14 @@ public class JobExpMultiplierReward extends AbstractReward {
             return new JobExpMultiplierReward(
                     chance,
                     priority,
-                    friendlyByteBuf.readResourceLocation(),
+                    friendlyByteBuf.readIdentifier(),
                     friendlyByteBuf.readDouble());
         }
 
         @Override
         public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, JobExpMultiplierReward type) {
             IRewardSerializer.super.toNetwork(friendlyByteBuf, type);
-            friendlyByteBuf.writeResourceLocation(type.jobLocation);
+            friendlyByteBuf.writeIdentifier(type.jobLocation);
             friendlyByteBuf.writeDouble(type.multiplier);
         }
     }

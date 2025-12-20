@@ -6,7 +6,7 @@ import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +21,7 @@ import java.util.Map;
 public abstract class MixinLocalPlayer extends Player implements JobsPlayer {
 
     @Unique
-    private final Map<ResourceLocation, Job> jobsplus$jobs = new HashMap<>();
+    private final Map<Identifier, Job> jobsplus$jobs = new HashMap<>();
     @Unique
     private double jobsplus$coins = 0;
 
@@ -46,11 +46,11 @@ public abstract class MixinLocalPlayer extends Player implements JobsPlayer {
 
     @Override
     public @Nullable Job jobsplus$addNewJob(JobInstance jobInstance) {
-        if (jobInstance.getLocation() == null) return null;
+        if (jobInstance.getIdentifier() == null) return null;
         Job job = jobsplus$getJob(jobInstance);
         if (job == null) {
             job = new Job(this, jobInstance, 1, 0);
-            jobsplus$jobs.put(jobInstance.getLocation(), job);
+            jobsplus$jobs.put(jobInstance.getIdentifier(), job);
             return job;
         }
         return null;
@@ -58,7 +58,7 @@ public abstract class MixinLocalPlayer extends Player implements JobsPlayer {
 
     @Override
     public void jobsplus$removeJob(JobInstance jobInstance) {
-        jobsplus$jobs.remove(jobInstance.getLocation());
+        jobsplus$jobs.remove(jobInstance.getIdentifier());
     }
 
     @Override
@@ -69,11 +69,11 @@ public abstract class MixinLocalPlayer extends Player implements JobsPlayer {
     @Override
     public Job jobsplus$getJob(@Nullable JobInstance jobInstance) {
         if (jobInstance == null) return null;
-        return jobsplus$jobs.get(jobInstance.getLocation());
+        return jobsplus$jobs.get(jobInstance.getIdentifier());
     }
 
     @Override
-    public Job jobsplus$getJob(ResourceLocation jobLocation) {
+    public Job jobsplus$getJob(Identifier jobLocation) {
         return jobsplus$getJob(JobInstance.of(jobLocation));
     }
 

@@ -18,7 +18,7 @@ public class RightTabWidget extends CustomButtonWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 this.state.getSelectedRightTab() == this.tab ? tab.getActiveSprite() : tab.getInactiveSprite(),

@@ -25,7 +25,7 @@ import com.mojang.serialization.OptionalDynamic;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelSettings;
 import net.minecraft.world.level.levelgen.WorldOptions;
@@ -35,29 +35,29 @@ import net.minecraft.world.level.storage.PrimaryLevelData;
 public class PrimaryLevelDataMixin implements JobsPlusLevelData {
 
     @Unique
-    private Map<UUID, Map<ResourceLocation, LeaderboardPlayer>> jobsplus$playerJobEntries = new HashMap<>();
+    private Map<UUID, Map<Identifier, LeaderboardPlayer>> jobsplus$playerJobEntries = new HashMap<>();
     @Unique
-    private final Map<ResourceLocation, List<LeaderboardPlayer>> jobsplus$leaderboardCache = new HashMap<>();
+    private final Map<Identifier, List<LeaderboardPlayer>> jobsplus$leaderboardCache = new HashMap<>();
     @Unique
-    private final Map<ResourceLocation, Long> jobsplus$leaderboardCacheTime = new HashMap<>();
+    private final Map<Identifier, Long> jobsplus$leaderboardCacheTime = new HashMap<>();
 
     @Override
-    public Map<UUID, Map<ResourceLocation, LeaderboardPlayer>> jobsplus$getPlayerJobEntries() {
+    public Map<UUID, Map<Identifier, LeaderboardPlayer>> jobsplus$getPlayerJobEntries() {
         return this.jobsplus$playerJobEntries;
     }
 
     @Override
-    public void jobsplus$setPlayerJobEntries(Map<UUID, Map<ResourceLocation, LeaderboardPlayer>> entries) {
+    public void jobsplus$setPlayerJobEntries(Map<UUID, Map<Identifier, LeaderboardPlayer>> entries) {
         this.jobsplus$playerJobEntries = entries;
     }
 
     @Override
     public void jobsplus$updatePlayerEntry(Player player, Job job) {
         if (job.getLevel() > 0) {
-            Map<ResourceLocation, LeaderboardPlayer> playerEntries = this.jobsplus$playerJobEntries.computeIfAbsent(player.getUUID(), k -> new HashMap<>());
+            Map<Identifier, LeaderboardPlayer> playerEntries = this.jobsplus$playerJobEntries.computeIfAbsent(player.getUUID(), k -> new HashMap<>());
             LeaderboardPlayer entry = playerEntries.computeIfAbsent(
-                    job.getJobInstance().getLocation(),
-                    k -> new LeaderboardPlayer(player.getUUID(), job.getJobInstance().getLocation()));
+                    job.getJobInstance().getIdentifier(),
+                    k -> new LeaderboardPlayer(player.getUUID(), job.getJobInstance().getIdentifier()));
 
             entry.setPlayerName(player.getGameProfile().name());
             entry.setLevel(job.getLevel());
@@ -69,9 +69,9 @@ public class PrimaryLevelDataMixin implements JobsPlusLevelData {
 
     @Override
     public void jobsplus$removePlayerEntry(Player player, Job job) {
-        Map<ResourceLocation, LeaderboardPlayer> playerEntries = this.jobsplus$playerJobEntries.get(player.getUUID());
+        Map<Identifier, LeaderboardPlayer> playerEntries = this.jobsplus$playerJobEntries.get(player.getUUID());
         if (playerEntries != null) {
-            playerEntries.remove(job.getJobInstance().getLocation());
+            playerEntries.remove(job.getJobInstance().getIdentifier());
             if (playerEntries.isEmpty()) {
                 this.jobsplus$playerJobEntries.remove(player.getUUID());
             }
@@ -79,7 +79,7 @@ public class PrimaryLevelDataMixin implements JobsPlusLevelData {
     }
 
     @Override
-    public List<LeaderboardPlayer> jobsplus$getSortedLeaderboard(ResourceLocation jobLocation) {
+    public List<LeaderboardPlayer> jobsplus$getSortedLeaderboard(Identifier jobLocation) {
         long now = System.currentTimeMillis();
         if (jobsplus$leaderboardCache.containsKey(jobLocation) && now - jobsplus$leaderboardCacheTime.getOrDefault(jobLocation, 0L) < 30000) {
             return jobsplus$leaderboardCache.get(jobLocation);

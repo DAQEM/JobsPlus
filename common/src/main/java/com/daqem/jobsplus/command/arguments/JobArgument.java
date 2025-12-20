@@ -9,7 +9,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
@@ -22,13 +22,13 @@ public class JobArgument implements ArgumentType<JobInstance> {
 
     @Override
     public JobInstance parse(StringReader reader) throws CommandSyntaxException {
-        return JobManager.getInstance().getJobs().get(ResourceLocation.read(reader));
+        return JobManager.getInstance().getJobs().get(Identifier.read(reader));
     }
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        Collection<ResourceLocation> jobs = JobManager.getInstance().getJobs().keySet();
-        return SharedSuggestionProvider.suggest(jobs.stream().map(ResourceLocation::toString), builder);
+        Collection<Identifier> jobs = JobManager.getInstance().getJobs().keySet();
+        return SharedSuggestionProvider.suggest(jobs.stream().map(Identifier::toString), builder);
     }
 
     public static JobInstance getJob(CommandContext<?> context, String name) {

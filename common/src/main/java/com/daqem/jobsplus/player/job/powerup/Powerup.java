@@ -3,12 +3,12 @@ package com.daqem.jobsplus.player.job.powerup;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class Powerup {
 
     public static final Codec<Powerup> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("powerup").forGetter(powerup -> powerup.powerupInstance.getLocation()),
+            Identifier.CODEC.fieldOf("powerup").forGetter(powerup -> powerup.powerupInstance.getIdentifier()),
             PowerupState.CODEC.fieldOf("state").forGetter(Powerup::getState)
 
     ).apply(instance, Powerup::new));
@@ -16,7 +16,7 @@ public class Powerup {
     private final PowerupInstance powerupInstance;
     private PowerupState powerupState;
 
-    public Powerup(ResourceLocation powerupLocation, PowerupState powerupState) {
+    public Powerup(Identifier powerupLocation, PowerupState powerupState) {
         this.powerupInstance = PowerupInstance.of(powerupLocation);
         this.powerupState = powerupState;
     }

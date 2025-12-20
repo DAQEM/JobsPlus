@@ -4,12 +4,12 @@ import com.daqem.jobsplus.networking.JobsPlusNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class ClientboundSyncJobPacket implements CustomPacketPayload {
 
-    private final ResourceLocation jobLocation;
+    private final Identifier jobLocation;
     private final int level;
     private final double experience;
 
@@ -21,13 +21,13 @@ public class ClientboundSyncJobPacket implements CustomPacketPayload {
 
         @Override
         public void encode(RegistryFriendlyByteBuf buf, ClientboundSyncJobPacket packet) {
-            buf.writeResourceLocation(packet.jobLocation);
+            buf.writeIdentifier(packet.jobLocation);
             buf.writeInt(packet.level);
             buf.writeDouble(packet.experience);
         }
     };
 
-    public ClientboundSyncJobPacket(ResourceLocation jobLocation, int level, double experience) {
+    public ClientboundSyncJobPacket(Identifier jobLocation, int level, double experience) {
         this.jobLocation = jobLocation;
         this.level = level;
         this.experience = experience;
@@ -35,7 +35,7 @@ public class ClientboundSyncJobPacket implements CustomPacketPayload {
     }
 
     public ClientboundSyncJobPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
-        this.jobLocation = friendlyByteBuf.readResourceLocation();
+        this.jobLocation = friendlyByteBuf.readIdentifier();
         this.level = friendlyByteBuf.readInt();
         this.experience = friendlyByteBuf.readDouble();
     }
@@ -45,7 +45,7 @@ public class ClientboundSyncJobPacket implements CustomPacketPayload {
         return JobsPlusNetworking.CLIENTBOUND_SYNC_JOB;
     }
 
-    public ResourceLocation getJobLocation() {
+    public Identifier getJobLocation() {
         return jobLocation;
     }
 

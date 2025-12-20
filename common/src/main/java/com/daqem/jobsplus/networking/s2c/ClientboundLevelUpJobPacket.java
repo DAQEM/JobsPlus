@@ -4,12 +4,12 @@ import com.daqem.jobsplus.networking.JobsPlusNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class ClientboundLevelUpJobPacket implements CustomPacketPayload {
 
-    private final ResourceLocation jobLocation;
+    private final Identifier jobLocation;
     private final int level;
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundLevelUpJobPacket> STREAM_CODEC = new StreamCodec<>() {
@@ -20,19 +20,19 @@ public class ClientboundLevelUpJobPacket implements CustomPacketPayload {
 
         @Override
         public void encode(RegistryFriendlyByteBuf buf, ClientboundLevelUpJobPacket packet) {
-            buf.writeResourceLocation(packet.jobLocation);
+            buf.writeIdentifier(packet.jobLocation);
             buf.writeInt(packet.level);
         }
     };
 
-    public ClientboundLevelUpJobPacket(ResourceLocation jobLocation, int level) {
+    public ClientboundLevelUpJobPacket(Identifier jobLocation, int level) {
         this.jobLocation = jobLocation;
         this.level = level;
 
     }
 
     public ClientboundLevelUpJobPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
-        this.jobLocation = friendlyByteBuf.readResourceLocation();
+        this.jobLocation = friendlyByteBuf.readIdentifier();
         this.level = friendlyByteBuf.readInt();
     }
 
@@ -41,7 +41,7 @@ public class ClientboundLevelUpJobPacket implements CustomPacketPayload {
         return JobsPlusNetworking.CLIENTBOUND_LEVEL_UP_JOB;
     }
 
-    public ResourceLocation getJobLocation() {
+    public Identifier getJobLocation() {
         return jobLocation;
     }
 

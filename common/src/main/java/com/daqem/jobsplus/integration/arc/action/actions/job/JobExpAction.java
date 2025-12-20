@@ -9,13 +9,13 @@ import com.daqem.arc.api.reward.IReward;
 import com.daqem.jobsplus.integration.arc.action.type.JobsPlusActionType;
 import com.google.gson.JsonObject;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
 public class JobExpAction extends AbstractAction {
 
-    public JobExpAction(ResourceLocation location, ResourceLocation actionHolderLocation, IActionHolderType<?> actionHolderType, List<IReward> rewards, List<ICondition> conditions) {
+    public JobExpAction(Identifier location, Identifier actionHolderLocation, IActionHolderType<?> actionHolderType, List<IReward> rewards, List<ICondition> conditions) {
         super(location, actionHolderLocation, actionHolderType, rewards, conditions);
     }
 
@@ -27,12 +27,12 @@ public class JobExpAction extends AbstractAction {
     public static class Serializer implements IActionSerializer<JobExpAction> {
 
         @Override
-        public JobExpAction fromJson(ResourceLocation location, JsonObject jsonObject, ResourceLocation actionHolderLocation, IActionHolderType<?> actionHolderType, List<IReward> rewards, List<ICondition> conditions) {
+        public JobExpAction fromJson(Identifier location, JsonObject jsonObject, Identifier actionHolderLocation, IActionHolderType<?> actionHolderType, List<IReward> rewards, List<ICondition> conditions) {
             return new JobExpAction(location, actionHolderLocation, actionHolderType, rewards, conditions);
         }
 
         @Override
-        public JobExpAction fromNetwork(ResourceLocation location, RegistryFriendlyByteBuf friendlyByteBuf, ResourceLocation actionHolderLocation, IActionHolderType<?> actionHolderType, List<IReward> rewards, List<ICondition> conditions) {
+        public JobExpAction fromNetwork(Identifier location, RegistryFriendlyByteBuf friendlyByteBuf, Identifier actionHolderLocation, IActionHolderType<?> actionHolderType, List<IReward> rewards, List<ICondition> conditions) {
             return new JobExpAction(location, actionHolderLocation, actionHolderType, rewards, conditions);
         }
 

@@ -4,7 +4,7 @@ import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -20,13 +20,13 @@ public class JobPowerupManager {
 
     public Optional<Powerup> getPowerup(PowerupInstance powerupInstance) {
         return powerups.stream()
-                .filter(powerup -> powerup.getPowerupInstance().getLocation().equals(powerupInstance.getLocation()))
+                .filter(powerup -> powerup.getPowerupInstance().getIdentifier().equals(powerupInstance.getIdentifier()))
                 .findFirst();
     }
 
-    public Optional<Powerup> getPowerup(ResourceLocation powerupLocation) {
+    public Optional<Powerup> getPowerup(Identifier powerupLocation) {
         return powerups.stream()
-                .filter(powerup -> powerup.getPowerupInstance().getLocation().equals(powerupLocation))
+                .filter(powerup -> powerup.getPowerupInstance().getIdentifier().equals(powerupLocation))
                 .findFirst();
     }
 
@@ -54,7 +54,7 @@ public class JobPowerupManager {
     }
 
     public boolean canAddPowerup(PowerupInstance powerupInstance) {
-        if (powerups.stream().anyMatch(powerup -> powerup.getPowerupInstance().getLocation().equals(powerupInstance.getLocation()))) return false;
+        if (powerups.stream().anyMatch(powerup -> powerup.getPowerupInstance().getIdentifier().equals(powerupInstance.getIdentifier()))) return false;
         if (powerupInstance.getParent() == null) return true;
         return getPowerup(powerupInstance.getParent()).isPresent();
     }
@@ -91,7 +91,7 @@ public class JobPowerupManager {
     public static List<Powerup> getChildren(PowerupInstance powerupInstance, List<Powerup> powerups) {
         return powerups.stream()
                 .filter(powerup -> powerup.getPowerupInstance().getParentLocation() != null
-                        && powerup.getPowerupInstance().getParentLocation().equals(powerupInstance.getLocation()))
+                        && powerup.getPowerupInstance().getParentLocation().equals(powerupInstance.getIdentifier()))
                 .toList();
     }
 

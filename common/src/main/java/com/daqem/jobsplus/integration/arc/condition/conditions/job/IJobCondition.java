@@ -1,10 +1,10 @@
 package com.daqem.jobsplus.integration.arc.condition.conditions.job;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface IJobCondition {
 
-    ResourceLocation getJobLocation();
+    Identifier getJobLocation();
 
     int getRequiredLevel();
 }

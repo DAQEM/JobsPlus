@@ -10,7 +10,7 @@ import com.daqem.jobsplus.player.job.powerup.PowerupType;
 import com.google.gson.*;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -21,14 +21,14 @@ import java.util.List;
 
 public class PowerupInstance extends AbstractActionHolder {
 
-    private final ResourceLocation jobLocation;
-    private final @Nullable ResourceLocation parentLocation;
+    private final Identifier jobLocation;
+    private final @Nullable Identifier parentLocation;
     private final ItemStack icon;
     private final int price;
     private final int requiredLevel;
     private final PowerupType type;
 
-    public PowerupInstance(ResourceLocation location, ResourceLocation jobLocation, @Nullable ResourceLocation parentLocation, ItemStack icon, int price, int requiredLevel, PowerupType type) {
+    public PowerupInstance(Identifier location, Identifier jobLocation, @Nullable Identifier parentLocation, ItemStack icon, int price, int requiredLevel, PowerupType type) {
         super(location);
         this.jobLocation = jobLocation;
         this.parentLocation = parentLocation;
@@ -46,11 +46,11 @@ public class PowerupInstance extends AbstractActionHolder {
         return JobsPlus.translatable("powerup." + location.getNamespace() + "." + location.getPath().replace('/', '.') + ".description");
     }
 
-    public ResourceLocation getJobLocation() {
+    public Identifier getJobLocation() {
         return jobLocation;
     }
 
-    public @Nullable ResourceLocation getParentLocation() {
+    public @Nullable Identifier getParentLocation() {
         return parentLocation;
     }
 
@@ -76,7 +76,7 @@ public class PowerupInstance extends AbstractActionHolder {
     }
 
     @Nullable
-    public static PowerupInstance of(ResourceLocation location) {
+    public static PowerupInstance of(Identifier location) {
         return PowerupManager.getInstance().getAllPowerups().get(location);
     }
 
@@ -86,7 +86,7 @@ public class PowerupInstance extends AbstractActionHolder {
 
     public List<PowerupInstance> getChildren() {
         return PowerupManager.getInstance().getAllPowerups().values().stream()
-                .filter(powerupInstance -> powerupInstance.getParentLocation() != null && powerupInstance.getParentLocation().equals(this.getLocation()))
+                .filter(powerupInstance -> powerupInstance.getParentLocation() != null && powerupInstance.getParentLocation().equals(this.getIdentifier()))
                 .toList();
     }
 
@@ -95,16 +95,16 @@ public class PowerupInstance extends AbstractActionHolder {
         @Override
         public PowerupInstance deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
-            return fromJson(jsonObject, getResourceLocation(jsonObject, "location"));
+            return fromJson(jsonObject, getIdentifier(jsonObject, "location"));
         }
 
         @Override
-        public PowerupInstance fromJson(JsonObject jsonObject, ResourceLocation resourceLocation) {
+        public PowerupInstance fromJson(JsonObject jsonObject, Identifier resourceLocation) {
             String parentLocation = GsonHelper.getAsString(jsonObject, "parent", null);
             return new PowerupInstance(
                     resourceLocation,
-                    getResourceLocation(jsonObject, "job"),
-                    parentLocation == null ? null : ResourceLocation.parse(parentLocation),
+                    getIdentifier(jsonObject, "job"),
+                    parentLocation == null ? null : Identifier.parse(parentLocation),
                     getItemStack(jsonObject, "icon"),
                     GsonHelper.getAsInt(jsonObject, "price"),
                     GsonHelper.getAsInt(jsonObject, "required_level"),
@@ -113,11 +113,11 @@ public class PowerupInstance extends AbstractActionHolder {
         }
 
         @Override
-        public PowerupInstance fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, ResourceLocation resourceLocation) {
+        public PowerupInstance fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, Identifier resourceLocation) {
             return new PowerupInstance(
-                    friendlyByteBuf.readResourceLocation(),
-                    friendlyByteBuf.readResourceLocation(),
-                    friendlyByteBuf.readBoolean() ? friendlyByteBuf.readResourceLocation() : null,
+                    friendlyByteBuf.readIdentifier(),
+                    friendlyByteBuf.readIdentifier(),
+                    friendlyByteBuf.readBoolean() ? friendlyByteBuf.readIdentifier() : null,
                     ItemStack.STREAM_CODEC.decode(friendlyByteBuf),
                     friendlyByteBuf.readInt(),
                     friendlyByteBuf.readInt(),
@@ -127,11 +127,11 @@ public class PowerupInstance extends AbstractActionHolder {
 
         @Override
         public void toNetwork(RegistryFriendlyByteBuf friendlyByteBuf, PowerupInstance powerupInstance) {
-            friendlyByteBuf.writeResourceLocation(powerupInstance.getLocation());
-            friendlyByteBuf.writeResourceLocation(powerupInstance.getJobLocation());
+            friendlyByteBuf.writeIdentifier(powerupInstance.getIdentifier());
+            friendlyByteBuf.writeIdentifier(powerupInstance.getJobLocation());
             friendlyByteBuf.writeBoolean(powerupInstance.getParentLocation() != null);
             if (powerupInstance.getParentLocation() != null) {
-                friendlyByteBuf.writeResourceLocation(powerupInstance.getParentLocation());
+                friendlyByteBuf.writeIdentifier(powerupInstance.getParentLocation());
             }
             ItemStack.STREAM_CODEC.encode(friendlyByteBuf, powerupInstance.getIcon());
             friendlyByteBuf.writeInt(powerupInstance.getPrice());

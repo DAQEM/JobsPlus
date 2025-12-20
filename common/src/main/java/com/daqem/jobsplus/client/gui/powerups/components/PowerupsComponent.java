@@ -11,7 +11,7 @@ import com.daqem.uilib.gui.component.skilltree.SkillTreeComponent;
 import com.daqem.uilib.gui.component.sprite.SpriteComponent;
 import com.daqem.uilib.gui.component.text.TextComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,20 +30,20 @@ public class PowerupsComponent extends SpriteComponent {
         coinsComponent.setX(-coinsComponent.getWidth() + 14);
         this.addComponent(coinsComponent);
 
-        Map<ResourceLocation, Powerup> allPowerups = state.getJob().getPowerupManager().getAllPowerups().stream().collect(Collectors.toMap(powerup -> powerup.getPowerupInstance().getLocation(), powerup -> powerup));
+        Map<Identifier, Powerup> allPowerups = state.getJob().getPowerupManager().getAllPowerups().stream().collect(Collectors.toMap(powerup -> powerup.getPowerupInstance().getIdentifier(), powerup -> powerup));
         List<PowerupInstance> powerupInstances = state.getJob().getJobInstance().getPowerups();
         PowerupsSkillTreeItem rootItem = new PowerupsSkillTreeItem(state, null, true, new ArrayList<>());
-        Map<ResourceLocation, PowerupsSkillTreeItem> powerupItems = new HashMap<>();
+        Map<Identifier, PowerupsSkillTreeItem> powerupItems = new HashMap<>();
         for (PowerupInstance powerupInstance : powerupInstances) {
-            Powerup powerup = allPowerups.get(powerupInstance.getLocation());
+            Powerup powerup = allPowerups.get(powerupInstance.getIdentifier());
             if (powerup == null) {
-                powerupItems.put(powerupInstance.getLocation(), new PowerupsSkillTreeItem(state, new Powerup(powerupInstance, PowerupState.LOCKED)));
+                powerupItems.put(powerupInstance.getIdentifier(), new PowerupsSkillTreeItem(state, new Powerup(powerupInstance, PowerupState.LOCKED)));
             } else {
-                powerupItems.put(powerupInstance.getLocation(), new PowerupsSkillTreeItem(state, powerup));
+                powerupItems.put(powerupInstance.getIdentifier(), new PowerupsSkillTreeItem(state, powerup));
             }
         }
         for (PowerupsSkillTreeItem powerupItem : powerupItems.values()) {
-            ResourceLocation parentLocation = powerupItem.getPowerup().getPowerupInstance().getParentLocation();
+            Identifier parentLocation = powerupItem.getPowerup().getPowerupInstance().getParentLocation();
             if (parentLocation == null) {
                 rootItem.addChild(powerupItem);
                 if (powerupItem.getPowerup().getState() == PowerupState.LOCKED) {
@@ -59,7 +59,7 @@ public class PowerupsComponent extends SpriteComponent {
                 }
             }
         }
-        powerupItems.put(state.getJob().getJobInstance().getLocation(), rootItem);
+        powerupItems.put(state.getJob().getJobInstance().getIdentifier(), rootItem);
         PowerupsSkillTree powerupsSkillTree = new PowerupsSkillTree(new ArrayList<>(powerupItems.values()));
         SkillTreeComponent skillTreeComponent = new SkillTreeComponent(23, 30, 242, 164, powerupsSkillTree);
         this.addComponent(skillTreeComponent);

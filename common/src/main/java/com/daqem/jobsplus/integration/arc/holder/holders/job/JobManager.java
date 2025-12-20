@@ -26,7 +26,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -47,19 +47,19 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
 
     @Override
     protected @NotNull List<IActionHolder> prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
-        Map<ResourceLocation, Resource> resourceMap = resourceManager.listResources("jobsplus/jobs", (resourceLocation) ->
+        Map<Identifier, Resource> resourceMap = resourceManager.listResources("jobsplus/jobs", (resourceLocation) ->
                         resourceLocation.getPath().endsWith(".json")).entrySet().stream()
                 .collect(Collectors.toMap(entry ->
-                                ResourceLocation.fromNamespaceAndPath(
+                                Identifier.fromNamespaceAndPath(
                                         entry.getKey().getNamespace(),
                                         entry.getKey().getPath()
                                                 .substring(0, entry.getKey().getPath().length() - ".json".length())
                                                 .substring("jobsplus/jobs/".length())),
                         Map.Entry::getValue));
 
-        Map<ResourceLocation, JsonObject> map = new HashMap<>();
-        for (Map.Entry<ResourceLocation, Resource> entry : resourceMap.entrySet()) {
-            ResourceLocation location = entry.getKey();
+        Map<Identifier, JsonObject> map = new HashMap<>();
+        for (Map.Entry<Identifier, Resource> entry : resourceMap.entrySet()) {
+            Identifier location = entry.getKey();
             try (BufferedReader reader = entry.getValue().openAsReader()) {
                 JsonObject jsonElement = GsonHelper.parse(reader);
                 map.put(location, jsonElement);
@@ -91,7 +91,7 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
                                     namespace = JobsPlus.MOD_ID;
                                     resourcePath = relativePath;
                                 }
-                                ResourceLocation location = ResourceLocation.fromNamespaceAndPath(namespace, resourcePath);
+                                Identifier location = Identifier.fromNamespaceAndPath(namespace, resourcePath);
                                 map.put(location, jsonElement);
                             } catch (Exception e) {
                                 JobsPlus.LOGGER.error("Parsing error loading job from config {}", path, e);
@@ -104,8 +104,8 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
         List<IActionHolder> jobs = new ArrayList<>();
         List<String> excludedJobs = JobsPlusConfig.excludedJobs.get();
 
-        for (Map.Entry<ResourceLocation, JsonObject> entry : map.entrySet()) {
-            ResourceLocation location = entry.getKey();
+        for (Map.Entry<Identifier, JsonObject> entry : map.entrySet()) {
+            Identifier location = entry.getKey();
             if (excludedJobs.contains(location.toString())) {
                 continue;
             }
@@ -134,10 +134,10 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
         return instance != null ? instance : JobsPlusExpectPlatform.getJobManager();
     }
 
-    public Map<ResourceLocation, JobInstance> getJobs() {
+    public Map<Identifier, JobInstance> getJobs() {
         return ActionHolderManager.getInstance().getActionHolders().stream()
                 .filter(actionHolder -> actionHolder instanceof JobInstance)
                 .map(actionHolder -> (JobInstance) actionHolder)
-                .collect(Collectors.toMap(JobInstance::getLocation, jobInstance -> jobInstance));
+                .collect(Collectors.toMap(JobInstance::getIdentifier, jobInstance -> jobInstance));
     }
 }
