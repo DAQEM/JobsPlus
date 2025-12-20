@@ -38,6 +38,7 @@ subprojects {
 
     repositories {
         maven { url "https://maven.daqem.com/snapshots/" }
+        maven { url "https://maven.daqem.com/releases" }
         maven { url "https://maven.neoforged.net/releases/" }
     }
 
