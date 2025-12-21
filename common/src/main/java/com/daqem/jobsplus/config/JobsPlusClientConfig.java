@@ -44,7 +44,13 @@ public class JobsPlusClientConfig {
     public static final IConfigEntry<Boolean> showJobRestrictionTooltip;
 
     static {
-        IConfigBuilder builder = new ConfigBuilder(JobsPlus.MOD_ID, "jobsplus-client", ConfigExtension.YAML, ConfigType.CLIENT, YamlConfigExpectPlatform.getConfigDirectory().resolve("jobsplus"));
+        IConfigBuilder builder = new ConfigBuilder(
+                JobsPlus.MOD_ID,
+                "jobsplus-client",
+                ConfigExtension.YAML,
+                ConfigType.CLIENT,
+                YamlConfigExpectPlatform.getConfigDirectory().resolve("jobsplus")
+        );
 
         builder.push("status_bar");
         jobStatusBarJobs = builder.defineStringList("jobs", List.of()).withComments("The job status bars to display. Use job IDs.");

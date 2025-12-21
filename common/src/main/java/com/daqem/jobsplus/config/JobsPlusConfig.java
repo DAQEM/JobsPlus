@@ -33,9 +33,17 @@ public class JobsPlusConfig {
     public static final IConfigEntry<String> coinFormat;
     public static final IConfigEntry<String> expFormat;
 
+    public static final IConfigEntry<Boolean> sendJobLevelUpMessages;
+
 
     static {
-        IConfigBuilder builder = new ConfigBuilder(JobsPlus.MOD_ID, "jobsplus-common", ConfigExtension.YAML, ConfigType.COMMON, YamlConfigExpectPlatform.getConfigDirectory().resolve("jobsplus"));
+        IConfigBuilder builder = new ConfigBuilder(
+                JobsPlus.MOD_ID,
+                "jobsplus-common",
+                ConfigExtension.YAML,
+                ConfigType.COMMON,
+                YamlConfigExpectPlatform.getConfigDirectory().resolve("jobsplus")
+        );
 
         builder.push("jobs");
         amountOfFreeJobs = builder.defineInteger("amount_of_free_jobs", 2, 0, 1000).withComments("the amount of free jobs a player can have");
@@ -72,6 +80,10 @@ public class JobsPlusConfig {
         builder.push("display");
         coinFormat = builder.defineString("coin_format", "#,###.#", 1, 32).withComments("The format used to display coins.", "Uses DecimalFormat patterns.", "Examples: '#,##0.00', '0.0a', '##0‰'").dontSync();
         expFormat = builder.defineString("exp_format", "#,###.#", 1, 32).withComments("The format used to display experience.", "Uses DecimalFormat patterns.", "Examples: '#,##0.00', '0.0a', '##0‰'").dontSync();
+        builder.pop();
+
+        builder.push("messages");
+        sendJobLevelUpMessages = builder.defineBoolean("send_job_level_up_messages", true).withComments("If true, players will receive a message in chat when they level up a job.");
         builder.pop();
 
         builder.build();

@@ -28,7 +28,7 @@ public class JobArgument implements ArgumentType<JobInstance> {
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         Collection<Identifier> jobs = JobManager.getInstance().getJobs().keySet();
-        return SharedSuggestionProvider.suggest(jobs.stream().map(Identifier::toString), builder);
+        return SharedSuggestionProvider.suggestResource(jobs, builder);
     }
 
     public static JobInstance getJob(CommandContext<?> context, String name) {
