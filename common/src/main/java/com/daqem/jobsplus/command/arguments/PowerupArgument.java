@@ -35,7 +35,7 @@ public class PowerupArgument implements ArgumentType<PowerupInstance> {
             powerups = context.getArgument("job", JobInstance.class).getPowerups().stream().map(PowerupInstance::getIdentifier).toList();
         } catch (NullPointerException ignored) {
         }
-        return SharedSuggestionProvider.suggest(powerups.stream().map(Identifier::toString), builder);
+        return SharedSuggestionProvider.suggestResource(powerups, builder);
     }
 
     public static PowerupInstance getPowerup(CommandContext<?> context, String name) {

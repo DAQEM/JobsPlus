@@ -58,19 +58,21 @@ public class JobEvents {
 
             player.jobsplus$addCoins(JobsPlusConfig.coinsPerLevelUp.get());
             JobInstance jobInstance = job.getJobInstance();
-            serverPlayer.level().getServer().getPlayerList()
-                    .broadcastSystemMessage(
-                            JobsPlus.translatable("job.level_up",
-                                    serverPlayer.getName().copy()
-                                            .withStyle(style -> style
-                                                    .withColor(jobInstance.getColorDecimal())
-                                            ),
-                                    JobsPlus.literal(String.valueOf(job.getLevel()))
-                                            .withStyle(style -> style
-                                                    .withColor(jobInstance.getColorDecimal())
-                                            ),
-                                    jobInstance.getName().getString()
-                            ), false);
+            if (JobsPlusConfig.sendJobLevelUpMessages.get()) {
+                serverPlayer.level().getServer().getPlayerList()
+                        .broadcastSystemMessage(
+                                JobsPlus.translatable("job.level_up",
+                                        serverPlayer.getName().copy()
+                                                .withStyle(style -> style
+                                                        .withColor(jobInstance.getColorDecimal())
+                                                ),
+                                        JobsPlus.literal(String.valueOf(job.getLevel()))
+                                                .withStyle(style -> style
+                                                        .withColor(jobInstance.getColorDecimal())
+                                                ),
+                                        jobInstance.getName().getString()
+                                ), false);
+            }
         }
     }
 

@@ -19,23 +19,24 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class RecipeItemComponent extends SpriteComponent {
 
-    private static final int[] SPRITE_IDS = new int[] {4, 1, 2, 3, 3, 1, 4, 3, 2, 4, 2, 4, 3, 1, 2, 1};
+    private static final int[] SPRITE_IDS = new int[]{4, 1, 2, 3, 3, 1, 4, 3, 2, 4, 2, 4, 3, 1, 2, 1};
 
     private final List<Component> tooltip;
 
     public RecipeItemComponent(int x, int y, int index, List<RestrictionType> restrictionTypes, int requiredLevel, ItemStack itemStack) {
         super(x, y, 24, 24, JobsPlus.getId("jobs/item_slot_" + SPRITE_IDS[index % SPRITE_IDS.length]));
-        this.tooltip = restrictionTypes.stream()
-                .map(restrictionType -> (Component) ItemRestrictions.translatable(restrictionType.getGuiTranslationKey()))
-                .sorted((c1, c2) -> String.CASE_INSENSITIVE_ORDER.compare(c1.getString(), c2.getString()))
-                .collect(Collectors.toList());
+        this.tooltip = new ArrayList<>();
         MutableComponent title = JobsPlus.translatable("gui.jobs.restriction_types", requiredLevel);
-        List<Component> titleLines = getTitleLines(title).reversed();
-        titleLines.forEach(this.tooltip::addFirst);
+        List<Component> titleLines = getTitleLines(title);
+        this.tooltip.addAll(titleLines);
+
+        this.tooltip.addAll(restrictionTypes.stream()
+                .map(restrictionType -> ItemRestrictions.translatable(restrictionType.getGuiTranslationKey().replace("cant_", "can_")))
+                .sorted((c1, c2) -> String.CASE_INSENSITIVE_ORDER.compare(c1.getString(), c2.getString()))
+                .toList());
 
         this.tooltip.add(Component.empty());
         this.tooltip.add(JobsPlus.translatable("gui.jobs.item_info").withStyle(ChatFormatting.GOLD));
