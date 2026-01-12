@@ -206,6 +206,11 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
             this.jobsplus$coins = oldJobsServerPlayer.jobsplus$getCoins();
 
             this.jobsplus$jobs.forEach(job -> job.setPlayer(this));
+
+            if (jobsplus$getServerPlayer() instanceof ArcServerPlayer arcServerPlayer) {
+                List<IActionHolder> iActionHolders = this.jobsplus$getActionHolders();
+                arcServerPlayer.arc$addActionHolders(new ArrayList<>(iActionHolders));
+            }
         }
     }
 

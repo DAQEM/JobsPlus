@@ -14,7 +14,7 @@
   "conditions": [
     {
       "type": "jobsplus:powerup_not_active",
-      "powerup": "jobsplus:alchemist/job_experience_boost_iii"
+      "powerup": "jobsplus:alchemist/job_exp_iii"
     }
   ]
 }
