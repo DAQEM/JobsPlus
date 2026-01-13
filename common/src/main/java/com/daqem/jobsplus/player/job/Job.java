@@ -1,5 +1,11 @@
 package com.daqem.jobsplus.player.job;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.daqem.jobsplus.Constants;
 import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.event.triggers.JobEvents;
@@ -15,17 +21,13 @@ import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Job {
 
@@ -102,6 +104,9 @@ public class Job {
     public void setExperience(double experience, boolean triggerEvent, boolean triggerLevelUpCheck) {
         if (level >= JobsPlusConfig.maxLevel.get()) {
             this.experience = 0;
+            return;
+        }
+        if (!player.jobsplus$isExpEnabled()) {
             return;
         }
         experience *= JobsPlusConfig.experienceMultiplier.get();

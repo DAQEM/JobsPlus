@@ -41,4 +41,8 @@ public interface JobsPlayer {
     Player jobsplus$getPlayer();
 
     List<IActionHolder> jobsplus$getActionHolders();
+
+    boolean jobsplus$isExpEnabled();
+
+    void jobsplus$setExpEnabled(boolean enabled);
 }
