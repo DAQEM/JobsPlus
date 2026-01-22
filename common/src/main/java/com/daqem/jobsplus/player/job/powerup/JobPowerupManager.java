@@ -7,31 +7,38 @@ import com.daqem.jobsplus.player.job.Job;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class JobPowerupManager {
 
-    private final List<Powerup> powerups;
+    private final Map<Identifier, Powerup> powerups;
 
-    public JobPowerupManager(@NotNull List<Powerup> powerups) {
-        this.powerups = powerups;
+    public JobPowerupManager(@NotNull List<Powerup> powerupsList) {
+        this.powerups = new HashMap<>();
+        for (Powerup powerup : powerupsList) {
+            Identifier id = powerup.getPowerupInstance().getIdentifier();
+            if (id != null) {
+                this.powerups.put(id, powerup);
+            }
+        }
     }
 
     public Optional<Powerup> getPowerup(PowerupInstance powerupInstance) {
-        return powerups.stream()
-                .filter(powerup -> powerup.getPowerupInstance().getIdentifier().equals(powerupInstance.getIdentifier()))
-                .findFirst();
+        if (powerupInstance == null || powerupInstance.getIdentifier() == null) {
+            return Optional.empty();
+        }
+        return getPowerup(powerupInstance.getIdentifier());
     }
 
     public Optional<Powerup> getPowerup(Identifier powerupLocation) {
-        return powerups.stream()
-                .filter(powerup -> powerup.getPowerupInstance().getIdentifier().equals(powerupLocation))
-                .findFirst();
+        if (powerupLocation == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(powerups.get(powerupLocation));
     }
 
     public List<Powerup> getAllPowerups() {
-        return powerups;
+        return new ArrayList<>(powerups.values());
     }
 
     public boolean addPowerup(JobsPlayer player, Job job, PowerupInstance powerupInstance) {
@@ -40,9 +47,12 @@ public class JobPowerupManager {
 
     public boolean addPowerup(JobsPlayer player, Job job, PowerupInstance powerupInstance, PowerupState powerupState) {
         if (canAddPowerup(powerupInstance)) {
-            powerups.add(new Powerup(powerupInstance, powerupState));
-            this.sendJobUpdatePacket(job, player);
-            return true;
+            Identifier id = powerupInstance.getIdentifier();
+            if (id != null) {
+                powerups.put(id, new Powerup(powerupInstance, powerupState));
+                this.sendJobUpdatePacket(job, player);
+                return true;
+            }
         }
         return false;
     }
@@ -54,14 +64,21 @@ public class JobPowerupManager {
     }
 
     public boolean canAddPowerup(PowerupInstance powerupInstance) {
-        if (powerups.stream().anyMatch(powerup -> powerup.getPowerupInstance().getIdentifier().equals(powerupInstance.getIdentifier()))) return false;
+        if (powerupInstance == null || powerupInstance.getIdentifier() == null) return false;
+
+        if (powerups.containsKey(powerupInstance.getIdentifier())) return false;
+
         if (powerupInstance.getParent() == null) return true;
+
         return getPowerup(powerupInstance.getParent()).isPresent();
     }
 
     public void forceAddPowerup(JobsPlayer player, Job job, PowerupInstance powerupInstance, PowerupState powerupState) {
-        powerups.add(new Powerup(powerupInstance, powerupState));
-        this.sendJobUpdatePacket(job, player);
+        Identifier id = powerupInstance.getIdentifier();
+        if (id != null) {
+            powerups.put(id, new Powerup(powerupInstance, powerupState));
+            this.sendJobUpdatePacket(job, player);
+        }
     }
 
     public void clearPowerups() {
@@ -81,11 +98,11 @@ public class JobPowerupManager {
     }
 
     public List<Powerup> getChildren(PowerupInstance powerupInstance) {
-        return getChildren(powerupInstance, powerups);
+        return getChildren(powerupInstance, new ArrayList<>(powerups.values()));
     }
 
     public List<Powerup> getChildren(Powerup powerup) {
-        return getChildren(powerup, powerups);
+        return getChildren(powerup, new ArrayList<>(powerups.values()));
     }
 
     public static List<Powerup> getChildren(PowerupInstance powerupInstance, List<Powerup> powerups) {
