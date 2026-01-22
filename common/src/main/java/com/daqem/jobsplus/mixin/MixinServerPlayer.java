@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.daqem.jobsplus.config.JobsPlusConfig;
-import net.minecraft.world.damagesource.DamageSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +17,7 @@ import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.arc.api.player.ArcPlayer;
 import com.daqem.arc.api.player.ArcServerPlayer;
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
@@ -39,6 +38,7 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
@@ -51,10 +51,13 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     private List<Job> jobsplus$jobs = new ArrayList<>();
     @Unique
     private double jobsplus$coins = 0;
+    @Unique
+    private boolean jobsplus$isExpEnabled = true;
 
     public MixinServerPlayer(Level level, GameProfile gameProfile) {
         super(level, gameProfile);
     }
+
 
 
     @Override
@@ -199,11 +202,22 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         return jobsplus$getServerPlayer();
     }
 
+    @Override
+    public boolean jobsplus$isExpEnabled() {
+        return jobsplus$isExpEnabled;
+    }
+
+    @Override
+    public void jobsplus$setExpEnabled(boolean enabled) {
+        this.jobsplus$isExpEnabled = enabled;
+    }
+
     @Inject(at = @At("TAIL"), method = "restoreFrom(Lnet/minecraft/server/level/ServerPlayer;Z)V")
     public void restoreFrom(ServerPlayer oldPlayer, boolean alive, CallbackInfo ci) {
         if (oldPlayer instanceof JobsServerPlayer oldJobsServerPlayer) {
             this.jobsplus$jobs = oldJobsServerPlayer.jobsplus$getJobs();
             this.jobsplus$coins = oldJobsServerPlayer.jobsplus$getCoins();
+            this.jobsplus$isExpEnabled = oldJobsServerPlayer.jobsplus$isExpEnabled();
 
             this.jobsplus$jobs.forEach(job -> job.setPlayer(this));
 

@@ -1,21 +1,23 @@
 package com.daqem.jobsplus.mixin.client;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+
 import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.mojang.authlib.GameProfile;
+
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Mixin(LocalPlayer.class)
 public abstract class MixinLocalPlayer extends Player implements JobsPlayer {
@@ -104,6 +106,16 @@ public abstract class MixinLocalPlayer extends Player implements JobsPlayer {
 
     @Override
     public List<IActionHolder> jobsplus$getActionHolders() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean jobsplus$isExpEnabled() {
+        return true;
+    }
+
+    @Override
+    public void jobsplus$setExpEnabled(boolean enabled) {
         throw new UnsupportedOperationException();
     }
 }

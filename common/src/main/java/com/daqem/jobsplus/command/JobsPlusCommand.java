@@ -1,14 +1,17 @@
 package com.daqem.jobsplus.command;
 
+import java.util.stream.Collectors;
+
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.networking.s2c.ClientboundOpenHudEditorPacket;
+import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.mojang.brigadier.CommandDispatcher;
+
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-
-import java.util.stream.Collectors;
+import net.minecraft.server.permissions.Permissions;
 
 public class JobsPlusCommand {
 
@@ -30,6 +33,18 @@ public class JobsPlusCommand {
                                 ));
                             }
                             return 0;
+                        })
+                )
+                .then(Commands.literal("toggleexp")
+                        .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
+                        .executes(context -> {
+                            ServerPlayer serverPlayer = context.getSource().getPlayer();
+                            if (serverPlayer instanceof JobsServerPlayer jobsServerPlayer) {
+                                boolean newStatus = !jobsServerPlayer.jobsplus$isExpEnabled();
+                                jobsServerPlayer.jobsplus$setExpEnabled(newStatus);
+                                serverPlayer.sendSystemMessage(JobsPlus.translatable("command.toggleexp." + (newStatus ? "enabled" : "disabled")));
+                            }
+                            return 1;
                         })
                 )
                 .then(Commands.literal("attributes")
