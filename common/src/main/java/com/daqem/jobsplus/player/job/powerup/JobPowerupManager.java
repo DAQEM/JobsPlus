@@ -16,9 +16,12 @@ public class JobPowerupManager {
     public JobPowerupManager(@NotNull List<Powerup> powerupsList) {
         this.powerups = new HashMap<>();
         for (Powerup powerup : powerupsList) {
-            Identifier id = powerup.getPowerupInstance().getIdentifier();
-            if (id != null) {
-                this.powerups.put(id, powerup);
+            PowerupInstance powerupInstance = powerup.getPowerupInstance();
+            if (powerupInstance != null) {
+                Identifier id = powerupInstance.getIdentifier();
+                if (id != null) {
+                    this.powerups.put(id, powerup);
+                }
             }
         }
     }
