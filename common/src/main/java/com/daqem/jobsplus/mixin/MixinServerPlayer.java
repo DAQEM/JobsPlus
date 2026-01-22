@@ -2,9 +2,12 @@ package com.daqem.jobsplus.mixin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.daqem.jobsplus.player.LeaderboardPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -57,8 +60,6 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     public MixinServerPlayer(Level level, GameProfile gameProfile) {
         super(level, gameProfile);
     }
-
-
 
     @Override
     public List<Job> jobsplus$getJobs() {
@@ -243,7 +244,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
                     .filter(job -> job.getJobInstance() != null)
                     .peek(job -> {
                         job.setPlayer(this);
-                        jobsplus$getLevelData().jobsplus$updatePlayerEntry(this, job);
+                        // We do not blindly update here anymore, validation happens below
                     })
                     .collect(Collectors.toCollection(ArrayList::new));
             this.jobsplus$coins = serverPlayerData.coins();
@@ -253,6 +254,33 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
                 arcServerPlayer.arc$addActionHolders(new ArrayList<>(iActionHolders));
             }
         });
+
+        JobsPlusLevelData levelData = jobsplus$getLevelData();
+        Map<UUID, Map<Identifier, LeaderboardPlayer>> allEntries = levelData.jobsplus$getPlayerJobEntries();
+        Map<Identifier, LeaderboardPlayer> playerEntries = allEntries.get(this.getUUID());
+
+        if (playerEntries != null) {
+            List<Identifier> jobsToRemove = new ArrayList<>();
+            for (Identifier jobLocation : playerEntries.keySet()) {
+                Job job = jobsplus$getJob(jobLocation);
+                if (job == null || job.getLevel() <= 0) {
+                    jobsToRemove.add(jobLocation);
+                }
+            }
+
+            for (Identifier jobLocation : jobsToRemove) {
+                JobInstance dummyInstance = JobInstance.of(jobLocation);
+                if (dummyInstance != null) {
+                    levelData.jobsplus$removePlayerEntry(this, new Job(this, dummyInstance));
+                } else {
+                    playerEntries.remove(jobLocation);
+                }
+            }
+        }
+
+        for (Job job : this.jobsplus$jobs) {
+            levelData.jobsplus$updatePlayerEntry(this, job);
+        }
     }
 
     @Inject(at = @At("TAIL"), method = "tick()V")

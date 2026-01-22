@@ -53,6 +53,8 @@ public class PrimaryLevelDataMixin implements JobsPlusLevelData {
 
     @Override
     public void jobsplus$updatePlayerEntry(Player player, Job job) {
+        jobsplus$leaderboardCache.remove(job.getJobInstance().getIdentifier());
+
         if (job.getLevel() > 0) {
             Map<Identifier, LeaderboardPlayer> playerEntries = this.jobsplus$playerJobEntries.computeIfAbsent(player.getUUID(), k -> new HashMap<>());
             LeaderboardPlayer entry = playerEntries.computeIfAbsent(
@@ -69,6 +71,8 @@ public class PrimaryLevelDataMixin implements JobsPlusLevelData {
 
     @Override
     public void jobsplus$removePlayerEntry(Player player, Job job) {
+        jobsplus$leaderboardCache.remove(job.getJobInstance().getIdentifier());
+
         Map<Identifier, LeaderboardPlayer> playerEntries = this.jobsplus$playerJobEntries.get(player.getUUID());
         if (playerEntries != null) {
             playerEntries.remove(job.getJobInstance().getIdentifier());
