@@ -81,11 +81,7 @@ public class Job {
         this.level = Math.clamp(level, 0, JobsPlusConfig.maxLevel.get());
         if (player instanceof JobsServerPlayer serverPlayer) {
             serverPlayer.jobsplus$getLevelData().jobsplus$updatePlayerEntry(serverPlayer.jobsplus$getPlayer(), this);
-            NetworkManager.sendToPlayer(serverPlayer.jobsplus$getServerPlayer(), new ClientboundSyncJobPacket(
-                    jobInstance.getIdentifier(),
-                    this.level,
-                    this.experience
-            ));
+            sendClientSyncPacket();
         }
     }
 
@@ -121,13 +117,7 @@ public class Job {
         }
         if (player instanceof JobsServerPlayer serverPlayer) {
             serverPlayer.jobsplus$getLevelData().jobsplus$updatePlayerEntry(serverPlayer.jobsplus$getPlayer(), this);
-            if (triggerLevelUpCheck) {
-                NetworkManager.sendToPlayer(serverPlayer.jobsplus$getServerPlayer(), new ClientboundSyncJobPacket(
-                        jobInstance.getIdentifier(),
-                        this.level,
-                        this.experience
-                ));
-            }
+            if (triggerLevelUpCheck) sendClientSyncPacket();
         }
     }
 
@@ -225,6 +215,12 @@ public class Job {
         return getExperienceToLevelUp(level);
     }
 
+    public void sendClientSyncPacket() {
+        if (player instanceof JobsServerPlayer serverPlayer) {
+            NetworkManager.sendToPlayer(serverPlayer.jobsplus$getServerPlayer(), new ClientboundSyncJobPacket(this));
+        }
+    }
+
     public static class Serializer {
 
         public static Job fromNetwork(FriendlyByteBuf friendlyByteBuf, JobsPlayer player) {
@@ -256,33 +252,6 @@ public class Job {
                 friendlyByteBuf.writeIdentifier(powerup.getPowerupInstance().getIdentifier());
                 friendlyByteBuf.writeEnum(powerup.getState());
             }
-        }
-
-        public static List<Job> fromNBT(JobsServerPlayer player, CompoundTag compoundTag) {
-            List<Job> jobs = new ArrayList<>();
-
-            compoundTag.getList(Constants.JOBS).ifPresent(list -> {
-                for (Tag jobTag : list) {
-                    CompoundTag jobNBT = (CompoundTag) jobTag;
-                    Job job = Job.fromNBT(player, jobNBT);
-                    if (job != null) {
-                        jobs.add(job);
-                    }
-                }
-            });
-
-            return jobs;
-        }
-
-        public static ListTag toNBT(List<Job> jobs) {
-
-            ListTag jobsListTag = new ListTag();
-            for (Job job : jobs) {
-                CompoundTag jobNBT = job.toNBT();
-                jobsListTag.add(jobNBT);
-            }
-
-            return jobsListTag;
         }
     }
 }

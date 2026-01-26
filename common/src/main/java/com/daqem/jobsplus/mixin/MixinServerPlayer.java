@@ -184,6 +184,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     @Override
     public void jobsplus$updateJob(Job job) {
         this.jobsplus$updateActionHolders(job);
+        job.sendClientSyncPacket();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.daqem.jobsplus.networking.s2c;
 
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
+import com.daqem.jobsplus.player.job.Job;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -9,35 +10,22 @@ import org.jetbrains.annotations.NotNull;
 
 public class ClientboundSyncJobPacket implements CustomPacketPayload {
 
-    private final Identifier jobLocation;
-    private final int level;
-    private final double experience;
+    private final Job job;
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundSyncJobPacket> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public @NotNull ClientboundSyncJobPacket decode(RegistryFriendlyByteBuf buf) {
-            return new ClientboundSyncJobPacket(buf);
+            return new ClientboundSyncJobPacket(Job.Serializer.fromNetwork(buf, null));
         }
 
         @Override
         public void encode(RegistryFriendlyByteBuf buf, ClientboundSyncJobPacket packet) {
-            buf.writeIdentifier(packet.jobLocation);
-            buf.writeInt(packet.level);
-            buf.writeDouble(packet.experience);
+            Job.Serializer.toNetwork(buf, packet.job);
         }
     };
 
-    public ClientboundSyncJobPacket(Identifier jobLocation, int level, double experience) {
-        this.jobLocation = jobLocation;
-        this.level = level;
-        this.experience = experience;
-
-    }
-
-    public ClientboundSyncJobPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
-        this.jobLocation = friendlyByteBuf.readIdentifier();
-        this.level = friendlyByteBuf.readInt();
-        this.experience = friendlyByteBuf.readDouble();
+    public ClientboundSyncJobPacket(Job job) {
+        this.job = job;
     }
 
     @Override
@@ -45,15 +33,7 @@ public class ClientboundSyncJobPacket implements CustomPacketPayload {
         return JobsPlusNetworking.CLIENTBOUND_SYNC_JOB;
     }
 
-    public Identifier getJobLocation() {
-        return jobLocation;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public double getExperience() {
-        return experience;
+    public Job getJob() {
+        return job;
     }
 }

@@ -10,19 +10,26 @@ public class ClientboundSyncJobPacketHandler {
 
     public static void handleClientSide(ClientboundSyncJobPacket packet, NetworkManager.PacketContext context) {
         if (context.getPlayer() instanceof JobsPlayer jobsPlayer) {
-            Job job = jobsPlayer.jobsplus$getJob(packet.getJobLocation());
-            if (job != null) {
-                job.setLevel(packet.getLevel());
-                job.setExperience(packet.getExperience(), false, false);
-            } else {
-                JobInstance jobInstance = JobInstance.of(packet.getJobLocation());
+            Job syncedJob = packet.getJob();
+            Job localJob = jobsPlayer.jobsplus$getJob(syncedJob.getJobInstance().getIdentifier());
+
+            // If the job doesn't exist on the client yet, create it
+            if (localJob == null) {
+                JobInstance jobInstance = JobInstance.of(syncedJob.getJobInstance().getIdentifier());
                 if (jobInstance != null) {
-                    Job newJob = jobsPlayer.jobsplus$addNewJob(jobInstance);
-                    if (newJob != null) {
-                        newJob.setLevel(packet.getLevel());
-                        newJob.setExperience(packet.getExperience(), false, false);
-                    }
+                    localJob = jobsPlayer.jobsplus$addNewJob(jobInstance);
                 }
+            }
+
+            // Update the local job instance with the server's data
+            if (localJob != null) {
+                localJob.setLevel(syncedJob.getLevel());
+                localJob.setExperience(syncedJob.getExperience(), false, false);
+
+                // Sync the Powerup Manager
+                // Clear existing powerups to ensure we have an exact match of the server state
+                localJob.getPowerupManager().clearPowerups();
+                localJob.getPowerupManager().addPowerups(syncedJob.getPowerupManager().getAllPowerups());
             }
         }
     }
