@@ -118,4 +118,21 @@ public class JobPowerupManager {
     public static List<Powerup> getChildren(Powerup powerup, List<Powerup> powerups) {
         return getChildren(powerup.getPowerupInstance(), powerups);
     }
+
+    public void addPowerups(List<Powerup> powerups) {
+        for (Powerup powerup : powerups) {
+            PowerupInstance powerupInstance = powerup.getPowerupInstance();
+            if (powerupInstance != null) {
+                Identifier id = powerupInstance.getIdentifier();
+                if (id != null) {
+                    this.powerups.put(id, powerup);
+                }
+            }
+        }
+    }
+
+    public void togglePowerup(JobsPlayer player, Job job, Powerup powerup) {
+        powerup.toggle();
+        sendJobUpdatePacket(job, player);
+    }
 }

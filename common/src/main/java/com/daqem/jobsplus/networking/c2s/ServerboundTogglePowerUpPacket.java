@@ -48,8 +48,7 @@ public class ServerboundTogglePowerUpPacket implements CustomPacketPayload {
             Job job = serverPlayer.jobsplus$getJob(packet.jobLocation);
             if (job != null) {
                 job.getPowerupManager().getPowerup(packet.powerupLocation).ifPresent(powerup -> {
-                    powerup.toggle();
-                    serverPlayer.jobsplus$updateJob(job);
+                    job.getPowerupManager().togglePowerup(serverPlayer, job, powerup);
                 });
             }
         }
