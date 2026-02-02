@@ -64,11 +64,6 @@ public abstract class MixinLocalPlayer extends Player implements JobsPlayer {
     }
 
     @Override
-    public void jobsplus$removeActionHolders(Job job) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public Job jobsplus$getJob(@Nullable JobInstance jobInstance) {
         if (jobInstance == null) return null;
         return jobsplus$jobs.get(jobInstance.getIdentifier());

@@ -109,7 +109,7 @@ public class JobCommand {
             Job job = jobsServerPlayer.jobsplus$getJob(jobInstance);
             if (job != null) {
                 job.getPowerupManager().clearPowerups();
-                jobsServerPlayer.jobsplus$updateJob(job);
+                job.markPowerupsDirty();
                 source.sendSuccess(() -> JobsPlus.translatable("command.set.powerup.success_clear", jobInstance.getName()), false);
             }
         }
@@ -132,7 +132,7 @@ public class JobCommand {
     private static int setPowerup(CommandSourceStack source, ServerPlayer target, JobInstance jobInstance, PowerupInstance powerupInstance, PowerupState powerupState) {
         if (target instanceof JobsServerPlayer jobsServerPlayer) {
             Job job = jobsServerPlayer.jobsplus$getJob(jobInstance);
-            job.getPowerupManager().forceAddPowerup(jobsServerPlayer, job, powerupInstance, powerupState);
+            job.getPowerupManager().forceAddPowerup(powerupInstance, powerupState);
             source.sendSuccess(() -> JobsPlus.translatable(
                     "command.set.powerup.success", powerupInstance.getName(), jobInstance.getName(), powerupState.toString()), false);
         }

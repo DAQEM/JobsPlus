@@ -1,17 +1,14 @@
 package com.daqem.jobsplus.player.job;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.jetbrains.annotations.NotNull;
-
-import com.daqem.jobsplus.Constants;
+import com.daqem.arc.api.action.holder.IActionHolder;
+import com.daqem.arc.api.player.ArcPlayer;
+import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.event.triggers.JobEvents;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
+import com.daqem.jobsplus.networking.s2c.ClientboundSyncJobLevelPacket;
 import com.daqem.jobsplus.networking.s2c.ClientboundSyncJobPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.JobsServerPlayer;
@@ -21,13 +18,16 @@ import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import dev.architectury.networking.NetworkManager;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Job {
 
@@ -44,6 +44,8 @@ public class Job {
     private int level;
     private double experience;
     private final ExpCollector expCollector = new ExpCollector();
+    private boolean isStatsDirty = false;
+    private boolean isPowerupsDirty = false;
 
     public Job(JobsPlayer player, JobInstance jobInstance) {
         this(player, jobInstance, 0, 0, new ArrayList<>());
@@ -60,7 +62,7 @@ public class Job {
     public Job(JobsPlayer player, JobInstance jobInstance, int level, double experience, @NotNull List<Powerup> powerups) {
         this.player = player;
         this.jobInstance = jobInstance;
-        this.powerupManager = new JobPowerupManager(powerups);
+        this.powerupManager = new JobPowerupManager(this, powerups);
         this.level = level;
         this.experience = experience;
     }
@@ -78,10 +80,11 @@ public class Job {
     }
 
     public void setLevel(int level) {
+        int oldLevel = this.level;
         this.level = Math.clamp(level, 0, JobsPlusConfig.maxLevel.get());
-        if (player instanceof JobsServerPlayer serverPlayer) {
-            serverPlayer.jobsplus$getLevelData().jobsplus$updatePlayerEntry(serverPlayer.jobsplus$getPlayer(), this);
-            sendClientSyncPacket();
+
+        if (oldLevel != this.level) {
+            markStatsDirty();
         }
     }
 
@@ -108,16 +111,17 @@ public class Job {
         experience *= JobsPlusConfig.experienceMultiplier.get();
         double change = experience - this.experience;
         expCollector.addExp(change);
-        this.experience = experience;
+
+        if (this.experience != experience) {
+            this.experience = experience;
+            markStatsDirty();
+        }
+
         if (triggerLevelUpCheck) {
             checkForLevelUp();
         }
         if (triggerEvent) {
             JobEvents.onJobExperience(player, this, change);
-        }
-        if (player instanceof JobsServerPlayer serverPlayer) {
-            serverPlayer.jobsplus$getLevelData().jobsplus$updatePlayerEntry(serverPlayer.jobsplus$getPlayer(), this);
-            if (triggerLevelUpCheck) sendClientSyncPacket();
         }
     }
 
@@ -146,61 +150,6 @@ public class Job {
         this.player = player;
     }
 
-    public CompoundTag toNBT() {
-        CompoundTag jobTag = new CompoundTag();
-
-        jobTag.putString(Constants.JOB_INSTANCE_LOCATION, getJobInstance().getIdentifier().toString());
-        jobTag.putInt(Constants.LEVEL, getLevel());
-        jobTag.putDouble(Constants.EXPERIENCE, getExperience());
-
-        ListTag powerupsTag = new ListTag();
-
-        for (Powerup powerup : powerupManager.getAllPowerups()
-                .stream()
-                .filter(powerup -> powerup != null && powerup.getPowerupInstance() != null)
-                .toList()
-        ) {
-            CompoundTag powerupTag = new CompoundTag();
-
-            powerupTag.putString(Constants.POWERUP_LOCATION, powerup.getPowerupInstance().getIdentifier().toString());
-            powerupTag.putString(Constants.POWERUP_STATE, powerup.getState().name());
-
-            powerupsTag.add(powerupTag);
-        }
-
-        jobTag.put(Constants.POWERUPS, powerupsTag);
-
-        return jobTag;
-    }
-
-    public static Job fromNBT(JobsPlayer player, CompoundTag tag) {
-        AtomicReference<Job> job = new AtomicReference<>();
-        tag.getString(Constants.JOB_INSTANCE_LOCATION).ifPresent(jobLocation -> {
-            tag.getInt(Constants.LEVEL).ifPresent(level -> {
-                double exp = tag.getDouble(Constants.EXPERIENCE)
-                        .or(() -> tag.getInt(Constants.EXPERIENCE).map(Integer::doubleValue))
-                        .orElse(0.0);
-                List<Powerup> powerups = new ArrayList<>();
-                tag.getList(Constants.POWERUPS).ifPresent(powerupsTag -> {
-                    for (Tag powerupTag : powerupsTag) {
-                        CompoundTag powerupNBT = (CompoundTag) powerupTag;
-                        powerupNBT.getString(Constants.POWERUP_LOCATION).ifPresent(powerupLocationString -> {
-                            powerupNBT.getString(Constants.POWERUP_STATE).ifPresent(powerupState -> {
-                                Identifier powerupLocation = Identifier.tryParse(powerupLocationString);
-                                if (powerupLocation == null) return;
-                                PowerupInstance powerupInstance = PowerupInstance.of(powerupLocation);
-                                if (powerupInstance == null) return;
-                                powerups.add(new Powerup(powerupInstance, PowerupState.valueOf(powerupState)));
-                            });
-                        });
-                    }
-                });
-                job.set(new Job(player, Identifier.parse(jobLocation), level, exp, powerups));
-            });
-        });
-        return job.get();
-    }
-
     public double getExperiencePercentage() {
         double expToLevel = getExperienceToLevelUp(level);
         if (expToLevel == 0) return 0.0D;
@@ -215,9 +164,86 @@ public class Job {
         return getExperienceToLevelUp(level);
     }
 
+    public void markStatsDirty() {
+        this.isStatsDirty = true;
+    }
+
+    public void markPowerupsDirty() {
+        this.isPowerupsDirty = true;
+    }
+
+    public @Nullable MutableComponent getExperienceGainMessage() {
+        double exp = expCollector.getExp();
+        if (exp > 0) {
+            return JobsPlus.translatable("job.exp.gain",
+                            JobsPlus.formatExp(exp),
+                            jobInstance.getName().getString())
+                    .withStyle(style -> style.withColor(jobInstance.getColorDecimal()))
+                    .withStyle(ChatFormatting.BOLD);
+        }
+        return null;
+    }
+
+    public List<IActionHolder> getActiveHolders() {
+        List<IActionHolder> holders = new ArrayList<>();
+        holders.add(this.jobInstance);
+        holders.addAll(powerupManager.getAllActivePowerups().stream()
+                .map(Powerup::getPowerupInstance)
+                .toList());
+        return holders;
+    }
+
+    public void updateArcActionHolders() {
+        if (player.jobsplus$getPlayer() instanceof ArcPlayer arcPlayer) {
+            arcPlayer.arc$addActionHolder(this.jobInstance);
+
+            for (Powerup powerup : powerupManager.getAllPowerups()) {
+                if (powerup.getState() == PowerupState.ACTIVE) {
+                    arcPlayer.arc$addActionHolder(powerup.getPowerupInstance());
+                } else {
+                    arcPlayer.arc$removeActionHolder(powerup.getPowerupInstance());
+                }
+            }
+        }
+    }
+
+    public void dispose() {
+        if (player.jobsplus$getPlayer() instanceof ArcPlayer arcPlayer) {
+            arcPlayer.arc$removeActionHolder(this.jobInstance);
+
+            for (Powerup powerup : powerupManager.getAllPowerups()) {
+                arcPlayer.arc$removeActionHolder(powerup.getPowerupInstance());
+            }
+        }
+    }
+
+    public void tick() {
+        if (this.isPowerupsDirty) {
+            this.sendClientSyncPacket();
+            this.updateArcActionHolders();
+            if (player instanceof JobsServerPlayer serverPlayer) {
+                serverPlayer.jobsplus$getLevelData().jobsplus$updatePlayerEntry(serverPlayer.jobsplus$getPlayer(), this);
+            }
+            this.isPowerupsDirty = false;
+            this.isStatsDirty = false;
+        } else if (this.isStatsDirty) {
+            this.sendClientLevelPacket();
+            if (player instanceof JobsServerPlayer serverPlayer) {
+                serverPlayer.jobsplus$getLevelData().jobsplus$updatePlayerEntry(serverPlayer.jobsplus$getPlayer(), this);
+            }
+            this.isStatsDirty = false;
+        }
+    }
+
     public void sendClientSyncPacket() {
         if (player instanceof JobsServerPlayer serverPlayer) {
             NetworkManager.sendToPlayer(serverPlayer.jobsplus$getServerPlayer(), new ClientboundSyncJobPacket(this));
+        }
+    }
+
+    public void sendClientLevelPacket() {
+        if (player instanceof JobsServerPlayer serverPlayer) {
+            NetworkManager.sendToPlayer(serverPlayer.jobsplus$getServerPlayer(), new ClientboundSyncJobLevelPacket(this));
         }
     }
 

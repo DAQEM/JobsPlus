@@ -15,4 +15,5 @@ public interface JobsPlusLevelData {
     void jobsplus$updatePlayerEntry(Player player, Job job);
     void jobsplus$removePlayerEntry(Player player, Job job);
     List<LeaderboardPlayer> jobsplus$getSortedLeaderboard(Identifier jobLocation);
+    void jobsplus$validateAndSync(Player player, List<Job> currentJobs);
 }

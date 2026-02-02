@@ -71,7 +71,7 @@ public class ServerboundStartPowerupPacket implements CustomPacketPayload {
                 return;
             }
 
-            if (job.getPowerupManager().addPowerup(serverPlayer, job, powerupInstance)) {
+            if (job.getPowerupManager().addPowerup(powerupInstance)) {
                 serverPlayer.jobsplus$setCoins(serverPlayer.jobsplus$getCoins() - powerupInstance.getPrice());
             } else {
                 serverPlayer.jobsplus$getServerPlayer().sendSystemMessage(JobsPlus.translatable("error.could_not_add_powerup", powerupInstance.getName()));

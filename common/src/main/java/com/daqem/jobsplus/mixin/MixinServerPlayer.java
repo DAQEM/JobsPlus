@@ -1,21 +1,5 @@
 package com.daqem.jobsplus.mixin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import com.daqem.jobsplus.player.LeaderboardPlayer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.arc.api.player.ArcPlayer;
 import com.daqem.arc.api.player.ArcServerPlayer;
@@ -26,15 +10,18 @@ import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.level.JobsPlusLevelData;
 import com.daqem.jobsplus.level.JobsPlusServerLevel;
+import com.daqem.jobsplus.networking.s2c.ClientboundDeleteJobPacket;
 import com.daqem.jobsplus.player.JobsServerPlayer;
+import com.daqem.jobsplus.player.LeaderboardPlayer;
 import com.daqem.jobsplus.player.ServerPlayerData;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.jobsplus.player.job.exp.ExpCollector;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
 import com.mojang.authlib.GameProfile;
-
+import dev.architectury.networking.NetworkManager;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -46,9 +33,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Mixin(ServerPlayer.class)
 public abstract class MixinServerPlayer extends Player implements JobsServerPlayer {
+
+    @Shadow public abstract void sendSystemMessage(Component component, boolean bl);
 
     @Unique
     private List<Job> jobsplus$jobs = new ArrayList<>();
@@ -86,8 +86,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         if (job == null) {
             job = new Job(this, jobInstance, 1, 0);
             jobsplus$jobs.add(job);
-            jobsplus$updateJob(job);
-            jobsplus$getLevelData().jobsplus$updatePlayerEntry(this, job);
+            job.markPowerupsDirty();
             return job;
         }
         return null;
@@ -97,17 +96,10 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     public void jobsplus$removeJob(JobInstance jobInstance) {
         Job job = jobsplus$getJob(jobInstance);
         if (job != null) {
+            job.dispose();
             jobsplus$jobs.remove(job);
-            jobsplus$removeActionHolders(job);
             jobsplus$getLevelData().jobsplus$removePlayerEntry(this, job);
-        }
-    }
-
-    @Override
-    public void jobsplus$removeActionHolders(Job job) {
-        if (jobsplus$getServerPlayer() instanceof ArcPlayer arcPlayer) {
-            arcPlayer.arc$removeActionHolder(job.getJobInstance());
-            job.getPowerupManager().getAllPowerups().forEach(powerup -> arcPlayer.arc$removeActionHolder(powerup.getPowerupInstance()));
+            NetworkManager.sendToPlayer(jobsplus$getServerPlayer(), new ClientboundDeleteJobPacket(jobInstance));
         }
     }
 
@@ -160,14 +152,9 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
 
     @Override
     public List<IActionHolder> jobsplus$getActionHolders() {
-        List<IActionHolder> actionHolders = new ArrayList<>(jobsplus$getJobInstances());
-        actionHolders.addAll(jobsplus$getJobs().stream()
-                .map(Job::getPowerupManager)
-                .flatMap(powerupManager -> powerupManager.getAllPowerups().stream()
-                        .filter(powerup -> powerup.getState() == PowerupState.ACTIVE))
-                .map(Powerup::getPowerupInstance)
-                .toList());
-        return actionHolders;
+        return jobsplus$jobs.stream()
+                .flatMap(job -> job.getActiveHolders().stream())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -179,24 +166,6 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     @Override
     public String jobsplus$getName() {
         return super.getName().getString();
-    }
-
-    @Override
-    public void jobsplus$updateJob(Job job) {
-        this.jobsplus$updateActionHolders(job);
-        job.sendClientSyncPacket();
-    }
-
-    @Override
-    public void jobsplus$updateActionHolders(Job job) {
-        if (jobsplus$getServerPlayer() instanceof ArcPlayer arcPlayer) {
-            arcPlayer.arc$removeActionHolder(job.getJobInstance());
-            job.getPowerupManager().getAllPowerups().forEach(powerup -> arcPlayer.arc$removeActionHolder(powerup.getPowerupInstance()));
-            arcPlayer.arc$addActionHolder(job.getJobInstance());
-            job.getPowerupManager().getAllPowerups().stream()
-                    .filter(powerup -> powerup.getState() == PowerupState.ACTIVE)
-                    .forEach(powerup -> arcPlayer.arc$addActionHolder(powerup.getPowerupInstance()));
-        }
     }
 
     @Override
@@ -243,59 +212,29 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         valueInput.read("JobsPlus", ServerPlayerData.CODEC).ifPresent(serverPlayerData -> {
             this.jobsplus$jobs = serverPlayerData.jobs().stream()
                     .filter(job -> job.getJobInstance() != null)
-                    .peek(job -> {
-                        job.setPlayer(this);
-                        // We do not blindly update here anymore, validation happens below
-                    })
+                    .peek(job -> job.setPlayer(this))
                     .collect(Collectors.toCollection(ArrayList::new));
             this.jobsplus$coins = serverPlayerData.coins();
 
             if (jobsplus$getServerPlayer() instanceof ArcServerPlayer arcServerPlayer) {
-                List<IActionHolder> iActionHolders = this.jobsplus$getActionHolders();
-                arcServerPlayer.arc$addActionHolders(new ArrayList<>(iActionHolders));
+                arcServerPlayer.arc$addActionHolders(this.jobsplus$getActionHolders());
             }
         });
 
-        JobsPlusLevelData levelData = jobsplus$getLevelData();
-        Map<UUID, Map<Identifier, LeaderboardPlayer>> allEntries = levelData.jobsplus$getPlayerJobEntries();
-        Map<Identifier, LeaderboardPlayer> playerEntries = allEntries.get(this.getUUID());
-
-        if (playerEntries != null) {
-            List<Identifier> jobsToRemove = new ArrayList<>();
-            for (Identifier jobLocation : playerEntries.keySet()) {
-                Job job = jobsplus$getJob(jobLocation);
-                if (job == null || job.getLevel() <= 0) {
-                    jobsToRemove.add(jobLocation);
-                }
-            }
-
-            for (Identifier jobLocation : jobsToRemove) {
-                JobInstance dummyInstance = JobInstance.of(jobLocation);
-                if (dummyInstance != null) {
-                    levelData.jobsplus$removePlayerEntry(this, new Job(this, dummyInstance));
-                } else {
-                    playerEntries.remove(jobLocation);
-                }
-            }
-        }
-
-        for (Job job : this.jobsplus$jobs) {
-            levelData.jobsplus$updatePlayerEntry(this, job);
-        }
+        jobsplus$getLevelData().jobsplus$validateAndSync(this, this.jobsplus$jobs);
     }
 
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void tickTail(CallbackInfo ci) {
-        jobsplus$jobs.forEach((job) -> {
-            ExpCollector expCollector = job.getExpCollector();
-            double exp = expCollector.getExp();
-            if (exp > 0) {
-                JobInstance jobInstance = job.getJobInstance();
-                MutableComponent component = JobsPlus.translatable("job.exp.gain", JobsPlus.formatExp(exp), jobInstance.getName().getString()).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(jobInstance.getColorDecimal()))).withStyle(ChatFormatting.BOLD);
-                jobsplus$getServerPlayer().sendSystemMessage(component, true);
+        for (Job job : jobsplus$jobs) {
+            job.tick();
+
+            MutableComponent msg = job.getExperienceGainMessage();
+            if (msg != null) {
+                this.sendSystemMessage(msg, true);
+                job.getExpCollector().clear();
             }
-            expCollector.clear();
-        });
+        }
     }
 
     @Inject(at = @At("HEAD"), method = "die")
