@@ -1,11 +1,8 @@
 package com.daqem.jobsplus.mixin;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -102,6 +99,34 @@ public class PrimaryLevelDataMixin implements JobsPlusLevelData {
         jobsplus$leaderboardCache.put(jobLocation, sorted);
         jobsplus$leaderboardCacheTime.put(jobLocation, now);
         return sorted;
+    }
+
+    @Override
+    public void jobsplus$validateAndSync(Player player, List<Job> currentJobs) {
+        Map<Identifier, LeaderboardPlayer> playerEntries = this.jobsplus$playerJobEntries.get(player.getUUID());
+
+        if (playerEntries != null) {
+            List<Identifier> jobsToRemove = new ArrayList<>();
+
+            Set<Identifier> currentJobIds = currentJobs.stream()
+                    .map(j -> j.getJobInstance().getIdentifier())
+                    .collect(Collectors.toSet());
+
+            for (Identifier jobLoc : playerEntries.keySet()) {
+                if (!currentJobIds.contains(jobLoc)) {
+                    jobsToRemove.add(jobLoc);
+                }
+            }
+
+            for (Identifier jobLoc : jobsToRemove) {
+                playerEntries.remove(jobLoc);
+                jobsplus$leaderboardCache.remove(jobLoc);
+            }
+        }
+
+        for (Job job : currentJobs) {
+            this.jobsplus$updatePlayerEntry(player, job);
+        }
     }
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/LevelSettings;Lnet/minecraft/world/level/levelgen/WorldOptions;Lnet/minecraft/world/level/storage/PrimaryLevelData$SpecialWorldProperty;Lcom/mojang/serialization/Lifecycle;)V", at = @At("RETURN"))

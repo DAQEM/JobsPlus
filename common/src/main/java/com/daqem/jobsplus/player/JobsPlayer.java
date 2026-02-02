@@ -24,8 +24,6 @@ public interface JobsPlayer {
 
     void jobsplus$removeJob(JobInstance job);
 
-    void jobsplus$removeActionHolders(Job job);
-
     Job jobsplus$getJob(@Nullable JobInstance jobInstance);
 
     Job jobsplus$getJob(Identifier jobLocation);

@@ -11,10 +11,6 @@ public interface JobsServerPlayer extends JobsPlayer {
 
     ServerPlayer jobsplus$getServerPlayer();
 
-    void jobsplus$updateJob(Job job);
-
-    void jobsplus$updateActionHolders(Job job);
-
     @Nullable Powerup jobsplus$getPowerup(PowerupInstance powerupInstance);
 
     JobsPlusLevelData jobsplus$getLevelData();
