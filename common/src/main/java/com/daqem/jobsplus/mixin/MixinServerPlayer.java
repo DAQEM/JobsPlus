@@ -232,8 +232,8 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
             MutableComponent msg = job.getExperienceGainMessage();
             if (msg != null) {
                 this.sendSystemMessage(msg, true);
-                job.getExpCollector().clear();
             }
+            job.getExpCollector().clear();
         }
     }
 
