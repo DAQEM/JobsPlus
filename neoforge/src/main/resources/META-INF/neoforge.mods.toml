@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[${neoforge_loader_version},)"
+loaderVersion = "[1,)"
 issueTrackerURL = "${mod_repository}/issues"
 license = "${mod_license}"
 
@@ -36,7 +36,7 @@ side = "BOTH"
 [[dependencies."${mod_id}"]]
 modId = "yamlconfig"
 mandatory = true
-versionRange = "[${config_library_version},)"
+versionRange = "[${yamlconfig_version},)"
 ordering = "NONE"
 side = "BOTH"
 
@@ -50,14 +50,14 @@ side = "BOTH"
 [[dependencies."${mod_id}"]]
 modId = "itemrestrictions"
 mandatory = true
-versionRange = "[${item_restrictions_version},)"
+versionRange = "[${itemrestrictions_version},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies."${mod_id}"]]
 modId = "uilib"
 mandatory = true
-versionRange = "[${ui_library_version},)"
+versionRange = "[${uilib_version},)"
 ordering = "NONE"
 side = "CLIENT"
 

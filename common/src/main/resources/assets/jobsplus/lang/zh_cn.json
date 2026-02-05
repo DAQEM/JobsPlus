@@ -46,6 +46,8 @@
   "jobsplus.command.set.coins.success": "已将玩家 %2$s 的金币设置为 %1$d。",
   "jobsplus.command.toggleexp.enabled": "经验获取已启用。",
   "jobsplus.command.toggleexp.disabled": "本次会话已禁用经验获取。",
+  "jobsplus.command.togglecoins.enabled": "金币获取已启用。",
+  "jobsplus.command.togglecoins.disabled": "本次会话已禁用金币获取。",
 
   "key.category.jobsplus.category": "Jobs+",
   "key.jobsplus.open_menu": "打开 Jobs+ 菜单",

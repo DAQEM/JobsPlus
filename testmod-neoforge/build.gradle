@@ -1,11 +1,12 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
+architectury {
+    platformSetupLoomIde()
+    neoForge {
+        platformPackage = "neoforge"
+    }
 }
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
-
     mods {
         forge {
             sourceSet project(":neoforge").sourceSets.main
@@ -13,20 +14,15 @@ loom {
     }
 }
 
-architectury {
-    platformSetupLoomIde()
-    neoForge {
-        platformPackage = "forge"
-    }
-}
-
 configurations {
-    common
     forgeLike
+    common
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentNeoForge.extendsFrom common
 }
+
+apply from: rootProject.file("gradle/scripts/platform.gradle")
 
 dependencies {
     neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
@@ -35,10 +31,8 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     common(project(path: ":testmod-common", configuration: "namedElements")) { transitive false }
 
-    modImplementation "com.daqem.uilib:uilib-neoforge:${project.ui_library_version}"
-    modImplementation "com.daqem.yamlconfig:yamlconfig-neoforge:${project.config_library_version}"
+    modImplementation "com.daqem.uilib:uilib-neoforge:${project.uilib_version}"
+    modImplementation "com.daqem.yamlconfig:yamlconfig-neoforge:${project.yamlconfig_version}"
     modImplementation "com.daqem.arc:arc-neoforge:${project.arc_version}"
-    modImplementation "com.daqem.itemrestrictions:itemrestrictions-neoforge:${project.item_restrictions_version}"
-
-    modRuntimeOnly "dev.architectury:architectury-neoforge:${project.architectury_version}"
+    modImplementation "com.daqem.itemrestrictions:itemrestrictions-neoforge:${project.itemrestrictions_version}"
 }

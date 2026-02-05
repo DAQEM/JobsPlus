@@ -1,25 +1,14 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-}
-
-loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-
-    mixin { useLegacyMixinAp = true }
-}
-
 architectury {
     platformSetupLoomIde()
     fabric()
 }
 
-configurations {
-    common
-    compileClasspath.extendsFrom common
-    runtimeClasspath.extendsFrom common
-    developmentFabric.extendsFrom common
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+    mixin { useLegacyMixinAp = true }
 }
+
+apply from: rootProject.file("gradle/scripts/platform.gradle")
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
@@ -29,8 +18,8 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     common(project(path: ":testmod-common", configuration: "namedElements")) { transitive false }
 
-    modImplementation "com.daqem.uilib:uilib-fabric:${project.ui_library_version}"
-    modImplementation "com.daqem.yamlconfig:yamlconfig-fabric:${project.config_library_version}"
+    modImplementation "com.daqem.uilib:uilib-fabric:${project.uilib_version}"
+    modImplementation "com.daqem.yamlconfig:yamlconfig-fabric:${project.yamlconfig_version}"
     modImplementation "com.daqem.arc:arc-fabric:${project.arc_version}"
-    modImplementation "com.daqem.itemrestrictions:itemrestrictions-fabric:${project.item_restrictions_version}"
+    modImplementation "com.daqem.itemrestrictions:itemrestrictions-fabric:${project.itemrestrictions_version}"
 }

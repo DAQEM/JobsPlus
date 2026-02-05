@@ -1,46 +1,18 @@
-//file:noinspection GroovyAssignabilityCheck
 architectury {
-    //noinspection GrUnresolvedAccess
     common(rootProject.enabled_platforms.split(","))
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/jobsplus.accesswidener")
+    accessWidenerPath = file("src/main/resources/${rootProject.mod_id}.accesswidener")
 }
+
+apply from: rootProject.file("gradle/scripts/maven-publishing.gradle")
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
-    modApi "dev.architectury:architectury:${project.architectury_version}"
-
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${project.jUnitVersion}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.jUnitVersion}"
-
-    modImplementation "com.daqem.uilib:uilib-common:${project.ui_library_version}"
-    modImplementation "com.daqem.yamlconfig:yamlconfig-common:${project.config_library_version}"
+    // Fabric loader for annotations/mixins (Architectury standard)
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "com.daqem.uilib:uilib-common:${project.uilib_version}"
+    modImplementation "com.daqem.yamlconfig:yamlconfig-common:${project.yamlconfig_version}"
     modImplementation "com.daqem.arc:arc-common:${project.arc_version}"
-    modImplementation "com.daqem.itemrestrictions:itemrestrictions-common:${project.item_restrictions_version}"
-}
-
-test {
-    useJUnitPlatform()
-}
-
-publishing {
-    publications {
-        mavenFabric(MavenPublication) {
-            groupId = rootProject.maven_group
-            artifactId = rootProject.archives_base_name + "-common"
-            from components.java
-        }
-    }
-
-    repositories {
-        maven {
-            url = project.version.contains('-PR') ? 'https://maven.daqem.com/snapshots' : 'https://maven.daqem.com/releases'
-            credentials {
-                username = System.getenv("MAVEN_USER")
-                password = System.getenv("MAVEN_PASS")
-            }
-        }
-    }
+    modImplementation "com.daqem.itemrestrictions:itemrestrictions-common:${project.itemrestrictions_version}"
 }

@@ -56,6 +56,8 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     private double jobsplus$coins = 0;
     @Unique
     private boolean jobsplus$isExpEnabled = true;
+    @Unique
+    private boolean jobsplus$isCoinsEnabled = true;
 
     public MixinServerPlayer(Level level, GameProfile gameProfile) {
         super(level, gameProfile);
@@ -147,7 +149,9 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
 
     @Override
     public void jobsplus$setCoins(double coins) {
-        this.jobsplus$coins = coins;
+        if (this.jobsplus$isCoinsEnabled) {
+            this.jobsplus$coins = Math.max(0, coins);
+        }
     }
 
     @Override
@@ -183,12 +187,23 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
         this.jobsplus$isExpEnabled = enabled;
     }
 
+    @Override
+    public boolean jobsplus$isCoinsEnabled() {
+        return jobsplus$isCoinsEnabled;
+    }
+
+    @Override
+    public void jobsplus$setCoinsEnabled(boolean enabled) {
+        this.jobsplus$isCoinsEnabled = enabled;
+    }
+
     @Inject(at = @At("TAIL"), method = "restoreFrom(Lnet/minecraft/server/level/ServerPlayer;Z)V")
     public void restoreFrom(ServerPlayer oldPlayer, boolean alive, CallbackInfo ci) {
         if (oldPlayer instanceof JobsServerPlayer oldJobsServerPlayer) {
             this.jobsplus$jobs = oldJobsServerPlayer.jobsplus$getJobs();
             this.jobsplus$coins = oldJobsServerPlayer.jobsplus$getCoins();
             this.jobsplus$isExpEnabled = oldJobsServerPlayer.jobsplus$isExpEnabled();
+            this.jobsplus$isCoinsEnabled = oldJobsServerPlayer.jobsplus$isCoinsEnabled();
 
             this.jobsplus$jobs.forEach(job -> job.setPlayer(this));
 
