@@ -11,6 +11,7 @@ apply from: rootProject.file("gradle/scripts/maven-publishing.gradle")
 dependencies {
     // Fabric loader for annotations/mixins (Architectury standard)
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modApi "dev.architectury:architectury:${project.architectury_version}"
     modImplementation "com.daqem.uilib:uilib-common:${project.uilib_version}"
     modImplementation "com.daqem.yamlconfig:yamlconfig-common:${project.yamlconfig_version}"
     modImplementation "com.daqem.arc:arc-common:${project.arc_version}"

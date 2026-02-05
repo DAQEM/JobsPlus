@@ -18,6 +18,7 @@ dependencies {
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 
+    modApi "dev.architectury:architectury-fabric:${project.architectury_version}"
     modImplementation "com.daqem.uilib:uilib-fabric:${project.uilib_version}"
     modImplementation "com.daqem.yamlconfig:yamlconfig-fabric:${project.yamlconfig_version}"
     modImplementation "com.daqem.arc:arc-fabric:${project.arc_version}"
