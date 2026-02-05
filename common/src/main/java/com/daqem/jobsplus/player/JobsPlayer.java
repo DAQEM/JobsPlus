@@ -43,4 +43,8 @@ public interface JobsPlayer {
     boolean jobsplus$isExpEnabled();
 
     void jobsplus$setExpEnabled(boolean enabled);
+
+    boolean jobsplus$isCoinsEnabled();
+
+    void jobsplus$setCoinsEnabled(boolean enabled);
 }

@@ -54,6 +54,8 @@
   "jobsplus.command.hud.jobs_required": "Wähle zuerst mindestens einen Job für das HUD aus.",
   "jobsplus.command.toggleexp.enabled": "Erfahrungsgewinn aktiviert.",
   "jobsplus.command.toggleexp.disabled": "Erfahrungsgewinn für diese Sitzung deaktiviert.",
+  "jobsplus.command.togglecoins.enabled": "Münzgewinn aktiviert.",
+  "jobsplus.command.togglecoins.disabled": "Münzgewinn für diese Sitzung deaktiviert.",
 
   "key.category.jobsplus.category": "Jobs+",
   "key.jobsplus.open_menu": "Jobs+ Menü öffnen",

@@ -41,6 +41,8 @@
   "jobsplus.command.set.coins.success": "Monedas establecidas en %d para %s.",
   "jobsplus.command.toggleexp.enabled": "Ganancia de experiencia activada.",
   "jobsplus.command.toggleexp.disabled": "Ganancia de experiencia desactivada para esta sesión.",
+  "jobsplus.command.togglecoins.enabled": "Ganancia de monedas activada.",
+  "jobsplus.command.togglecoins.disabled": "Ganancia de monedas desactivada para esta sesión.",
 
   "key.category.jobsplus.category": "Jobs+",
   "key.jobsplus.open_menu": "Abrir menú de Jobs+",

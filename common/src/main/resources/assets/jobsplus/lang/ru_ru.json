@@ -40,6 +40,8 @@
   "jobsplus.command.set.level.success": "Установлен уровень %2$d для профессии %1$s игроку %3$s.",
   "jobsplus.command.toggleexp.enabled": "Получение опыта включено.",
   "jobsplus.command.toggleexp.disabled": "Получение опыта отключено на эту сессию.",
+  "jobsplus.command.togglecoins.enabled": "Получение монет включено.",
+  "jobsplus.command.togglecoins.disabled": "Получение монет отключено на эту сессию.",
 
   "key.category.jobsplus.category": "Jobs+",
   "key.jobsplus.open_menu": "Открыть меню Jobs+",

@@ -54,6 +54,8 @@
     "jobsplus.command.hud.jobs_required": "Select at least one job to display in the HUD first.",
     "jobsplus.command.toggleexp.enabled": "Experience gaining enabled.",
     "jobsplus.command.toggleexp.disabled": "Experience gaining disabled for this session.",
+    "jobsplus.command.togglecoins.enabled": "Coin gaining enabled.",
+    "jobsplus.command.togglecoins.disabled": "Coin gaining disabled for this session.",
 
     "key.category.jobsplus.category": "Jobs+",
     "key.jobsplus.open_menu": "Open Jobs+ GUI",

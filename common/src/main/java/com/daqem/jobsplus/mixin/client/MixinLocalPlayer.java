@@ -113,4 +113,14 @@ public abstract class MixinLocalPlayer extends Player implements JobsPlayer {
     public void jobsplus$setExpEnabled(boolean enabled) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public boolean jobsplus$isCoinsEnabled() {
+        return true;
+    }
+
+    @Override
+    public void jobsplus$setCoinsEnabled(boolean enabled) {
+        throw new UnsupportedOperationException();
+    }
 }

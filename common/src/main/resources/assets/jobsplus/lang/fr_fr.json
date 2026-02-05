@@ -40,6 +40,8 @@
   "jobsplus.command.set.level.success": "Niveau de %s fixé à %d pour %s.",
   "jobsplus.command.toggleexp.enabled": "Gain d'expérience activé.",
   "jobsplus.command.toggleexp.disabled": "Gain d'expérience désactivé pour cette session.",
+  "jobsplus.command.togglecoins.enabled": "Gain de pièces activé.",
+  "jobsplus.command.togglecoins.disabled": "Gain de pièces désactivé pour cette session.",
 
   "key.category.jobsplus.category": "Jobs+",
   "key.jobsplus.open_menu": "Ouvrir le menu Jobs+",
