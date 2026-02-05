@@ -17,6 +17,7 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
 
+    modApi "dev.architectury:architectury-neoforge:${project.architectury_version}"
     modImplementation "com.daqem.uilib:uilib-neoforge:${project.uilib_version}"
     modImplementation "com.daqem.yamlconfig:yamlconfig-neoforge:${project.yamlconfig_version}"
     modImplementation "com.daqem.arc:arc-neoforge:${project.arc_version}"
