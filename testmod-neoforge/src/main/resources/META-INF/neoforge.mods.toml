@@ -4,7 +4,7 @@ license = "Apache-2.0"
 
 [[mods]]
 modId = "jobsplus_test"
-version = "${file.jarVersion}"
+version = "1.0.0"
 displayName = "JobsPlus Test Mod"
 authors = "DAQEM"
 description = '''
