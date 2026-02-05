@@ -20,7 +20,7 @@ unifiedPublishing {
                 id = rootProject.curse_forge_project_id
                 gameVersions.addAll "Java 21"
                 relations {
-                    depends rootProject.curse_forge_dependencies
+                    rootProject.curse_forge_dependencies.split(",").each { depends it }
                 }
             }
         }
@@ -31,7 +31,7 @@ unifiedPublishing {
                 token = modrinthtoken
                 id = rootProject.modrinth_project_id
                 relations {
-                    depends rootProject.modrinth_dependencies
+                    rootProject.modrinth_dependencies.split(",").each { depends it }
                 }
             }
         }
