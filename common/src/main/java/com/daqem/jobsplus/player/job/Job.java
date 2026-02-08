@@ -174,7 +174,7 @@ public class Job {
 
     public @Nullable MutableComponent getExperienceGainMessage() {
         double exp = expCollector.getExp();
-        if (exp > 0) {
+        if (exp >= 0.1) {
             return JobsPlus.translatable("job.exp.gain",
                             JobsPlus.formatExp(exp),
                             jobInstance.getName().getString())
