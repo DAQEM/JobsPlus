@@ -6,7 +6,7 @@ import com.daqem.jobsplus.config.JobsPlusClientConfig;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.uilib.gui.widget.CustomButtonWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -18,10 +18,10 @@ import java.util.List;
 
 public class ToggleJobStatusBarWidget extends CustomButtonWidget {
 
-    private final static Component MESSAGE = JobsPlus.translatable("gui.jobs.toggle_job_status_bar");
+    private final static Component MESSAGE = JobsPlus.API.translatable("gui.jobs.toggle_job_status_bar");
     private static final WidgetSprites SPRITES = new WidgetSprites(
-            JobsPlus.getId("jobs/job_status_bar_toggle"),
-            JobsPlus.getId("jobs/job_status_bar_toggle_active")
+            JobsPlus.API.getId("jobs/job_status_bar_toggle"),
+            JobsPlus.API.getId("jobs/job_status_bar_toggle_active")
     );
 
     private final JobsScreenState state;
@@ -42,24 +42,24 @@ public class ToggleJobStatusBarWidget extends CustomButtonWidget {
     }
 
     @Override
-    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         List<String> jobs = JobsPlusClientConfig.jobStatusBarJobs.get();
         JobInstance jobInstance = state.getSelectedJob().getJobInstance();
         String jobLocation = jobInstance.getIdentifier().toString();
         boolean active = jobs.contains(jobLocation);
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(true, active || this.isHovered()), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ARGB.white(this.alpha));
-        guiGraphics.hLine(this.getX() + 2, this.getX() + 4, this.getY() + 3, 0xFF000000 | jobInstance.getColorDecimal());
+        guiGraphics.horizontalLine(this.getX() + 2, this.getX() + 4, this.getY() + 3, 0xFF000000 | jobInstance.getColorDecimal());
 
         if (this.isHovered()) {
             if (active) {
                 guiGraphics.setComponentTooltipForNextFrame(Minecraft.getInstance().font,  List.of(
-                        JobsPlus.translatable("gui.jobs.job_status_bar.toggle.enabled").setStyle(Style.EMPTY.withBold(true).withColor(jobInstance.getColorDecimal())),
-                        JobsPlus.translatable("gui.jobs.job_status_bar.toggle.command")
+                        JobsPlus.API.translatable("gui.jobs.job_status_bar.toggle.enabled").setStyle(Style.EMPTY.withBold(true).withColor(jobInstance.getColorDecimal())),
+                        JobsPlus.API.translatable("gui.jobs.job_status_bar.toggle.command")
                 ), mouseX, mouseY);
             } else {
                 guiGraphics.setComponentTooltipForNextFrame(Minecraft.getInstance().font,  List.of(
-                        JobsPlus.translatable("gui.jobs.job_status_bar.toggle.disabled").setStyle(Style.EMPTY.withBold(true).withColor(jobInstance.getColorDecimal())),
-                        JobsPlus.translatable("gui.jobs.job_status_bar.toggle.command")
+                        JobsPlus.API.translatable("gui.jobs.job_status_bar.toggle.disabled").setStyle(Style.EMPTY.withBold(true).withColor(jobInstance.getColorDecimal())),
+                        JobsPlus.API.translatable("gui.jobs.job_status_bar.toggle.command")
                 ), mouseX, mouseY);
             }
         }

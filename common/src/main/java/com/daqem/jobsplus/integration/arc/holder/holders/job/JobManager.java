@@ -10,15 +10,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.daqem.arc.Arc;
-import com.daqem.yamlconfig.YamlConfigExpectPlatform;
-import dev.architectury.platform.Platform;
+import com.daqem.knot.api.platform.Platform;
 import org.jetbrains.annotations.NotNull;
 
 import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.arc.data.ActionHolderManager;
 import com.daqem.jobsplus.JobsPlus;
-import com.daqem.jobsplus.JobsPlusExpectPlatform;
 import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
 import com.google.gson.Gson;
@@ -64,12 +61,12 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
                 JsonObject jsonElement = GsonHelper.parse(reader);
                 map.put(location, jsonElement);
             } catch (Exception runtimeException) {
-                JobsPlus.LOGGER.error("Parsing error loading job {}", location, runtimeException);
+                JobsPlus.API.LOGGER.error("Parsing error loading job {}", location, runtimeException);
             }
         }
 
         try {
-            Path configDir = YamlConfigExpectPlatform.getConfigDirectory().resolve(JobsPlus.MOD_ID).resolve("jobs");
+            Path configDir = Platform.INFO.getConfigFolder().resolve(JobsPlus.MOD_ID).resolve("jobs");
             if (!Files.exists(configDir)) {
                 Files.createDirectories(configDir);
             }
@@ -94,12 +91,12 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
                                 Identifier location = Identifier.fromNamespaceAndPath(namespace, resourcePath);
                                 map.put(location, jsonElement);
                             } catch (Exception e) {
-                                JobsPlus.LOGGER.error("Parsing error loading job from config {}", path, e);
+                                JobsPlus.API.LOGGER.error("Parsing error loading job from config {}", path, e);
                             }
                         });
             }
         } catch (Exception e) {
-            JobsPlus.LOGGER.error("Error loading jobs from config", e);
+            JobsPlus.API.LOGGER.error("Error loading jobs from config", e);
         }
         List<IActionHolder> jobs = new ArrayList<>();
         List<String> excludedJobs = JobsPlusConfig.excludedJobs.get();
@@ -115,7 +112,7 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
                 JobInstance job = GSON.fromJson(entry.getValue(), JobInstance.class);
                 jobs.add(job);
             } catch (JsonParseException | IllegalArgumentException runtimeException) {
-                JobsPlus.LOGGER.error("Parsing error loading job {}", location, runtimeException);
+                JobsPlus.API.LOGGER.error("Parsing error loading job {}", location, runtimeException);
             }
         }
 
@@ -127,11 +124,11 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
         ActionHolderManager actionHolderManager = ActionHolderManager.getInstance();
         actionHolderManager.clearAllActionHoldersForType(JobsPlusActionHolderType.JOB_INSTANCE);
         actionHolderManager.registerActionHolders(jobs);
-        JobsPlus.LOGGER.info("Loaded {} jobs", jobs.size());
+        JobsPlus.API.LOGGER.info("Loaded {} jobs", jobs.size());
     }
 
     public static JobManager getInstance() {
-        return instance != null ? instance : JobsPlusExpectPlatform.getJobManager();
+        return instance != null ? instance : new JobManager();
     }
 
     public Map<Identifier, JobInstance> getJobs() {

@@ -3,7 +3,7 @@ package com.daqem.jobsplus.config;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.gui.statusbar.JobStatusBarAlignmentHorizontal;
 import com.daqem.jobsplus.client.gui.statusbar.JobStatusBarAlignmentVertical;
-import com.daqem.yamlconfig.YamlConfigExpectPlatform;
+import com.daqem.knot.api.platform.Platform;
 import com.daqem.yamlconfig.api.config.ConfigExtension;
 import com.daqem.yamlconfig.api.config.ConfigType;
 import com.daqem.yamlconfig.api.config.IConfig;
@@ -49,7 +49,7 @@ public class JobsPlusClientConfig {
                 "jobsplus-client",
                 ConfigExtension.YAML,
                 ConfigType.CLIENT,
-                YamlConfigExpectPlatform.getConfigDirectory().resolve("jobsplus")
+                Platform.INFO.getConfigFolder().resolve("jobsplus")
         );
 
         builder.push("status_bar");

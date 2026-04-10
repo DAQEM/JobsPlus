@@ -40,7 +40,7 @@ public class HasPowerupActivatedCondition extends AbstractCondition  {
                 }
             }
         } else {
-            JobsPlus.LOGGER.error("Powerup {} does not exist! Trying to use it in the condition has_powerup_activated.", powerupLocation);
+            JobsPlus.API.LOGGER.error("Powerup {} does not exist! Trying to use it in the condition has_powerup_activated.", powerupLocation);
         }
         return false;
     }

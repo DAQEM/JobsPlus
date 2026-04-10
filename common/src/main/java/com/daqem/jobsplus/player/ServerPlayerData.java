@@ -12,7 +12,7 @@ public record ServerPlayerData(
         double coins
 ) {
     public static final Codec<ServerPlayerData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Job.CODEC.listOf().fieldOf("jobs").forGetter(ServerPlayerData::jobs),
+            Job.Serializer.CODEC.listOf().fieldOf("jobs").forGetter(ServerPlayerData::jobs),
             Codec.DOUBLE.fieldOf("coins").forGetter(ServerPlayerData::coins)
     ).apply(instance, ServerPlayerData::new));
 }

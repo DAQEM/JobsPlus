@@ -18,7 +18,7 @@ import com.daqem.jobsplus.networking.s2c.ClientboundUnlockPowerupPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
 
-import dev.architectury.networking.NetworkManager;
+import com.daqem.knot.Knot;
 import net.minecraft.server.level.ServerPlayer;
 
 public class JobEvents {
@@ -31,7 +31,7 @@ public class JobEvents {
                     .sendToAction();
         }
         if (player.jobsplus$getPlayer() instanceof ServerPlayer serverPlayer) {
-            NetworkManager.sendToPlayer(serverPlayer, new ClientboundLevelUpJobPacket(job.getJobInstance().getIdentifier(), job.getLevel()));
+            Knot.NETWORKING.sendToPlayer(serverPlayer, new ClientboundLevelUpJobPacket(job.getJobInstance().getIdentifier(), job.getLevel()));
 
             List<ItemRestriction> itemRestrictions = job.getJobInstance().getItemRestrictions()
                     .entrySet().stream()
@@ -41,7 +41,7 @@ public class JobEvents {
 
             for (ItemRestriction itemRestriction : itemRestrictions) {
                 if (itemRestriction.getIcon() != null && !itemRestriction.getIcon().isEmpty()) {
-                    NetworkManager.sendToPlayer(serverPlayer, new ClientboundUnlockItemRestrictionPacket(itemRestriction.getIdentifier()));
+                    Knot.NETWORKING.sendToPlayer(serverPlayer, new ClientboundUnlockItemRestrictionPacket(itemRestriction.getIdentifier()));
                 }
             }
 
@@ -52,7 +52,7 @@ public class JobEvents {
 
             for (PowerupInstance powerupInstance : powerupInstances) {
                 if (powerupInstance.getIcon() != null && !powerupInstance.getIcon().isEmpty()) {
-                    NetworkManager.sendToPlayer(serverPlayer, new ClientboundUnlockPowerupPacket(powerupInstance.getIdentifier()));
+                    Knot.NETWORKING .sendToPlayer(serverPlayer, new ClientboundUnlockPowerupPacket(powerupInstance.getIdentifier()));
                 }
             }
 
@@ -61,12 +61,12 @@ public class JobEvents {
             if (JobsPlusConfig.sendJobLevelUpMessages.get()) {
                 serverPlayer.level().getServer().getPlayerList()
                         .broadcastSystemMessage(
-                                JobsPlus.translatable("job.level_up",
+                                JobsPlus.API.translatable("job.level_up",
                                         serverPlayer.getName().copy()
                                                 .withStyle(style -> style
                                                         .withColor(jobInstance.getColorDecimal())
                                                 ),
-                                        JobsPlus.literal(String.valueOf(job.getLevel()))
+                                        JobsPlus.API.literal(String.valueOf(job.getLevel()))
                                                 .withStyle(style -> style
                                                         .withColor(jobInstance.getColorDecimal())
                                                 ),

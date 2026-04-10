@@ -11,7 +11,7 @@ public class JobsScreen extends AbstractScreen {
     private final Screen previousScreen;
 
     public JobsScreen(JobsScreenState state, Screen previousScreen) {
-        super(JobsPlus.translatable("gui.title.jobs"));
+        super(JobsPlus.API.translatable("gui.title.jobs"));
         this.state = state;
         this.previousScreen = previousScreen;
     }

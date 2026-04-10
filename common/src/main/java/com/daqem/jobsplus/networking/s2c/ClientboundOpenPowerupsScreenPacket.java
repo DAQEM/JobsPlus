@@ -1,63 +1,25 @@
 package com.daqem.jobsplus.networking.s2c;
 
-import java.util.List;
-
-import org.jetbrains.annotations.NotNull;
-
-import com.daqem.jobsplus.networking.JobsPlusNetworking;
+import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.player.job.Job;
-
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
 
-public class ClientboundOpenPowerupsScreenPacket implements CustomPacketPayload {
+import java.util.List;
 
-    private final List<Job> jobs;
-    private final double coins;
-    private final Identifier jobLocation;
+public record ClientboundOpenPowerupsScreenPacket(List<Job> jobs, double coins,
+                                                  Identifier jobLocation) implements CustomPacketPayload {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundOpenPowerupsScreenPacket> STREAM_CODEC = new StreamCodec<>() {
-        @Override
-        public @NotNull ClientboundOpenPowerupsScreenPacket decode(RegistryFriendlyByteBuf buf) {
-            return new ClientboundOpenPowerupsScreenPacket(buf);
-        }
+    public static final Type<@NotNull ClientboundOpenPowerupsScreenPacket> TYPE = new Type<>(JobsPlus.API.getId("clientbound_open_powerups_screen_packet"));
 
-        @Override
-        public void encode(RegistryFriendlyByteBuf buf, ClientboundOpenPowerupsScreenPacket packet) {
-            buf.writeCollection(packet.jobs, Job.Serializer::toNetwork);
-            buf.writeDouble(packet.coins);
-            buf.writeIdentifier(packet.jobLocation);
-        }
-    };
-
-    public ClientboundOpenPowerupsScreenPacket(List<Job> jobs, double coins, Identifier jobLocation) {
-        this.jobs = jobs;
-        this.coins = coins;
-        this.jobLocation = jobLocation;
-    }
-
-    public ClientboundOpenPowerupsScreenPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
-        this.jobs = friendlyByteBuf.readList(friendlyByteBuf1 -> Job.Serializer.fromNetwork(friendlyByteBuf1, null));
-        this.coins = friendlyByteBuf.readDouble();
-        this.jobLocation = friendlyByteBuf.readIdentifier();
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundOpenPowerupsScreenPacket> STREAM_CODEC = StreamCodec.composite(Job.Serializer.STREAM_CODEC.apply(ByteBufCodecs.list()), ClientboundOpenPowerupsScreenPacket::jobs, ByteBufCodecs.DOUBLE, ClientboundOpenPowerupsScreenPacket::coins, Identifier.STREAM_CODEC, ClientboundOpenPowerupsScreenPacket::jobLocation, ClientboundOpenPowerupsScreenPacket::new);
 
     @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
-        return JobsPlusNetworking.CLIENTBOUND_OPEN_POWERUPS_SCREEN;
-    }
-
-    public List<Job> getJobs() {
-        return jobs;
-    }
-
-    public double getCoins() {
-        return coins;
-    }
-
-    public Identifier getJobLocation() {
-        return jobLocation;
+    public @NotNull Type<? extends @NotNull CustomPacketPayload> type() {
+        return TYPE;
     }
 }

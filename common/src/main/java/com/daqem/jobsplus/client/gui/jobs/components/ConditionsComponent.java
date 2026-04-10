@@ -37,11 +37,11 @@ public class ConditionsComponent extends EmptyComponent {
         if (level == null) return;
 
         if (conditions.isEmpty()) {
-            TruncatedTextComponent noConditionsText = new TruncatedTextComponent(0, 2, getWidth(), JobsPlus.translatable("gui.jobs.no_conditions"), 0xFF1E1410);
+            TruncatedTextComponent noConditionsText = new TruncatedTextComponent(0, 2, getWidth(), JobsPlus.API.translatable("gui.jobs.no_conditions"), 0xFF1E1410);
             this.addComponent(noConditionsText);
             this.setHeight(noConditionsText.getHeight());
         } else {
-            TruncatedTextComponent title = new TruncatedTextComponent(0, 2, getWidth(), JobsPlus.translatable("gui.jobs.conditions").withStyle(style -> style.withUnderlined(true)), 0xFF1E1410);
+            TruncatedTextComponent title = new TruncatedTextComponent(0, 2, getWidth(), JobsPlus.API.translatable("gui.jobs.conditions").withStyle(style -> style.withUnderlined(true)), 0xFF1E1410);
             this.addComponent(title);
 
             int yOffset = title.getHeight() + 4;

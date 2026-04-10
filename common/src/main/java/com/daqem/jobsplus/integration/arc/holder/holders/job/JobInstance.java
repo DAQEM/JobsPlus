@@ -18,6 +18,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
@@ -30,13 +31,15 @@ public class JobInstance extends AbstractActionHolder {
 
     private final double price;
     private final String color;
-    private final ItemStack iconItem;
+    private final ItemStackTemplate iconTemplate;
+    private ItemStack cachedIcon;
 
-    public JobInstance(Identifier location, double price, String color, ItemStack iconItem) {
+    public JobInstance(Identifier location, double price, String color, ItemStackTemplate iconTemplate) {
         super(location);
         this.price = price;
         this.color = color;
-        this.iconItem = iconItem;
+        this.iconTemplate = iconTemplate;
+        this.cachedIcon = null;
     }
 
     public double getPrice() {
@@ -44,11 +47,11 @@ public class JobInstance extends AbstractActionHolder {
     }
 
     public MutableComponent getName() {
-        return JobsPlus.translatable("job." + location.getNamespace() + "." + location.getPath() + ".name");
+        return JobsPlus.API.translatable("job." + location.getNamespace() + "." + location.getPath() + ".name");
     }
 
     public MutableComponent getDescription() {
-        return JobsPlus.translatable("job." + location.getNamespace() + "." + location.getPath() + ".description");
+        return JobsPlus.API.translatable("job." + location.getNamespace() + "." + location.getPath() + ".description");
     }
 
     public List<PowerupInstance> getPowerups() {
@@ -63,7 +66,15 @@ public class JobInstance extends AbstractActionHolder {
     }
 
     public ItemStack getIconItem() {
-        return iconItem;
+        if (cachedIcon != null) {
+            return cachedIcon;
+        }
+        cachedIcon = iconTemplate.create();
+        return cachedIcon;
+    }
+
+    public ItemStackTemplate getIconTemplate() {
+        return iconTemplate;
     }
 
     /**
@@ -76,7 +87,7 @@ public class JobInstance extends AbstractActionHolder {
                 .collect(Collectors.toMap(
                         itemRestriction -> new ItemRestriction(
                                 itemRestriction.getIdentifier(),
-                                itemRestriction.getIcon().copy(),
+                                ItemStackTemplate.fromNonEmptyStack(itemRestriction.getIcon()),
                                 new ArrayList<>(itemRestriction.getRestrictionTypes()),
                                 new ArrayList<>(itemRestriction.getConditions()),
                                 itemRestriction.isClientSide()
@@ -124,7 +135,7 @@ public class JobInstance extends AbstractActionHolder {
                     resourceLocation,
                     GsonHelper.getAsDouble(jsonObject, "price"),
                     GsonHelper.getAsString(jsonObject, "color"),
-                    getItemStack(jsonObject, "icon"));
+                    getItemStackTemplate(jsonObject, "icon"));
         }
 
         public JobInstance fromNetwork(RegistryFriendlyByteBuf friendlyByteBuf, Identifier resourceLocation) {
@@ -132,7 +143,7 @@ public class JobInstance extends AbstractActionHolder {
                     friendlyByteBuf.readIdentifier(),
                     friendlyByteBuf.readDouble(),
                     friendlyByteBuf.readUtf(),
-                    ItemStack.STREAM_CODEC.decode(friendlyByteBuf)
+                    ItemStackTemplate.STREAM_CODEC.decode(friendlyByteBuf)
             );
         }
 
@@ -140,7 +151,7 @@ public class JobInstance extends AbstractActionHolder {
             friendlyByteBuf.writeIdentifier(jobInstance.location);
             friendlyByteBuf.writeDouble(jobInstance.price);
             friendlyByteBuf.writeUtf(jobInstance.color);
-            ItemStack.STREAM_CODEC.encode(friendlyByteBuf, jobInstance.iconItem);
+            ItemStackTemplate.STREAM_CODEC.encode(friendlyByteBuf, jobInstance.iconTemplate);
             IActionHolderSerializer.super.toNetwork(friendlyByteBuf, jobInstance);
         }
     }

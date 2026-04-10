@@ -7,7 +7,7 @@ import com.daqem.uilib.gui.component.item.ItemComponent;
 import com.daqem.uilib.gui.component.sprite.SpriteComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,19 +27,19 @@ public class RecipeItemComponent extends SpriteComponent {
     private final List<Component> tooltip;
 
     public RecipeItemComponent(int x, int y, int index, List<RestrictionType> restrictionTypes, int requiredLevel, ItemStack itemStack) {
-        super(x, y, 24, 24, JobsPlus.getId("jobs/item_slot_" + SPRITE_IDS[index % SPRITE_IDS.length]));
+        super(x, y, 24, 24, JobsPlus.API.getId("jobs/item_slot_" + SPRITE_IDS[index % SPRITE_IDS.length]));
         this.tooltip = new ArrayList<>();
-        MutableComponent title = JobsPlus.translatable("gui.jobs.restriction_types", requiredLevel);
+        MutableComponent title = JobsPlus.API.translatable("gui.jobs.restriction_types", requiredLevel);
         List<Component> titleLines = getTitleLines(title);
         this.tooltip.addAll(titleLines);
 
         this.tooltip.addAll(restrictionTypes.stream()
-                .map(restrictionType -> ItemRestrictions.translatable(restrictionType.getGuiTranslationKey().replace("cant_", "can_")))
+                .map(restrictionType -> ItemRestrictions.API.translatable(restrictionType.getGuiTranslationKey().replace("cant_", "can_")))
                 .sorted((c1, c2) -> String.CASE_INSENSITIVE_ORDER.compare(c1.getString(), c2.getString()))
                 .toList());
 
         this.tooltip.add(Component.empty());
-        this.tooltip.add(JobsPlus.translatable("gui.jobs.item_info").withStyle(ChatFormatting.GOLD));
+        this.tooltip.add(JobsPlus.API.translatable("gui.jobs.item_info").withStyle(ChatFormatting.GOLD));
 
         //add item tooltip info to the end of the tooltip
         Minecraft minecraft = Minecraft.getInstance();
@@ -83,8 +83,8 @@ public class RecipeItemComponent extends SpriteComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
         if (this.getRectangle().containsPoint(mouseX, mouseY)) {
             guiGraphics.setTooltipForNextFrame(
                     Minecraft.getInstance().font,

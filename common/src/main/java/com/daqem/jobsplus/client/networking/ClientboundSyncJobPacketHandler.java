@@ -4,13 +4,14 @@ import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.networking.s2c.ClientboundSyncJobPacket;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
-import dev.architectury.networking.NetworkManager;
+import com.daqem.knot.networking.ClientboundContext;
+import org.jetbrains.annotations.NotNull;
 
 public class ClientboundSyncJobPacketHandler {
 
-    public static void handleClientSide(ClientboundSyncJobPacket packet, NetworkManager.PacketContext context) {
-        if (context.getPlayer() instanceof JobsPlayer jobsPlayer) {
-            Job syncedJob = packet.getJob();
+    public static void handle(@NotNull ClientboundSyncJobPacket packet, ClientboundContext context) {
+        if (context.player() instanceof JobsPlayer jobsPlayer) {
+            Job syncedJob = packet.job();
             Job localJob = jobsPlayer.jobsplus$getJob(syncedJob.getJobInstance().getIdentifier());
 
             // If the job doesn't exist on the client yet, create it

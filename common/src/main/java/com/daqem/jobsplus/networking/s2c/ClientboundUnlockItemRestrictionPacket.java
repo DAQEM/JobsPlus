@@ -1,43 +1,25 @@
 package com.daqem.jobsplus.networking.s2c;
 
-import com.daqem.jobsplus.networking.JobsPlusNetworking;
+import com.daqem.jobsplus.JobsPlus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class ClientboundUnlockItemRestrictionPacket implements CustomPacketPayload {
+public record ClientboundUnlockItemRestrictionPacket(
+        Identifier itemRestrictionLocation) implements CustomPacketPayload {
 
-    private final Identifier itemRestrictionLocation;
+    public static final Type<@NotNull ClientboundUnlockItemRestrictionPacket> TYPE = new Type<>(JobsPlus.API.getId("clientbound_unlock_item_restriction_packet"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUnlockItemRestrictionPacket> STREAM_CODEC = new StreamCodec<>() {
-        @Override
-        public @NotNull ClientboundUnlockItemRestrictionPacket decode(RegistryFriendlyByteBuf buf) {
-            return new ClientboundUnlockItemRestrictionPacket(buf);
-        }
-
-        @Override
-        public void encode(RegistryFriendlyByteBuf buf, ClientboundUnlockItemRestrictionPacket packet) {
-            buf.writeIdentifier(packet.itemRestrictionLocation);
-        }
-    };
-
-    public ClientboundUnlockItemRestrictionPacket(Identifier itemRestrictionLocation) {
-        this.itemRestrictionLocation = itemRestrictionLocation;
-
-    }
-
-    public ClientboundUnlockItemRestrictionPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
-        this.itemRestrictionLocation = friendlyByteBuf.readIdentifier();
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUnlockItemRestrictionPacket> STREAM_CODEC = StreamCodec.composite(
+            Identifier.STREAM_CODEC,
+            ClientboundUnlockItemRestrictionPacket::itemRestrictionLocation,
+            ClientboundUnlockItemRestrictionPacket::new
+    );
 
     @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
-        return JobsPlusNetworking.CLIENTBOUND_UNLOCK_ITEM_RESTRICTION;
-    }
-
-    public Identifier getItemRestrictionLocation() {
-        return itemRestrictionLocation;
+    public @NotNull Type<? extends @NotNull CustomPacketPayload> type() {
+        return TYPE;
     }
 }

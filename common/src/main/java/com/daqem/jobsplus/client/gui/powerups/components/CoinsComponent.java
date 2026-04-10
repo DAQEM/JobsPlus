@@ -6,7 +6,7 @@ import com.daqem.uilib.gui.component.sprite.SpriteComponent;
 import com.daqem.uilib.gui.component.text.TextComponent;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.MutableComponent;
 
 public class CoinsComponent extends SpriteComponent {
@@ -15,14 +15,14 @@ public class CoinsComponent extends SpriteComponent {
     private double cachedCoins;
 
     public CoinsComponent(PowerupsScreenState state) {
-        super(0, 24, 0, 15, JobsPlus.getId("powerups/coins_background"));
+        super(0, 24, 0, 15, JobsPlus.API.getId("powerups/coins_background"));
         this.state = state;
         this.cachedCoins = state.getCoins();
 
-        MutableComponent coinsText = JobsPlus.literal(JobsPlus.formatCoin(this.cachedCoins));
+        MutableComponent coinsText = JobsPlus.API.literal(JobsPlus.formatCoin(this.cachedCoins));
         int coinsTextWidth = Minecraft.getInstance().font.width(coinsText);
         TextComponent coinsTextComponent = new TextComponent(6, 4, coinsText, 0xFFEAF0FF);
-        SpriteComponent coinIcon = new SpriteComponent(6 + coinsTextWidth + 2, 4, 7, 8, JobsPlus.getId("jobs/coins"));
+        SpriteComponent coinIcon = new SpriteComponent(6 + coinsTextWidth + 2, 4, 7, 8, JobsPlus.API.getId("jobs/coins"));
 
         this.addComponent(coinsTextComponent);
         this.addComponent(coinIcon);
@@ -30,10 +30,10 @@ public class CoinsComponent extends SpriteComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         if (this.state.getCoins() != this.cachedCoins) {
 
         }
-        super.render(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
     }
 }

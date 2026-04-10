@@ -7,7 +7,7 @@ import com.daqem.jobsplus.client.gui.jobs.widgets.AbstractScrollWidget;
 import com.daqem.jobsplus.player.LeaderboardPlayer;
 import com.daqem.uilib.api.component.IComponent;
 import com.daqem.uilib.gui.component.text.multiline.MultiLineTextComponent;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class LeaderboardScrollWidget extends AbstractScrollWidget {
                     0,
                     0,
                     this.getWidth(),
-                    JobsPlus.translatable("gui.jobs.leaderboard.no_players"),
+                    JobsPlus.API.translatable("gui.jobs.leaderboard.no_players"),
                     0xFFD8BF96
             ));
         } else {
@@ -48,10 +48,10 @@ public class LeaderboardScrollWidget extends AbstractScrollWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (cachedPlayers != state.getLeaderboardPlayers()) {
             rebuildComponents();
         }
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 }

@@ -6,7 +6,7 @@ import com.daqem.jobsplus.player.job.Job;
 import com.daqem.uilib.gui.component.AbstractComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class JobStatusBarComponent extends AbstractComponent {
 
@@ -18,20 +18,20 @@ public class JobStatusBarComponent extends AbstractComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         setWidth(JobsPlusClientConfig.jobStatusBarWidth.get() - 1);
         boolean isDetailed = JobsPlusClientConfig.jobStatusBarDetailed.get();
         int lineHeight = Minecraft.getInstance().font.lineHeight;
         setHeight(isDetailed ? 3 + lineHeight : 3);
         int yOffset = isDetailed ? lineHeight : 0;
-        guiGraphics.hLine(getTotalX() + 1, getTotalX() + getWidth() - 1, getTotalY() + yOffset, JobsPlusClientConfig.jobStatusBarColor.get().intValue());
-        guiGraphics.hLine(getTotalX(), getTotalX() + getWidth(), getTotalY() + 1 + yOffset, JobsPlusClientConfig.jobStatusBarColor.get().intValue());
-        guiGraphics.hLine(getTotalX() + 1, getTotalX() + getWidth() - 1, getTotalY() + 1 + yOffset, JobsPlusClientConfig.jobStatusBarEmptyColor.get().intValue());
-        guiGraphics.hLine(getTotalX() + 1, getTotalX() + getWidth() - 1, getTotalY() + 2 + yOffset, JobsPlusClientConfig.jobStatusBarColor.get().intValue());
+        guiGraphics.horizontalLine(getTotalX() + 1, getTotalX() + getWidth() - 1, getTotalY() + yOffset, JobsPlusClientConfig.jobStatusBarColor.get().intValue());
+        guiGraphics.horizontalLine(getTotalX(), getTotalX() + getWidth(), getTotalY() + 1 + yOffset, JobsPlusClientConfig.jobStatusBarColor.get().intValue());
+        guiGraphics.horizontalLine(getTotalX() + 1, getTotalX() + getWidth() - 1, getTotalY() + 1 + yOffset, JobsPlusClientConfig.jobStatusBarEmptyColor.get().intValue());
+        guiGraphics.horizontalLine(getTotalX() + 1, getTotalX() + getWidth() - 1, getTotalY() + 2 + yOffset, JobsPlusClientConfig.jobStatusBarColor.get().intValue());
 
         double experiencePercentage = job.getExperiencePercentage();
         if ( experiencePercentage > 0) {
-            guiGraphics.hLine(getTotalX() + 1, getTotalX() + (int) (getWidth() * (experiencePercentage / 100.0f)) - 1, getTotalY() + 1 + yOffset, 0xFF000000 | job.getJobInstance().getColorDecimal());
+            guiGraphics.horizontalLine(getTotalX() + 1, getTotalX() + (int) (getWidth() * (experiencePercentage / 100.0f)) - 1, getTotalY() + 1 + yOffset, 0xFF000000 | job.getJobInstance().getColorDecimal());
         }
 
         if (isDetailed) {
@@ -61,7 +61,7 @@ public class JobStatusBarComponent extends AbstractComponent {
                 }
             }
 
-            guiGraphics.drawString(
+            guiGraphics.text(
                     font,
                     text,
                     getTotalX(),

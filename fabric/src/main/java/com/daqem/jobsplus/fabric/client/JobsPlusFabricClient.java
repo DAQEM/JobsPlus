@@ -1,8 +1,8 @@
 package com.daqem.jobsplus.fabric.client;
 
 import com.daqem.jobsplus.client.JobsPlusClient;
+import com.daqem.knot.Knot;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 
 public class JobsPlusFabricClient implements ClientModInitializer {
 
@@ -13,6 +13,6 @@ public class JobsPlusFabricClient implements ClientModInitializer {
     }
 
     private static void registerKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(JobsPlusClient.OPEN_MENU);
+        Knot.KEY_MAPPING_REGISTRY.register(JobsPlusClient.OPEN_MENU);
     }
 }

@@ -59,6 +59,7 @@
   "jobsplus.job.jobsplus.lumberjack.name": "Лесоруб",
   "jobsplus.job.jobsplus.miner.name": "Шахтер",
   "jobsplus.job.jobsplus.smith.name": "Кузнец",
+  "jobsplus.job.jobsplus.add_jobs.name": "Добавить профессии",
 
   "jobsplus.powerup.jobsplus.alchemist.harmful_potion_immunity_i.name": "Иммунитет к негативным зельям I",
   "jobsplus.powerup.jobsplus.builder.less_fall_damage_i.name": "Снижение урона от падения I",

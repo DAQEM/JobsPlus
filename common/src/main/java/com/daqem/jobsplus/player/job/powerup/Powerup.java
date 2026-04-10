@@ -1,8 +1,11 @@
 package com.daqem.jobsplus.player.job.powerup;
 
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
+import com.daqem.knot.api.codec.KnotStreamCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
 public class Powerup {
@@ -12,6 +15,14 @@ public class Powerup {
             PowerupState.CODEC.fieldOf("state").forGetter(Powerup::getState)
 
     ).apply(instance, Powerup::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, Powerup> STREAM_CODEC = StreamCodec.composite(
+            Identifier.STREAM_CODEC,
+            powerup -> powerup.getPowerupInstance().getIdentifier(),
+            KnotStreamCodecs.enumCodec(PowerupState.class),
+            Powerup::getState,
+            Powerup::new
+    );
 
     private final PowerupInstance powerupInstance;
     private PowerupState powerupState;

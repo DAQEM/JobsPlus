@@ -93,7 +93,7 @@ public class JobLevelCalculator {
             }.parse();
 
         } catch (Exception e) {
-            JobsPlus.LOGGER.error("Failed to parse experience formula '{}': {}. Using default backup.", formula, e.getMessage());
+            JobsPlus.API.LOGGER.error("Failed to parse experience formula '{}': {}. Using default backup.", formula, e.getMessage());
             return calculateDefault(level);
         }
     }

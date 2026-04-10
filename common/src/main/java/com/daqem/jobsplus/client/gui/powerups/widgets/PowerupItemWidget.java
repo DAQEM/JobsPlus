@@ -12,19 +12,20 @@ import com.daqem.jobsplus.networking.c2s.ServerboundTogglePowerUpPacket;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
+import com.daqem.knot.Knot;
 import com.daqem.uilib.api.skilltree.ISkillTreeItem;
 import com.daqem.uilib.api.widget.skilltree.ISkillTreeItemWidget;
 import com.daqem.uilib.gui.component.text.multiline.MultiLineTextComponent;
 import com.daqem.uilib.gui.widget.CustomButtonWidget;
-import dev.architectury.networking.NetworkManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeItemWidget {
 
@@ -39,16 +40,16 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                 PowerupInstance powerupInstance = powerUp.getPowerupInstance();
                 Identifier location = button.getState().getJob().getJobInstance().getIdentifier();
                 if (powerUp.getState() == PowerupState.ACTIVE || powerUp.getState() == PowerupState.INACTIVE) {
-                    NetworkManager.sendToServer(new ServerboundTogglePowerUpPacket(location, powerupInstance.getIdentifier()));
+                    Knot.NETWORKING.sendToServer(new ServerboundTogglePowerUpPacket(location, powerupInstance.getIdentifier()));
                     if (Minecraft.getInstance().screen instanceof PowerupsScreen powerupsScreen) {
                         button.getPowerup().setState(powerUp.getState() == PowerupState.ACTIVE ? PowerupState.INACTIVE : PowerupState.ACTIVE);
                     }
                 } else if (powerUp.getState() == PowerupState.NOT_OWNED) {
                     Minecraft.getInstance().setScreen(new ConfirmationScreen(Minecraft.getInstance().screen, new ConfirmationScreenState(
-                            JobsPlus.translatable("gui.confirmation.purchase_powerup", powerupInstance.getName(), powerupInstance.getPrice()),
+                            JobsPlus.API.translatable("gui.confirmation.purchase_powerup", powerupInstance.getName(), powerupInstance.getPrice()),
                             () -> {
-                                NetworkManager.sendToServer(new ServerboundStartPowerupPacket(location, powerupInstance.getIdentifier()));
-                                NetworkManager.sendToServer(new ServerboundOpenPowerupsScreenPacket(location));
+                                Knot.NETWORKING.sendToServer(new ServerboundStartPowerupPacket(location, powerupInstance.getIdentifier()));
+                                Knot.NETWORKING.sendToServer(new ServerboundOpenPowerupsScreenPacket(location));
                             }
                     )));
                 }
@@ -60,7 +61,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
     }
 
     @Override
-    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.blitSlot(guiGraphics);
     }
 
@@ -73,9 +74,9 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
     }
 
     private Identifier getSprite() {
-        Identifier defaultSprite = JobsPlus.getId("powerups/slot_active");
-        Identifier lockedSprite = JobsPlus.getId("powerups/slot_locked");
-        Identifier notOwnedSprite = JobsPlus.getId("powerups/slot_not_owned");
+        Identifier defaultSprite = JobsPlus.API.getId("powerups/slot_active");
+        Identifier lockedSprite = JobsPlus.API.getId("powerups/slot_locked");
+        Identifier notOwnedSprite = JobsPlus.API.getId("powerups/slot_not_owned");
         if (this.powerup == null) {
             Job job = state.getJob();
             if (job.getLevel() > 0) {
@@ -91,13 +92,13 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
         }
         return switch (this.powerup.getState()) {
             case ACTIVE -> defaultSprite;
-            case INACTIVE -> JobsPlus.getId("powerups/slot_inactive");
+            case INACTIVE -> JobsPlus.API.getId("powerups/slot_inactive");
             case NOT_OWNED -> notOwnedSprite;
             case LOCKED -> lockedSprite;
         };
     }
 
-    private void blitSlot(GuiGraphics guiGraphics) {
+    private void blitSlot(GuiGraphicsExtractor guiGraphics) {
         guiGraphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 this.getSprite(),
@@ -108,12 +109,12 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
         );
 
         ItemStack icon = this.powerup != null ? this.powerup.getPowerupInstance().getIcon() : state.getJob().getJobInstance().getIconItem();
-        guiGraphics.renderFakeItem(
+        guiGraphics.fakeItem(
                 icon,
                 this.getX() + 5,
                 this.getY() + 5
         );
-        guiGraphics.renderItemDecorations(
+        guiGraphics.itemDecorations(
                 Minecraft.getInstance().font,
                 icon,
                 this.getX() + 5,
@@ -122,7 +123,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
     }
 
     @Override
-    public void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void extractTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (this.isMouseOver(mouseX, mouseY)) {
             Component title = this.powerup != null ? this.powerup.getPowerupInstance().getName() : state.getJob().getJobInstance().getName();
             Component description = this.powerup != null ? this.powerup.getPowerupInstance().getDescription() : state.getJob().getJobInstance().getDescription();
@@ -131,7 +132,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
             if (getX() + getWidth() + titleWidth + 18 > guiGraphics.guiWidth()) {
                 guiGraphics.blitSprite(
                         RenderPipelines.GUI_TEXTURED,
-                        JobsPlus.getId("powerups/text_background"),
+                        JobsPlus.API.getId("powerups/text_background"),
                         this.getX() - titleWidth - 18,
                         this.getY() + 7,
                         this.getWidth() + titleWidth + 24,
@@ -139,13 +140,13 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                 );
                 guiGraphics.blitSprite(
                         RenderPipelines.GUI_TEXTURED,
-                        JobsPlus.getId("powerups/bar"),
+                        JobsPlus.API.getId("powerups/bar"),
                         this.getX() - titleWidth - 18,
                         this.getY() + 3,
                         this.getWidth() + titleWidth + 24,
                         20
                 );
-                guiGraphics.drawString(
+                guiGraphics.text(
                         Minecraft.getInstance().font,
                         title,
                         this.getX() - titleWidth - 6,
@@ -156,7 +157,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                 if (this.powerup != null) {
                     guiGraphics.blitSprite(
                             RenderPipelines.GUI_TEXTURED,
-                            JobsPlus.getId("powerups/line"),
+                            JobsPlus.API.getId("powerups/line"),
                             this.getX() - titleWidth - 12,
                             this.getY() + 29 + descriptionComponent.getHeight() + 1,
                             30,
@@ -164,17 +165,17 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                     );
                     int requiredLevel = this.powerup.getPowerupInstance().getRequiredLevel();
                     if (requiredLevel > 0) {
-                        guiGraphics.drawString(
+                        guiGraphics.text(
                                 Minecraft.getInstance().font,
-                                JobsPlus.translatable("gui.powerups.required_level", requiredLevel),
+                                JobsPlus.API.translatable("gui.powerups.required_level", requiredLevel),
                                 this.getX() - titleWidth - 11,
                                 this.getY() + 29 + descriptionComponent.getHeight() + 4,
                                 0xFF1E1410,
                                 false
                         );
                     }
-                    MutableComponent price = JobsPlus.translatable("gui.powerups.price", this.powerup.getPowerupInstance().getPrice());
-                    guiGraphics.drawString(
+                    MutableComponent price = JobsPlus.API.translatable("gui.powerups.price", this.powerup.getPowerupInstance().getPrice());
+                    guiGraphics.text(
                             Minecraft.getInstance().font,
                             price,
                             this.getX() - titleWidth - 11,
@@ -184,7 +185,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                     );
                     guiGraphics.blitSprite(
                             RenderPipelines.GUI_TEXTURED,
-                            JobsPlus.getId("jobs/coins"),
+                            JobsPlus.API.getId("jobs/coins"),
                             this.getX() - titleWidth - 11 + Minecraft.getInstance().font.width(price) + 2,
                             this.getY() + 29 + descriptionComponent.getHeight() + (requiredLevel > 0 ? 15 : 4),
                             7,
@@ -193,11 +194,11 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                 }
                 descriptionComponent.setX(this.getX() - titleWidth - 11);
                 descriptionComponent.setY(this.getY() + 29);
-                descriptionComponent.renderBase(guiGraphics, mouseX, mouseY,0, 0, 0);
+                descriptionComponent.extractRenderStateBase(guiGraphics, mouseX, mouseY,0, 0, 0);
             } else {
                 guiGraphics.blitSprite(
                         RenderPipelines.GUI_TEXTURED,
-                        JobsPlus.getId("powerups/text_background"),
+                        JobsPlus.API.getId("powerups/text_background"),
                         this.getX() - 6,
                         this.getY() + 7,
                         this.getWidth() + titleWidth + 24,
@@ -205,13 +206,13 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                 );
                 guiGraphics.blitSprite(
                         RenderPipelines.GUI_TEXTURED,
-                        JobsPlus.getId("powerups/bar"),
+                        JobsPlus.API.getId("powerups/bar"),
                         this.getX() - 6,
                         this.getY() + 3,
                         this.getWidth() +titleWidth + 24,
                         20
                 );
-                guiGraphics.drawString(
+                guiGraphics.text(
                         Minecraft.getInstance().font,
                         title,
                         this.getX() + this.getWidth() + 8,
@@ -222,7 +223,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                 if (this.powerup != null) {
                     guiGraphics.blitSprite(
                             RenderPipelines.GUI_TEXTURED,
-                            JobsPlus.getId("powerups/line"),
+                            JobsPlus.API.getId("powerups/line"),
                             this.getX(),
                             this.getY() + 29 + descriptionComponent.getHeight() + 1,
                             30,
@@ -230,17 +231,17 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                     );
                     int requiredLevel = this.powerup.getPowerupInstance().getRequiredLevel();
                     if (requiredLevel > 0) {
-                        guiGraphics.drawString(
+                        guiGraphics.text(
                                 Minecraft.getInstance().font,
-                                JobsPlus.translatable("gui.powerups.required_level", requiredLevel),
+                                JobsPlus.API.translatable("gui.powerups.required_level", requiredLevel),
                                 this.getX() + 1,
                                 this.getY() + 29 + descriptionComponent.getHeight() + 4,
                                 0xFF1E1410,
                                 false
                         );
                     }
-                    MutableComponent price = JobsPlus.translatable("gui.powerups.price", this.powerup.getPowerupInstance().getPrice());
-                    guiGraphics.drawString(
+                    MutableComponent price = JobsPlus.API.translatable("gui.powerups.price", this.powerup.getPowerupInstance().getPrice());
+                    guiGraphics.text(
                             Minecraft.getInstance().font,
                             price,
                             this.getX() + 1,
@@ -250,7 +251,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                     );
                     guiGraphics.blitSprite(
                             RenderPipelines.GUI_TEXTURED,
-                            JobsPlus.getId("jobs/coins"),
+                            JobsPlus.API.getId("jobs/coins"),
                             this.getX() + 1 + Minecraft.getInstance().font.width(price) + 2,
                             this.getY() + 29 + descriptionComponent.getHeight() + (requiredLevel > 0 ? 15 : 4),
                             7,
@@ -259,7 +260,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                 }
                 descriptionComponent.setX(this.getX() + 1);
                 descriptionComponent.setY(this.getY() + 29);
-                descriptionComponent.renderBase(guiGraphics, mouseX, mouseY,0, 0, 0);
+                descriptionComponent.extractRenderStateBase(guiGraphics, mouseX, mouseY,0, 0, 0);
             }
             this.blitSlot(guiGraphics);
         }
@@ -271,7 +272,7 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
     }
 
     @Override
-    protected boolean isValidClickButton(MouseButtonInfo mouseButtonInfo) {
+    protected boolean isValidClickButton(@NotNull MouseButtonInfo mouseButtonInfo) {
         if (hasPowerup()) return true;
 
         boolean isCorrectPowerupState = this.powerup != null && this.powerup.getState() != PowerupState.LOCKED;

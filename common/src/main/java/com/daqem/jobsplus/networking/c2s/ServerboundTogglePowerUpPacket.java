@@ -1,53 +1,37 @@
 package com.daqem.jobsplus.networking.c2s;
 
-import com.daqem.jobsplus.networking.JobsPlusNetworking;
+import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.player.JobsServerPlayer;
 import com.daqem.jobsplus.player.job.Job;
-import dev.architectury.networking.NetworkManager;
+import com.daqem.knot.networking.ServerboundContext;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class ServerboundTogglePowerUpPacket implements CustomPacketPayload {
+public record ServerboundTogglePowerUpPacket(Identifier jobLocation, Identifier powerupLocation) implements CustomPacketPayload {
 
-    private final Identifier jobLocation;
-    private final Identifier powerupLocation;
+    public static final Type<@NotNull ServerboundTogglePowerUpPacket> TYPE = new Type<>(JobsPlus.API.getId("serverbound_toggle_powerup_packet"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundTogglePowerUpPacket> STREAM_CODEC = new StreamCodec<>() {
-        @Override
-        public @NotNull ServerboundTogglePowerUpPacket decode(RegistryFriendlyByteBuf buf) {
-            return new ServerboundTogglePowerUpPacket(buf);
-        }
-
-        @Override
-        public void encode(RegistryFriendlyByteBuf buf, ServerboundTogglePowerUpPacket packet) {
-            buf.writeIdentifier(packet.jobLocation);
-            buf.writeIdentifier(packet.powerupLocation);
-        }
-    };
-
-    public ServerboundTogglePowerUpPacket(Identifier jobLocation, Identifier powerupLocation) {
-        this.jobLocation = jobLocation;
-        this.powerupLocation = powerupLocation;
-    }
-
-    public ServerboundTogglePowerUpPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
-        this.jobLocation = friendlyByteBuf.readIdentifier();
-        this.powerupLocation = friendlyByteBuf.readIdentifier();
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundTogglePowerUpPacket> STREAM_CODEC = StreamCodec.composite(
+            Identifier.STREAM_CODEC,
+            ServerboundTogglePowerUpPacket::jobLocation,
+            Identifier.STREAM_CODEC,
+            ServerboundTogglePowerUpPacket::powerupLocation,
+            ServerboundTogglePowerUpPacket::new
+    );
 
     @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
-        return JobsPlusNetworking.SERVERBOUND_TOGGLE_POWERUP;
+    public @NotNull Type<? extends @NotNull CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static void handleServerSide(ServerboundTogglePowerUpPacket packet, NetworkManager.PacketContext context) {
-        if (context.getPlayer() instanceof JobsServerPlayer serverPlayer) {
-            Job job = serverPlayer.jobsplus$getJob(packet.jobLocation);
+    public void handle(ServerboundContext context) {
+        if (context.player() instanceof JobsServerPlayer serverPlayer) {
+            Job job = serverPlayer.jobsplus$getJob(this.jobLocation);
             if (job != null) {
-                job.getPowerupManager().getPowerup(packet.powerupLocation).ifPresent(powerup -> {
+                job.getPowerupManager().getPowerup(this.powerupLocation).ifPresent(powerup -> {
                     job.getPowerupManager().togglePowerup(powerup);
                 });
             }

@@ -129,14 +129,14 @@ public class PrimaryLevelDataMixin implements JobsPlusLevelData {
         }
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/world/level/LevelSettings;Lnet/minecraft/world/level/levelgen/WorldOptions;Lnet/minecraft/world/level/storage/PrimaryLevelData$SpecialWorldProperty;Lcom/mojang/serialization/Lifecycle;)V", at = @At("RETURN"))
+    @Inject(method = "<init>(Ljava/util/UUID;ZLnet/minecraft/world/level/storage/LevelData$RespawnData;JIZLjava/util/Set;Ljava/util/Set;Lnet/minecraft/world/level/LevelSettings;Lnet/minecraft/world/level/storage/PrimaryLevelData$SpecialWorldProperty;Lcom/mojang/serialization/Lifecycle;)V", at = @At("RETURN"))
     private void constructorInit(CallbackInfo ci) {
         this.jobsplus$playerJobEntries = new HashMap<>();
     }
 
-    @Inject(method = "parse", at = @At("RETURN"))
-    private static <T> void parse(Dynamic<T> dynamic, LevelSettings levelSettings, PrimaryLevelData.SpecialWorldProperty specialWorldProperty, WorldOptions worldOptions, Lifecycle lifecycle, CallbackInfoReturnable<PrimaryLevelData> cir) {
-        OptionalDynamic<T> optionalDynamic = dynamic.get("JobsPlusLeaderboard");
+    @Inject(method = "Lnet/minecraft/world/level/storage/PrimaryLevelData;parse(Lcom/mojang/serialization/Dynamic;Lnet/minecraft/world/level/LevelSettings;Lnet/minecraft/world/level/storage/PrimaryLevelData$SpecialWorldProperty;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/world/level/storage/PrimaryLevelData;", at = @At("RETURN"))
+    private static <T> void parse(Dynamic<T> input, LevelSettings settings, PrimaryLevelData.SpecialWorldProperty specialWorldProperty, Lifecycle worldGenSettingsLifecycle, CallbackInfoReturnable<PrimaryLevelData> cir) {
+        OptionalDynamic<T> optionalDynamic = input.get("JobsPlusLeaderboard");
 
         List<LeaderboardPlayer> players = optionalDynamic.get("players")
                 .asStream()
@@ -151,14 +151,14 @@ public class PrimaryLevelDataMixin implements JobsPlusLevelData {
         }
     }
 
-    @Inject(method = "setTagData(Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/nbt/CompoundTag;)V", at = @At("HEAD"))
-    private void setTagData(RegistryAccess registryAccess, CompoundTag compoundTag, @Nullable CompoundTag compoundTag2, CallbackInfo ci) {
+    @Inject(method = "setTagData(Lnet/minecraft/nbt/CompoundTag;Ljava/util/UUID;)V", at = @At("HEAD"))
+    private void setTagData(CompoundTag tag, @Nullable UUID singlePlayerUUID, CallbackInfo ci) {
         CompoundTag leaderboardTag = new CompoundTag();
         ListTag playersTag = new ListTag();
         this.jobsplus$playerJobEntries.values().forEach(jobMap ->
                 jobMap.values().forEach(player -> playersTag.add(player.toNbt()))
         );
         leaderboardTag.put("players", playersTag);
-        compoundTag.put("JobsPlusLeaderboard", leaderboardTag);
+        tag.put("JobsPlusLeaderboard", leaderboardTag);
     }
 }

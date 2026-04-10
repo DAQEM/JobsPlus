@@ -16,13 +16,13 @@ public class ConfirmationComponent extends EmptyComponent {
 
         ConfirmationButtonWidget cancelButton = new ConfirmationButtonWidget(
                 confirmationTextComponent.getWidth() / 2 - buttonWidth - 3
-                , confirmationTextComponent.getHeight(), buttonWidth, 30, JobsPlus.translatable("gui.confirmation.cancel"), button -> {
+                , confirmationTextComponent.getHeight(), buttonWidth, 30, JobsPlus.API.translatable("gui.confirmation.cancel"), button -> {
             assert Minecraft.getInstance().screen != null;
             Minecraft.getInstance().screen.onClose();
         });
         ConfirmationButtonWidget yesButton = new ConfirmationButtonWidget(
                 confirmationTextComponent.getWidth() / 2 + 3
-                , confirmationTextComponent.getHeight(), buttonWidth, 30, JobsPlus.translatable("gui.confirmation.yes"), button -> state.getOnConfirm().onConfirm());
+                , confirmationTextComponent.getHeight(), buttonWidth, 30, JobsPlus.API.translatable("gui.confirmation.yes"), button -> state.getOnConfirm().onConfirm());
 
         this.setWidth(confirmationTextComponent.getWidth());
         this.setHeight(confirmationTextComponent.getHeight() + yesButton.getHeight() + 5);

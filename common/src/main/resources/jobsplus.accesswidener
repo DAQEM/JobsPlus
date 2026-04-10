@@ -1,4 +1,1 @@
-accessWidener   v2  named
-
-accessible field net/minecraft/world/inventory/AbstractFurnaceMenu container Lnet/minecraft/world/Container;
-accessible field net/minecraft/world/inventory/BrewingStandMenu brewingStand Lnet/minecraft/world/Container;
+accessWidener   v2  official

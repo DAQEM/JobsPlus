@@ -14,6 +14,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
@@ -23,27 +24,29 @@ public class PowerupInstance extends AbstractActionHolder {
 
     private final Identifier jobLocation;
     private final @Nullable Identifier parentLocation;
-    private final ItemStack icon;
+    private final ItemStackTemplate iconTemplate;
+    private ItemStack cachedIcon;
     private final int price;
     private final int requiredLevel;
     private final PowerupType type;
 
-    public PowerupInstance(Identifier location, Identifier jobLocation, @Nullable Identifier parentLocation, ItemStack icon, int price, int requiredLevel, PowerupType type) {
+    public PowerupInstance(Identifier location, Identifier jobLocation, @Nullable Identifier parentLocation, ItemStackTemplate iconTemplate, int price, int requiredLevel, PowerupType type) {
         super(location);
         this.jobLocation = jobLocation;
         this.parentLocation = parentLocation;
-        this.icon = icon;
+        this.iconTemplate = iconTemplate;
+        this.cachedIcon = null;
         this.price = price;
         this.requiredLevel = requiredLevel;
         this.type = type;
     }
 
     public MutableComponent getName() {
-        return JobsPlus.translatable("powerup." + location.getNamespace() + "." + location.getPath().replace('/', '.') + ".name");
+        return JobsPlus.API.translatable("powerup." + location.getNamespace() + "." + location.getPath().replace('/', '.') + ".name");
     }
 
     public MutableComponent getDescription() {
-        return JobsPlus.translatable("powerup." + location.getNamespace() + "." + location.getPath().replace('/', '.') + ".description");
+        return JobsPlus.API.translatable("powerup." + location.getNamespace() + "." + location.getPath().replace('/', '.') + ".description");
     }
 
     public Identifier getJobLocation() {
@@ -55,7 +58,15 @@ public class PowerupInstance extends AbstractActionHolder {
     }
 
     public ItemStack getIcon() {
-        return icon;
+        if (cachedIcon != null) {
+            return cachedIcon;
+        }
+        cachedIcon = iconTemplate.create();
+        return cachedIcon;
+    }
+
+    public ItemStackTemplate getIconTemplate() {
+        return iconTemplate;
     }
 
     public int getPrice() {
@@ -105,7 +116,7 @@ public class PowerupInstance extends AbstractActionHolder {
                     resourceLocation,
                     getIdentifier(jsonObject, "job"),
                     parentLocation == null ? null : Identifier.parse(parentLocation),
-                    getItemStack(jsonObject, "icon"),
+                    getItemStackTemplate(jsonObject, "icon"),
                     GsonHelper.getAsInt(jsonObject, "price"),
                     GsonHelper.getAsInt(jsonObject, "required_level"),
                     PowerupType.valueOf(GsonHelper.getAsString(jsonObject, "type", "basic").toUpperCase())
@@ -118,7 +129,7 @@ public class PowerupInstance extends AbstractActionHolder {
                     friendlyByteBuf.readIdentifier(),
                     friendlyByteBuf.readIdentifier(),
                     friendlyByteBuf.readBoolean() ? friendlyByteBuf.readIdentifier() : null,
-                    ItemStack.STREAM_CODEC.decode(friendlyByteBuf),
+                    ItemStackTemplate.STREAM_CODEC.decode(friendlyByteBuf),
                     friendlyByteBuf.readInt(),
                     friendlyByteBuf.readInt(),
                     friendlyByteBuf.readEnum(PowerupType.class)
@@ -133,7 +144,7 @@ public class PowerupInstance extends AbstractActionHolder {
             if (powerupInstance.getParentLocation() != null) {
                 friendlyByteBuf.writeIdentifier(powerupInstance.getParentLocation());
             }
-            ItemStack.STREAM_CODEC.encode(friendlyByteBuf, powerupInstance.getIcon());
+            ItemStackTemplate.STREAM_CODEC.encode(friendlyByteBuf, powerupInstance.getIconTemplate());
             friendlyByteBuf.writeInt(powerupInstance.getPrice());
             friendlyByteBuf.writeInt(powerupInstance.getRequiredLevel());
             friendlyByteBuf.writeEnum(powerupInstance.getPowerupType());

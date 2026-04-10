@@ -1,7 +1,7 @@
 package com.daqem.jobsplus.client.gui.jobs.widgets;
 
 import com.daqem.uilib.api.component.IComponent;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class ActionScrollWidget extends AbstractScrollWidget {
 
@@ -10,8 +10,8 @@ public class ActionScrollWidget extends AbstractScrollWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
         if (!getComponents().isEmpty()) {
             IComponent firstComponent = getComponents().getFirst();
             if (firstComponent.getHeight() > getHeight() && scrollAmount() < maxScrollAmount()) {

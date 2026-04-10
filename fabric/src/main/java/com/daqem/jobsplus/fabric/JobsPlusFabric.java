@@ -18,9 +18,9 @@ public class JobsPlusFabric implements ModInitializer {
     }
 
     private void registerCommandArgumentTypes() {
-        ArgumentTypeRegistry.registerArgumentType(JobsPlus.getId("job"), JobArgument.class, SingletonArgumentInfo.contextFree(JobArgument::job));
-        ArgumentTypeRegistry.registerArgumentType(JobsPlus.getId("powerup"), PowerupArgument.class, SingletonArgumentInfo.contextFree(PowerupArgument::powerup));
+        ArgumentTypeRegistry.registerArgumentType(JobsPlus.API.getId("job"), JobArgument.class, SingletonArgumentInfo.contextFree(JobArgument::job));
+        ArgumentTypeRegistry.registerArgumentType(JobsPlus.API.getId("powerup"), PowerupArgument.class, SingletonArgumentInfo.contextFree(PowerupArgument::powerup));
         //noinspection rawtypes,unchecked
-        ArgumentTypeRegistry.registerArgumentType(JobsPlus.getId("enum"), EnumArgument.class, new EnumArgument.Info());
+        ArgumentTypeRegistry.registerArgumentType(JobsPlus.API.getId("enum"), EnumArgument.class, new EnumArgument.Info());
     }
 }

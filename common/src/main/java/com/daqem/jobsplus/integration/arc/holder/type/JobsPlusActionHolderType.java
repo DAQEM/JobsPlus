@@ -8,8 +8,8 @@ import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance
 
 public interface JobsPlusActionHolderType<T extends IActionHolder> extends IActionHolderType<T> {
 
-    IActionHolderType<JobInstance> JOB_INSTANCE = IActionHolderType.register(JobsPlus.getId("job"), new JobInstance.Serializer());
-    IActionHolderType<PowerupInstance> POWERUP_INSTANCE = IActionHolderType.register(JobsPlus.getId("powerup"), new PowerupInstance.Serializer());
+    IActionHolderType<JobInstance> JOB_INSTANCE = IActionHolderType.register(JobsPlus.API.getId("job"), new JobInstance.Serializer());
+    IActionHolderType<PowerupInstance> POWERUP_INSTANCE = IActionHolderType.register(JobsPlus.API.getId("powerup"), new PowerupInstance.Serializer());
 
     static void init() {
     }

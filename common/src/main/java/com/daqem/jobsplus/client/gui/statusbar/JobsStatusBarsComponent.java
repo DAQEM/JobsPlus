@@ -4,8 +4,7 @@ import com.daqem.jobsplus.config.JobsPlusClientConfig;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.uilib.gui.component.EmptyComponent;
-import dev.architectury.event.events.client.ClientPlayerEvent;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class JobsStatusBarsComponent extends EmptyComponent {
     }
 
     @Override
-    public void renderBase(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void extractRenderStateBase(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         List<String> jobs = JobsPlusClientConfig.jobStatusBarJobs.get();
 
         // Handle addition and removal of status bar components based on config
@@ -68,25 +67,25 @@ public class JobsStatusBarsComponent extends EmptyComponent {
                     this.getY() + this.getHeight(),
                     JobsPlusClientConfig.jobStatusBarBackgroundColor.get().intValue()
             );
-            guiGraphics.hLine(
+            guiGraphics.horizontalLine(
                     this.getX(),
                     this.getX() + this.getWidth() - 1,
                     this.getY(),
                     JobsPlusClientConfig.jobStatusBarBackgroundBorderColor.get().intValue()
             );
-            guiGraphics.hLine(
+            guiGraphics.horizontalLine(
                     this.getX(),
                     this.getX() + this.getWidth() - 1,
                     this.getY() + this.getHeight() - 1,
                     JobsPlusClientConfig.jobStatusBarBackgroundBorderColor.get().intValue()
             );
-            guiGraphics.vLine(
+            guiGraphics.verticalLine(
                     this.getX(),
                     this.getY(),
                     this.getY() + this.getHeight(),
                     JobsPlusClientConfig.jobStatusBarBackgroundBorderColor.get().intValue()
             );
-            guiGraphics.vLine(
+            guiGraphics.verticalLine(
                     this.getX() + this.getWidth() - 1,
                     this.getY(),
                     this.getY() + this.getHeight(),
@@ -95,6 +94,6 @@ public class JobsStatusBarsComponent extends EmptyComponent {
         }
 
         // Render the components
-        super.renderBase(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
+        super.extractRenderStateBase(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
     }
 }

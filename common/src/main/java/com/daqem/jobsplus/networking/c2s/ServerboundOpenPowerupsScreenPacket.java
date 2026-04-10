@@ -1,9 +1,10 @@
 package com.daqem.jobsplus.networking.c2s;
 
-import com.daqem.jobsplus.networking.JobsPlusNetworking;
+import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.networking.s2c.ClientboundOpenPowerupsScreenPacket;
 import com.daqem.jobsplus.player.JobsServerPlayer;
-import dev.architectury.networking.NetworkManager;
+import com.daqem.knot.Knot;
+import com.daqem.knot.networking.ServerboundContext;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -12,41 +13,27 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
-public class ServerboundOpenPowerupsScreenPacket implements CustomPacketPayload {
+public record ServerboundOpenPowerupsScreenPacket(Identifier jobLocation) implements CustomPacketPayload {
 
-    private final Identifier jobLocation;
+    public static final Type<@NotNull ServerboundOpenPowerupsScreenPacket> TYPE = new Type<>(JobsPlus.API.getId("serverbound_open_powerups_screen_packet"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundOpenPowerupsScreenPacket> STREAM_CODEC = new StreamCodec<>() {
-        @Override
-        public @NotNull ServerboundOpenPowerupsScreenPacket decode(RegistryFriendlyByteBuf buf) {
-            return new ServerboundOpenPowerupsScreenPacket(buf);
-        }
-
-        @Override
-        public void encode(RegistryFriendlyByteBuf buf, ServerboundOpenPowerupsScreenPacket packet) {
-            buf.writeIdentifier(packet.jobLocation);
-        }
-    };
-
-    public ServerboundOpenPowerupsScreenPacket(Identifier jobLocation) {
-        this.jobLocation = jobLocation;
-    }
-
-    public ServerboundOpenPowerupsScreenPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
-        this.jobLocation = friendlyByteBuf.readIdentifier();
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundOpenPowerupsScreenPacket> STREAM_CODEC = StreamCodec.composite(
+            Identifier.STREAM_CODEC,
+            ServerboundOpenPowerupsScreenPacket::jobLocation,
+            ServerboundOpenPowerupsScreenPacket::new
+    );
 
     @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
-        return JobsPlusNetworking.SERVERBOUND_OPEN_POWERUPS_SCREEN;
+    public @NotNull Type<? extends @NotNull CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static void handleServerSide(ServerboundOpenPowerupsScreenPacket packet, NetworkManager.PacketContext context) {
-        if (context.getPlayer() instanceof JobsServerPlayer jobsServerPlayer) {
-            NetworkManager.sendToPlayer(jobsServerPlayer.jobsplus$getServerPlayer(), new ClientboundOpenPowerupsScreenPacket(
+    public void handle(ServerboundContext context) {
+        if (context.player() instanceof JobsServerPlayer jobsServerPlayer) {
+            Knot.NETWORKING.sendToPlayer(jobsServerPlayer.jobsplus$getServerPlayer(), new ClientboundOpenPowerupsScreenPacket(
                     Stream.concat(jobsServerPlayer.jobsplus$getJobs().stream(), jobsServerPlayer.jobsplus$getInactiveJobs().stream()).toList(),
                     jobsServerPlayer.jobsplus$getCoins(),
-                    packet.jobLocation
+                    this.jobLocation
             ));
         }
     }

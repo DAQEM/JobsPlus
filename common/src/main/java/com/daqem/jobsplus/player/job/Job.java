@@ -16,12 +16,15 @@ import com.daqem.jobsplus.player.job.exp.ExpCollector;
 import com.daqem.jobsplus.player.job.powerup.JobPowerupManager;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
 import com.daqem.jobsplus.player.job.powerup.PowerupState;
+import com.daqem.knot.Knot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.architectury.networking.NetworkManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,13 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Job {
-
-    public static final Codec<Job> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Identifier.CODEC.fieldOf("job_instance").forGetter(job -> job.getJobInstance().getIdentifier()),
-            Codec.INT.fieldOf("level").forGetter(Job::getLevel),
-            Codec.DOUBLE.fieldOf("experience").forGetter(Job::getExperience),
-            Codec.list(Powerup.CODEC).fieldOf("powerups").forGetter(job -> job.getPowerupManager().getAllPowerups())
-    ).apply(instance, (jobInstanceLocation, level, experience, powerups) -> new Job(null, jobInstanceLocation, level, experience, new ArrayList<>(powerups))));
 
     private final JobInstance jobInstance;
     private final JobPowerupManager powerupManager;
@@ -57,6 +53,10 @@ public class Job {
 
     public Job(JobsPlayer player, Identifier jobInstanceLocation, int level, double experience, @NotNull List<Powerup> powerups) {
         this(player, JobManager.getInstance().getJobs().get(jobInstanceLocation), level, experience, powerups);
+    }
+
+    public Job(Identifier jobInstanceLocation, int level, double experience, @NotNull List<Powerup> powerups) {
+        this(null, JobManager.getInstance().getJobs().get(jobInstanceLocation), level, experience, powerups);
     }
 
     public Job(JobsPlayer player, JobInstance jobInstance, int level, double experience, @NotNull List<Powerup> powerups) {
@@ -175,7 +175,7 @@ public class Job {
     public @Nullable MutableComponent getExperienceGainMessage() {
         double exp = expCollector.getExp();
         if (exp >= 0.1) {
-            return JobsPlus.translatable("job.exp.gain",
+            return JobsPlus.API.translatable("job.exp.gain",
                             JobsPlus.formatExp(exp),
                             jobInstance.getName().getString())
                     .withStyle(style -> style.withColor(jobInstance.getColorDecimal()))
@@ -237,47 +237,38 @@ public class Job {
 
     public void sendClientSyncPacket() {
         if (player instanceof JobsServerPlayer serverPlayer) {
-            NetworkManager.sendToPlayer(serverPlayer.jobsplus$getServerPlayer(), new ClientboundSyncJobPacket(this));
+            Knot.NETWORKING.sendToPlayer(serverPlayer.jobsplus$getServerPlayer(), new ClientboundSyncJobPacket(this));
         }
     }
 
     public void sendClientLevelPacket() {
         if (player instanceof JobsServerPlayer serverPlayer) {
-            NetworkManager.sendToPlayer(serverPlayer.jobsplus$getServerPlayer(), new ClientboundSyncJobLevelPacket(this));
+            Knot.NETWORKING.sendToPlayer(serverPlayer.jobsplus$getServerPlayer(), new ClientboundSyncJobLevelPacket(this.getJobInstance().getIdentifier(), this.getLevel(), this.getExperience()));
         }
     }
 
     public static class Serializer {
 
-        public static Job fromNetwork(FriendlyByteBuf friendlyByteBuf, JobsPlayer player) {
-            Identifier jobInstanceLocation = friendlyByteBuf.readIdentifier();
-            int level = friendlyByteBuf.readInt();
-            double experience = friendlyByteBuf.readDouble();
-            int powerupCount = friendlyByteBuf.readVarInt();
-            List<Powerup> powerups = new ArrayList<>();
-            for (int i = 0; i < powerupCount; i++) {
-                Identifier powerupLocation = friendlyByteBuf.readIdentifier();
-                PowerupState state = friendlyByteBuf.readEnum(PowerupState.class);
-                PowerupInstance powerupInstance = PowerupInstance.of(powerupLocation);
-                if (powerupInstance == null) continue;
-                powerups.add(new Powerup(powerupInstance, state));
-            }
-            return new Job(player, jobInstanceLocation, level, experience, powerups);
-        }
+        public static final Codec<Job> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Identifier.CODEC.fieldOf("job_instance").forGetter(job -> job.getJobInstance().getIdentifier()),
+                Codec.INT.fieldOf("level").forGetter(Job::getLevel),
+                Codec.DOUBLE.fieldOf("experience").forGetter(Job::getExperience),
+                Codec.list(Powerup.CODEC).fieldOf("powerups").forGetter(job -> job.getPowerupManager().getAllPowerups())
+        ).apply(instance, (jobInstanceLocation, level, experience, powerups) -> new Job(null, jobInstanceLocation, level, experience, new ArrayList<>(powerups))));
 
-        public static void toNetwork(FriendlyByteBuf friendlyByteBuf, Job job) {
-            friendlyByteBuf.writeIdentifier(job.getJobInstance().getIdentifier());
-            friendlyByteBuf.writeInt(job.getLevel());
-            friendlyByteBuf.writeDouble(job.getExperience());
-            List<Powerup> allPowerups = job.getPowerupManager().getAllPowerups()
-                    .stream()
-                    .filter(powerup -> powerup != null && powerup.getPowerupInstance() != null)
-                    .toList();
-            friendlyByteBuf.writeVarInt(allPowerups.size());
-            for (Powerup powerup : allPowerups) {
-                friendlyByteBuf.writeIdentifier(powerup.getPowerupInstance().getIdentifier());
-                friendlyByteBuf.writeEnum(powerup.getState());
-            }
-        }
+        public static final StreamCodec<RegistryFriendlyByteBuf, Job> STREAM_CODEC = StreamCodec.composite(
+                Identifier.STREAM_CODEC,
+                job -> job.getJobInstance().getIdentifier(),
+                ByteBufCodecs.INT,
+                Job::getLevel,
+                ByteBufCodecs.DOUBLE,
+                Job::getExperience,
+                Powerup.STREAM_CODEC.apply(ByteBufCodecs.list()),
+                job -> job.getPowerupManager().getAllPowerups()
+                        .stream()
+                        .filter(powerup -> powerup != null && powerup.getPowerupInstance() != null)
+                        .toList(),
+                Job::new
+        );
     }
 }

@@ -12,7 +12,7 @@ public class JobSelectionComponent extends EmptyComponent {
         super(21, 66, 117, 120);
 
         JobSelectionWidget jobSelectionWidget = new JobSelectionWidget(getWidth(), getHeight(), state);
-        TextComponent title = new TextComponent(0, -10, JobsPlus.translatable("gui.jobs.job_selection"), 0xFFD8BF96);
+        TextComponent title = new TextComponent(0, -10, JobsPlus.API.translatable("gui.jobs.job_selection"), 0xFFD8BF96);
 
         this.addWidget(jobSelectionWidget);
         this.addComponent(title);

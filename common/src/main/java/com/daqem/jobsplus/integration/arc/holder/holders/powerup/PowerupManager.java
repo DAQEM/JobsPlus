@@ -12,13 +12,12 @@ import java.util.stream.Stream;
 
 import com.daqem.arc.Arc;
 import com.daqem.jobsplus.config.JobsPlusConfig;
-import com.daqem.yamlconfig.YamlConfigExpectPlatform;
+import com.daqem.knot.api.platform.Platform;
 import org.jetbrains.annotations.NotNull;
 
 import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.arc.data.ActionHolderManager;
 import com.daqem.jobsplus.JobsPlus;
-import com.daqem.jobsplus.JobsPlusExpectPlatform;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -65,12 +64,12 @@ public class PowerupManager extends SimplePreparableReloadListener<List<IActionH
                 map.put(location, jsonElement);
             }
             catch (Exception runtimeException) {
-                JobsPlus.LOGGER.error("Parsing error loading powerup {}", location, runtimeException);
+                JobsPlus.API.LOGGER.error("Parsing error loading powerup {}", location, runtimeException);
             }
         }
 
         try {
-            Path configDir = YamlConfigExpectPlatform.getConfigDirectory().resolve(JobsPlus.MOD_ID).resolve("powerups");
+            Path configDir = Platform.INFO.getConfigFolder().resolve(JobsPlus.MOD_ID).resolve("powerups");
             if (!Files.exists(configDir)) {
                 Files.createDirectories(configDir);
             }
@@ -95,12 +94,12 @@ public class PowerupManager extends SimplePreparableReloadListener<List<IActionH
                                 Identifier location = Identifier.fromNamespaceAndPath(namespace, resourcePath);
                                 map.put(location, jsonElement);
                             } catch (Exception e) {
-                                JobsPlus.LOGGER.error("Parsing error loading powerup from config {}", path, e);
+                                JobsPlus.API.LOGGER.error("Parsing error loading powerup from config {}", path, e);
                             }
                         });
             }
         } catch (Exception e) {
-            JobsPlus.LOGGER.error("Error loading powerups from config", e);
+            JobsPlus.API.LOGGER.error("Error loading powerups from config", e);
         }
         List<IActionHolder> powerups = new ArrayList<>();
         List<String> excludedPowerups = JobsPlusConfig.excludedPowerups.get();
@@ -117,7 +116,7 @@ public class PowerupManager extends SimplePreparableReloadListener<List<IActionH
                 powerups.add(powerup);
             }
             catch (JsonParseException | IllegalArgumentException runtimeException) {
-                JobsPlus.LOGGER.error("Parsing error loading powerup {}", location, runtimeException);
+                JobsPlus.API.LOGGER.error("Parsing error loading powerup {}", location, runtimeException);
             }
         }
 
@@ -129,12 +128,12 @@ public class PowerupManager extends SimplePreparableReloadListener<List<IActionH
         ActionHolderManager actionHolderManager = ActionHolderManager.getInstance();
         actionHolderManager.clearAllActionHoldersForType(JobsPlusActionHolderType.POWERUP_INSTANCE);
         actionHolderManager.registerActionHolders(powerups);
-        JobsPlus.LOGGER.info("Loaded {} powerups", powerups.size());
+        JobsPlus.API.LOGGER.info("Loaded {} powerups", powerups.size());
     }
 
 
     public static PowerupManager getInstance() {
-        return instance != null ? instance : JobsPlusExpectPlatform.getPowerupManager();
+        return instance != null ? instance : new PowerupManager();
     }
 
     public ImmutableMap<Identifier, PowerupInstance> getRootPowerups() {

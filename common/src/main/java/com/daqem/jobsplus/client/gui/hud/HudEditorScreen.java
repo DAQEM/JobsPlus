@@ -8,7 +8,7 @@ import com.daqem.jobsplus.config.JobsPlusClientConfig;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -35,7 +35,7 @@ public class HudEditorScreen extends Screen {
     private int componentY;
 
     public HudEditorScreen() {
-        super(JobsPlus.translatable("gui.hud_editor.title"));
+        super(JobsPlus.API.translatable("gui.hud_editor.title"));
     }
 
     @Override
@@ -115,19 +115,19 @@ public class HudEditorScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Draw alignment grid
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 
         // Vertical Center Line (Green if snapped)
-        guiGraphics.vLine(centerX, 0, this.height, snappedX ? 0xFF00FF00 : 0x40FFFFFF);
+        guiGraphics.verticalLine(centerX, 0, this.height, snappedX ? 0xFF00FF00 : 0x40FFFFFF);
         // Horizontal Center Line (Green if snapped)
-        guiGraphics.hLine(0, this.width, centerY, snappedY ? 0xFF00FF00 : 0x40FFFFFF);
+        guiGraphics.horizontalLine(0, this.width, centerY, snappedY ? 0xFF00FF00 : 0x40FFFFFF);
 
         // Instructions
-        MutableComponent instructions = JobsPlus.translatable("gui.hud_editor.instructions");
-        guiGraphics.drawString(this.font, instructions, centerX - font.width(instructions) / 2, 20, 0xFFFFFFFF, false);
+        MutableComponent instructions = JobsPlus.API.translatable("gui.hud_editor.instructions");
+        guiGraphics.text(this.font, instructions, centerX - font.width(instructions) / 2, 20, 0xFFFFFFFF, false);
 
         // Show "Centered" text if snapped
         String statusText = "X: " + this.componentX + ", Y: " + this.componentY;
@@ -136,7 +136,7 @@ public class HudEditorScreen extends Screen {
         else if (snappedY) statusText += " (Centered Y)";
 
         MutableComponent status = Component.literal(statusText);
-        guiGraphics.drawString(this.font, status, centerX - font.width(status) / 2, 35, 0xFFAAAAAA, false);
+        guiGraphics.text(this.font, status, centerX - font.width(status) / 2, 35, 0xFFAAAAAA, false);
 
         if (this.statusBarsComponent != null) {
             // Force position for rendering
@@ -146,11 +146,11 @@ public class HudEditorScreen extends Screen {
             // Render a bounding box for better visibility
             // Green outline if dragging, White if idle
             int color = this.isDragging ? 0xFF00FF00 : 0xFFFFFFFF;
-            guiGraphics.renderOutline(this.componentX - 1, this.componentY - 1,
+            guiGraphics.outline(this.componentX - 1, this.componentY - 1,
                     this.statusBarsComponent.getWidth() + 2, this.statusBarsComponent.getHeight() + 2,
                     color);
 
-            this.statusBarsComponent.renderBase(guiGraphics, mouseX, mouseY, partialTick, this.width, this.height);
+            this.statusBarsComponent.extractRenderStateBase(guiGraphics, mouseX, mouseY, partialTick, this.width, this.height);
         }
     }
 

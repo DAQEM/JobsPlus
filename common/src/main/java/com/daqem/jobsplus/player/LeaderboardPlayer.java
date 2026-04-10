@@ -6,9 +6,16 @@ import com.mojang.serialization.Dynamic;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
 public class LeaderboardPlayer {
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, LeaderboardPlayer> STREAM_CODEC = StreamCodec.of(
+            (buf, player) -> player.toNetwork(buf),
+            LeaderboardPlayer::fromNetwork
+    );
 
     private final UUID uuid;
     private final Identifier jobLocation;

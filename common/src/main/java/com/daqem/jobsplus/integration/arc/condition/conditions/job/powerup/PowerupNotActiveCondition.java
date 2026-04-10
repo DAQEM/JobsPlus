@@ -56,7 +56,7 @@ public class PowerupNotActiveCondition extends AbstractCondition {
     public Component getDescription() {
         PowerupInstance powerupInstance = PowerupInstance.of(powerupThatShouldNotBeActiveLocation);
         if (powerupInstance == null) {
-            return JobsPlus.literal("ERROR: Powerup not found: '" + powerupThatShouldNotBeActiveLocation.toString() + "'");
+            return JobsPlus.API.literal("ERROR: Powerup not found: '" + powerupThatShouldNotBeActiveLocation.toString() + "'");
         }
         return getDescription(powerupInstance.getName());
     }

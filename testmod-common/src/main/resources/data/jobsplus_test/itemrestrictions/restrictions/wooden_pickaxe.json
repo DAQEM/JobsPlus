@@ -1,0 +1,28 @@
+{
+  "icon": {
+    "id": "minecraft:wooden_pickaxe"
+  },
+  "types": [
+    "craft",
+    "smelt",
+    "enchant",
+    "repair",
+    "item_break_block",
+    "hurt_entity"
+  ],
+  "conditions": [
+    {
+      "type": "arc:item",
+      "check_components": false,
+      "item": {
+        "id": "minecraft:wooden_pickaxe"
+      }
+    },
+    {
+      "type": "jobsplus:job_level",
+      "inverted": true,
+      "job": "jobsplus:miner",
+      "level": 1
+    }
+  ]
+}

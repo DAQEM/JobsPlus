@@ -33,8 +33,8 @@ public class ItemConditionComponent extends EmptyComponent {
                 .values()
                 .stream()
                 .sorted((b1, b2) -> {
-                    String name1 = b1.getItem().getName().getString();
-                    String name2 = b2.getItem().getName().getString();
+                    String name1 = b1.getDisplayName().getString();
+                    String name2 = b2.getDisplayName().getString();
                     return name1.compareToIgnoreCase(name2);
                 })
                 .toList();
@@ -44,7 +44,7 @@ public class ItemConditionComponent extends EmptyComponent {
         } else if (items.size() == 1) {
             TextComponent dotText = new TextComponent(0, 0, Component.literal(" • "), 0xFF1E1410);
             this.addComponent(dotText);
-            MultiLineTextComponent isItemTextComponent = new MultiLineTextComponent(10, 0, getWidth() - 10, JobsPlus.translatable("gui.jobs.condition.is", items.getFirst().getItem().getName()), 0xFF1E1410);
+            MultiLineTextComponent isItemTextComponent = new MultiLineTextComponent(10, 0, getWidth() - 10, JobsPlus.API.translatable("gui.jobs.condition.is", items.getFirst().getDisplayName()), 0xFF1E1410);
             this.addComponent(isItemTextComponent);
             this.setHeight(isItemTextComponent.getHeight());
         } else {

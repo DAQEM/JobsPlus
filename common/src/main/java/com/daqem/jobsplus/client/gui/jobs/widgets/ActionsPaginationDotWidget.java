@@ -4,15 +4,15 @@ import com.daqem.arc.api.action.IAction;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
 import com.daqem.uilib.gui.widget.CustomButtonWidget;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.RenderPipelines;
 
 public class ActionsPaginationDotWidget extends CustomButtonWidget {
 
     private final static WidgetSprites SPRITES = new WidgetSprites(
-            JobsPlus.getId("jobs/pagination_inactive"),
-            JobsPlus.getId("jobs/pagination_active")
+            JobsPlus.API.getId("jobs/pagination_inactive"),
+            JobsPlus.API.getId("jobs/pagination_active")
     );
 
     private final IAction action;
@@ -25,7 +25,7 @@ public class ActionsPaginationDotWidget extends CustomButtonWidget {
     }
 
     @Override
-    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 SPRITES.get(true, this.state.getActiveAction() == this.action),

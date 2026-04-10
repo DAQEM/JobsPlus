@@ -4,10 +4,11 @@ import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.mixin.client.AbstractScrollAreaAccessor;
 import com.daqem.uilib.gui.widget.ScrollContainerWidget;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractScrollWidget extends ScrollContainerWidget {
 
@@ -28,7 +29,7 @@ public abstract class AbstractScrollWidget extends ScrollContainerWidget {
 
     @Override
     public boolean updateScrolling(MouseButtonEvent event) {
-        ((AbstractScrollAreaAccessor) this).jobsplus$setScrolling(this.scrollbarVisible()
+        ((AbstractScrollAreaAccessor) this).jobsplus$setScrolling(this.scrollable()
                 && this.isValidClickButton(event.buttonInfo())
                 && event.x() >= this.scrollBarX()
                 && event.x() <= this.scrollBarX() + SCROLL_HANDLE_WIDTH
@@ -41,21 +42,21 @@ public abstract class AbstractScrollWidget extends ScrollContainerWidget {
         return this.getRight() - SCROLL_HANDLE_WIDTH;
     }
 
-    protected int scrollBarY() {
+    public int scrollBarY() {
         int availableHeight = this.height - this.scrollerHeight() - 8;
         int baseY = (int)(this.scrollAmount() * availableHeight / this.maxScrollAmount()) + this.getY() + 4;
         return Mth.clamp(baseY, this.getY() + 4, this.getBottom() - this.scrollerHeight() - 4);
     }
 
     @Override
-    protected void renderScrollbar(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        if (this.scrollbarVisible()) {
+    protected void extractScrollbar(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+        if (this.scrollable()) {
             int scrollBarX = this.scrollBarX();
             int scrollerHeight = this.scrollerHeight();
             int scrollBarY = this.scrollBarY();
             guiGraphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
-                    JobsPlus.getId("jobs/scroll_bar"),
+                    JobsPlus.API.getId("jobs/scroll_bar"),
                     scrollBarX + 3,
                     this.getY(),
                     8,
@@ -63,7 +64,7 @@ public abstract class AbstractScrollWidget extends ScrollContainerWidget {
             );
             guiGraphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
-                    JobsPlus.getId("jobs/scroll_handle"),
+                    JobsPlus.API.getId("jobs/scroll_handle"),
                     scrollBarX,
                     Mth.clamp(
                             scrollBarY,

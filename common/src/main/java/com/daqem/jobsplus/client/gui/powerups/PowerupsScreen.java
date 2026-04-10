@@ -11,7 +11,7 @@ public class PowerupsScreen extends AbstractScreen {
     private final Screen previousScreen;
 
     public PowerupsScreen(PowerupsScreenState state, Screen previousScreen) {
-        super(JobsPlus.translatable("gui.title.powerups"));
+        super(JobsPlus.API.translatable("gui.title.powerups"));
         this.state = state;
         this.previousScreen = previousScreen;
     }

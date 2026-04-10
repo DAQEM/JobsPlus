@@ -4,7 +4,7 @@ import com.daqem.jobsplus.config.JobsPlusClientConfig;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.uilib.gui.component.EmptyComponent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class JobsStatusBarsContainerComponent extends EmptyComponent {
 
@@ -15,7 +15,7 @@ public class JobsStatusBarsContainerComponent extends EmptyComponent {
         super(0, 0, 0, 0);
     }
 
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, JobsPlayer jobsPlayer) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, JobsPlayer jobsPlayer) {
         int windowWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int windowHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         if (this.getWidth() != windowWidth) {
@@ -59,6 +59,6 @@ public class JobsStatusBarsContainerComponent extends EmptyComponent {
             jobsStatusBarsComponent.setY(y);
         }
 
-        super.renderBase(guiGraphics, mouseX, mouseY, partialTick, windowWidth, windowHeight);
+        super.extractRenderStateBase(guiGraphics, mouseX, mouseY, partialTick, windowWidth, windowHeight);
     }
 }

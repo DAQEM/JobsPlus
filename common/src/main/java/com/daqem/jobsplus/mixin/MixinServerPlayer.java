@@ -1,9 +1,7 @@
 package com.daqem.jobsplus.mixin;
 
 import com.daqem.arc.api.action.holder.IActionHolder;
-import com.daqem.arc.api.player.ArcPlayer;
 import com.daqem.arc.api.player.ArcServerPlayer;
-import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
@@ -12,19 +10,13 @@ import com.daqem.jobsplus.level.JobsPlusLevelData;
 import com.daqem.jobsplus.level.JobsPlusServerLevel;
 import com.daqem.jobsplus.networking.s2c.ClientboundDeleteJobPacket;
 import com.daqem.jobsplus.player.JobsServerPlayer;
-import com.daqem.jobsplus.player.LeaderboardPlayer;
 import com.daqem.jobsplus.player.ServerPlayerData;
 import com.daqem.jobsplus.player.job.Job;
-import com.daqem.jobsplus.player.job.exp.ExpCollector;
 import com.daqem.jobsplus.player.job.powerup.Powerup;
-import com.daqem.jobsplus.player.job.powerup.PowerupState;
+import com.daqem.knot.Knot;
 import com.mojang.authlib.GameProfile;
-import dev.architectury.networking.NetworkManager;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -101,7 +93,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
             job.dispose();
             jobsplus$jobs.remove(job);
             jobsplus$getLevelData().jobsplus$removePlayerEntry(this, job);
-            NetworkManager.sendToPlayer(jobsplus$getServerPlayer(), new ClientboundDeleteJobPacket(jobInstance));
+            Knot.NETWORKING.sendToPlayer(jobsplus$getServerPlayer(), new ClientboundDeleteJobPacket(jobInstance.getIdentifier()));
         }
     }
 

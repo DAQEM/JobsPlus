@@ -38,7 +38,7 @@ public class HasJobCondition extends AbstractCondition implements IJobCondition 
                 }
             }
         } else {
-            JobsPlus.LOGGER.error("Job {} does not exist! Trying to use it in the condition has_job.", jobLocation);
+            JobsPlus.API.LOGGER.error("Job {} does not exist! Trying to use it in the condition has_job.", jobLocation);
         }
         return false;
     }
@@ -61,7 +61,7 @@ public class HasJobCondition extends AbstractCondition implements IJobCondition 
     public Component getDescription() {
         JobInstance jobInstance = JobInstance.of(jobLocation);
         if (jobInstance == null) {
-            return JobsPlus.literal("ERROR: Job not found: '" + this.jobLocation.toString() + "'");
+            return JobsPlus.API.literal("ERROR: Job not found: '" + this.jobLocation.toString() + "'");
         }
         return this.getDescription(jobInstance.getName());
     }

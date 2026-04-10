@@ -17,7 +17,7 @@ import com.daqem.jobsplus.integration.arc.condition.conditions.job.IJobCondition
 import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
-import dev.architectury.event.events.client.ClientTooltipEvent;
+import com.daqem.knot.Knot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +28,7 @@ import java.util.List;
 public class EventItemTooltip {
 
     public static void registerEvent() {
-        ClientTooltipEvent.ITEM.register((stack, lines, tooltipContext, flag) -> {
+        Knot.Events.Client.TOOLTIP_GATHER_COMPONENTS.register((stack, tooltipContext, flag, lines) -> {
             if (!JobsPlusClientConfig.showJobRestrictionTooltip.get()) {
                 return;
             }
@@ -67,7 +67,7 @@ public class EventItemTooltip {
     }
 
     private static void addTooltipForRestriction(ItemRestriction restriction, List<Component> lines, Minecraft minecraft) {
-        List<Component> newLines = new ArrayList<>(List.of(JobsPlus.literal("")));
+        List<Component> newLines = new ArrayList<>(List.of(JobsPlus.API.literal("")));
         for (ICondition condition : restriction.getConditions()) {
             if (condition instanceof IJobCondition jobCondition) {
                 JobInstance jobInstance = JobInstance.of(jobCondition.getJobLocation());
@@ -77,7 +77,7 @@ public class EventItemTooltip {
                         continue;
                     }
 
-                    newLines.add(JobsPlus.translatable(
+                    newLines.add(JobsPlus.API.translatable(
                             "tooltip.requirement",
                             jobInstance.getName().withStyle(style ->
                                     style.withColor(jobInstance.getColorDecimal())),

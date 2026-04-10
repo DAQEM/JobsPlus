@@ -11,7 +11,7 @@ public class ConfirmationScreen extends AbstractScreen {
     private final ConfirmationScreenState state;
 
     public ConfirmationScreen(Screen previousScreen, ConfirmationScreenState state) {
-        super(JobsPlus.translatable("gui.confirmation.title"));
+        super(JobsPlus.API.translatable("gui.confirmation.title"));
         this.previousScreen = previousScreen;
         this.state = state;
     }

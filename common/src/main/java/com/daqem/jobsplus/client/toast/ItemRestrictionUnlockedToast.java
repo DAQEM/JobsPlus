@@ -3,18 +3,15 @@ package com.daqem.jobsplus.client.toast;
 import com.daqem.itemrestrictions.data.ItemRestriction;
 import com.daqem.jobsplus.JobsPlus;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.context.ContextMap;
-import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ItemRestrictionUnlockedToast implements Toast {
     private static final Identifier BACKGROUND_SPRITE = Identifier.withDefaultNamespace("toast/recipe");
@@ -31,7 +28,7 @@ public class ItemRestrictionUnlockedToast implements Toast {
     }
 
     @Override
-    public void update(ToastManager toastManager, long l) {
+    public void update(@NotNull ToastManager toastManager, long l) {
         if (this.changed) {
             this.lastChanged = l;
             this.changed = false;
@@ -49,12 +46,12 @@ public class ItemRestrictionUnlockedToast implements Toast {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, Font font, long l) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, @NotNull Font font, long l) {
         ItemRestriction entry = this.itemRestrictions.get(this.displayedItemRestrictionIndex);
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
-        guiGraphics.drawString(font, entry.getIcon().getHoverName(), 30, 7, -11534256, false);
-        guiGraphics.drawString(font, JobsPlus.translatable("job.item_unlocked.toast"), 30, 18, -16777216, false);
-        guiGraphics.renderFakeItem(entry.getIcon(), 8, 8);
+        guiGraphics.text(font, entry.getIcon().getHoverName(), 30, 7, -11534256, false);
+        guiGraphics.text(font, JobsPlus.API.translatable("job.item_unlocked.toast"), 30, 18, -16777216, false);
+        guiGraphics.fakeItem(entry.getIcon(), 8, 8);
     }
 
     private void addItem(ItemRestriction itemRestriction) {

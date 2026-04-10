@@ -11,12 +11,12 @@ import com.daqem.jobsplus.integration.arc.condition.conditions.powerup.HasPoweru
 
 public interface JobsPlusConditionType<T extends ICondition> extends IConditionType<T> {
 
-    IConditionType<JobExperiencePercentageCondition> JOB_EXPERIENCE_PERCENTAGE = IConditionType.register(JobsPlus.getId("job_experience_percentage"), new JobExperiencePercentageCondition.Serializer());
-    IConditionType<JobLevelCondition> JOB_LEVEL = IConditionType.register(JobsPlus.getId("job_level"), new JobLevelCondition.Serializer());
-    IConditionType<PowerupNotActiveCondition> POWERUP_NOT_ACTIVE = IConditionType.register(JobsPlus.getId("powerup_not_active"), new PowerupNotActiveCondition.Serializer());
-    IConditionType<HasJobCondition> HAS_JOB = IConditionType.register(JobsPlus.getId("has_job"), new HasJobCondition.Serializer());
+    IConditionType<JobExperiencePercentageCondition> JOB_EXPERIENCE_PERCENTAGE = IConditionType.register(JobsPlus.API.getId("job_experience_percentage"), new JobExperiencePercentageCondition.Serializer());
+    IConditionType<JobLevelCondition> JOB_LEVEL = IConditionType.register(JobsPlus.API.getId("job_level"), new JobLevelCondition.Serializer());
+    IConditionType<PowerupNotActiveCondition> POWERUP_NOT_ACTIVE = IConditionType.register(JobsPlus.API.getId("powerup_not_active"), new PowerupNotActiveCondition.Serializer());
+    IConditionType<HasJobCondition> HAS_JOB = IConditionType.register(JobsPlus.API.getId("has_job"), new HasJobCondition.Serializer());
 
-    IConditionType<HasPowerupActivatedCondition> HAS_POWERUP_ACTIVATED = IConditionType.register(JobsPlus.getId("has_powerup_activated"), new HasPowerupActivatedCondition.Serializer());
+    IConditionType<HasPowerupActivatedCondition> HAS_POWERUP_ACTIVATED = IConditionType.register(JobsPlus.API.getId("has_powerup_activated"), new HasPowerupActivatedCondition.Serializer());
 
     static void init() {
     }

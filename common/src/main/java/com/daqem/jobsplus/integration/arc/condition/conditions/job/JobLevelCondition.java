@@ -70,7 +70,7 @@ public class JobLevelCondition extends AbstractCondition implements IJobConditio
     public Component getDescription() {
         JobInstance jobInstance = JobInstance.of(this.jobLocation);
         if (jobInstance == null) {
-            return JobsPlus.literal("ERROR: Job not found: '" + this.jobLocation.toString() + "'");
+            return JobsPlus.API.literal("ERROR: Job not found: '" + this.jobLocation.toString() + "'");
         }
         return this.getDescription(jobInstance.getName(), this.level);
     }

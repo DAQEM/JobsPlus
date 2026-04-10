@@ -12,7 +12,7 @@ import com.daqem.uilib.gui.component.item.ItemComponent;
 import com.daqem.uilib.gui.component.sprite.SpriteComponent;
 import com.daqem.uilib.gui.component.text.TruncatedTextComponent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
@@ -33,8 +33,8 @@ public class SelectedJobComponent extends EmptyComponent {
         this.startJobButtonWidget = new StartJobButtonWidget(this.state);
         this.toggleJobStatusBarWidget = new ToggleJobStatusBarWidget(this.state);
 
-        SpriteComponent jobIconSlotComponent = new SpriteComponent(0, 0, 24, 24, JobsPlus.getId("jobs/job_icon_slot"));
-        SpriteComponent separatorComponent = new SpriteComponent(0, 27, 113, 7, JobsPlus.getId("jobs/separator_line"));
+        SpriteComponent jobIconSlotComponent = new SpriteComponent(0, 0, 24, 24, JobsPlus.API.getId("jobs/job_icon_slot"));
+        SpriteComponent separatorComponent = new SpriteComponent(0, 27, 113, 7, JobsPlus.API.getId("jobs/separator_line"));
 
         this.addComponent(this.jobTitleComponent);
         this.addComponent(jobIconSlotComponent);
@@ -49,7 +49,7 @@ public class SelectedJobComponent extends EmptyComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         Job selectedJob = this.state.getSelectedJob();
         JobInstance jobInstance = selectedJob.getJobInstance();
 
@@ -62,11 +62,11 @@ public class SelectedJobComponent extends EmptyComponent {
             guiGraphics.pose().pushMatrix();
             guiGraphics.pose().translate(getTotalX() + 26, getTotalY() + Minecraft.getInstance().font.lineHeight);
             guiGraphics.pose().scale(0.75f, 0.75f);
-            guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.level", level), 0, 0, 0xFF1E1410, false);
+            guiGraphics.text(Minecraft.getInstance().font, JobsPlus.API.translatable("gui.jobs.level", level), 0, 0, 0xFF1E1410, false);
             if (level < JobsPlusConfig.maxLevel.get()) {
-                guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.experience", JobsPlus.formatExp(selectedJob.getExperience()), JobsPlus.formatExp(selectedJob.getExperienceForNextLevel())), 0, Minecraft.getInstance().font.lineHeight, 0xFF1E1410, false);
+                guiGraphics.text(Minecraft.getInstance().font, JobsPlus.API.translatable("gui.jobs.experience", JobsPlus.formatExp(selectedJob.getExperience()), JobsPlus.formatExp(selectedJob.getExperienceForNextLevel())), 0, Minecraft.getInstance().font.lineHeight, 0xFF1E1410, false);
             } else {
-                guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.max_level").withColor(jobInstance.getColorDecimal() | 0xFF000000), 0, Minecraft.getInstance().font.lineHeight, 0xFF1E1410, false);
+                guiGraphics.text(Minecraft.getInstance().font, JobsPlus.API.translatable("gui.jobs.max_level").withColor(jobInstance.getColorDecimal() | 0xFF000000), 0, Minecraft.getInstance().font.lineHeight, 0xFF1E1410, false);
             }
             guiGraphics.pose().popMatrix();
 
@@ -80,9 +80,9 @@ public class SelectedJobComponent extends EmptyComponent {
             guiGraphics.pose().translate(getTotalX() + 26, getTotalY() + Minecraft.getInstance().font.lineHeight);
             guiGraphics.pose().scale(0.75f, 0.75f);
             if (canStartNewJob()) {
-                guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.price", JobsPlus.formatCoin(jobInstance.getPrice())), 0, 0, 0xFF1E1410, false);
+                guiGraphics.text(Minecraft.getInstance().font, JobsPlus.API.translatable("gui.jobs.price", JobsPlus.formatCoin(jobInstance.getPrice())), 0, 0, 0xFF1E1410, false);
             } else {
-                guiGraphics.drawString(Minecraft.getInstance().font, JobsPlus.translatable("gui.jobs.max_jobs", JobsPlusConfig.maxJobs.get()), 0, 0, 0xFFFF5555, false);
+                guiGraphics.text(Minecraft.getInstance().font, JobsPlus.API.translatable("gui.jobs.max_jobs", JobsPlusConfig.maxJobs.get()), 0, 0, 0xFFFF5555, false);
             }
             guiGraphics.pose().popMatrix();
             if (jobInstance.getPrice() > this.state.getCoins() && !canStartFreeJob()) {
@@ -96,7 +96,7 @@ public class SelectedJobComponent extends EmptyComponent {
             this.removeWidget(this.toggleJobStatusBarWidget);
         }
 
-        super.render(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
     }
 
     private boolean canStartNewJob() {

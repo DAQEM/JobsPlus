@@ -5,7 +5,7 @@ import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
 import com.daqem.uilib.gui.component.AbstractComponent;
 import com.daqem.uilib.gui.component.sprite.SpriteComponent;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class LeaderboardComponent extends AbstractComponent {
 
@@ -19,14 +19,14 @@ public class LeaderboardComponent extends AbstractComponent {
         this.state = state;
         state.fetchInitialLeaderboardPlayers();
 
-        SpriteComponent bannerComponent = new SpriteComponent(0, 0, 117, 33, JobsPlus.getId("jobs/leaderboard_banner"));
+        SpriteComponent bannerComponent = new SpriteComponent(0, 0, 117, 33, JobsPlus.API.getId("jobs/leaderboard_banner"));
         this.leaderboardScrollComponent = new LeaderboardScrollComponent(state);
 
         this.addComponent(bannerComponent);
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         if (!hasLoaded && !state.isLoadingLeaderboard()) {
             this.hasLoaded = true;
             this.addComponent(leaderboardScrollComponent);

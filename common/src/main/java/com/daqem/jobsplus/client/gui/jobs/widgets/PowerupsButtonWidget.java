@@ -6,14 +6,14 @@ import com.daqem.jobsplus.client.gui.powerups.PowerupsScreen;
 import com.daqem.jobsplus.client.gui.powerups.PowerupsScreenState;
 import com.daqem.uilib.gui.widget.CustomButtonWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 
 public class PowerupsButtonWidget extends CustomButtonWidget {
 
-    private final static Component MESSAGE = JobsPlus.translatable("gui.jobs.powerups");
+    private final static Component MESSAGE = JobsPlus.API.translatable("gui.jobs.powerups");
 
     private final JobsScreenState state;
 
@@ -28,9 +28,9 @@ public class PowerupsButtonWidget extends CustomButtonWidget {
     }
 
     @Override
-    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JobsPlus.getId("jobs/tab_bottom"), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ARGB.white(this.alpha));
-        guiGraphics.drawString(
+    protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JobsPlus.API.getId("jobs/tab_bottom"), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ARGB.white(this.alpha));
+        guiGraphics.text(
                 Minecraft.getInstance().font,
                 this.getMessage(),
                 this.getX() + 10,

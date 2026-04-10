@@ -1,6 +1,6 @@
 package com.daqem.jobsplus;
 
-import org.slf4j.Logger;
+import com.daqem.knot.Knot;
 
 import com.daqem.arc.registry.ArcRegistry;
 import com.daqem.jobsplus.config.JobsPlusConfig;
@@ -12,19 +12,12 @@ import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupManager;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
 import com.daqem.jobsplus.integration.arc.reward.type.JobsPlusRewardType;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
-import com.mojang.logging.LogUtils;
-
-import dev.architectury.registry.ReloadListenerRegistry;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.PackType;
 
 import java.text.DecimalFormat;
 
 public class JobsPlus {
     public static final String MOD_ID = "jobsplus";
-    public static final Logger LOGGER = LogUtils.getLogger();
+    public static final Knot API = new Knot(MOD_ID);
 
     public static void init() {
         JobsPlusConfig.init();
@@ -32,8 +25,8 @@ public class JobsPlus {
 
         registerEvents();
         initRegistry();
-        ReloadListenerRegistry.register(PackType.SERVER_DATA, new JobManager(), getId("jobs"));
-        ReloadListenerRegistry.register(PackType.SERVER_DATA, new PowerupManager(), getId("powerups"));
+        Knot.RELOAD_REGISTRY.registerData(API.getId("jobs"), new JobManager());
+        Knot.RELOAD_REGISTRY.registerData(API.getId("powerups"), new PowerupManager());
     }
 
     private static void initRegistry() {
@@ -47,22 +40,6 @@ public class JobsPlus {
 
     private static void registerEvents() {
         EventRegisterCommands.registerEvent();
-    }
-
-    public static Identifier getId(String id) {
-        return Identifier.fromNamespaceAndPath(MOD_ID, id);
-    }
-
-    public static MutableComponent translatable(String str) {
-        return Component.translatable(MOD_ID + "." + str);
-    }
-
-    public static MutableComponent translatable(String str, Object... objects) {
-        return Component.translatable(MOD_ID + "." + str, objects);
-    }
-
-    public static MutableComponent literal(String str) {
-        return Component.literal(str);
     }
 
     public static String formatCoin(double coins) {

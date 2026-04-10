@@ -1,98 +1,33 @@
 package com.daqem.jobsplus.networking;
 
-import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.networking.*;
 import com.daqem.jobsplus.networking.c2s.*;
 import com.daqem.jobsplus.networking.s2c.*;
-import dev.architectury.networking.NetworkManager;
-import dev.architectury.utils.Env;
-import dev.architectury.utils.EnvExecutor;
+import com.daqem.knot.Knot;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public interface JobsPlusNetworking {
 
-    CustomPacketPayload.Type<ServerboundTogglePowerUpPacket> SERVERBOUND_TOGGLE_POWERUP =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_toggle_powerup"));
-    CustomPacketPayload.Type<ServerboundStartJobPacket> SERVERBOUND_START_JOB =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_start_job"));
-    CustomPacketPayload.Type<ServerboundStartPowerupPacket> SERVERBOUND_START_POWERUP =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_start_powerup"));
-    CustomPacketPayload.Type<ServerboundOpenJobsScreenPacket> SERVERBOUND_OPEN_JOBS_SCREEN =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_open_jobs_screen"));
-    CustomPacketPayload.Type<ServerboundOpenPowerupsScreenPacket> SERVERBOUND_OPEN_POWERUPS_SCREEN =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_open_powerups_screen"));
-    CustomPacketPayload.Type<ServerboundRequestLeaderboardPacket> SERVERBOUND_REQUEST_LEADERBOARD =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_request_leaderboard"));
-    CustomPacketPayload.Type<ServerboundRequestPlayerJobsPacket> SERVERBOUND_REQUEST_PLAYER_JOBS =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_request_player_jobs"));
-    CustomPacketPayload.Type<ServerboundSyncPlayerJobsPacket> SERVERBOUND_SYNC_PLAYER_JOBS =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("serverbound_sync_player_jobs"));
-
-    CustomPacketPayload.Type<ClientboundUnlockItemRestrictionPacket> CLIENTBOUND_UNLOCK_ITEM_RESTRICTION =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_unlock_item_restriction"));
-    CustomPacketPayload.Type<ClientboundOpenJobsScreenPacket> CLIENTBOUND_OPEN_JOBS_SCREEN =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_open_jobs_screen"));
-    CustomPacketPayload.Type<ClientboundLevelUpJobPacket> CLIENTBOUND_LEVEL_UP_JOB =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_level_up_job"));
-    CustomPacketPayload.Type<ClientboundOpenPowerupsScreenPacket> CLIENTBOUND_OPEN_POWERUPS_SCREEN =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_open_powerups_screen"));
-    CustomPacketPayload.Type<ClientboundLeaderboardPacket> CLIENTBOUND_LEADERBOARD =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_leaderboard"));
-    CustomPacketPayload.Type<ClientboundPlayerJobsPacket> CLIENTBOUND_PLAYER_JOBS =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_player_jobs"));
-    CustomPacketPayload.Type<ClientboundSyncJobPacket> CLIENTBOUND_SYNC_JOB =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_sync_job"));
-    CustomPacketPayload.Type<ClientboundOpenHudEditorPacket> CLIENTBOUND_OPEN_HUD_EDITOR =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_open_hud_editor"));
-    CustomPacketPayload.Type<ClientboundUnlockPowerupPacket> CLIENTBOUND_UNLOCK_POWERUP =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_unlock_powerup"));
-    CustomPacketPayload.Type<ClientboundSyncJobLevelPacket> CLIENTBOUND_SYNC_JOB_LEVEL =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_sync_job_level"));
-    CustomPacketPayload.Type<ClientboundDeleteJobPacket> CLIENTBOUND_DELETE_JOB =
-            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_delete_job"));
-
-    static void initClient() {
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC, ClientboundOpenJobsScreenPacketHandler::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_LEVEL_UP_JOB, ClientboundLevelUpJobPacket.STREAM_CODEC, ClientboundLevelUpJobPacketHandler::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_UNLOCK_ITEM_RESTRICTION, ClientboundUnlockItemRestrictionPacket.STREAM_CODEC, ClientboundUnlockItemRestrictionPacketHandler::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_POWERUPS_SCREEN, ClientboundOpenPowerupsScreenPacket.STREAM_CODEC, ClientboundOpenPowerupsScreenPacketHandler::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_LEADERBOARD, ClientboundLeaderboardPacket.STREAM_CODEC, ClientboundLeaderboardPacketHandler::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_PLAYER_JOBS, ClientboundPlayerJobsPacket.STREAM_CODEC, ClientboundPlayerJobsPacketHandler::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_SYNC_JOB, ClientboundSyncJobPacket.STREAM_CODEC, ClientboundSyncJobPacketHandler::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_HUD_EDITOR, ClientboundOpenHudEditorPacket.STREAM_CODEC, ClientboundOpenHudEditorPacketHandler::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_UNLOCK_POWERUP, ClientboundUnlockPowerupPacket.STREAM_CODEC, ClientboundUnlockPowerupPacketHandler::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_SYNC_JOB_LEVEL, ClientboundSyncJobLevelPacket.STREAM_CODEC, ClientboundSyncJobLevelPacketHandler::handleClientSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_DELETE_JOB, ClientboundDeleteJobPacket.STREAM_CODEC, ClientboundDeleteJobPacketHandler::handleClientSide);
-    }
-
-    static void initCommon() {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_TOGGLE_POWERUP, ServerboundTogglePowerUpPacket.STREAM_CODEC, ServerboundTogglePowerUpPacket::handleServerSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_START_JOB, ServerboundStartJobPacket.STREAM_CODEC, ServerboundStartJobPacket::handleServerSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_START_POWERUP, ServerboundStartPowerupPacket.STREAM_CODEC, ServerboundStartPowerupPacket::handleServerSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_OPEN_JOBS_SCREEN, ServerboundOpenJobsScreenPacket.STREAM_CODEC, ServerboundOpenJobsScreenPacket::handleServerSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_OPEN_POWERUPS_SCREEN, ServerboundOpenPowerupsScreenPacket.STREAM_CODEC, ServerboundOpenPowerupsScreenPacket::handleServerSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_REQUEST_LEADERBOARD, ServerboundRequestLeaderboardPacket.STREAM_CODEC, ServerboundRequestLeaderboardPacket::handleServerSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_REQUEST_PLAYER_JOBS, ServerboundRequestPlayerJobsPacket.STREAM_CODEC, ServerboundRequestPlayerJobsPacket::handleServerSide);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SERVERBOUND_SYNC_PLAYER_JOBS, ServerboundSyncPlayerJobsPacket.STREAM_CODEC, ServerboundSyncPlayerJobsPacket::handleServerSide);
-    }
-
-    static void initServer() {
-        NetworkManager.registerS2CPayloadType(CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC);
-        NetworkManager.registerS2CPayloadType(CLIENTBOUND_LEVEL_UP_JOB, ClientboundLevelUpJobPacket.STREAM_CODEC);
-        NetworkManager.registerS2CPayloadType(CLIENTBOUND_UNLOCK_ITEM_RESTRICTION, ClientboundUnlockItemRestrictionPacket.STREAM_CODEC);
-        NetworkManager.registerS2CPayloadType(CLIENTBOUND_OPEN_POWERUPS_SCREEN, ClientboundOpenPowerupsScreenPacket.STREAM_CODEC);
-        NetworkManager.registerS2CPayloadType(CLIENTBOUND_LEADERBOARD, ClientboundLeaderboardPacket.STREAM_CODEC);
-        NetworkManager.registerS2CPayloadType(CLIENTBOUND_PLAYER_JOBS, ClientboundPlayerJobsPacket.STREAM_CODEC);
-        NetworkManager.registerS2CPayloadType(CLIENTBOUND_SYNC_JOB, ClientboundSyncJobPacket.STREAM_CODEC);
-        NetworkManager.registerS2CPayloadType(CLIENTBOUND_OPEN_HUD_EDITOR, ClientboundOpenHudEditorPacket.STREAM_CODEC);
-        NetworkManager.registerS2CPayloadType(CLIENTBOUND_UNLOCK_POWERUP, ClientboundUnlockPowerupPacket.STREAM_CODEC);
-        NetworkManager.registerS2CPayloadType(CLIENTBOUND_SYNC_JOB_LEVEL, ClientboundSyncJobLevelPacket.STREAM_CODEC);
-        NetworkManager.registerS2CPayloadType(CLIENTBOUND_DELETE_JOB, ClientboundDeleteJobPacket.STREAM_CODEC);
-    }
-
     static void init() {
-        EnvExecutor.runInEnv(Env.CLIENT, () -> JobsPlusNetworking::initClient);
-        EnvExecutor.runInEnv(Env.SERVER, () -> JobsPlusNetworking::initServer);
-        initCommon();
+        Knot.NETWORKING.registerServerbound(ServerboundOpenJobsScreenPacket.TYPE, ServerboundOpenJobsScreenPacket.STREAM_CODEC, () -> ServerboundOpenJobsScreenPacket::handle);
+        Knot.NETWORKING.registerServerbound(ServerboundOpenPowerupsScreenPacket.TYPE, ServerboundOpenPowerupsScreenPacket.STREAM_CODEC, () -> ServerboundOpenPowerupsScreenPacket::handle);
+        Knot.NETWORKING.registerServerbound(ServerboundRequestLeaderboardPacket.TYPE, ServerboundRequestLeaderboardPacket.STREAM_CODEC, () -> ServerboundRequestLeaderboardPacket::handle);
+        Knot.NETWORKING.registerServerbound(ServerboundRequestPlayerJobsPacket.TYPE, ServerboundRequestPlayerJobsPacket.STREAM_CODEC, () -> ServerboundRequestPlayerJobsPacket::handle);
+        Knot.NETWORKING.registerServerbound(ServerboundStartJobPacket.TYPE, ServerboundStartJobPacket.STREAM_CODEC, () -> ServerboundStartJobPacket::handle);
+        Knot.NETWORKING.registerServerbound(ServerboundStartPowerupPacket.TYPE, ServerboundStartPowerupPacket.STREAM_CODEC, () -> ServerboundStartPowerupPacket::handle);
+        Knot.NETWORKING.registerServerbound(ServerboundSyncPlayerJobsPacket.TYPE, ServerboundSyncPlayerJobsPacket.STREAM_CODEC, () -> ServerboundSyncPlayerJobsPacket::handle);
+        Knot.NETWORKING.registerServerbound(ServerboundTogglePowerUpPacket.TYPE, ServerboundTogglePowerUpPacket.STREAM_CODEC, () -> ServerboundTogglePowerUpPacket::handle);
+
+        Knot.NETWORKING.registerClientbound(ClientboundDeleteJobPacket.TYPE, ClientboundDeleteJobPacket.STREAM_CODEC, () -> ClientboundDeleteJobPacketHandler::handle);
+        Knot.NETWORKING.registerClientbound(ClientboundLeaderboardPacket.TYPE, ClientboundLeaderboardPacket.STREAM_CODEC, () -> ClientboundLeaderboardPacketHandler::handle);
+        Knot.NETWORKING.registerClientbound(ClientboundLevelUpJobPacket.TYPE, ClientboundLevelUpJobPacket.STREAM_CODEC, () -> ClientboundLevelUpJobPacketHandler::handle);
+        Knot.NETWORKING.registerClientbound(ClientboundOpenHudEditorPacket.TYPE, ClientboundOpenHudEditorPacket.STREAM_CODEC, () -> ClientboundOpenHudEditorPacketHandler::handle);
+        Knot.NETWORKING.registerClientbound(ClientboundOpenJobsScreenPacket.TYPE, ClientboundOpenJobsScreenPacket.STREAM_CODEC, () -> ClientboundOpenJobsScreenPacketHandler::handle);
+        Knot.NETWORKING.registerClientbound(ClientboundOpenPowerupsScreenPacket.TYPE, ClientboundOpenPowerupsScreenPacket.STREAM_CODEC, () -> ClientboundOpenPowerupsScreenPacketHandler::handle);
+        Knot.NETWORKING.registerClientbound(ClientboundPlayerJobsPacket.TYPE, ClientboundPlayerJobsPacket.STREAM_CODEC, () -> ClientboundPlayerJobsPacketHandler::handle);
+        Knot.NETWORKING.registerClientbound(ClientboundSyncJobLevelPacket.TYPE, ClientboundSyncJobLevelPacket.STREAM_CODEC, () -> ClientboundSyncJobLevelPacketHandler::handle);
+        Knot.NETWORKING.registerClientbound(ClientboundSyncJobPacket.TYPE, ClientboundSyncJobPacket.STREAM_CODEC, () -> ClientboundSyncJobPacketHandler::handle);
+        Knot.NETWORKING.registerClientbound(ClientboundUnlockItemRestrictionPacket.TYPE, ClientboundUnlockItemRestrictionPacket.STREAM_CODEC, () -> ClientboundUnlockItemRestrictionPacketHandler::handle);
+        Knot.NETWORKING.registerClientbound(ClientboundUnlockPowerupPacket.TYPE, ClientboundUnlockPowerupPacket.STREAM_CODEC, () -> ClientboundUnlockPowerupPacketHandler::handle);
     }
 }

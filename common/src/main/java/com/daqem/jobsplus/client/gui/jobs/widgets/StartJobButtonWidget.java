@@ -9,17 +9,17 @@ import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.networking.c2s.ServerboundOpenJobsScreenPacket;
 import com.daqem.jobsplus.networking.c2s.ServerboundStartJobPacket;
 import com.daqem.jobsplus.player.job.Job;
+import com.daqem.knot.Knot;
 import com.daqem.uilib.gui.widget.CustomButtonWidget;
-import dev.architectury.networking.NetworkManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 
 public class StartJobButtonWidget extends CustomButtonWidget {
 
-    private final static Component MESSAGE = JobsPlus.translatable("gui.jobs.start_job");
+    private final static Component MESSAGE = JobsPlus.API.translatable("gui.jobs.start_job");
 
     private final JobsScreenState state;
 
@@ -28,14 +28,14 @@ public class StartJobButtonWidget extends CustomButtonWidget {
             Job selectedJob = state.getSelectedJob();
             JobInstance jobInstance = selectedJob.getJobInstance();
             int jobAmount = state.getJobs().stream().filter(job -> job.getLevel() > 0).toList().size();
-            Component freeJobMessage = JobsPlus.translatable("gui.confirmation.purchase_job.free", jobInstance.getName());
-            Component paidJobMessage = JobsPlus.translatable("gui.confirmation.purchase_job.paid", jobInstance.getName(), jobInstance.getPrice());
+            Component freeJobMessage = JobsPlus.API.translatable("gui.confirmation.purchase_job.free", jobInstance.getName());
+            Component paidJobMessage = JobsPlus.API.translatable("gui.confirmation.purchase_job.paid", jobInstance.getName(), jobInstance.getPrice());
             if (selectedJob.getLevel() == 0) {
                 Minecraft.getInstance().setScreen(new ConfirmationScreen(Minecraft.getInstance().screen, new ConfirmationScreenState(
                         jobAmount >= JobsPlusConfig.amountOfFreeJobs.get() ? paidJobMessage : freeJobMessage,
                         () -> {
-                            NetworkManager.sendToServer(new ServerboundStartJobPacket(selectedJob.getJobInstance().getIdentifier()));
-                            NetworkManager.sendToServer(new ServerboundOpenJobsScreenPacket());
+                            Knot.NETWORKING.sendToServer(new ServerboundStartJobPacket(selectedJob.getJobInstance().getIdentifier()));
+                            Knot.NETWORKING.sendToServer(new ServerboundOpenJobsScreenPacket());
                         }
                 )));
             }
@@ -44,9 +44,9 @@ public class StartJobButtonWidget extends CustomButtonWidget {
     }
 
     @Override
-    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JobsPlus.getId("jobs/tab_bottom"), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ARGB.white(this.alpha));
-        guiGraphics.drawString(
+    protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, JobsPlus.API.getId("jobs/tab_bottom"), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ARGB.white(this.alpha));
+        guiGraphics.text(
                 Minecraft.getInstance().font,
                 this.getMessage(),
                 this.getX() + 10,

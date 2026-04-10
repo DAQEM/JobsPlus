@@ -5,7 +5,7 @@ import com.daqem.jobsplus.client.gui.jobs.components.leaderboard.LeaderboardComp
 import com.daqem.jobsplus.client.gui.jobs.tab.RightTab;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.uilib.gui.component.EmptyComponent;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class RightPageContentComponent extends EmptyComponent {
 
@@ -30,7 +30,7 @@ public class RightPageContentComponent extends EmptyComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         if (this.cachedTab != this.state.getSelectedRightTab() || this.cachedJob != this.state.getSelectedJob()) {
             this.cachedTab = this.state.getSelectedRightTab();
             this.cachedJob = this.state.getSelectedJob();

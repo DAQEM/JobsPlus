@@ -15,7 +15,7 @@ public class RecipesScrollComponent extends EmptyComponent {
         RecipesScrollWidget recipesScrollWidget = new RecipesScrollWidget(getWidth(), getHeight(), state);
         IComponent scrollContentComponent = recipesScrollWidget.getComponents().getFirst();
         if (scrollContentComponent.getComponents().isEmpty()) {
-            MultiLineTextComponent noRecipesText = new MultiLineTextComponent(0, 0, getWidth(), JobsPlus.translatable("gui.jobs.no_recipes"), 0xFFD8BF96);
+            MultiLineTextComponent noRecipesText = new MultiLineTextComponent(0, 0, getWidth(), JobsPlus.API.translatable("gui.jobs.no_recipes"), 0xFFD8BF96);
             this.addComponent(noRecipesText);
         } else {
             if (scrollContentComponent.getHeight() <= getHeight()) {

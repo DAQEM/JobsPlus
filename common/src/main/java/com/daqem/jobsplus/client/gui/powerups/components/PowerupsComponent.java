@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 public class PowerupsComponent extends SpriteComponent {
 
     public PowerupsComponent(PowerupsScreenState state) {
-        super(0, 0, 286, 212, JobsPlus.getId("powerups/background"));
+        super(0, 0, 286, 212, JobsPlus.API.getId("powerups/background"));
 
-        TextComponent title = new TextComponent(11, 5, state.getJob().getJobInstance().getName().withStyle(Style.EMPTY.withBold(true)).append(JobsPlus.literal(" • " + state.getJob().getLevel()).withStyle(Style.EMPTY.withBold(false))), 0xFFEAF0FF);
+        TextComponent title = new TextComponent(11, 5, state.getJob().getJobInstance().getName().withStyle(Style.EMPTY.withBold(true)).append(JobsPlus.API.literal(" • " + state.getJob().getLevel()).withStyle(Style.EMPTY.withBold(false))), 0xFFEAF0FF);
         this.addComponent(title);
         CoinsComponent coinsComponent = new CoinsComponent(state);
         coinsComponent.setX(-coinsComponent.getWidth() + 14);

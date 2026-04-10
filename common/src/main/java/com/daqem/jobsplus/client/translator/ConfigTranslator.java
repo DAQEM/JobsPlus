@@ -1,7 +1,7 @@
 package com.daqem.jobsplus.client.translator;
 
 import com.daqem.jobsplus.JobsPlus;
-import com.daqem.yamlconfig.YamlConfigExpectPlatform;
+import com.daqem.knot.api.platform.Platform;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,12 +17,12 @@ public class ConfigTranslator {
     private static final Gson GSON = new Gson();
 
     public static void load(List<String> languages, Map<String, String> translations) {
-        Path configDir = YamlConfigExpectPlatform.getConfigDirectory().resolve(JobsPlus.MOD_ID).resolve("lang");
+        Path configDir = Platform.INFO.getConfigFolder().resolve(JobsPlus.MOD_ID).resolve("lang");
         if (!Files.exists(configDir)) {
             try {
                 Files.createDirectories(configDir);
             } catch (IOException e) {
-                JobsPlus.LOGGER.error("Failed to create jobsplus lang config directory", e);
+                JobsPlus.API.LOGGER.error("Failed to create jobsplus lang config directory", e);
                 return;
             }
         }
@@ -40,7 +40,7 @@ public class ConfigTranslator {
                         }
                     }
                 } catch (Exception e) {
-                    JobsPlus.LOGGER.error("Failed to load translation file: {}", langFile, e);
+                    JobsPlus.API.LOGGER.error("Failed to load translation file: {}", langFile, e);
                 }
             }
         }

@@ -4,7 +4,7 @@ import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
 import com.daqem.jobsplus.client.gui.jobs.widgets.PowerupsButtonWidget;
 import com.daqem.uilib.gui.component.AbstractComponent;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 
 public class JobsComponent extends AbstractComponent {
@@ -37,10 +37,10 @@ public class JobsComponent extends AbstractComponent {
 
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         guiGraphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
-                JobsPlus.getId("jobs/background"),
+                JobsPlus.API.getId("jobs/background"),
                 this.getTotalX(),
                 this.getTotalY(),
                 this.getWidth(),

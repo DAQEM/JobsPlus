@@ -3,7 +3,7 @@ package com.daqem.jobsplus.client.gui.jobs.components;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.uilib.gui.component.sprite.SpriteComponent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -21,15 +21,15 @@ public class SlottedItemComponent extends SpriteComponent {
     private final Supplier<ScreenRectangle> parentBounds;
 
     public SlottedItemComponent(int x, int y, int index, ItemStack itemStack, Supplier<ScreenRectangle> parentBounds) {
-        super(x, y, 24, 24, JobsPlus.getId("jobs/item_slot_" + SPRITE_IDS[index % SPRITE_IDS.length]));
+        super(x, y, 24, 24, JobsPlus.API.getId("jobs/item_slot_" + SPRITE_IDS[index % SPRITE_IDS.length]));
         this.itemStack = itemStack;
         this.parentBounds = parentBounds;
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
-        guiGraphics.renderFakeItem(this.itemStack, this.getTotalX() + 4, this.getTotalY() + 4);
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
+        guiGraphics.fakeItem(this.itemStack, this.getTotalX() + 4, this.getTotalY() + 4);
         if (this.parentBounds.get().containsPoint(mouseX, mouseY) && getRectangle().containsPoint(mouseX, mouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
             guiGraphics.setTooltipForNextFrame(

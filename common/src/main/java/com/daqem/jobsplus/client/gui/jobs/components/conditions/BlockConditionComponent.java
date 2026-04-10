@@ -31,8 +31,8 @@ public class BlockConditionComponent extends EmptyComponent {
                 .collect(Collectors.toSet()).stream()
                 .map(Item::getDefaultInstance)
                 .sorted((b1, b2) -> {
-                    String name1 = b1.getItem().getName().getString();
-                    String name2 = b2.getItem().getName().getString();
+                    String name1 = b1.getDisplayName().getString();
+                    String name2 = b2.getDisplayName().getString();
                     return name1.compareToIgnoreCase(name2);
                 })
                 .toList();
@@ -42,7 +42,7 @@ public class BlockConditionComponent extends EmptyComponent {
         } else if (items.size() == 1) {
             TextComponent dotText = new TextComponent(0, 0, Component.literal(" • "), 0xFF1E1410);
             this.addComponent(dotText);
-            MultiLineTextComponent isBlockTextComponent = new MultiLineTextComponent(10, 0, getWidth() - 10, JobsPlus.translatable("gui.jobs.condition.is", blocks.getFirst().getName()), 0xFF1E1410);
+            MultiLineTextComponent isBlockTextComponent = new MultiLineTextComponent(10, 0, getWidth() - 10, JobsPlus.API.translatable("gui.jobs.condition.is", blocks.getFirst().getName()), 0xFF1E1410);
             this.addComponent(isBlockTextComponent);
             this.setHeight(isBlockTextComponent.getHeight());
         } else {

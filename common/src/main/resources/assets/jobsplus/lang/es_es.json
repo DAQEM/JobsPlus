@@ -60,6 +60,7 @@
   "jobsplus.job.jobsplus.lumberjack.name": "Leñador",
   "jobsplus.job.jobsplus.miner.name": "Minero",
   "jobsplus.job.jobsplus.smith.name": "Herrero",
+  "jobsplus.job.jobsplus.add_jobs.name": "Añadir trabajos",
 
   "jobsplus.powerup.jobsplus.alchemist.harmful_potion_immunity_i.name": "Inmunidad a pociones dañinas I",
   "jobsplus.powerup.jobsplus.builder.less_fall_damage_i.name": "Menos daño por caída I",

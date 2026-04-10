@@ -85,6 +85,7 @@
     "jobsplus.job.jobsplus.miner.description": "The miner is a master of mining ores and stone. Use the Miner's powerups to mine faster and receive more drops!",
     "jobsplus.job.jobsplus.smith.name": "Smith",
     "jobsplus.job.jobsplus.smith.description": "The smith is a master of smelting ores and crafting tools. Use the Smith's powerups to make your armor last longer!",
+    "jobsplus.job.jobsplus.add_jobs.name": "Add Jobs",
 
     "jobsplus.powerup.jobsplus.alchemist.root.name": "Alchemist",
     "jobsplus.powerup.jobsplus.alchemist.root.description": "The alchemist is a master of potions and brewing. Use the Alchemist's powerups to make your potions even stronger!",

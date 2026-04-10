@@ -5,7 +5,7 @@ import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
 import com.daqem.jobsplus.client.gui.jobs.widgets.ActionScrollWidget;
 import com.daqem.jobsplus.integration.arc.reward.rewards.job.JobExpReward;
 import com.daqem.uilib.gui.component.EmptyComponent;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +47,7 @@ public class ActionScrollComponent extends EmptyComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         if (this.cachedAction != null && this.cachedAction != this.state.getActiveAction()) {
             this.cachedAction = this.state.getActiveAction();
             this.actionScrollWidget.clearComponents();
@@ -55,7 +55,7 @@ public class ActionScrollComponent extends EmptyComponent {
             this.actionScrollWidget.setScrollAmount(0);
             this.updateParentPosition(getParentX(), getParentY(), parentWidth, parentHeight);
         }
-        super.render(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
     }
 
     private List<IAction> getSortedActions(JobsScreenState state) {

@@ -85,6 +85,7 @@
   "jobsplus.job.jobsplus.miner.description": "Der Miner meistert das Untertagegeschäft. Baue Steine und Erze schneller ab!",
   "jobsplus.job.jobsplus.smith.name": "Schmied",
   "jobsplus.job.jobsplus.smith.description": "Der Schmied schmilzt Erze und fertigt Werkzeuge. Erhöhe die Haltbarkeit deiner Rüstung!",
+  "jobsplus.job.jobsplus.add_jobs.name": "Berufe hinzufügen",
 
   "jobsplus.powerup.jobsplus.alchemist.root.name": "Alchemist",
   "jobsplus.powerup.jobsplus.alchemist.root.description": "Meister der Tränke und des Brauens.",

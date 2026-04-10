@@ -11,9 +11,9 @@ import net.minecraft.network.chat.MutableComponent;
 public class CoinsComponent extends SpriteComponent {
 
     public CoinsComponent(JobsScreenState state) {
-        super(0, 27, 0, 16, JobsPlus.getId("jobs/tab_coins"));
+        super(0, 27, 0, 16, JobsPlus.API.getId("jobs/tab_coins"));
 
-        MutableComponent coinsText = JobsPlus.literal(JobsPlus.formatCoin(state.getCoins()));
+        MutableComponent coinsText = JobsPlus.API.literal(JobsPlus.formatCoin(state.getCoins()));
         int coinsTextWidth = Minecraft.getInstance().font.width(coinsText);
 
         this.setX(-coinsTextWidth + 2);
@@ -21,7 +21,7 @@ public class CoinsComponent extends SpriteComponent {
 
         TextComponent coinsTextComponent = new TextComponent(getWidth() - 11, 5, coinsText, 0xFF1E1410);
         coinsTextComponent.setTextAlign(TextAlign.RIGHT);
-        SpriteComponent coinsIconComponent = new SpriteComponent(getWidth() - 10, 4, 7, 8, JobsPlus.getId("jobs/coins"));
+        SpriteComponent coinsIconComponent = new SpriteComponent(getWidth() - 10, 4, 7, 8, JobsPlus.API.getId("jobs/coins"));
 
         this.addComponent(coinsTextComponent);
         this.addComponent(coinsIconComponent);

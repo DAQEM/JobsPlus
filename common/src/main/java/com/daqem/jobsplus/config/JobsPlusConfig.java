@@ -2,7 +2,7 @@ package com.daqem.jobsplus.config;
 
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.player.job.JobLevelCalculator;
-import com.daqem.yamlconfig.YamlConfigExpectPlatform;
+import com.daqem.knot.api.platform.Platform;
 import com.daqem.yamlconfig.api.config.ConfigExtension;
 import com.daqem.yamlconfig.api.config.ConfigType;
 import com.daqem.yamlconfig.api.config.IConfigBuilder;
@@ -42,7 +42,7 @@ public class JobsPlusConfig {
                 "jobsplus-common",
                 ConfigExtension.YAML,
                 ConfigType.COMMON,
-                YamlConfigExpectPlatform.getConfigDirectory().resolve("jobsplus")
+                Platform.INFO.getConfigFolder().resolve("jobsplus")
         );
 
         builder.push("jobs");

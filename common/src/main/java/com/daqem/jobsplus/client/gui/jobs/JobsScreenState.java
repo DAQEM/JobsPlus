@@ -1,19 +1,24 @@
 package com.daqem.jobsplus.client.gui.jobs;
 
+import com.daqem.arc.api.action.IAction;
+import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.client.gui.jobs.tab.RightTab;
+import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
+import com.daqem.jobsplus.networking.c2s.ServerboundRequestLeaderboardPacket;
+import com.daqem.jobsplus.networking.c2s.ServerboundRequestPlayerJobsPacket;
+import com.daqem.jobsplus.player.JobsPlayer;
+import com.daqem.jobsplus.player.LeaderboardPlayer;
+import com.daqem.jobsplus.player.job.Job;
+import com.daqem.knot.Knot;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
-import com.daqem.arc.api.action.IAction;
-import com.daqem.jobsplus.client.gui.jobs.tab.RightTab;
-import com.daqem.jobsplus.networking.c2s.ServerboundRequestLeaderboardPacket;
-import com.daqem.jobsplus.networking.c2s.ServerboundRequestPlayerJobsPacket;
-import com.daqem.jobsplus.player.LeaderboardPlayer;
-import com.daqem.jobsplus.player.job.Job;
-
-import dev.architectury.networking.NetworkManager;
+import java.util.stream.Collectors;
 
 public class JobsScreenState {
 
@@ -38,7 +43,19 @@ public class JobsScreenState {
                 .sorted(Comparator.comparing(Job::getLevel).reversed()
                         .thenComparingDouble(job -> -job.getExperience())
                         .thenComparing(job -> job.getJobInstance().getName().getString()))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
+        if (jobs.isEmpty() && Minecraft.getInstance().player instanceof JobsPlayer player) {
+            this.jobs.add(new Job(
+                            player,
+                            new JobInstance(
+                                    JobsPlus.API.getId("add_jobs"),
+                                    9999,
+                                    "#555555",
+                                    ItemStackTemplate.fromNonEmptyStack(Items.BARRIER.getDefaultInstance())
+                            )
+                    )
+            );
+        }
         this.preformingJobs = this.jobs.stream().filter(job -> job.getLevel() > 0).toList();
         this.notPreformingJobs = this.jobs.stream().filter(job -> job.getLevel() <= 0).toList();
         this.coins = coins;
@@ -114,7 +131,7 @@ public class JobsScreenState {
     }
 
     public void fetchLeaderboardPlayers() {
-        NetworkManager.sendToServer(new ServerboundRequestLeaderboardPacket(getSelectedJob().getJobInstance().getIdentifier()));
+        Knot.NETWORKING.sendToServer(new ServerboundRequestLeaderboardPacket(getSelectedJob().getJobInstance().getIdentifier()));
     }
 
     public LeaderboardPlayer getViewingPlayer() {
@@ -132,7 +149,7 @@ public class JobsScreenState {
     public void fetchViewingPlayerJobs(LeaderboardPlayer viewingPlayer) {
         this.viewingPlayer = viewingPlayer;
         this.viewingPlayerJobs = new ArrayList<>();
-        NetworkManager.sendToServer(new ServerboundRequestPlayerJobsPacket(viewingPlayer.getUuid()));
+        Knot.NETWORKING.sendToServer(new ServerboundRequestPlayerJobsPacket(viewingPlayer.getUuid()));
     }
 
     public void stopViewingPlayer() {
