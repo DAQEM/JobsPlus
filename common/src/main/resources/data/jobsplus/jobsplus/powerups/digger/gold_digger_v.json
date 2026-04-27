@@ -3,6 +3,9 @@
   "parent": "jobsplus:digger/gold_digger_iv",
   "icon": {
     "id": "minecraft:gold_block",
+    "components": {
+      "minecraft:max_stack_size": 5
+    },
     "count": 5
   },
   "price": 15,

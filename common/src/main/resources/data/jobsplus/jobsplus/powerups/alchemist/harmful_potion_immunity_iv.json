@@ -6,7 +6,8 @@
     "components": {
       "minecraft:potion_contents": {
         "potion": "minecraft:poison"
-      }
+      },
+      "minecraft:max_stack_size": 4
     },
     "count": 4
   },

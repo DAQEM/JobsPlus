@@ -3,6 +3,9 @@
   "parent": "jobsplus:lumberjack/axe_efficiency_iii",
   "icon": {
     "id": "minecraft:golden_axe",
+    "components": {
+      "minecraft:max_stack_size": 4
+    },
     "count": 4
   },
   "price": 12,

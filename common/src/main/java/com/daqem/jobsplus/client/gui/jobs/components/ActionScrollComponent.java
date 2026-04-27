@@ -1,10 +1,15 @@
 package com.daqem.jobsplus.client.gui.jobs.components;
 
 import com.daqem.arc.api.action.IAction;
+import com.daqem.arc.api.action.data.ActionDataBuilder;
+import com.daqem.arc.api.player.ArcPlayer;
+import com.daqem.arc.data.ActionData;
+import com.daqem.arc.data.math.ConstantNumberProvider;
 import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
 import com.daqem.jobsplus.client.gui.jobs.widgets.ActionScrollWidget;
 import com.daqem.jobsplus.integration.arc.reward.rewards.job.JobExpReward;
 import com.daqem.uilib.gui.component.EmptyComponent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import org.jetbrains.annotations.NotNull;
@@ -61,17 +66,21 @@ public class ActionScrollComponent extends EmptyComponent {
     private List<IAction> getSortedActions(JobsScreenState state) {
         return state.getSelectedJob().getJobInstance().getActions().stream()
                 .filter(action -> action.getRewards().stream().anyMatch(reward -> reward instanceof JobExpReward))
-                .sorted(Comparator.comparingDouble(o -> {
-                    JobExpReward jobExpReward = o.getRewards().stream()
+                .sorted(Comparator.comparingDouble(action -> {
+                    JobExpReward jobExpReward = action.getRewards().stream()
                             .filter(reward -> reward instanceof JobExpReward)
                             .map(reward -> (JobExpReward) reward)
                             .findFirst()
                             .orElse(null);
+
                     if (jobExpReward == null) {
                         return 0;
-                    } else {
-                        return jobExpReward.getMax();
+                    } else if (jobExpReward.getMax() instanceof ConstantNumberProvider cnp) {
+                        ActionData dummyData = new ActionDataBuilder((ArcPlayer) Minecraft.getInstance().player, action.getType()).build();
+                        return cnp.resolve(dummyData);
                     }
+
+                    return Double.MAX_VALUE;
                 }))
                 .collect(Collectors.toList());
     }

@@ -5,6 +5,7 @@ import com.daqem.arc.api.action.data.ActionDataBuilder;
 import com.daqem.arc.api.action.data.IActionDataType;
 import com.daqem.arc.api.condition.ICondition;
 import com.daqem.arc.api.player.ArcPlayer;
+import com.daqem.arc.data.ActionData;
 import com.daqem.arc.data.condition.OrCondition;
 import com.daqem.arc.data.condition.block.*;
 import com.daqem.arc.data.condition.item.ItemCondition;
@@ -70,10 +71,16 @@ public class ConditionsComponent extends EmptyComponent {
                                     allowedBlocks.addAll(getOreBlocks());
                                 } else {
                                     BlockHardnessCondition bhc = (BlockHardnessCondition) c;
-                                    level.registryAccess().lookupOrThrow(Registries.BLOCK).forEach(blockHolder -> {
-                                        float hardness = blockHolder.defaultBlockState().getDestroySpeed(level, BlockPos.ZERO);
-                                        if (hardness >= bhc.getMin() && hardness <= bhc.getMax()) {
-                                            allowedBlocks.add(blockHolder);
+                                    level.registryAccess().lookupOrThrow(Registries.BLOCK).forEach(block -> {
+
+                                        ActionData actionData = new ActionDataBuilder((ArcPlayer) Minecraft.getInstance().player, IActionType.BREAK_BLOCK)
+                                                .withData(IActionDataType.BLOCK_STATE, block.defaultBlockState())
+                                                .withData(IActionDataType.BLOCK_POSITION, BlockPos.ZERO)
+                                                .withData(IActionDataType.WORLD, level)
+                                                .build();
+
+                                        if (bhc.isMet(actionData)) {
+                                            allowedBlocks.add(block);
                                         }
                                     });
                                 }
@@ -93,17 +100,21 @@ public class ConditionsComponent extends EmptyComponent {
 
                 Set<Block> toRemove = new HashSet<>();
                 for (Block block : allowedBlocks) {
+
+                    // Pre-build the ActionData context for this specific block
+                    ActionData actionData = new ActionDataBuilder((ArcPlayer) Minecraft.getInstance().player, IActionType.BREAK_BLOCK)
+                            .withData(IActionDataType.BLOCK_STATE, block.defaultBlockState())
+                            .withData(IActionDataType.BLOCK_POSITION, BlockPos.ZERO)
+                            .withData(IActionDataType.WORLD, level)
+                            .build();
+
                     for (ICondition refiner : refiningConditions) {
                         boolean isMet = false;
-                        if (refiner instanceof IsOreCondition) {
-                            isMet = new IsOreCondition(false).isMet(
-                                    new ActionDataBuilder((ArcPlayer) Minecraft.getInstance().player, IActionType.BREAK_BLOCK)
-                                            .withData(IActionDataType.BLOCK_STATE, block.defaultBlockState())
-                                            .build()
-                            );
+
+                        if (refiner instanceof IsOreCondition oreCond) {
+                            isMet = oreCond.isMet(actionData);
                         } else if (refiner instanceof BlockHardnessCondition bhc) {
-                            float hardness = block.defaultBlockState().getDestroySpeed(level, BlockPos.ZERO);
-                            isMet = hardness >= bhc.getMin() && hardness <= bhc.getMax();
+                            isMet = bhc.isMet(actionData);
                         }
 
                         if ((!refiner.isInverted() && !isMet) || (refiner.isInverted() && isMet)) {
@@ -120,6 +131,10 @@ public class ConditionsComponent extends EmptyComponent {
                     blockConditionComponent.setY(yOffset);
                     this.addComponent(blockConditionComponent);
                     yOffset += blockConditionComponent.getHeight();
+                } else {
+                    // Fallback: If the visual block grid didn't render (e.g., purely negative conditions like inverted is_ore),
+                    // remove them from processed so they gracefully fall back to text rendering!
+                    processedConditions.removeAll(blockConditions);
                 }
             }
 
@@ -145,6 +160,9 @@ public class ConditionsComponent extends EmptyComponent {
                     itemConditionComponent.setY(yOffset);
                     this.addComponent(itemConditionComponent);
                     yOffset += itemConditionComponent.getHeight();
+                } else {
+                    // Fallback for purely inverted item conditions too
+                    processedConditions.removeAll(itemConditions);
                 }
             }
 

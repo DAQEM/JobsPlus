@@ -1,11 +1,18 @@
 package com.daqem.jobsplus.client.gui.jobs.components;
 
 import com.daqem.arc.api.action.IAction;
+import com.daqem.arc.api.action.data.ActionDataBuilder;
+import com.daqem.arc.api.math.INumberProvider;
+import com.daqem.arc.api.player.ArcPlayer;
+import com.daqem.arc.data.ActionData;
+import com.daqem.arc.data.math.ConstantNumberProvider;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.gui.jobs.JobsScreenState;
 import com.daqem.jobsplus.integration.arc.reward.rewards.job.JobExpReward;
 import com.daqem.uilib.gui.component.EmptyComponent;
 import com.daqem.uilib.gui.component.text.TruncatedTextComponent;
+import com.daqem.uilib.gui.component.text.multiline.MultiLineTextComponent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.network.chat.Component;
 
@@ -22,15 +29,40 @@ public class ActionItemComponent extends EmptyComponent {
                 .map(reward -> (JobExpReward) reward)
                 .findFirst()
                 .orElse(null);
+
         if (jobExpReward == null) return;
-        Component experienceText = jobExpReward.getMin() == jobExpReward.getMax() ?
-                JobsPlus.API.translatable("gui.jobs.experience.reward", JobsPlus.formatExp(jobExpReward.getMin())) :
-                JobsPlus.API.translatable("gui.jobs.experience.reward.range", JobsPlus.formatExp(jobExpReward.getMin()), JobsPlus.formatExp(jobExpReward.getMax()));
-        TruncatedTextComponent experienceComponent = new TruncatedTextComponent(0, nameComponent.getHeight(), getWidth(), experienceText, 0xFF1E1410);
+
+        INumberProvider minProvider = jobExpReward.getMin();
+        INumberProvider maxProvider = jobExpReward.getMax();
+
+        boolean isConstantMin = minProvider instanceof ConstantNumberProvider;
+        boolean isConstantMax = maxProvider instanceof ConstantNumberProvider;
+
+        ActionData dummyData = new ActionDataBuilder((ArcPlayer) Minecraft.getInstance().player, action.getType()).build();
+
+        Component minDesc = isConstantMin
+                ? JobsPlus.API.literal(JobsPlus.formatExp(minProvider.resolve(dummyData)))
+                : minProvider.getDescription();
+
+        Component maxDesc = isConstantMax
+                ? JobsPlus.API.literal(JobsPlus.formatExp(maxProvider.resolve(dummyData)))
+                : maxProvider.getDescription();
+
+        boolean isSame;
+        if (isConstantMin && isConstantMax) {
+            isSame = minProvider.resolve(dummyData) == maxProvider.resolve(dummyData);
+        } else {
+            isSame = minDesc.getString().equals(maxDesc.getString());
+        }
+
+        Component experienceText = isSame ?
+                JobsPlus.API.translatable("gui.jobs.experience.reward", minDesc) :
+                JobsPlus.API.translatable("gui.jobs.experience.reward.range", minDesc, maxDesc);
+
+        MultiLineTextComponent experienceComponent = new MultiLineTextComponent(0, nameComponent.getHeight(), getWidth(), experienceText, 0xFF1E1410);
 
         ConditionsComponent conditionsComponent = new ConditionsComponent(action.getConditions(), parentBounds);
         conditionsComponent.setY(nameComponent.getHeight() + experienceComponent.getHeight());
-
 
         this.addComponent(nameComponent);
         this.addComponent(experienceComponent);

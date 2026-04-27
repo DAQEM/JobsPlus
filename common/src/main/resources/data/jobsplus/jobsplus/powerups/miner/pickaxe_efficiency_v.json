@@ -3,6 +3,9 @@
   "parent": "jobsplus:miner/pickaxe_efficiency_iv",
   "icon": {
     "id": "minecraft:golden_pickaxe",
+    "components": {
+      "minecraft:max_stack_size": 5
+    },
     "count": 5
   },
   "price": 15,

@@ -3,6 +3,9 @@
   "parent": "jobsplus:hunter/sword_unbreaking_ii",
   "icon": {
     "id": "minecraft:diamond_sword",
+    "components": {
+      "minecraft:max_stack_size": 3
+    },
     "count": 3
   },
   "price": 10,

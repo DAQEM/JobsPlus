@@ -3,6 +3,9 @@
   "parent": "jobsplus:smith/job_exp_i",
   "icon": {
     "id": "minecraft:experience_bottle",
+    "components": {
+      "minecraft:max_stack_size": 2
+    },
     "count": 2
   },
   "price": 8,

@@ -3,6 +3,9 @@
   "parent": "jobsplus:hunter/fire_arrows_ii",
   "icon": {
     "id": "minecraft:fire_charge",
+    "components": {
+      "minecraft:max_stack_size": 3
+    },
     "count": 3
   },
   "price": 10,

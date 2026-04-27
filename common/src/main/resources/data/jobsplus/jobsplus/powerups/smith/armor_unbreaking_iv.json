@@ -3,6 +3,9 @@
   "parent": "jobsplus:smith/armor_unbreaking_iii",
   "icon": {
     "id": "minecraft:diamond_chestplate",
+    "components": {
+      "minecraft:max_stack_size": 4
+    },
     "count": 4
   },
   "price": 12,

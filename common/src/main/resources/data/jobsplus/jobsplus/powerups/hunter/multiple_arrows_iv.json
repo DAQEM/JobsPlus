@@ -3,6 +3,9 @@
   "parent": "jobsplus:hunter/multiple_arrows_iii",
   "icon": {
     "id": "minecraft:arrow",
+    "components": {
+      "minecraft:max_stack_size": 4
+    },
     "count": 4
   },
   "price": 15,

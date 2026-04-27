@@ -3,6 +3,9 @@
   "parent": "jobsplus:alchemist/longer_potions_iv",
   "icon": {
     "id": "minecraft:experience_bottle",
+    "components": {
+      "minecraft:max_stack_size": 3
+    },
     "count": 3
   },
   "price": 12,

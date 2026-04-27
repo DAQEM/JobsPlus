@@ -3,6 +3,9 @@
   "parent": "jobsplus:fisherman/job_exp_ii",
   "icon": {
     "id": "minecraft:experience_bottle",
+    "components": {
+      "minecraft:max_stack_size": 3
+    },
     "count": 3
   },
   "price": 12,

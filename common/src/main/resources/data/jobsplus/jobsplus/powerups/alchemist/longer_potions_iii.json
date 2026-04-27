@@ -6,7 +6,8 @@
     "components": {
       "minecraft:potion_contents": {
         "potion": "minecraft:swiftness"
-      }
+      },
+      "minecraft:max_stack_size": 3
     },
     "count": 3
   },
