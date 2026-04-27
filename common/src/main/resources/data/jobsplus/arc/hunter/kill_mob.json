@@ -4,11 +4,31 @@
     "id": "jobsplus:hunter"
   },
   "type": "arc:on_kill_entity",
-  "rewards": [
+  "rewards":[
     {
       "type": "jobsplus:job_exp",
-      "min": 4,
-      "max": 6
+      "min": {
+        "type": "arc:calculate",
+        "base": {
+          "type": "arc:entity_data",
+          "target": "entity",
+          "property": "arc:max_health"
+        },
+        "modifiers":[
+          { "operator": "divide", "value": 4 }
+        ]
+      },
+      "max": {
+        "type": "arc:calculate",
+        "base": {
+          "type": "arc:entity_data",
+          "target": "entity",
+          "property": "arc:max_health"
+        },
+        "modifiers": [
+          { "operator": "divide", "value": 2 }
+        ]
+      }
     }
   ]
 }
