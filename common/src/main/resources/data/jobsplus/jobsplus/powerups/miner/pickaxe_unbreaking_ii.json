@@ -4,7 +4,9 @@
   "icon": {
     "id": "minecraft:diamond_pickaxe",
     "components": {
-      "minecraft:max_stack_size": 2
+      "minecraft:max_stack_size": 2,
+      "!minecraft:max_damage": {},
+      "!minecraft:damage": {}
     },
     "count": 2
   },
