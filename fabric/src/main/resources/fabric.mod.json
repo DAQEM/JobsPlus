@@ -29,9 +29,9 @@
     "fabric": ">=${fabric_api_version}",
     "minecraft": ">=${minecraft_version}",
     "architectury": ">=${architectury_version}",
-    "yamlconfig": ">=${config_library_version}",
+    "yamlconfig": ">=${yamlconfig_version}",
     "arc": ">=${arc_version}",
-    "itemrestrictions": ">=${item_restrictions_version}",
-    "uilib": ">=${ui_library_version}"
+    "itemrestrictions": ">=${itemrestrictions_version}",
+    "uilib": ">=${uilib_version}"
   }
 }

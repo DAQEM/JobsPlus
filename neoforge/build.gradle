@@ -47,10 +47,10 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
 
-    modImplementation "curse.maven:yaml-config-1128669:${project.config_library_file_neoforge}"
-    modImplementation "curse.maven:arc-883593:${project.arc_file_neoforge}"
-    modImplementation "curse.maven:item-restrictions-887774:${project.item_restrictions_file_neoforge}"
-    modImplementation "curse.maven:ui-933200:${project.ui_library_file_neoforge}"
+    modImplementation "com.daqem.uilib:uilib-neoforge:${project.uilib_version}"
+    modImplementation "com.daqem.yamlconfig:yamlconfig-neoforge:${project.yamlconfig_version}"
+    modImplementation "com.daqem.arc:arc-neoforge:${project.arc_version}"
+    modImplementation "com.daqem.itemrestrictions:itemrestrictions-neoforge:${project.itemrestrictions_version}"
 }
 
 processResources {
@@ -67,10 +67,10 @@ processResources {
             "neoforge_version": project.neoforge_version,
             "minecraft_version": project.minecraft_version,
             "architectury_version": project.architectury_version,
-            "config_library_version": project.config_library_version,
+            "yamlconfig_version": project.yamlconfig_version,
             "arc_version": project.arc_version,
-            "item_restrictions_version": project.item_restrictions_version,
-            "ui_library_version": project.ui_library_version
+            "itemrestrictions_version": project.itemrestrictions_version,
+            "uilib_version": project.uilib_version
     ]
     inputs.properties replaceProperties
 
@@ -93,6 +93,26 @@ remapJar {
 
 remapSourcesJar {
     archiveClassifier = "neoforge-sources"
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            groupId = rootProject.maven_group
+            artifactId = rootProject.archives_base_name + "-neoforge"
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url = project.version.contains('-PR') ? 'https://maven.daqem.com/snapshots' : 'https://maven.daqem.com/releases'
+            credentials {
+                username = System.getenv("MAVEN_USER")
+                password = System.getenv("MAVEN_PASS")
+            }
+        }
+    }
 }
 
 curseforge {

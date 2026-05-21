@@ -43,6 +43,10 @@ subprojects {
                 includeGroup "curse.maven"
             }
         }
+        maven {
+            name = 'DAQEM Studios Releases'
+            url = 'https://maven.daqem.com/releases'
+        }
     }
 
     dependencies {
