@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Locale;
 
 public class PowerupInstance extends AbstractActionHolder {
 
@@ -119,7 +120,7 @@ public class PowerupInstance extends AbstractActionHolder {
                     getItemStackTemplate(jsonObject, "icon"),
                     GsonHelper.getAsInt(jsonObject, "price"),
                     GsonHelper.getAsInt(jsonObject, "required_level"),
-                    PowerupType.valueOf(GsonHelper.getAsString(jsonObject, "type", "basic").toUpperCase())
+                    PowerupType.valueOf(GsonHelper.getAsString(jsonObject, "type", "basic").toUpperCase(Locale.ROOT))
             );
         }
 
