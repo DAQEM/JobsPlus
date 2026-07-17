@@ -5,6 +5,7 @@ import com.daqem.arc.api.action.holder.IActionHolder;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.JobsPlusExpectPlatform;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -69,6 +70,9 @@ public class JobManager extends SimplePreparableReloadListener<List<IActionHolde
             jsonObject.addProperty("location", location.toString());
             try {
                 JobInstance job = GSON.fromJson(entry.getValue(), JobInstance.class);
+                if (!JobsPlusConfig.enableDefaultJobs.get() && job.isDefault()) {
+                    continue;
+                }
                 jobs.add(job);
             } catch (JsonParseException | IllegalArgumentException runtimeException) {
                 JobsPlus.LOGGER.error("Parsing error loading job {}", location, runtimeException);
