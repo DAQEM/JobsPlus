@@ -109,6 +109,8 @@ curseforge {
 
         addGameVersion "Java 21"
         addGameVersion "NeoForge"
+        addGameVersion "Client"
+        addGameVersion "Server"
 
         relations {
             project.curseforge_dependencies.split(',').each { dep ->
