@@ -18,6 +18,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -197,13 +198,21 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
             this.jobsplus$isExpEnabled = oldJobsServerPlayer.jobsplus$isExpEnabled();
             this.jobsplus$isCoinsEnabled = oldJobsServerPlayer.jobsplus$isCoinsEnabled();
 
-            this.jobsplus$jobs.forEach(job -> job.setPlayer(this));
+            this.jobsplus$jobs.forEach(job -> {
+                job.setPlayer(this);
+                job.markPowerupsDirty();
+            });
 
             if (jobsplus$getServerPlayer() instanceof ArcServerPlayer arcServerPlayer) {
                 List<IActionHolder> iActionHolders = this.jobsplus$getActionHolders();
                 arcServerPlayer.arc$addActionHolders(new ArrayList<>(iActionHolders));
             }
         }
+    }
+
+    @Inject(at = @At("TAIL"), method = "triggerDimensionChangeTriggers")
+    private void triggerDimensionChangeTriggers(ServerLevel oldLevel, CallbackInfo ci) {
+        this.jobsplus$jobs.forEach(Job::markPowerupsDirty);
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")

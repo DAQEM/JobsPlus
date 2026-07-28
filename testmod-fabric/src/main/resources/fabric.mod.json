@@ -12,6 +12,9 @@
   "entrypoints": {
     "main": [
       "com.daqem.jobsplus.test.TestMod::init"
+    ],
+    "client": [
+      "com.daqem.jobsplus.test.TestModClient::init"
     ]
   }
 }
