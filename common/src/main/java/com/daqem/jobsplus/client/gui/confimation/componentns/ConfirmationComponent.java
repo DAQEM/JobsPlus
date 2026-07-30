@@ -5,6 +5,7 @@ import com.daqem.jobsplus.client.gui.confimation.ConfirmationScreenState;
 import com.daqem.jobsplus.client.gui.confimation.widgets.ConfirmationButtonWidget;
 import com.daqem.uilib.gui.component.EmptyComponent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 
 public class ConfirmationComponent extends EmptyComponent {
 
@@ -17,9 +18,11 @@ public class ConfirmationComponent extends EmptyComponent {
         ConfirmationButtonWidget cancelButton = new ConfirmationButtonWidget(
                 confirmationTextComponent.getWidth() / 2 - buttonWidth - 3
                 , confirmationTextComponent.getHeight(), buttonWidth, 30, JobsPlus.API.translatable("gui.confirmation.cancel"), button -> {
-            assert Minecraft.getInstance().screen != null;
-            Minecraft.getInstance().screen.onClose();
-        });
+                    Screen screen = Minecraft.getInstance().gui.screen();
+                    if (screen != null) {
+                        screen.onClose();
+                    }
+                });
         ConfirmationButtonWidget yesButton = new ConfirmationButtonWidget(
                 confirmationTextComponent.getWidth() / 2 + 3
                 , confirmationTextComponent.getHeight(), buttonWidth, 30, JobsPlus.API.translatable("gui.confirmation.yes"), button -> state.getOnConfirm().onConfirm());

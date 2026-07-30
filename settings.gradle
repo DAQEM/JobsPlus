@@ -31,4 +31,4 @@ include("testmod-common")
 include("testmod-fabric")
 include("testmod-neoforge")
 
-rootProject.name = "JobsPlus 26.1.2"
+rootProject.name = "JobsPlus 26.2"

@@ -17,7 +17,7 @@ public class ClientboundOpenPowerupsScreenPacketHandler {
 
     public static void handle(@NotNull ClientboundOpenPowerupsScreenPacket packet, ClientboundContext context) {
         @Nullable Screen previousScreen = null;
-        if (Minecraft.getInstance().screen instanceof JobsScreen jobsScreen) {
+        if (Minecraft.getInstance().gui.screen() instanceof JobsScreen jobsScreen) {
             previousScreen = jobsScreen.getPreviousScreen();
         }
         Job job = packet.jobs().stream().filter(j -> j.getJobInstance().getIdentifier().equals(packet.jobLocation())).findFirst().orElse(null);
@@ -28,7 +28,7 @@ public class ClientboundOpenPowerupsScreenPacketHandler {
                 RightTab.EXPERIENCE
         ), previousScreen);
         if (job != null) {
-            Minecraft.getInstance().setScreen(new PowerupsScreen(new PowerupsScreenState(job, packet.coins()), jobsScreen));
+            Minecraft.getInstance().gui.setScreen(new PowerupsScreen(new PowerupsScreenState(job, packet.coins()), jobsScreen));
         }
     }
 }

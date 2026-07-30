@@ -15,7 +15,7 @@ public class ClientboundUnlockItemRestrictionPacketHandler {
         ItemRestriction itemRestriction = ItemRestrictionManager.getInstance().getItemRestriction(packet.itemRestrictionLocation());
         if (itemRestriction == null) return;
         if (JobsPlusClientConfig.showRestrictionUnlockToastMessage.get()) {
-            ItemRestrictionUnlockedToast.addOrUpdate(Minecraft.getInstance().getToastManager(), itemRestriction);
+            ItemRestrictionUnlockedToast.addOrUpdate(Minecraft.getInstance().gui.toastManager(), itemRestriction);
         }
     }
 }

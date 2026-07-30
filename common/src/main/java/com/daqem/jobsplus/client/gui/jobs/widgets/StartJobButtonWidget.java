@@ -31,7 +31,7 @@ public class StartJobButtonWidget extends CustomButtonWidget {
             Component freeJobMessage = JobsPlus.API.translatable("gui.confirmation.purchase_job.free", jobInstance.getName());
             Component paidJobMessage = JobsPlus.API.translatable("gui.confirmation.purchase_job.paid", jobInstance.getName(), jobInstance.getPrice());
             if (selectedJob.getLevel() == 0) {
-                Minecraft.getInstance().setScreen(new ConfirmationScreen(Minecraft.getInstance().screen, new ConfirmationScreenState(
+                Minecraft.getInstance().gui.setScreen(new ConfirmationScreen(Minecraft.getInstance().gui.screen(), new ConfirmationScreenState(
                         jobAmount >= JobsPlusConfig.amountOfFreeJobs.get() ? paidJobMessage : freeJobMessage,
                         () -> {
                             Knot.NETWORKING.sendToServer(new ServerboundStartJobPacket(selectedJob.getJobInstance().getIdentifier()));

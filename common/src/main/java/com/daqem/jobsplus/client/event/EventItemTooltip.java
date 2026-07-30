@@ -19,6 +19,7 @@ import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
 import com.daqem.knot.Knot;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -28,7 +29,7 @@ import java.util.List;
 public class EventItemTooltip {
 
     public static void registerEvent() {
-        Knot.Events.Client.TOOLTIP_GATHER_COMPONENTS.register((stack, tooltipContext, flag, lines) -> {
+        Knot.Events.Client.TOOLTIP_GATHER_COMPONENTS.register((stack, _, _, lines) -> {
             if (!JobsPlusClientConfig.showJobRestrictionTooltip.get()) {
                 return;
             }
@@ -37,8 +38,9 @@ public class EventItemTooltip {
             }
 
             Minecraft minecraft = Minecraft.getInstance();
+            Screen screen = minecraft.gui.screen();
 
-            if (minecraft.screen instanceof JobsScreen || minecraft.screen instanceof PowerupsScreen) {
+            if (screen instanceof JobsScreen || screen instanceof PowerupsScreen) {
                 return;
             }
 

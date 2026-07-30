@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class ClientboundLeaderboardPacketHandler {
 
     public static void handle(@NotNull ClientboundLeaderboardPacket packet, ClientboundContext context) {
-        if (Minecraft.getInstance().screen instanceof JobsScreen jobsScreen) {
+        if (Minecraft.getInstance().gui.screen() instanceof JobsScreen jobsScreen) {
             jobsScreen.getState().setLeaderboardPlayers(packet.leaderboard());
         }
     }

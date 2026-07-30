@@ -12,7 +12,7 @@ public class EventKeyPressed {
 
     public static void registerEvent() {
         Knot.Events.Client.RAW_INPUT_KEY_PRESSED.register((client, keyCode, scanCode, action, modifiers) -> {
-            Screen screen = client.screen;
+            Screen screen = client.gui.screen();
             KeyEvent keyEvent = new KeyEvent(keyCode, scanCode, modifiers);
             if (JobsPlusClient.OPEN_MENU.matches(keyEvent) && action == 1) {
                 if (screen instanceof JobsScreen) screen.onClose();

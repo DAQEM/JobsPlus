@@ -14,7 +14,7 @@ public class ClientboundUnlockPowerupPacketHandler {
         PowerupInstance powerupInstance = PowerupInstance.of(packet.powerupLocation());
         if (powerupInstance == null) return;
         if (JobsPlusClientConfig.showPowerupUnlockToastMessage.get()) {
-            PowerupUnlockedToast.addOrUpdate(Minecraft.getInstance().getToastManager(), powerupInstance);
+            PowerupUnlockedToast.addOrUpdate(Minecraft.getInstance().gui.toastManager(), powerupInstance);
         }
     }
 }

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class ClientboundPlayerJobsPacketHandler {
 
     public static void handle(@NotNull ClientboundPlayerJobsPacket packet, ClientboundContext context) {
-        if (Minecraft.getInstance().screen instanceof JobsScreen jobsScreen) {
+        if (Minecraft.getInstance().gui.screen() instanceof JobsScreen jobsScreen) {
             LeaderboardPlayer viewingPlayer = jobsScreen.getState().getViewingPlayer();
             if (viewingPlayer != null && viewingPlayer.getUuid().equals(packet.playerUUID())) {
                 jobsScreen.getState().setViewingPlayerJobs(packet.jobs());

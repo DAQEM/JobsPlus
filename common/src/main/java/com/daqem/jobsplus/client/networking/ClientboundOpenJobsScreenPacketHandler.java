@@ -13,10 +13,10 @@ public class ClientboundOpenJobsScreenPacketHandler {
 
     public static void handle(@NotNull ClientboundOpenJobsScreenPacket packet, ClientboundContext context) {
         @Nullable Screen previousScreen = null;
-        if (Minecraft.getInstance().screen instanceof JobsScreen jobsScreen) {
+        if (Minecraft.getInstance().gui.screen() instanceof JobsScreen jobsScreen) {
             previousScreen = jobsScreen.getPreviousScreen();
         }
-        Minecraft.getInstance().setScreen(new JobsScreen(new JobsScreenState(
+        Minecraft.getInstance().gui.setScreen(new JobsScreen(new JobsScreenState(
                 packet.jobs(),
                 packet.coins()
         ), previousScreen));

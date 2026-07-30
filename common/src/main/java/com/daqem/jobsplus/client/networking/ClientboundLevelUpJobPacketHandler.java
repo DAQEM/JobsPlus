@@ -15,7 +15,7 @@ public class ClientboundLevelUpJobPacketHandler {
         JobInstance jobInstance = JobInstance.of(packet.jobLocation());
         if (jobInstance == null) return;
         if (JobsPlusClientConfig.showYourLevelUpToastMessages.get()) {
-            LevelUpJobToast.addOrUpdate(Minecraft.getInstance().getToastManager(), jobInstance, packet.level());
+            LevelUpJobToast.addOrUpdate(Minecraft.getInstance().gui.toastManager(), jobInstance, packet.level());
         }
         JobsPlusSoundManager.playLevelUpSound();
     }

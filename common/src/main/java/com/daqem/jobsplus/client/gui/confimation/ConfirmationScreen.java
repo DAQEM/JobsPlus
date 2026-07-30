@@ -31,8 +31,7 @@ public class ConfirmationScreen extends AbstractScreen {
 
     @Override
     public void onClose() {
-        assert this.minecraft != null;
-        this.minecraft.setScreen(this.previousScreen);
+        this.minecraft.gui.setScreen(this.previousScreen);
     }
 
     @Override

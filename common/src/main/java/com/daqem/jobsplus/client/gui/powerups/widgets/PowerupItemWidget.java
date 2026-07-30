@@ -41,11 +41,11 @@ public class PowerupItemWidget extends CustomButtonWidget implements ISkillTreeI
                 Identifier location = button.getState().getJob().getJobInstance().getIdentifier();
                 if (powerUp.getState() == PowerupState.ACTIVE || powerUp.getState() == PowerupState.INACTIVE) {
                     Knot.NETWORKING.sendToServer(new ServerboundTogglePowerUpPacket(location, powerupInstance.getIdentifier()));
-                    if (Minecraft.getInstance().screen instanceof PowerupsScreen powerupsScreen) {
+                    if (Minecraft.getInstance().gui.screen() instanceof PowerupsScreen powerupsScreen) {
                         button.getPowerup().setState(powerUp.getState() == PowerupState.ACTIVE ? PowerupState.INACTIVE : PowerupState.ACTIVE);
                     }
                 } else if (powerUp.getState() == PowerupState.NOT_OWNED) {
-                    Minecraft.getInstance().setScreen(new ConfirmationScreen(Minecraft.getInstance().screen, new ConfirmationScreenState(
+                    Minecraft.getInstance().gui.setScreen(new ConfirmationScreen(Minecraft.getInstance().gui.screen(), new ConfirmationScreenState(
                             JobsPlus.API.translatable("gui.confirmation.purchase_powerup", powerupInstance.getName(), powerupInstance.getPrice()),
                             () -> {
                                 Knot.NETWORKING.sendToServer(new ServerboundStartPowerupPacket(location, powerupInstance.getIdentifier()));

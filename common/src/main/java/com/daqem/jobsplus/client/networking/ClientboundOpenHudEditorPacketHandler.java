@@ -17,7 +17,7 @@ public class ClientboundOpenHudEditorPacketHandler {
                     JobsPlus.API.translatable("command.hud.jobs_required").withStyle(ChatFormatting.RED)
             );
         } else {
-            Minecraft.getInstance().setScreen(new HudEditorScreen());
+            Minecraft.getInstance().gui.setScreen(new HudEditorScreen());
         }
     }
 }

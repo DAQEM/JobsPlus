@@ -19,13 +19,11 @@ import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.OptionalDynamic;
 
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelSettings;
-import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.storage.PrimaryLevelData;
 
 @Mixin(PrimaryLevelData.class)
@@ -134,7 +132,7 @@ public class PrimaryLevelDataMixin implements JobsPlusLevelData {
         this.jobsplus$playerJobEntries = new HashMap<>();
     }
 
-    @Inject(method = "Lnet/minecraft/world/level/storage/PrimaryLevelData;parse(Lcom/mojang/serialization/Dynamic;Lnet/minecraft/world/level/LevelSettings;Lnet/minecraft/world/level/storage/PrimaryLevelData$SpecialWorldProperty;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/world/level/storage/PrimaryLevelData;", at = @At("RETURN"))
+    @Inject(method = "parse(Lcom/mojang/serialization/Dynamic;Lnet/minecraft/world/level/LevelSettings;Lnet/minecraft/world/level/storage/PrimaryLevelData$SpecialWorldProperty;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/world/level/storage/PrimaryLevelData;", at = @At("RETURN"))
     private static <T> void parse(Dynamic<T> input, LevelSettings settings, PrimaryLevelData.SpecialWorldProperty specialWorldProperty, Lifecycle worldGenSettingsLifecycle, CallbackInfoReturnable<PrimaryLevelData> cir) {
         OptionalDynamic<T> optionalDynamic = input.get("JobsPlusLeaderboard");
 

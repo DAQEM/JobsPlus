@@ -30,8 +30,7 @@ public class JobsScreen extends AbstractScreen {
 
     @Override
     public void onClose() {
-        assert this.minecraft != null;
-        this.minecraft.setScreen(previousScreen);
+        this.minecraft.gui.setScreen(previousScreen);
     }
 
     public Screen getPreviousScreen() {

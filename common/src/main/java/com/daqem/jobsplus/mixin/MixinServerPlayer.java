@@ -191,7 +191,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     }
 
     @Inject(at = @At("TAIL"), method = "restoreFrom(Lnet/minecraft/server/level/ServerPlayer;Z)V")
-    public void restoreFrom(ServerPlayer oldPlayer, boolean alive, CallbackInfo ci) {
+    public void restoreFrom(ServerPlayer oldPlayer, boolean restoreAll, CallbackInfo ci) {
         if (oldPlayer instanceof JobsServerPlayer oldJobsServerPlayer) {
             this.jobsplus$jobs = oldJobsServerPlayer.jobsplus$getJobs();
             this.jobsplus$coins = oldJobsServerPlayer.jobsplus$getCoins();
@@ -216,16 +216,16 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     }
 
     @Inject(at = @At("TAIL"), method = "addAdditionalSaveData")
-    public void addAdditionalSaveData(ValueOutput valueOutput, CallbackInfo ci) {
-        valueOutput.store("JobsPlus", ServerPlayerData.CODEC, new ServerPlayerData(
+    public void addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
+        output.store("JobsPlus", ServerPlayerData.CODEC, new ServerPlayerData(
                 this.jobsplus$jobs,
                 this.jobsplus$coins)
         );
     }
 
     @Inject(at = @At("TAIL"), method = "readAdditionalSaveData")
-    public void readAdditionalSaveData(ValueInput valueInput, CallbackInfo ci) {
-        valueInput.read("JobsPlus", ServerPlayerData.CODEC).ifPresent(serverPlayerData -> {
+    public void readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
+        input.read("JobsPlus", ServerPlayerData.CODEC).ifPresent(serverPlayerData -> {
             this.jobsplus$jobs = serverPlayerData.jobs().stream()
                     .filter(job -> job.getJobInstance() != null)
                     .peek(job -> job.setPlayer(this))
@@ -254,7 +254,7 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
     }
 
     @Inject(at = @At("HEAD"), method = "die")
-    public void dieHead(DamageSource damageSource, CallbackInfo ci) {
+    public void dieHead(DamageSource source, CallbackInfo ci) {
         if (JobsPlusConfig.loseExpOnDeath.get()) {
             Double percentLoss = JobsPlusConfig.expLossPercentage.get();
             jobsplus$jobs.forEach(job -> job.setExperience(job.getExperience() * (1.0 - percentLoss)));
