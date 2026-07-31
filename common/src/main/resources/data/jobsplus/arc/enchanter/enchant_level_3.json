@@ -13,8 +13,9 @@
   ],
   "conditions": [
     {
-      "type": "arc:exp_level",
-      "level": 3
+      "type": "arc:exp_cost",
+      "level": 3,
+      "comparison": ">="
     }
   ]
 }
