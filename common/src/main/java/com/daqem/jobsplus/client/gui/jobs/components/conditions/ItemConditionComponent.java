@@ -1,12 +1,8 @@
 package com.daqem.jobsplus.client.gui.jobs.components.conditions;
 
-import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.client.gui.jobs.components.SlottedItemComponent;
 import com.daqem.uilib.gui.component.EmptyComponent;
-import com.daqem.uilib.gui.component.text.TextComponent;
-import com.daqem.uilib.gui.component.text.multiline.MultiLineTextComponent;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -57,12 +53,6 @@ public class ItemConditionComponent extends EmptyComponent {
 
         if (items.isEmpty()) {
             this.setHeight(0);
-        } else if (items.size() == 1) {
-            TextComponent dotText = new TextComponent(0, 0, Component.literal(" • "), 0xFF1E1410);
-            this.addComponent(dotText);
-            MultiLineTextComponent isItemTextComponent = new MultiLineTextComponent(10, 0, getWidth() - 10, JobsPlus.API.translatable("gui.jobs.condition.is", items.getFirst().getDisplayName()), 0xFF1E1410);
-            this.addComponent(isItemTextComponent);
-            this.setHeight(isItemTextComponent.getHeight());
         } else {
             final int columns = 4;
             final int rows = (int) Math.ceil((double) items.size() / columns);
