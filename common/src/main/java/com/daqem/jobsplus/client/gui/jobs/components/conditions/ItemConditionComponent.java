@@ -10,28 +10,44 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class ItemConditionComponent extends EmptyComponent {
 
     public ItemConditionComponent(Set<ItemStack> allowedItems, Set<ItemStack> deniedItems, Supplier<ScreenRectangle> parentBounds) {
         super(0, 0, 99, 0);
-        List<ItemStack> items = new ArrayList<>(allowedItems);
-        items.removeAll(deniedItems);
+
+        List<ItemStack> uniqueAllowed = new ArrayList<>();
+        for (ItemStack item : allowedItems) {
+            boolean isDuplicate = false;
+            for (ItemStack uniqueItem : uniqueAllowed) {
+                if (ItemStack.isSameItemSameComponents(item, uniqueItem)) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+            if (!isDuplicate) {
+                uniqueAllowed.add(item);
+            }
+        }
+
+        List<ItemStack> items = new ArrayList<>();
+        for (ItemStack item : uniqueAllowed) {
+            boolean isDenied = false;
+            for (ItemStack deniedItem : deniedItems) {
+                if (ItemStack.isSameItemSameComponents(item, deniedItem)) {
+                    isDenied = true;
+                    break;
+                }
+            }
+            if (!isDenied) {
+                items.add(item);
+            }
+        }
 
         items = items.stream()
-                .collect(Collectors.toMap(
-                        ItemStack::getItem,
-                        itemStack -> itemStack,
-                        (existing, replacement) -> existing,
-                        HashMap::new
-                ))
-                .values()
-                .stream()
                 .sorted((b1, b2) -> {
                     String name1 = b1.getDisplayName().getString();
                     String name2 = b2.getDisplayName().getString();
