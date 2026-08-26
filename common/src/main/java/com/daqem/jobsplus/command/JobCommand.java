@@ -171,7 +171,7 @@ public class JobCommand {
         if (target instanceof JobsServerPlayer jobsServerPlayer) {
             jobsServerPlayer.jobsplus$setCoins(coins);
             source.sendSuccess(() -> JobsPlus.translatable(
-                    "command.set.coins.success", JobsPlus.formatNumber(coins), jobsServerPlayer.jobsplus$getName()), false);
+                    "command.set.coins.success", JobsPlus.formatCoin(coins), jobsServerPlayer.jobsplus$getName()), false);
         }
         return 0;
     }
@@ -192,7 +192,7 @@ public class JobCommand {
                 }
                 job.setExperience(experience, false);
                 source.sendSuccess(() -> JobsPlus.translatable(
-                        "command.set.experience.success", jobInstance.getName(), JobsPlus.formatNumber(experience), jobsServerPlayer.jobsplus$getPlayer().getDisplayName()), false);
+                        "command.set.experience.success", jobInstance.getName(), JobsPlus.formatExp(experience), jobsServerPlayer.jobsplus$getPlayer().getDisplayName()), false);
             } else {
                 source.sendFailure(JobsPlus.translatable(
                         "command.does_not_have_job", jobsServerPlayer.jobsplus$getPlayer().getDisplayName(), jobInstance.getName()));

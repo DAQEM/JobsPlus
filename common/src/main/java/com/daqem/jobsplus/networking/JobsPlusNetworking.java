@@ -5,6 +5,7 @@ import com.daqem.jobsplus.networking.c2s.*;
 import com.daqem.jobsplus.networking.s2c.ClientboundLevelUpJobPacket;
 import com.daqem.jobsplus.networking.s2c.ClientboundOpenJobsScreenPacket;
 import com.daqem.jobsplus.networking.s2c.ClientboundUnlockItemRestrictionPacket;
+import com.daqem.jobsplus.networking.s2c.ClientboundUnlockPowerupPacket;
 import com.daqem.jobsplus.networking.sync.coin.ClientBoundUpdateCoinsPacket;
 import com.daqem.jobsplus.networking.sync.job.ClientboundRemoveJobPacket;
 import com.daqem.jobsplus.networking.sync.job.ClientboundUpdateJobPacket;
@@ -41,6 +42,8 @@ public interface JobsPlusNetworking {
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_open_jobs_screen"));
     CustomPacketPayload.Type<ClientboundLevelUpJobPacket> CLIENTBOUND_LEVEL_UP_JOB =
             new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_level_up_job"));
+    CustomPacketPayload.Type<ClientboundUnlockPowerupPacket> CLIENTBOUND_UNLOCK_POWERUP =
+            new CustomPacketPayload.Type<>(JobsPlus.getId("clientbound_unlock_powerup"));
 
     static void initClient() {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_REMOVE_JOB, ClientboundRemoveJobPacket.STREAM_CODEC, ClientboundRemoveJobPacket::handleClientSide);
@@ -50,6 +53,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC, ClientboundOpenJobsScreenPacket::handleClientSide);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_LEVEL_UP_JOB, ClientboundLevelUpJobPacket.STREAM_CODEC, ClientboundLevelUpJobPacket::handleClientSide);
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_UNLOCK_ITEM_RESTRICTION, ClientboundUnlockItemRestrictionPacket.STREAM_CODEC, ClientboundUnlockItemRestrictionPacket::handleClientSide);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CLIENTBOUND_UNLOCK_POWERUP, ClientboundUnlockPowerupPacket.STREAM_CODEC, ClientboundUnlockPowerupPacket::handleClientSide);
     }
 
     static void initCommon() {
@@ -68,6 +72,7 @@ public interface JobsPlusNetworking {
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_OPEN_JOBS_SCREEN, ClientboundOpenJobsScreenPacket.STREAM_CODEC);
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_LEVEL_UP_JOB, ClientboundLevelUpJobPacket.STREAM_CODEC);
         NetworkManager.registerS2CPayloadType(CLIENTBOUND_UNLOCK_ITEM_RESTRICTION, ClientboundUnlockItemRestrictionPacket.STREAM_CODEC);
+        NetworkManager.registerS2CPayloadType(CLIENTBOUND_UNLOCK_POWERUP, ClientboundUnlockPowerupPacket.STREAM_CODEC);
     }
 
     static void init() {

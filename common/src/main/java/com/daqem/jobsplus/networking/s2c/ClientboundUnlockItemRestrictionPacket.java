@@ -1,11 +1,7 @@
 package com.daqem.jobsplus.networking.s2c;
 
-import com.daqem.itemrestrictions.ItemRestrictions;
-import com.daqem.itemrestrictions.data.ItemRestriction;
 import com.daqem.itemrestrictions.data.ItemRestrictionManager;
 import com.daqem.jobsplus.client.toast.ItemRestrictionUnlockedToast;
-import com.daqem.jobsplus.client.toast.LevelUpJobToast;
-import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
 import com.daqem.jobsplus.networking.JobsPlusNetworking;
 import dev.architectury.networking.NetworkManager;
 import net.fabricmc.api.EnvType;
@@ -49,6 +45,8 @@ public class ClientboundUnlockItemRestrictionPacket implements CustomPacketPaylo
 
     @Environment(EnvType.CLIENT)
     public static void handleClientSide(ClientboundUnlockItemRestrictionPacket packet, NetworkManager.PacketContext context) {
-        ItemRestrictionUnlockedToast.add(Minecraft.getInstance().getToasts(), ItemRestrictionManager.getInstance().getItemRestriction(packet.itemRestrictionLocation));
+        if (com.daqem.jobsplus.config.JobsPlusClientConfig.showRestrictionUnlockToastMessage.get()) {
+            ItemRestrictionUnlockedToast.add(Minecraft.getInstance().getToasts(), ItemRestrictionManager.getInstance().getItemRestriction(packet.itemRestrictionLocation));
+        }
     }
 }

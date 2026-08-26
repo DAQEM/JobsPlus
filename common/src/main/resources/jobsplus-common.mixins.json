@@ -4,6 +4,7 @@
   "package": "com.daqem.jobsplus.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "client.MixinClientPacketListener",
     "client.MixinLocalPlayer"
   ],
   "mixins": [

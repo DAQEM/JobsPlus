@@ -1,5 +1,7 @@
 package com.daqem.jobsplus.player.job;
 
+import com.daqem.arc.api.action.holder.IActionHolder;
+import com.daqem.arc.api.player.ArcPlayer;
 import com.daqem.jobsplus.Constants;
 import com.daqem.jobsplus.JobsPlus;
 import com.daqem.jobsplus.config.JobsPlusConfig;
@@ -120,8 +122,7 @@ public class Job {
     }
 
     public static int getExperienceToLevelUp(int level) {
-        if (level == 0) return 0;
-        return (int) (100 + level * level * 0.5791);
+        return (int) JobLevelCalculator.getExperienceForLevel(level);
     }
 
     public void setPlayer(JobsPlayer player) {

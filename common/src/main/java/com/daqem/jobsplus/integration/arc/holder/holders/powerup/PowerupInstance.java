@@ -6,6 +6,7 @@ import com.daqem.arc.api.action.holder.serializer.IActionHolderSerializer;
 import com.daqem.arc.api.action.holder.type.IActionHolderType;
 import com.daqem.arc.api.player.ArcPlayer;
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
 import com.daqem.jobsplus.player.JobsPlayer;
 import com.daqem.jobsplus.player.job.Job;
@@ -63,7 +64,7 @@ public class PowerupInstance extends AbstractActionHolder {
     }
 
     public int getPrice() {
-        return price;
+        return net.minecraft.util.Mth.floor(price * JobsPlusConfig.powerupPriceMultiplier.get());
     }
 
     public int getRequiredLevel() {
