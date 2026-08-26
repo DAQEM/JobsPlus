@@ -7,6 +7,7 @@ import com.daqem.arc.api.action.holder.type.IActionHolderType;
 import com.daqem.itemrestrictions.data.ItemRestriction;
 import com.daqem.itemrestrictions.data.ItemRestrictionManager;
 import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.condition.conditions.job.IJobCondition;
 import com.daqem.jobsplus.integration.arc.holder.holders.powerup.PowerupInstance;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
@@ -15,6 +16,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +50,7 @@ public class JobInstance extends AbstractActionHolder {
     }
 
     public int getPrice() {
-        return price;
+        return Mth.floor(price * JobsPlusConfig.jobPriceMultiplier.get());
     }
 
     public int getMaxLevel() {

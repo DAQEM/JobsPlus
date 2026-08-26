@@ -1,0 +1,95 @@
+package com.daqem.jobsplus.client.event;
+
+import com.daqem.arc.api.action.data.ActionDataBuilder;
+import com.daqem.arc.api.action.data.type.ActionDataType;
+import com.daqem.arc.api.action.type.ActionType;
+import com.daqem.arc.api.condition.ICondition;
+import com.daqem.arc.api.player.ArcPlayer;
+import com.daqem.arc.data.condition.item.ItemCondition;
+import com.daqem.arc.data.condition.item.ItemsCondition;
+import com.daqem.itemrestrictions.data.ItemRestriction;
+import com.daqem.itemrestrictions.data.ItemRestrictionManager;
+import com.daqem.jobsplus.JobsPlus;
+import com.daqem.jobsplus.client.screen.job.JobsScreen;
+import com.daqem.jobsplus.config.JobsPlusClientConfig;
+import com.daqem.jobsplus.integration.arc.condition.conditions.job.IJobCondition;
+import com.daqem.jobsplus.integration.arc.holder.holders.job.JobInstance;
+import com.daqem.jobsplus.player.JobsPlayer;
+import com.daqem.jobsplus.player.job.Job;
+import dev.architectury.event.events.client.ClientTooltipEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class EventItemTooltip {
+
+    public static void registerEvent() {
+        ClientTooltipEvent.ITEM.register((stack, lines, context, flag) -> {
+            if (!JobsPlusClientConfig.showJobRestrictionTooltip.get()) {
+                return;
+            }
+            if (stack.isEmpty()) {
+                return;
+            }
+
+            Minecraft minecraft = Minecraft.getInstance();
+            Screen screen = minecraft.screen;
+
+            if (screen instanceof JobsScreen) {
+                return;
+            }
+
+            List<ItemRestriction> restrictions = ItemRestrictionManager.getInstance().getItemRestrictions();
+
+            if (minecraft.level == null) return;
+
+            for (ItemRestriction restriction : restrictions) {
+                if (matchesStack(restriction, stack, minecraft)) {
+                    addTooltipForRestriction(restriction, lines, minecraft);
+                }
+            }
+        });
+    }
+
+    private static boolean matchesStack(ItemRestriction restriction, ItemStack stack, Minecraft minecraft) {
+        for (ICondition condition : restriction.getConditions()) {
+            if ((condition instanceof ItemCondition || condition instanceof ItemsCondition) && minecraft.player instanceof ArcPlayer arcPlayer) {
+                if (condition.isMet(new ActionDataBuilder(arcPlayer, ActionType.USE_ITEM)
+                        .withData(ActionDataType.ITEM_STACK, stack).build())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static void addTooltipForRestriction(ItemRestriction restriction, List<Component> lines, Minecraft minecraft) {
+        List<Component> newLines = new ArrayList<>(List.of(JobsPlus.literal("")));
+        for (ICondition condition : restriction.getConditions()) {
+            if (condition instanceof IJobCondition jobCondition) {
+                JobInstance jobInstance = JobInstance.of(jobCondition.getJobLocation());
+                if (jobInstance != null && minecraft.player instanceof JobsPlayer jobsPlayer) {
+                    Job job = jobsPlayer.jobsplus$getJob(jobInstance);
+                    if (job != null && job.getLevel() >= jobCondition.getRequiredLevel()) {
+                        continue;
+                    }
+
+                    newLines.add(JobsPlus.translatable(
+                            "tooltip.requirement",
+                            jobInstance.getName().withStyle(style ->
+                                    style.withColor(jobInstance.getColorDecimal())),
+                            jobCondition.getRequiredLevel()
+                    ));
+                }
+            }
+        }
+
+        if (newLines.size() > 1) {
+            lines.addAll(newLines);
+        }
+    }
+}

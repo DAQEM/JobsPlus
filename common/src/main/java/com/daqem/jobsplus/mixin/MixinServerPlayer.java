@@ -22,12 +22,12 @@ import dev.architectury.networking.NetworkManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -233,13 +233,19 @@ public abstract class MixinServerPlayer extends Player implements JobsServerPlay
             ExpCollector expCollector = job.getExpCollector();
             double exp = expCollector.getExp();
             if (exp > 0) {
-                if (JobsPlusConfig.showXPInActionBar.get()) {
-                    JobInstance jobInstance = job.getJobInstance();
-                    MutableComponent component = JobsPlus.translatable("job.exp.gain", JobsPlus.formatNumber(exp), jobInstance.getName().getString()).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(jobInstance.getColorDecimal()))).withStyle(ChatFormatting.BOLD);
-                    jobsplus$getServerPlayer().sendSystemMessage(component, true);
-                }
+                JobInstance jobInstance = job.getJobInstance();
+                MutableComponent component = JobsPlus.translatable("job.exp.gain", JobsPlus.formatExp(exp), jobInstance.getName().getString()).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(jobInstance.getColorDecimal()))).withStyle(ChatFormatting.BOLD);
+                jobsplus$getServerPlayer().sendSystemMessage(component, true);
             }
             expCollector.clear();
         });
+    }
+
+    @Inject(at = @At("HEAD"), method = "die")
+    public void dieHead(DamageSource damageSource, CallbackInfo ci) {
+        if (JobsPlusConfig.loseExpOnDeath.get()) {
+            Double percentLoss = JobsPlusConfig.expLossPercentage.get();
+            jobsplus$jobs.forEach(job -> job.setExperience(job.getExperience() * (1.0 - percentLoss), false));
+        }
     }
 }

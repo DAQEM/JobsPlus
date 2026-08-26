@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,12 @@ public abstract class JobManager extends SimpleJsonResourceReloadListener {
         actionHolderManager.clearAllActionHoldersForType(JobsPlusActionHolderType.JOB_INSTANCE);
         Map<ResourceLocation, JobInstance> tempJobInstances = new HashMap<>();
 
+        List<String> excludedJobs = JobsPlusConfig.excludedJobs.get();
+
         map.forEach((location, jsonElement) -> {
+            if (excludedJobs.contains(location.toString())) {
+                return;
+            }
             try {
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
                 jsonObject.addProperty("location", location.toString());

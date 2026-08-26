@@ -67,8 +67,16 @@ public class JobsPlus {
         }
     }
 
-    public static String formatNumber(double number) {
-        DecimalFormat df = new DecimalFormat("#.##");
+    public static String formatCoin(double coins) {
+        return formatNumber(coins, JobsPlusConfig.coinFormat.get());
+    }
+
+    public static String formatExp(double exp) {
+        return formatNumber(exp, JobsPlusConfig.expFormat.get());
+    }
+
+    public static String formatNumber(double number, String pattern) {
+        DecimalFormat df = new DecimalFormat(pattern);
         df.setMinimumFractionDigits(0);
         return df.format(number);
     }

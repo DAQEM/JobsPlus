@@ -2,7 +2,7 @@ package com.daqem.jobsplus.integration.arc.holder.holders.powerup;
 
 import com.daqem.arc.api.action.holder.ActionHolderManager;
 import com.daqem.jobsplus.JobsPlusExpectPlatform;
-import com.daqem.jobsplus.integration.arc.holder.holders.job.JobManager;
+import com.daqem.jobsplus.config.JobsPlusConfig;
 import com.daqem.jobsplus.integration.arc.holder.type.JobsPlusActionHolderType;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -43,14 +43,19 @@ public abstract class PowerupManager extends SimpleJsonResourceReloadListener {
         actionHolderManager.clearAllActionHoldersForType(JobsPlusActionHolderType.POWERUP_INSTANCE);
         List<PowerupInstance> tempPowerups = new ArrayList<>();
 
+        List<String> excludedPowerups = JobsPlusConfig.excludedPowerups.get();
+
         map.forEach((location, jsonElement) -> {
+            if (excludedPowerups.contains(location.toString())) {
+                return;
+            }
             try {
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
                 jsonObject.addProperty("location", location.toString());
                 PowerupInstance powerup = GSON.fromJson(jsonObject, PowerupInstance.class);
                 tempPowerups.add(powerup);
             } catch (Exception e) {
-                LOGGER.error("Could not deserialize job {} because: {}", location, e.getMessage());
+                LOGGER.error("Could not deserialize powerup {} because: {}", location, e.getMessage());
                 throw e;
             }
         });
