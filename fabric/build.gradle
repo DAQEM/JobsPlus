@@ -3,8 +3,7 @@
 //file:noinspection GrDeprecatedAPIUsage
 plugins {
     id 'com.github.johnrengelman.shadow'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'com.modrinth.minotaur' version '2.+'
+    id "me.modmuss50.mod-publish-plugin" version "2.1.1"
 }
 
 architectury {
@@ -109,50 +108,41 @@ publishing {
     }
 }
 
-curseforge {
-    apiKey = System.getenv("CURSEFORGE_API_KEY")
-    project {
-        id = project.curse_forge_project_id
-        releaseType = project.release_type
-        changelogType = "markdown"
-        changelog = rootProject.file('changelog.md')
+publishMods {
+    file = remapJar.archiveFile
+    additionalFiles.from(remapSourcesJar.archiveFile)
+    changelog = rootProject.file('changelog.md').text
+    version = project.mod_version
+    type = project.release_type == "release" ? STABLE : (project.release_type == "beta" ? BETA : ALPHA)
+    modLoaders.add("fabric")
 
-        project.supported_minecraft_versions.split(',').each { version ->
-            addGameVersion version
-        }
+    curseforge {
+        accessToken = System.getenv("CURSEFORGE_API_KEY")
+        projectId = project.curse_forge_project_id
+        minecraftVersions.addAll(project.supported_minecraft_versions.split(','))
 
-        addGameVersion "Java 21"
-        addGameVersion "Fabric"
+        displayName = "$project.mod_name Fabric - $project.mod_version"
 
-        relations {
-            project.curseforge_dependencies.split(',').each { dep ->
-                requiredDependency dep.trim()
-            }
-        }
+        // FIX: These two lines satisfy the new CurseForge requirement
+        client = true
+        server = true
 
-        mainArtifact(remapJar) {
-            displayName = "$project.mod_name Fabric - $project.mod_version"
-        }
-
-        addArtifact(remapSourcesJar) {
+        // Dependencies
+        project.curseforge_dependencies.split(',').each { dep ->
+            requires(dep.trim())
         }
     }
-}
 
-modrinth {
-    token = System.getenv("MODRINTH_API_KEY")
-    projectId = project.modrinth_project_id
-    versionName = "$project.mod_name Fabric - $project.mod_version"
-    versionNumber = "$project.mod_version"
-    versionType = "$project.release_type"
-    uploadFile = remapJar
-    additionalFiles = [remapSourcesJar]
-    gameVersions = project.supported_minecraft_versions.split(',').toList()
-    loaders = ["fabric"]
-    changelog = rootProject.file('changelog.md').text
-    dependencies {
+    modrinth {
+        accessToken = System.getenv("MODRINTH_API_KEY")
+        projectId = project.modrinth_project_id
+        minecraftVersions.addAll(project.supported_minecraft_versions.split(','))
+
+        displayName = "$project.mod_name Fabric - $project.mod_version"
+
+        // Dependencies
         project.modrinth_dependencies.split(',').each { dep ->
-            required.project dep
+            requires(dep.trim())
         }
     }
 }
