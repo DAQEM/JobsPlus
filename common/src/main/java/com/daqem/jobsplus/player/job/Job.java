@@ -108,7 +108,6 @@ public class Job {
         if (!player.jobsplus$isExpEnabled()) {
             return;
         }
-        experience *= JobsPlusConfig.experienceMultiplier.get();
         double change = experience - this.experience;
         expCollector.addExp(change);
 
@@ -126,11 +125,11 @@ public class Job {
     }
 
     public void addExperience(double experience) {
-        setExperience(getExperience() + experience, true);
+        setExperience(getExperience() + (experience * JobsPlusConfig.experienceMultiplier.get()), true);
     }
 
     public void addExperienceWithoutEvent(double experience) {
-        setExperience(getExperience() + experience, false);
+        setExperience(getExperience() + (experience * JobsPlusConfig.experienceMultiplier.get()), false);
     }
 
     private void checkForLevelUp() {
