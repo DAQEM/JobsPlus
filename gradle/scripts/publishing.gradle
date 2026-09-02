@@ -2,7 +2,7 @@ apply plugin: "me.modmuss50.mod-publish-plugin"
 
 publishMods {
     def capitalizedProjectName = project.name == "fabric" ? "Fabric" : "NeoForge"
-    file = jar.archiveFile
+    file = tasks.renameJarForPublication
     displayName = "${project.mod_name} ${capitalizedProjectName} ${project.minecraft_version} - ${project.version}"
     version = project.version
     changelog = rootProject.file("changelog.md").exists() ? rootProject.file("changelog.md").text : "No changelog provided."
